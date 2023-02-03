@@ -15,179 +15,179 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    function CanvasCaptureToWEBM(canvas, bitrate) {
-        // the video_recorder is set to  '= new CanvasCaptureToWEBM(canvas, 4500000);' in the setup, 
-        // it uses the same canvas as the rest of the file.
-        // to start a recording call .record() on video_recorder
-        /*
-        for example, 
-        if(keysPressed['-'] && recording == 0){
-            recording = 1
-            video_recorder.record()
-        }
-        if(keysPressed['='] && recording == 1){
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
-        */
-        this.record = Record
-        this.stop = Stop
-        this.download = saveToDownloads
-        let blobCaptures = []
-        let outputFormat = {}
-        let recorder = {}
-        let canvasInput = canvas.captureStream()
-        if (typeof canvasInput == undefined || !canvasInput) {
-            return
-        }
-        const video = document.createElement('video')
-        video.style.display = 'none'
+    // function CanvasCaptureToWEBM(canvas, bitrate) {
+    //     // the video_recorder is set to  '= new CanvasCaptureToWEBM(canvas, 4500000);' in the setup, 
+    //     // it uses the same canvas as the rest of the file.
+    //     // to start a recording call .record() on video_recorder
+    //     /*
+    //     for example, 
+    //     if(keysPressed['-'] && recording == 0){
+    //         recording = 1
+    //         video_recorder.record()
+    //     }
+    //     if(keysPressed['='] && recording == 1){
+    //         recording = 0
+    //         video_recorder.stop()
+    //         video_recorder.download('File Name As A String.webm')
+    //     }
+    //     */
+    //     this.record = Record
+    //     this.stop = Stop
+    //     this.download = saveToDownloads
+    //     let blobCaptures = []
+    //     let outputFormat = {}
+    //     let recorder = {}
+    //     let canvasInput = canvas.captureStream()
+    //     if (typeof canvasInput == undefined || !canvasInput) {
+    //         return
+    //     }
+    //     const video = document.createElement('video')
+    //     video.style.display = 'none'
 
-        function Record() {
-            let formats = [
-                "video/webm\;codecs=h264",
-                "video/webm\;codecs=vp8",
-                'video/vp8',
-                "video/webm",
-                'video/webm,codecs=vp9',
-                "video/webm\;codecs=daala",
-                "video/mpeg"
-            ];
+    //     function Record() {
+    //         let formats = [
+    //             "video/webm\;codecs=h264",
+    //             "video/webm\;codecs=vp8",
+    //             'video/vp8',
+    //             "video/webm",
+    //             'video/webm,codecs=vp9',
+    //             "video/webm\;codecs=daala",
+    //             "video/mpeg"
+    //         ];
 
-            for (let t = 0; t < formats.length; t++) {
-                if (MediaRecorder.isTypeSupported(formats[t])) {
-                    outputFormat = formats[t]
-                    break
-                }
-            }
-            if (typeof outputFormat != "string") {
-                return
-            } else {
-                let videoSettings = {
-                    mimeType: outputFormat,
-                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-                };
-                blobCaptures = []
-                try {
-                    recorder = new MediaRecorder(canvasInput, videoSettings)
-                } catch (error) {
-                    return;
-                }
-                recorder.onstop = handleStop
-                recorder.ondataavailable = handleAvailableData
-                recorder.start(100)
-            }
-        }
-        function handleAvailableData(event) {
-            if (event.data && event.data.size > 0) {
-                blobCaptures.push(event.data)
-            }
-        }
-        function handleStop() {
-            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-            video.src = window.URL.createObjectURL(superBuffer)
-        }
-        function Stop() {
-            recorder.stop()
-            video.controls = true
-        }
-        function saveToDownloads(input) { // specifying a file name for the output
-            const name = input || 'video_out.webm'
-            const blob = new Blob(blobCaptures, { type: outputFormat })
-            const url = window.URL.createObjectURL(blob)
-            const storageElement = document.createElement('a')
-            storageElement.style.display = 'none'
-            storageElement.href = url
-            storageElement.download = name
-            document.body.appendChild(storageElement)
-            storageElement.click()
-            setTimeout(() => {
-                document.body.removeChild(storageElement)
-                window.URL.revokeObjectURL(url)
-            }, 100)
-        }
-    }
-    const gamepadAPI = {
-        controller: {},
-        turbo: true,
-        connect: function (evt) {
-            if (navigator.getGamepads()[0] != null) {
-                gamepadAPI.controller = navigator.getGamepads()[0]
-                gamepadAPI.turbo = true;
-            } else if (navigator.getGamepads()[1] != null) {
-                gamepadAPI.controller = navigator.getGamepads()[0]
-                gamepadAPI.turbo = true;
-            } else if (navigator.getGamepads()[2] != null) {
-                gamepadAPI.controller = navigator.getGamepads()[0]
-                gamepadAPI.turbo = true;
-            } else if (navigator.getGamepads()[3] != null) {
-                gamepadAPI.controller = navigator.getGamepads()[0]
-                gamepadAPI.turbo = true;
-            }
-            for (let i = 0; i < gamepads.length; i++) {
-                if (gamepads[i] === null) {
-                    continue;
-                }
-                if (!gamepads[i].connected) {
-                    continue;
-                }
-            }
-        },
-        disconnect: function (evt) {
-            gamepadAPI.turbo = false;
-            delete gamepadAPI.controller;
-        },
-        update: function () {
-            gamepadAPI.controller = navigator.getGamepads()[0]
-            gamepadAPI.buttonsCache = [];// clear the buttons cache
-            for (var k = 0; k < gamepadAPI.buttonsStatus.length; k++) {// move the buttons status from the previous frame to the cache
-                gamepadAPI.buttonsCache[k] = gamepadAPI.buttonsStatus[k];
-            }
-            gamepadAPI.buttonsStatus = [];// clear the buttons status
-            var c = gamepadAPI.controller || {}; // get the gamepad object
-            var pressed = [];
-            if (c.buttons) {
-                for (var b = 0, t = c.buttons.length; b < t; b++) {// loop through buttons and push the pressed ones to the array
-                    if (c.buttons[b].pressed) {
-                        pressed.push(gamepadAPI.buttons[b]);
-                    }
-                }
-            }
-            var axes = [];
-            if (c.axes) {
-                for (var a = 0, x = c.axes.length; a < x; a++) {// loop through axes and push their values to the array
-                    axes.push(c.axes[a].toFixed(2));
-                }
-            }
-            gamepadAPI.axesStatus = axes;// assign received values
-            gamepadAPI.buttonsStatus = pressed;
-            // ////////console.log(pressed); // return buttons for debugging purposes
-            return pressed;
-        },
-        buttonPressed: function (button, hold) {
-            var newPress = false;
-            for (var i = 0, s = gamepadAPI.buttonsStatus.length; i < s; i++) {// loop through pressed buttons
-                if (gamepadAPI.buttonsStatus[i] == button) {// if we found the button we're looking for...
-                    newPress = true;// set the boolean variable to true
-                    if (!hold) {// if we want to check the single press
-                        for (var j = 0, p = gamepadAPI.buttonsCache.length; j < p; j++) {// loop through the cached states from the previous frame
-                            if (gamepadAPI.buttonsCache[j] == button) { // if the button was already pressed, ignore new press
-                                newPress = false;
-                            }
-                        }
-                    }
-                }
-            }
-            return newPress;
-        },
-        buttons: [
-            'A', 'B', 'X', 'Y', 'LB', 'RB', 'Left-Trigger', 'Right-Trigger', 'Back', 'Start', 'Axis-Left', 'Axis-Right', 'DPad-Up', 'DPad-Down', 'DPad-Left', 'DPad-Right', "Power"
-        ],
-        buttonsCache: [],
-        buttonsStatus: [],
-        axesStatus: []
-    };
+    //         for (let t = 0; t < formats.length; t++) {
+    //             if (MediaRecorder.isTypeSupported(formats[t])) {
+    //                 outputFormat = formats[t]
+    //                 break
+    //             }
+    //         }
+    //         if (typeof outputFormat != "string") {
+    //             return
+    //         } else {
+    //             let videoSettings = {
+    //                 mimeType: outputFormat,
+    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+    //             };
+    //             blobCaptures = []
+    //             try {
+    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
+    //             } catch (error) {
+    //                 return;
+    //             }
+    //             recorder.onstop = handleStop
+    //             recorder.ondataavailable = handleAvailableData
+    //             recorder.start(100)
+    //         }
+    //     }
+    //     function handleAvailableData(event) {
+    //         if (event.data && event.data.size > 0) {
+    //             blobCaptures.push(event.data)
+    //         }
+    //     }
+    //     function handleStop() {
+    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+    //         video.src = window.URL.createObjectURL(superBuffer)
+    //     }
+    //     function Stop() {
+    //         recorder.stop()
+    //         video.controls = true
+    //     }
+    //     function saveToDownloads(input) { // specifying a file name for the output
+    //         const name = input || 'video_out.webm'
+    //         const blob = new Blob(blobCaptures, { type: outputFormat })
+    //         const url = window.URL.createObjectURL(blob)
+    //         const storageElement = document.createElement('a')
+    //         storageElement.style.display = 'none'
+    //         storageElement.href = url
+    //         storageElement.download = name
+    //         document.body.appendChild(storageElement)
+    //         storageElement.click()
+    //         setTimeout(() => {
+    //             document.body.removeChild(storageElement)
+    //             window.URL.revokeObjectURL(url)
+    //         }, 100)
+    //     }
+    // }
+    // const gamepadAPI = {
+    //     controller: {},
+    //     turbo: true,
+    //     connect: function (evt) {
+    //         if (navigator.getGamepads()[0] != null) {
+    //             gamepadAPI.controller = navigator.getGamepads()[0]
+    //             gamepadAPI.turbo = true;
+    //         } else if (navigator.getGamepads()[1] != null) {
+    //             gamepadAPI.controller = navigator.getGamepads()[0]
+    //             gamepadAPI.turbo = true;
+    //         } else if (navigator.getGamepads()[2] != null) {
+    //             gamepadAPI.controller = navigator.getGamepads()[0]
+    //             gamepadAPI.turbo = true;
+    //         } else if (navigator.getGamepads()[3] != null) {
+    //             gamepadAPI.controller = navigator.getGamepads()[0]
+    //             gamepadAPI.turbo = true;
+    //         }
+    //         for (let i = 0; i < gamepads.length; i++) {
+    //             if (gamepads[i] === null) {
+    //                 continue;
+    //             }
+    //             if (!gamepads[i].connected) {
+    //                 continue;
+    //             }
+    //         }
+    //     },
+    //     disconnect: function (evt) {
+    //         gamepadAPI.turbo = false;
+    //         delete gamepadAPI.controller;
+    //     },
+    //     update: function () {
+    //         gamepadAPI.controller = navigator.getGamepads()[0]
+    //         gamepadAPI.buttonsCache = [];// clear the buttons cache
+    //         for (var k = 0; k < gamepadAPI.buttonsStatus.length; k++) {// move the buttons status from the previous frame to the cache
+    //             gamepadAPI.buttonsCache[k] = gamepadAPI.buttonsStatus[k];
+    //         }
+    //         gamepadAPI.buttonsStatus = [];// clear the buttons status
+    //         var c = gamepadAPI.controller || {}; // get the gamepad object
+    //         var pressed = [];
+    //         if (c.buttons) {
+    //             for (var b = 0, t = c.buttons.length; b < t; b++) {// loop through buttons and push the pressed ones to the array
+    //                 if (c.buttons[b].pressed) {
+    //                     pressed.push(gamepadAPI.buttons[b]);
+    //                 }
+    //             }
+    //         }
+    //         var axes = [];
+    //         if (c.axes) {
+    //             for (var a = 0, x = c.axes.length; a < x; a++) {// loop through axes and push their values to the array
+    //                 axes.push(c.axes[a].toFixed(2));
+    //             }
+    //         }
+    //         gamepadAPI.axesStatus = axes;// assign received values
+    //         gamepadAPI.buttonsStatus = pressed;
+    //         // //////////console.log(pressed); // return buttons for debugging purposes
+    //         return pressed;
+    //     },
+    //     buttonPressed: function (button, hold) {
+    //         var newPress = false;
+    //         for (var i = 0, s = gamepadAPI.buttonsStatus.length; i < s; i++) {// loop through pressed buttons
+    //             if (gamepadAPI.buttonsStatus[i] == button) {// if we found the button we're looking for...
+    //                 newPress = true;// set the boolean variable to true
+    //                 if (!hold) {// if we want to check the single press
+    //                     for (var j = 0, p = gamepadAPI.buttonsCache.length; j < p; j++) {// loop through the cached states from the previous frame
+    //                         if (gamepadAPI.buttonsCache[j] == button) { // if the button was already pressed, ignore new press
+    //                             newPress = false;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         return newPress;
+    //     },
+    //     buttons: [
+    //         'A', 'B', 'X', 'Y', 'LB', 'RB', 'Left-Trigger', 'Right-Trigger', 'Back', 'Start', 'Axis-Left', 'Axis-Right', 'DPad-Up', 'DPad-Down', 'DPad-Left', 'DPad-Right', "Power"
+    //     ],
+    //     buttonsCache: [],
+    //     buttonsStatus: [],
+    //     axesStatus: []
+    // };
     let canvas
     let canvas_context
     let keysPressed = {}
@@ -517,7 +517,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fill()
                 canvas_context.stroke();
             } else {
-                ////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+                //////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
             }
         }
         move() {
@@ -668,7 +668,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // canvas_context.fill()
             canvas_context.stroke();
             // } else {
-            //     ////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+            //     //////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
             // }
         }
         move() {
@@ -1098,29 +1098,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         randomLight() {
             var letters = '0123456789ABCDEF';
-            var hash = '#';
+            this.hash = '#';
             for (var i = 0; i < 6; i++) {
-                hash += letters[(Math.floor(Math.random() * 12) + 4)];
+                this.hash += letters[(Math.floor(Math.random() * 12) + 4)];
             }
-            var color = new Color(hash, 55 + Math.random() * 200, 55 + Math.random() * 200, 55 + Math.random() * 200)
+            var color = new Color(this.hash, 55 + Math.random() * 200, 55 + Math.random() * 200, 55 + Math.random() * 200)
             return color;
         }
         randomDark() {
             var letters = '0123456789ABCDEF';
-            var hash = '#';
+            this.hash = '#';
             for (var i = 0; i < 6; i++) {
-                hash += letters[(Math.floor(Math.random() * 12))];
+                this.hash += letters[(Math.floor(Math.random() * 12))];
             }
-            var color = new Color(hash, Math.random() * 200, Math.random() * 200, Math.random() * 200)
+            var color = new Color(this.hash, Math.random() * 200, Math.random() * 200, Math.random() * 200)
             return color;
         }
         random() {
             var letters = '0123456789ABCDEF';
-            var hash = '#';
+            this.hash = '#';
             for (var i = 0; i < 6; i++) {
-                hash += letters[(Math.floor(Math.random() * 16))];
+                this.hash += letters[(Math.floor(Math.random() * 16))];
             }
-            var color = new Color(hash, Math.random() * 255, Math.random() * 255, Math.random() * 255)
+            var color = new Color(this.hash, Math.random() * 255, Math.random() * 255, Math.random() * 255)
             return color;
         }
     }
@@ -1239,7 +1239,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         canvas.style.background = style
         window.setInterval(function () {
@@ -1296,20 +1296,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (vessel.upgradeMenu.open == 1) {
                 return
             }
-            // //////console.log(vessel.energy.upgradeMenu)
+            // ////////console.log(vessel.energy.upgradeMenu)
 
             // if (keysPressed['2']) {
 
             //     let door = new Door(TIP_engine.x, TIP_engine.y)
             //     enemy.doors.push(door)
-            //     //console.log(JSON.stringify(enemy.doors))
+            //     ////console.log(JSON.stringify(enemy.doors))
             //     return
             // }
 
             // for (let t = 0; t < enemy.blocks.length; t++) {
             //     for (let k = 0; k < enemy.blocks[t].length; k++) {
             //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
-            //             // //////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
+            //             // ////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
 
             //             enemy.blocks[t][k].marked = 1
             //             if (keysPressed['k']) {
@@ -1357,8 +1357,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //         }
             //     }
             // }
-            // //console.log(JSON.stringify(enemy.doors))
-            // //console.log(JSON.stringify(enemy.blocks))
+            // ////console.log(JSON.stringify(enemy.doors))
+            // ////console.log(JSON.stringify(enemy.blocks))
             // return
             // wad.launch(TIP_engine)
             for (let t = 0; t < vessel.weapons.length; t++) {
@@ -1386,7 +1386,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
                     if (vessel.blocks[t][k].isPointInside(TIP_engine)) {
-                        // //////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
+                        // ////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
                         // if (keysPressed['m']) {
                         //     vessel.blocks[t][k].medbay = 1
                         //     vessel.blocks[t][k].color = "#00ff0044"
@@ -1482,7 +1482,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 stars.check(TIP_engine)
             }
 
-            //////console.log(JSON.stringify(enemy.blocks))
+            ////////console.log(JSON.stringify(enemy.blocks))
             // example usage: if(object.isPointInside(TIP_engine)){ take action }
         });
         window.addEventListener('pointermove', continued_stimuli);
@@ -1499,24 +1499,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
             stars.hover(TIP_engine)
         }
     }
-    function gamepad_control(object, speed = 1) { // basic control for objects using the controler
-        //         ////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
-        if (typeof object.body != 'undefined') {
-            if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
-                if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
-                    object.body.x += (gamepadAPI.axesStatus[0] * speed)
-                    object.body.y += (gamepadAPI.axesStatus[1] * speed)
-                }
-            }
-        } else if (typeof object != 'undefined') {
-            if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
-                if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
-                    object.x += (gamepadAPI.axesStatus[0] * speed)
-                    object.y += (gamepadAPI.axesStatus[1] * speed)
-                }
-            }
-        }
-    }
+    // function gamepad_control(object, speed = 1) { // basic control for objects using the controler
+    //     //         //////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
+    //     if (typeof object.body != 'undefined') {
+    //         if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
+    //             if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
+    //                 object.body.x += (gamepadAPI.axesStatus[0] * speed)
+    //                 object.body.y += (gamepadAPI.axesStatus[1] * speed)
+    //             }
+    //         }
+    //     } else if (typeof object != 'undefined') {
+    //         if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
+    //             if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
+    //                 object.x += (gamepadAPI.axesStatus[0] * speed)
+    //                 object.y += (gamepadAPI.axesStatus[1] * speed)
+    //             }
+    //         }
+    //     }
+    // }
     function control(object, speed = 1) { // basic control for objects
         if (typeof object.body != 'undefined') {
             if (keysPressed['w']) {
@@ -1972,8 +1972,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             // let link = new Line(this.posx, this.posy, bottle.crew[bottle.selectedcrew].body.x-100, bottle.crew[bottle.selectedcrew].body.y-300, "red", 1)
             // if (link.hypotenuse() < 108) {
-            // //////////////////////////////////////////////////////////////////console.log(link)
-            // //////////////////////////////////////////////////////////////////console.log(bottle)
+            // ////////////////////////////////////////////////////////////////////console.log(link)
+            // ////////////////////////////////////////////////////////////////////console.log(bottle)
             // }
             // let roundedx = (Math.round((startPoint.x) / 10))
             // let roundedy = (Math.round((startPoint.y) / 10))
@@ -1986,13 +1986,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // if (this.inPath === true) {
             //     // this.drawPath();
             // } else if (this.walkable === false) {
-            //     // //////////////////////////////////////////////////////////////////console.log(this)
+            //     // ////////////////////////////////////////////////////////////////////console.log(this)
 
             //     // this.createWall();
             //     return;
             //     // }else if (link.hypotenuse() < 11) {
             // } else if (this.posx == roundedx && this.posy == roundedy) {
-            //     //   //////////////////////////////////////////////////////////////////console.log("hit the startNode");
+            //     //   ////////////////////////////////////////////////////////////////////console.log("hit the startNode");
             //     //   this.createStartNode();
             //     return;
             // } else if (this.posx == endPoint.x && this.posy == endPoint.y) {
@@ -2032,7 +2032,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //         this.color = "transparent"
             //     }
             //     if (typeof this.wallcolor != "undefined") {
-            // //////////////console.log("s")
+            // ////////////////console.log("s")
             canvas_context.fillStyle = this.color
             canvas_context.strokeStyle = this.color
             canvas_context.fillRect(this.x, this.y, this.width, this.height)
@@ -2061,7 +2061,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.y += this.ymom
         }
         isPointInside(point) {
-            //////////////console.log(point, this)
+            ////////////////console.log(point, this)
             if (point.x >= this.x) {
                 if (point.y >= this.y) {
                     if (point.x <= this.x + this.width) {
@@ -2106,6 +2106,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Guy {
         constructor(tile) {
+            this.name = getRandomLightColor()
             this.tile = tile
             this.tile.walkable = false
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
@@ -2158,7 +2159,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.healthbar.draw()
                 canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbar.x - 34, this.healthbar.y - 27, this.body.radius * 2, this.body.radius * 2)
 
-            } else if(enemy.guys.includes(this)){
+            } else if (enemy.guys.includes(this)) {
 
                 let hrat = this.health / this.maxhealth
                 this.healthbox = new Rectangle(1102, ((enemy.guys.indexOf(this)) * 43), 66, 42, "#555555")
@@ -2191,7 +2192,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.count++
                     }
                     // if (this.path.length > 1) {
-                    // ////////console.log(this.path)
+                    // //////////console.log(this.path)
                     this.cound++
                     // }
                     if (this.cound > this.rate) {
@@ -2209,7 +2210,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     this.tile = this.path[this.step]
                 }
-                // ////////console.log(this.tile)
+                // //////////console.log(this.tile)
                 this.tile.walkable = false
             }
             // this.cound =this.stats[0]
@@ -2251,7 +2252,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (Math.random() < .1) {
                 this.count++
             }
-            // ////////console.log(this.path)
+            // //////////console.log(this.path)
             let l = this.stats[0] - this.cound
             if (this.path.length > 1) {
                 this.body.x = (this.tile.x + (this.tile.width * .5)) * l
@@ -2260,7 +2261,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                 this.body.x *= 1 / this.stats[0]
                 this.body.y *= 1 / this.stats[0]
-                // ////////console.log(this.tile)
+                // //////////console.log(this.tile)
                 this.tile.draw = (new Tile()).draw
                 // this.tile.color = "green"
                 // this.tile.draw()
@@ -2308,6 +2309,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.healthbar = new Rectangle(69, 10, 100 * hrat, 10, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${0 + (255 * hrat)})`)
             this.healthbar.draw()
 
+            this.healthbar = new Rectangle(68, 0, 104 * 1, 30, "#ffffff")
 
             if (this.charge > this.maxout) {
                 this.charge = 0
@@ -2397,25 +2399,82 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Weapon {
         constructor(type) {
+            this.max = 50000000000000000000000
             this.beingchecked = 0
             this.auto = 1
             this.type = type
             this.body = new RectangleR(270, 650, 100, 70, "#444444")
             this.charge = 0
+            this.double = 1
+            this.crew = 1
+            this.puncture = 0
             if (this.type == 0) {
                 this.name1 = "Basic"
                 this.name2 = "Laser"
                 this.max = 500
                 this.damage = 35
                 this.real = 1
-            }
-            if (this.type == 1) {
+            }else  if (this.type == 1) {
                 this.name1 = "Basic"
                 this.name2 = "Bomb"
                 this.max = 1000
-                this.damage = 70
+                this.damage = 90
                 this.bomb = 1
                 this.real = 1
+            }else if (this.type == 2) {
+                this.name1 = "Double"
+                this.name2 = "Laser"
+                this.max = 900
+                this.damage = 80
+                this.real = 1
+                this.double = 2
+            }else if (this.type == 3) {
+                this.name1 = "Triple"
+                this.name2 = "Laser"
+                this.max = 1300
+                this.damage = 135
+                this.real = 1
+                this.double = 3
+            }else if (this.type == 4) {
+                this.name1 = "Crew"
+                this.name2 = "Laser"
+                this.max = 650
+                this.damage = 35
+                this.real = 1
+                this.double = 1
+                this.crew = 8
+            }else if (this.type == 5) {
+                this.name1 = "Mega"
+                this.name2 = "Laser"
+                this.max = 1400
+                this.damage = 140
+                this.real = 1
+                this.crew = 2
+                this.double = 2
+            }else if (this.type == 6) {
+                this.name1 = "Medium"
+                this.name2 = "Bomb"
+                this.max = 1500
+                this.damage = 110
+                this.bomb = 1
+                this.real = 1
+            }else if (this.type == 7) {
+                this.name1 = "Big"
+                this.name2 = "Bomb"
+                this.max = 1800
+                this.damage = 150
+                this.bomb = 1
+                this.real = 1
+                this.crew = 1.5
+            }else if (this.type == 8) {
+                this.name1 = "Mega"
+                this.name2 = "Bomb"
+                this.max = 2900
+                this.damage = 200
+                this.bomb = 1
+                this.real = 1
+                this.crew = 1.8
+                this.puncture = 1
             }
         }
         fire(tile) {
@@ -2466,17 +2525,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     if (Math.random() < enemy.dodgeRate()) {
                         if (enemy.shield.state > 0 && this.bomb != 1) {
-                            enemy.shield.state--
+                            enemy.shield.state-=this.double
                             enemy.shield.charge = 0
-                            //console.log(this)
+                            if(enemy.shield.state <=0){
+                                enemy.shield.state = 0
+                            }
                         } else {
-                            tile.integrity -= this.damage * 3
-                            //console.log(enemy.hull)
+                            tile.integrity -= this.damage 
+                            if(this.puncture == 1){
+                                let n = enemy.neighbors(tile)
+                                console.log(n)
+                                for(let r = 0;r<n.length;r++){
+                                    n[r].integrity -= this.damage
+                                }
+                            }
                             enemy.hull -= this.damage * .1
-                            //console.log(enemy.hull)
                             for (let t = 0; t < enemy.guys.length; t++) {
                                 if (enemy.guys[t].tile == tile) {
-                                    enemy.guys[t].health -= this.damage * .4
+                                    enemy.guys[t].health -= this.damage*this.crew
                                 }
                             }
                         }
@@ -2488,18 +2554,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 break
                             }
                             this.target = enemy.blocks[Math.floor(Math.random() * enemy.blocks.length)][Math.floor(Math.random() * enemy.blocks[0].length)]
-                        }
-                        if (enemy.shield.state > 0 && this.bomb != 1) {
-                            // enemy.shield.state--
-                            // enemy.shield.charge = 0
-                        } else {
-                            // tile.integrity -= this.damage
-                            // enemy.hull -= this.damage * .1
-                            for (let t = 0; t < enemy.guys.length; t++) {
-                                if (enemy.guys[t].tile == tile) {
-                                    // enemy.guys[t].health -= this.damage * .4
-                                }
-                            }
                         }
                     }
                 } else {
@@ -2515,14 +2569,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     if (Math.random() < vessel.dodgeRate()) {
                         if (vessel.shield.state > 0 && this.bomb != 1) {
-                            vessel.shield.state--
+                            vessel.shield.state-=this.double
                             vessel.shield.charge = 0
+                            if(vessel.shield.state <=0){
+                                vessel.shield.state = 0
+                            }
                         } else {
-                            tile.integrity -= this.damage * 3
+                            tile.integrity -= this.damage 
+                            if(this.puncture == 1){
+                                let n = vessel.neighbors(tile)
+                                for(let r = 0;r<n.length;r++){
+                                    n[r].integrity -= this.damage
+                                }
+                            }
                             vessel.hull -= this.damage * .1
                             for (let t = 0; t < vessel.guys.length; t++) {
                                 if (vessel.guys[t].tile == tile) {
-                                    vessel.guys[t].health -= this.damage * .4
+                                    vessel.guys[t].health -= this.damage*this.crew
                                 }
                             }
                         }
@@ -2534,18 +2597,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 break
                             }
                             this.target = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks[0].length)]
-                        }
-                        if (vessel.shield.state > 0 && this.bomb != 1) {
-                            // vessel.shield.state--
-                            // vessel.shield.charge = 0
-                        } else {
-                            // tile.integrity -= this.damage
-                            // vessel.hull -= this.damage * .1
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].tile == tile) {
-                                    // vessel.guys[t].health -= this.damage * .4
-                                }
-                            }
                         }
                     }
                 }
@@ -2630,12 +2681,100 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         lin2k.draw()
                         this.firing--
                     }
-                } else {
+                } else if(this.type == 1) {
                     let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 17 * ((10 - this.firing) / 8), "#FF0000")
                     link.draw()
                     let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 13 * ((10 - this.firing) / 8.05), "#FFAA00")
                     link2.draw()
                     let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 9 * ((10 - this.firing) / 8.1), "#FFFF00")
+                    link3.draw()
+                    this.firing -= 2
+                }else if (this.type == 2) {
+                    if (vessel.weapons.includes(this)) {
+                        if(this.firing < 4 || this.firing > 6){
+                            let link = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "orange", 9)
+                            link.draw()
+                            let lin2k = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "yellow", 4)
+                            lin2k.draw()
+                        }
+                        this.firing-=.7
+                    } else {
+                        if(this.firing < 4 || this.firing > 6){
+                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "orange", 9)
+                            link.draw()
+                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "yellow", 4)
+                            lin2k.draw()
+                        }
+                        this.firing-=.7
+                    }
+                }else if (this.type == 3) {
+                    if (vessel.weapons.includes(this)) {
+                        if(this.firing < 2.5 || this.firing > 7.5 || (this.firing > 4 && this.firing < 6)){
+                            let link = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Purple", 9)
+                            link.draw()
+                            let lin2k = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "magenta", 4)
+                            lin2k.draw()
+                        }
+                        this.firing-=.5
+                    } else {
+                        if(this.firing < 2.5 || this.firing > 7.5 || (this.firing > 4 && this.firing < 6)){
+                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "purple", 9)
+                            link.draw()
+                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "magenta", 4)
+                            lin2k.draw()
+                        }
+                        this.firing-=.5
+                    }
+                }else if (this.type == 4) {
+                    if (vessel.weapons.includes(this)) {
+                            let link = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
+                            link.draw()
+                            let lin2k = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Black", 9)
+                            lin2k.draw()
+                        this.firing-=.5
+                    } else {
+                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
+                            link.draw()
+                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Black", 9)
+                            lin2k.draw()
+                        this.firing-=.5
+                    }
+                }else if (this.type == 5) {
+                    if (vessel.weapons.includes(this)) {
+                            let link = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 12)
+                            link.draw()
+                            let lin2k = new LineOP(vessel.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#AA00FF", 9)
+                            lin2k.draw()
+                        this.firing-=1
+                    } else {
+                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 12)
+                            link.draw()
+                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#AA00FF", 9)
+                            lin2k.draw()
+                        this.firing-=1
+                    }
+                }else if(this.type == 6) {
+                    let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 22 * ((10 - this.firing) / 8), "#FF0000")
+                    link.draw()
+                    let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 16 * ((10 - this.firing) / 8.05), "#FFAA00")
+                    link2.draw()
+                    let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 12 * ((10 - this.firing) / 8.1), "#FFFF00")
+                    link3.draw()
+                    this.firing -= 2
+                }else if(this.type == 7) {
+                    let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 24 * ((10 - this.firing) / 8), "#FF0000")
+                    link.draw()
+                    let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 18 * ((10 - this.firing) / 8.05), "#FFAA00")
+                    link2.draw()
+                    let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 14 * ((10 - this.firing) / 8.1), "#FFFFFF")
+                    link3.draw()
+                    this.firing -= 2
+                }else if(this.type == 8) {
+                    let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26 * ((10 - this.firing) / 8), "#FF0000")
+                    link.draw()
+                    let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20 * ((10 - this.firing) / 8.05), "#FFAA00")
+                    link2.draw()
+                    let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 16 * ((10 - this.firing) / 8.1), "#FFFFFF")
                     link3.draw()
                     this.firing -= 2
                 }
@@ -2652,7 +2791,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             this.work()
             this.beingchecked--
-            this.body.x = 270 + (100 * vessel.weapons.indexOf(this))
+            if(vessel.weapons.includes(this)){
+                this.body.x = 270 + (100 * vessel.weapons.indexOf(this))
+            }else{
+                this.body.x = (vessel.upgradeMenu.window.x+400) + ((100 * vessel.upgradeMenu.wepsto.indexOf(this))%500)
+                this.body.y = (vessel.upgradeMenu.window.y+10) + (70 *  Math.floor(vessel.upgradeMenu.wepsto.indexOf(this)/5))
+            }
             if (this.selected == 1) {
                 this.body.color = "#666666"
             } else {
@@ -2681,10 +2825,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (this.type == 0) {
                 canvas_context.drawImage(basiclaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
-            } else {
-
+            } else if(this.type == 1) {
                 canvas_context.drawImage(basicmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 2) {
+                canvas_context.drawImage(doublelaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 3) {
+                canvas_context.drawImage(triplelaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 4) {
+                canvas_context.drawImage(crewlaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 5) {
+                canvas_context.drawImage(megalaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 6) {
+                canvas_context.drawImage(mediummmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 7) {
+                canvas_context.drawImage(bigmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }else if(this.type == 8) {
+                canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             }
+
+            
         }
     }
 
@@ -2706,8 +2865,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
     specialimage.src = "special.png"
     let emptyimage = new Image()
     emptyimage.src = "empty.png"
+
+    
     let basiclaser = new Image()
     basiclaser.src = "basiclaser.png"
+    let doublelaser = new Image()
+    doublelaser.src = "doublelaser.png"
+    let triplelaser = new Image()
+    triplelaser.src = "triplelaser.png"
+    let megalaser = new Image()
+    megalaser.src = "megalaser.png"
+    let crewlaser = new Image()
+    crewlaser.src = "crewlaser.png"
+
+
+    let mediummmissle = new Image()
+    mediummmissle.src = "mediummissle.png"
+    let bigmissle = new Image()
+    bigmissle.src = "bigmissle.png"
+    let megamissle = new Image()
+    megamissle.src = "megamissle.png"
     let basicmissle = new Image()
     basicmissle.src = "basicmissle.png"
     let warning = new Image()
@@ -2749,6 +2926,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.systems[t].bars[k].color = "orange"
                         }
                     }
+                    this.box = box
                 }
             } else {
 
@@ -2763,7 +2941,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 let j = 0
                 while (j < (level * .5)) {
-                    //console.log("hit")
+                    ////console.log("hit")
                     this.systems[j % this.systems.length].max += 1
                     j++
                 }
@@ -2782,6 +2960,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.systems[t].bars[k].color = "orange"
                         }
                     }
+                    this.box = box
                 }
             }
         }
@@ -2957,10 +3136,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         // } else {
                         // if (vessel.energy.power > 0) {
                         if (vessel.scrap >= (15) + (this.systems[t].demand * 5)) {
-                            vessel.scrap -= (15) + (this.systems[t].demand * 5)
-                            this.systems[t].demand++
-                            vessel.UI.systems[t].max = this.systems[t].demand
-                            this.systems[t].sto = this.systems[t].demand
+                            if(this.systems[t].demand < 10){
+                                vessel.scrap -= (15) + (this.systems[t].demand * 5)
+                                this.systems[t].demand++
+                                vessel.UI.systems[t].max = this.systems[t].demand
+                                this.systems[t].sto = this.systems[t].demand
+                            }
                         }
                         // } else {
                         //     // vessel.warn = 10
@@ -2975,9 +3156,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
     system.src = "system.png"
     class UpgradeMenu {
         constructor() {
+            this.wepsto = []
+            // for(let t = 0;t<8;t++){
+            //     let v = new Weapon(t)
+            //     v.auto = 0
+            //     this.wepsto.push(v)
+            // }
+            for(let t = 0;t<15;t++){
+                let v = new Weapon(-1)
+                v.auto = 0
+                this.wepsto.push(v)
+            }
             this.button = new RectangleR(1, 540, 40, 40, "#444444")
             this.open = -1
-            this.window = new RectangleR(200, 200, 880, 200, "#444444")
+            this.window = new RectangleR(200, 200, 910, 250, "#444444")
             this.levels = new MenuUI(this.window)
         }
         draw() {
@@ -2994,12 +3186,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("Hull: " + vessel.hull, this.window.x + 270, this.window.y + 60)
                 canvas_context.fillText("Fuel: " + vessel.fuel, this.window.x + 270, this.window.y + 80)
                 canvas_context.fillText("Bombs: " + vessel.bombs, this.window.x + 270, this.window.y + 100)
+                for(let t =0;t<this.wepsto.length;t++){
+                    this.wepsto[t].draw()
+                    this.wepsto[t].auto = 0
+                }
             }
         }
         check(point) {
             if (this.open == 1) {
 
 
+                for(let  k = 0 ;k<vessel.weapons.length;k++){
+                if (vessel.weapons[k].body.isPointInside(point)) {
+                    for (let t = 0; t < vessel.weapons.length; t++) {
+                        vessel.weapons[t].selected = 0
+                    }
+                    vessel.weapons[k].selected = 1 //*=-1
+                } else {
+                    // vessel.weapons[k].selected = 0
+                }
+            }
+
+
+
+                for(let t =0;t<this.wepsto.length;t++){
+                    if (this.wepsto[t].body.isPointInside(point)){
+                        for(let  k = 0 ;k<vessel.weapons.length;k++){
+                            if(vessel.weapons[k].selected == 1){
+                                let swap = new Weapon(this.wepsto[t].type)
+                                this.wepsto[t] = new Weapon(vessel.weapons[k].type)
+                                vessel.weapons[k] = swap
+                            }
+                        }
+                    }
+                }
             }
             if (this.button.isPointInside(point)) {
                 this.open *= -1
@@ -3016,7 +3236,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.systems = systems
         }
         balance() {
-
+            if (this == vessel.battery) {
+                this.powersto = vessel.menuBattery.power
+                this.power = this.powersto
+                for (let t = 0; t < this.systems.length; t++) {
+                    this.power -= this.systems[t].demand
+                }
+                this.box = new RectangleR(1, 580, 40, 140, "#555555")
+                // this.box.draw()
+                for (let t = 0; t < this.powersto; t++) {
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
+                    // block.draw()
+                }
+                for (let t = 0; t < this.power; t++) {
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#00dd00")
+                    // block.draw()
+                }
+            } else {
+                this.powersto = vessel.menuBattery.power
+                this.power = this.powersto
+                for (let t = 0; t < this.systems.length; t++) {
+                    this.power -= this.systems[t].demand
+                }
+                this.box = new RectangleR(1, 580, 40, 140, "#555555")
+                // this.box.draw()
+                for (let t = 0; t < this.powersto; t++) {
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
+                    // block.draw()
+                }
+                for (let t = 0; t < this.power; t++) {
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#00dd00")
+                    // block.draw()
+                }
+            }
         }
         draw() {
             if (this == vessel.battery) {
@@ -3066,10 +3318,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         }
         check(point) {
+            if (vessel.upgradeMenu.open != 1) {
+                return
+            }
             if (this.box.isPointInside(point)) {
                 if (vessel.scrap >= vessel.energy.powersto) {
-                    vessel.scrap -= vessel.energy.powersto
-                    this.power++
+                    if(this.power < 56){
+                        vessel.scrap -= vessel.energy.powersto
+                        this.power++
+                    }
                 }
             }
         }
@@ -3078,7 +3335,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // for (let t = 0; t < this.systems.length; t++) {
             //     this.power -= this.systems[t].demand
             // }
-            this.box = new RectangleR(vessel.upgradeMenu.window.x + 1, vessel.upgradeMenu.window.y + 60, 40, 140, "#555555")
+            this.box = new RectangleR(vessel.upgradeMenu.window.x + 1, vessel.upgradeMenu.window.y + 110, 40, 140, "#555555")
             this.box.draw()
             for (let t = 0; t < this.power; t++) {
                 let block = new RectangleR(vessel.upgradeMenu.window.x + 2 + ((t % 4) * 10), (vessel.upgradeMenu.window.y + vessel.upgradeMenu.window.height) - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
@@ -3177,26 +3434,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let tile = new Tile((t * 32 * rat), (k * 32 * rat), 32 * rat, 32 * rat, getRandomColor() + '41')
                     tile.t = t
                     tile.k = k
-                    // ////////console.log(baseShipTiles)
+                    // //////////console.log(baseShipTiles)
                     let keys = Object.keys(baseShipTiles[t][k])
                     for (let f = 0; f < keys.length; f++) {
                         tile[keys[f]] = baseShipTiles[t][k][keys[f]]
                     }
-                    ////////console.log(tile)
+                    //////////console.log(tile)
                     if (tile.color == "#ff000044") {
-                        ////////console.log("h")
+                        //////////console.log("h")
                         tile.medbay = 1
                     }
                     if (tile.empty == 1) {
-                        ////////console.log("h")
+                        //////////console.log("h")
                         tile.color = "#FFFFFF44"
                     }
                     if (tile.engine == 1) {
-                        ////////console.log("h")
+                        //////////console.log("h")
                         tile.color = "#ffaa0044"
                     }
                     if (tile.marked == 1) {
-                        ////////console.log("w")
+                        //////////console.log("w")
                         tile.walkable = true
                     }
                     tile.holed = 0
@@ -3240,8 +3497,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.menuBattery = new BatteryMenu(9, this.upgradeMenu.levels)
         }
         dodgeRate() {
+            if (this.first == 0) {
+                return 0
+            }
             let dodgerate = this.boosts[3] + this.boosts[6]
-
+            if (this.hash['engine'].integrity < 95) {
+                dodgerate = 0
+            }
+            if (this.hash['helm'].integrity < 95) {
+                dodgerate = 0
+            }
             if (dodgerate == 0) {
                 return 1
             } else {
@@ -3252,7 +3517,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (start == 1) {
                 canvas_context.drawImage(shipimage, 0, 0, 256, 256, stars.stars[this.star].body.x - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * .5, stars.stars[this.star].body.radius * .5)
-                // //console.log("hif")
+                // ////console.log("hif")
             } else {
 
                 for (let t = 0; t < this.blocks.length; t++) {
@@ -3310,6 +3575,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.font = "15px comic sans ms"
                 canvas_context.fillText(Math.round(ac) + '% ship air', 90, 60)
                 canvas_context.fillText(this.bombs + ' Bombs', 90, 100)
+                canvas_context.fillText(Math.round((1 - this.dodgeRate()) * 100) + '% dodge', 90, 140)
 
                 if (this.warn > 0) {
                     canvas_context.drawImage(warning, 0, 0, 40, 40, this.energy.box.x - 20, this.energy.box.y + this.energy.box.height - 80, 80, 80)
@@ -3321,7 +3587,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         for (let k = 0; k < this.blocks[t].length; k++) {
                             if (this.blocks[t][k].marked == 1) {
                                 this.blocks[t][k].walkable = true
-                                ////////console.log("r")
+                                //////////console.log("r")
                                 tiles.push(this.blocks[t][k])
                             }
                         }
@@ -3335,6 +3601,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let wep2 = new Weapon(1)
                     let wep3 = new Weapon(-1)
                     let wep4 = new Weapon(-1)
+
+
+                    // wep2.name1 = "Basic"
+                    // wep2.name2 = "Bomb"
+                    // wep2.max = 1000
+                    // wep2.damage = 90
+                    // wep2.bomb = 1
+                    // wep2.real = 1
+                    // wep2.type = 1
+
                     this.weapons.push(wep1)
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
@@ -3349,8 +3625,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let hrat = this.blocks[t][k].integrity / 100
                         if (this.blocks[t][k].marked == 1) {
                             // this.blocks[t][k].color = `rgba(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80}, .3)`
-                        this.blocks[t][k].draw()
-                        this.blocks[t][k].hole()
+                            this.blocks[t][k].draw()
+                            this.blocks[t][k].hole()
                         }
                     }
                 }
@@ -3369,10 +3645,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.guys[t].tile.integrity > 100) {
                         this.guys[t].tile.integrity = 100
                     }
-                    // ////////console.log(this.guys[t].tile)
+                    // //////////console.log(this.guys[t].tile)
                     if (this.guys[t].tile.medbay == 1) {
                         if (this.UI.systems[0].demand + this.UI.systems[0].fed > 0) {
-                            this.guys[t].health += 1
+                            this.guys[t].health += Math.min((this.UI.systems[0].demand + this.UI.systems[0].fed)/2, 7)
                         }
                         if (this.guys[t].health > this.guys[t].maxhealth) {
                             this.guys[t].health = this.guys[t].maxhealth
@@ -3410,44 +3686,44 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                 let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
-                let hash = {}
+                this.hash = {}
                 for (let r = 0; r < rooms.length; r++) {
-                    hash[rooms[r]] = {}
-                    hash[rooms[r]].interior = 0
-                    hash[rooms[r]].integrity = 0
-                    hash[rooms[r]].air = 0
+                    this.hash[rooms[r]] = {}
+                    this.hash[rooms[r]].interior = 0
+                    this.hash[rooms[r]].integrity = 0
+                    this.hash[rooms[r]].air = 0
                 }
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         for (let r = 0; r < rooms.length; r++) {
                             if (this.blocks[t][k][rooms[r]] == 1) {
-                                if (typeof hash[rooms[r]].interior == "undefined") {
-                                    hash[rooms[r]].interior = 0
+                                if (typeof this.hash[rooms[r]].interior == "undefined") {
+                                    this.hash[rooms[r]].interior = 0
                                 }
-                                if (hash[rooms[r]].interior > 0) {
-                                    hash[rooms[r]].interior += 1
-                                    hash[rooms[r]].integrity += this.blocks[t][k].integrity
-                                    hash[rooms[r]].air += this.blocks[t][k].air
+                                if (this.hash[rooms[r]].interior > 0) {
+                                    this.hash[rooms[r]].interior += 1
+                                    this.hash[rooms[r]].integrity += this.blocks[t][k].integrity
+                                    this.hash[rooms[r]].air += this.blocks[t][k].air
                                 } else {
-                                    hash[rooms[r]].interior = 1
-                                    hash[rooms[r]].integrity = this.blocks[t][k].integrity
-                                    hash[rooms[r]].air = this.blocks[t][k].air
+                                    this.hash[rooms[r]].interior = 1
+                                    this.hash[rooms[r]].integrity = this.blocks[t][k].integrity
+                                    this.hash[rooms[r]].air = this.blocks[t][k].air
                                 }
                             }
                         }
                     }
                 }
-                let kre = Object.keys(hash)
+                let kre = Object.keys(this.hash)
                 for (let t = 0; t < kre.length; t++) {
-                    hash[kre[t]].integrity /= hash[kre[t]].interior
-                    hash[kre[t]].air /= hash[kre[t]].interior
+                    this.hash[kre[t]].integrity /= this.hash[kre[t]].interior
+                    this.hash[kre[t]].air /= this.hash[kre[t]].interior
                 }
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         for (let r = 0; r < rooms.length; r++) {
                             if (this.blocks[t][k][rooms[r]] == 1) {
-                                this.blocks[t][k].integrity = (hash[rooms[r]].integrity)
-                                // this.blocks[t][k].air = ( hash[rooms[r]].air) 
+                                this.blocks[t][k].integrity = (this.hash[rooms[r]].integrity)
+                                // this.blocks[t][k].air = ( this.hash[rooms[r]].air) 
                             }
                         }
                     }
@@ -3457,20 +3733,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                 for (let w = 0; w < this.weapons.length; w++) {
-                    if (hash["weapon"].integrity >= 95) {
-                        ////////console.log( this.boosts[1])
+                    if (this.hash["weapon"].integrity >= 95) {
+                        //////////console.log( this.boosts[1])
                         this.weapons[w].charge += this.boosts[1]
                     }
                 }
 
-                if (hash["shield"].integrity >= 99) {
+                if (this.hash["shield"].integrity >= 99) {
                     this.shield.charge += this.boosts[2]
                 }
 
                 let oat = 0
                 if (this.UI.systems[4].demand < 1) {
                     oat = 1
-                } else if (hash["oxygen"].integrity >= 99) {
+                } else if (this.hash["oxygen"].integrity >= 99) {
                     for (let t = 0; t < this.blocks.length; t++) {
                         for (let k = 0; k < this.blocks[t].length; k++) {
                             this.blocks[t][k].air += (this.boosts[4] + this.UI.systems[4].demand) / 10
@@ -3811,7 +4087,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (var j = 0; j < this.height; j += NODESIZE) {
                     gridPointsByPos[i][j] = countNodes;
                     //here's the problem , need to set the walkability of the node without always being true...
-                    //////////////////////////////////////////////////////////////////console.log(countNodes)
+                    ////////////////////////////////////////////////////////////////////console.log(countNodes)
                     tempNode = new Tile(i, j, 10, 10, "tan", countNodes, NODESIZE, i, j, true);
 
                     // let cutOut = [0,1 ,2, 3, 10, 5,6,7, 8, 9, 10, 11, 12,13, 18, 19,20, 32,33,  26, 31, 39, 410, 45, 46, 52, 57,58,59,99, 112, 108, 95, 197, 198, 199, 205, 203, 2010, 236, 237, 238, 242, 243,2410, 216, 212, 229, 225, 210, 211, 223, 2210, 217, 218, 230, 231]
@@ -3843,7 +4119,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     // }
                     // if (wallSet.has(countNodes)) {
-                    // //   //////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
+                    // //   ////////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
                     //   tempNode.walkable = false;
                     // }
 
@@ -3868,10 +4144,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
-            this.energy = new Battery(9, this.UI.systems)
+            this.energy = new Battery(9+Math.floor(this.level*.3), this.UI.systems)
             this.warn = 0
-            this.scrap = 3500
-            this.bombs = 2 + Math.floor(this.level / 3)
+            this.scrap = 35
+            this.bombs = 5 + Math.floor(this.level / 2)
             this.fuel = 10
             this.shield = new Shields()
             this.hull = 25 + (this.level * 2)
@@ -3905,7 +4181,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                         tile.marked = 1
-                        ////////console.log("w")
+                        //////////console.log("w")
                         tile.walkable = true
                         if (tile.empty > 0) {
                             tile.color = "#FFFFFF44"
@@ -3933,7 +4209,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     } else {
                         tile.marked = -1
-                        ////////console.log("w")
+                        //////////console.log("w")
                         tile.walkable = false
 
                     }
@@ -3993,8 +4269,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.state = 0
         }
         dodgeRate() {
+            if (this.first == 0) {
+                return 0
+            }
             let dodgerate = this.boosts[3] + this.boosts[6]
 
+            if (this.hash['engine'].integrity < 95) {
+                dodgerate = 0
+            }
+            if (this.hash['helm'].integrity < 95) {
+                dodgerate = 0
+            }
             if (dodgerate == 0) {
                 return 1
             } else {
@@ -4074,7 +4359,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
 
-            ////console.log(ret.length)
+            //////console.log(ret.length)
             return ret;
         }
         createGrid() {
@@ -4153,7 +4438,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].marked == 1) {
                             this.blocks[t][k].walkable = true
-                            ////////console.log("r")
+                            //////////console.log("r")
                             tiles.push(this.blocks[t][k])
                         }
                     }
@@ -4182,6 +4467,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
+                    if(Math.random()<.05){
+                        let wep5 = new Weapon(Math.floor(Math.random()*9))
+                        this.weapons.push(wep5)
+                    }
                 } else if (this.level < 10) {
 
                     let wep1 = new Weapon(0)
@@ -4192,6 +4481,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
+                    if(Math.random()<.1){
+                        let wep5 = new Weapon(Math.floor(Math.random()*9))
+                        this.weapons.push(wep5)
+                    }
                 } else if (this.level < 15) {
 
                     let wep1 = new Weapon(0)
@@ -4202,6 +4495,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
+                    if(Math.random()<.5){
+                        let wep5 = new Weapon(Math.floor(Math.random()*9))
+                        this.weapons.push(wep5)
+                    }
                 } else {
 
                     let wep1 = new Weapon(0)
@@ -4212,6 +4509,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
+                    if(Math.random()<.9){
+                        let wep5 = new Weapon(Math.floor(Math.random()*9))
+                        this.weapons.push(wep5)
+                    }
+
+                    if(Math.random()<this.level/100){
+                        let wep5 = new Weapon(Math.floor(Math.random()*9))
+                        this.weapons.push(wep5)
+                    }
                 }
             }
             // this.body.draw()
@@ -4222,7 +4528,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (this.hull <= 0) {
                         this.shield.state = 0
-                        // //console.log(this.blocks)
+                        // ////console.log(this.blocks)
                         // return
                         this.guys = []
                         this.blocks[t][k].move()
@@ -4262,10 +4568,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.guys[t].tile.integrity > 100) {
                     this.guys[t].tile.integrity = 100
                 }
-                // ////////console.log(this.guys[t].tile)
+                // //////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].demand + this.UI.systems[0].fed > 0) {
-                        this.guys[t].health += 1
+                        this.guys[t].health += Math.min((this.UI.systems[0].demand + this.UI.systems[0].fed)/2, 7)
                     }
                     if (this.guys[t].health > this.guys[t].maxhealth) {
                         this.guys[t].health = this.guys[t].maxhealth
@@ -4276,7 +4582,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // this.UI.systems[1].demand = 1
                     this.boosts[1] += (this.guys[t].stats[1] + Math.min((this.UI.systems[1].demand + this.guys[t].energy), this.UI.systems[1].max))
                     this.UI.systems[1].fed += this.guys[t].energy
-                    // //////console.log(Math.min((this.UI.systems[1].demand + this.guys[t].energy), this.UI.systems[1].max))
+                    // ////////console.log(Math.min((this.UI.systems[1].demand + this.guys[t].energy), this.UI.systems[1].max))
                 } if (this.guys[t].tile.shield == 1) {
                     // this.UI.systems[2].demand = 1
                     this.boosts[2] += (this.guys[t].stats[2] + Math.min((this.UI.systems[2].demand + this.guys[t].energy), this.UI.systems[2].max))
@@ -4303,53 +4609,53 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             }
-            //////console.log(this.boosts[2])
+            ////////console.log(this.boosts[2])
 
-            let hash = {}
+            this.hash = {}
             for (let r = 0; r < rooms.length; r++) {
-                hash[rooms[r]] = {}
-                hash[rooms[r]].interior = 0
-                hash[rooms[r]].integrity = 0
-                hash[rooms[r]].xmom = 0
-                hash[rooms[r]].yomo = 0
-                hash[rooms[r]].air = 0
+                this.hash[rooms[r]] = {}
+                this.hash[rooms[r]].interior = 0
+                this.hash[rooms[r]].integrity = 0
+                this.hash[rooms[r]].xmom = 0
+                this.hash[rooms[r]].yomo = 0
+                this.hash[rooms[r]].air = 0
             }
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     for (let r = 0; r < rooms.length; r++) {
                         if (this.blocks[t][k][rooms[r]] == 1) {
-                            if (typeof hash[rooms[r]].interior == "undefined") {
-                                hash[rooms[r]].interior = 0
+                            if (typeof this.hash[rooms[r]].interior == "undefined") {
+                                this.hash[rooms[r]].interior = 0
                             }
-                            if (hash[rooms[r]].interior > 0) {
-                                hash[rooms[r]].interior += 1
-                                hash[rooms[r]].integrity += this.blocks[t][k].integrity
-                                hash[rooms[r]].xmom += this.blocks[t][k].xmom
-                                hash[rooms[r]].ymom += this.blocks[t][k].ymom
-                                hash[rooms[r]].air += this.blocks[t][k].air
+                            if (this.hash[rooms[r]].interior > 0) {
+                                this.hash[rooms[r]].interior += 1
+                                this.hash[rooms[r]].integrity += this.blocks[t][k].integrity
+                                this.hash[rooms[r]].xmom += this.blocks[t][k].xmom
+                                this.hash[rooms[r]].ymom += this.blocks[t][k].ymom
+                                this.hash[rooms[r]].air += this.blocks[t][k].air
                             } else {
-                                hash[rooms[r]].interior = 1
-                                hash[rooms[r]].integrity = this.blocks[t][k].integrity
-                                hash[rooms[r]].xmom = this.blocks[t][k].xmom
-                                hash[rooms[r]].ymom = this.blocks[t][k].ymom
-                                hash[rooms[r]].air = this.blocks[t][k].air
+                                this.hash[rooms[r]].interior = 1
+                                this.hash[rooms[r]].integrity = this.blocks[t][k].integrity
+                                this.hash[rooms[r]].xmom = this.blocks[t][k].xmom
+                                this.hash[rooms[r]].ymom = this.blocks[t][k].ymom
+                                this.hash[rooms[r]].air = this.blocks[t][k].air
                             }
                         }
                     }
                 }
             }
-            let kre = Object.keys(hash)
+            let kre = Object.keys(this.hash)
             for (let t = 0; t < kre.length; t++) {
-                hash[kre[t]].integrity /= hash[kre[t]].interior
-                hash[kre[t]].xmom /= hash[kre[t]].interior
-                hash[kre[t]].ymom /= hash[kre[t]].interior
-                hash[kre[t]].air /= hash[kre[t]].interior
+                this.hash[kre[t]].integrity /= this.hash[kre[t]].interior
+                this.hash[kre[t]].xmom /= this.hash[kre[t]].interior
+                this.hash[kre[t]].ymom /= this.hash[kre[t]].interior
+                this.hash[kre[t]].air /= this.hash[kre[t]].interior
             }
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     for (let r = 0; r < rooms.length; r++) {
                         if (this.blocks[t][k][rooms[r]] == 1) {
-                            this.blocks[t][k].integrity = ((hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
+                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
                             if (this.blocks[t][k].empty == 1 && this.hull > 0) {
 
                                 this.blocks[t][k].xmom = (Math.random() - .5) * 40
@@ -4357,12 +4663,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             } else {
                                 if (this.blocks[t][k].empty !== 1) {
 
-                                    this.blocks[t][k].xmom = ((hash[rooms[r]].xmom))
-                                    this.blocks[t][k].ymom = ((hash[rooms[r]].ymom))
+                                    this.blocks[t][k].xmom = ((this.hash[rooms[r]].xmom))
+                                    this.blocks[t][k].ymom = ((this.hash[rooms[r]].ymom))
                                 }
 
                             }
-                            // this.blocks[t][k].air = ( hash[rooms[r]].air) 
+                            // this.blocks[t][k].air = ( this.hash[rooms[r]].air) 
                         }
                     }
                 }
@@ -4401,7 +4707,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     ac /= bc
 
-                    // //console.log(ac)
+                    // ////console.log(ac)
                     for (let t = 0; t < this.blocks.length; t++) {
                         for (let k = 0; k < this.blocks[t].length; k++) {
                             if (this.wet == 1) {
@@ -4423,7 +4729,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     } else {
                         this.state = 0
                     }
-                    let tile
+                    let tile 
+
+                    this.energy.balance()
                     if (this.guys[t].health < this.guys[t].maxhealth * .25) {
                         if (this.UI.systems[0].demand < this.UI.systems[0].max) {
                             if (this.energy.power > 0) {
@@ -4600,20 +4908,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             for (let w = 0; w < this.weapons.length; w++) {
-                if (hash["weapon"].integrity >= 95) {
-                    ////////console.log( this.boosts[1])
+                if (this.hash["weapon"].integrity >= 95) {
+                    //////////console.log( this.boosts[1])
                     this.weapons[w].charge += this.boosts[1] // * 5
                 }
             }
 
-            if (hash["shield"].integrity >= 95) {
+            if (this.hash["shield"].integrity >= 95) {
                 this.shield.charge += this.boosts[2]
             }
 
             let oat = 0
             if (this.UI.systems[4].demand < 1) {
                 oat = 1
-            } else if (hash["oxygen"].integrity >= 99) {
+            } else if (this.hash["oxygen"].integrity >= 99) {
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         this.blocks[t][k].air += (this.boosts[4] + this.UI.systems[4].demand) / 10
@@ -4850,7 +5158,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 2)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 9)))
                         } else {
                             this.wegflag = 1
                         }
@@ -4987,21 +5295,523 @@ window.addEventListener('DOMContentLoaded', (event) => {
     vessel.draw()
     let stars = new Stars()
 
+
+    class Labels {
+        constructor() {
+            this.text = ''
+        }
+        draw() {
+            if(!keysPressed['Shift']){
+                return
+            }
+
+            let rooms = ['Medbay', 'Weapons', 'Shield', 'Helm', 'Oxygen', 'Security', 'Engine', 'Empty', 'Empty']
+            for(let t = 0;t<vessel.UI.systems.length;t++){
+                for(let k = 0;k<vessel.UI.systems[t].bars.length;k++){
+                    vessel.UI.systems[t].bars[k].y-=2
+                    vessel.UI.systems[t].bars[k].height+=4
+                    if(vessel.UI.systems[t].bars[k].isPointInside(TIP_engine)){
+                        this.text1 = rooms[t]
+                        this.text2 = "Demand: " +vessel.UI.systems[t].demand
+                        this.text3 = "Capacity: " +vessel.UI.systems[t].max
+                        this.text4 = "Target: " +vessel.UI.systems[t].sto
+                        let dim = {}
+                        canvas_context.font = "12px comic sans ms"
+                        dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                        dim.h = 44
+                        //console.log(dim)
+                        let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                        rect.draw()
+                        canvas_context.fillStyle = "white"
+                        let py = TIP_engine.y + 5
+                        canvas_context.fillText(this.text1, rect.x + 10, py)
+                        py += 12
+                        canvas_context.fillText(this.text2, rect.x + 10, py)
+                        py += 12
+                        canvas_context.fillText(this.text3, rect.x + 10, py)
+                        py += 12
+                        canvas_context.fillText(this.text4, rect.x + 10, py)
+                    }
+                    vessel.UI.systems[t].bars[k].y+=2
+                    vessel.UI.systems[t].bars[k].height-=4
+                }
+            }
+
+
+            for(let t = 0;t<vessel.guys.length;t++){
+                if(vessel.guys[t].healthbox.isPointInside(TIP_engine)){
+                    this.text1 = `Crewman ${vessel.guys[t].name}`
+                    this.text2 = "Skills"
+                    this.text3 = `Health: ${Math.round(vessel.guys[t].health)}/${vessel.guys[t].maxhealth}`
+                    this.text4 = "System: " 
+                    let dim = {}
+                    canvas_context.font = "12px comic sans ms"
+                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                    dim.h = 44
+                    //console.log(dim)
+                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#555555dd")
+                    rect.draw()
+                    canvas_context.fillStyle = "white"
+                    let py = TIP_engine.y + 5
+                    canvas_context.fillText(this.text1, rect.x + 10, py)
+                    py += 12
+                    canvas_context.fillText(this.text2, rect.x + 10, py)
+                    py += 12
+                    canvas_context.fillText(this.text3, rect.x + 10, py)
+                    py += 12
+                    canvas_context.fillText(this.text4, rect.x + 10, py)
+                }
+        }
+
+
+        for(let t = 0;t<vessel.weapons.length;t++){
+            if(vessel.weapons[t].body.isPointInside(TIP_engine)){
+                this.text1 = `Weapon: ${vessel.weapons[t].name1 + ' ' + vessel.weapons[t].name2}`
+                this.text2 = `Charge: ${vessel.weapons[t].charge}/${vessel.weapons[t].max}`
+                let str = 'Idle'
+                if(vessel.weapons[t].charge >= vessel.weapons[t].max){
+                    str = 'Ready'
+                }else{
+                    if(vessel.boosts[1] > 0){
+                    str = 'Charging'
+                    }
+                }
+                this.text3 = "State: " + str
+                // this.text4 = "Max: " + vessel.shield.level
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 44
+                //console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#555555dd")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text2, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text3, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+    }
+
+
+
+            if(vessel.energy.box.isPointInside(TIP_engine)){
+                this.text1 = "Energy Storage"
+                this.text2 = "Total: " + vessel.energy.powersto
+                this.text3 = "Used: " + (vessel.energy.powersto-vessel.energy.power)
+                this.text4 = "Remain: " + vessel.energy.power
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 44
+                //console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text2, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text3, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+            if(vessel.upgradeMenu.button.isPointInside(TIP_engine)){
+                this.text1 = "Upgrade menu"
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 12
+                //console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text2, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text3, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+            if(vessel.shield.healthbar.isPointInside(TIP_engine)){
+                this.text1 = "Shields" 
+                this.text2 = `Charge: ${vessel.shield.charge}/${vessel.shield.maxout}`
+                this.text3 = "Current: " + vessel.shield.state
+                this.text4 = "Max: " + vessel.shield.level
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 44
+                //console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text2, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text3, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+            if(vessel.healthbar.isPointInside(TIP_engine)){
+                this.text1 = "Hull" 
+                this.text2 = `Integrity: ${vessel.hull}/${vessel.maxhull}`
+                this.text3 = "Current: " + vessel.shield.state
+                this.text4 = "Max: " + vessel.shield.level
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 24
+                //console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                py += 12
+                canvas_context.fillText(this.text2, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text3, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+
+            for (let t = 0; t < enemy.blocks.length; t++) {
+                for (let k = 0; k < enemy.blocks[t].length; k++) {
+                    if (enemy.blocks[t][k].marked == 1) {
+                        if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
+                            if (enemy.blocks[t][k].weapon == 1) {
+                                this.text1 = "Weapons"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].engine == 1) {
+                                this.text1 = "Engines"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].medbay == 1) {
+                                this.text1 = "Medbay"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                // //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].helm == 1) {
+                                this.text1 = "Helm"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].shield == 1) {
+                                this.text1 = "Shield"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].empty == 1 || enemy.blocks[t][k].special == 1) {
+                                this.text1 = "Empty"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].oxygen == 1) {
+                                this.text1 = "Oxygen Systems"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (enemy.blocks[t][k].security == 1) {
+                                this.text1 = "Security"
+                                this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            for (let t = 0; t < vessel.blocks.length; t++) {
+                for (let k = 0; k < vessel.blocks[t].length; k++) {
+                    if (vessel.blocks[t][k].marked == 1) {
+                        if (vessel.blocks[t][k].isPointInside(TIP_engine)) {
+                            if (vessel.blocks[t][k].weapon == 1) {
+                                this.text1 = "Weapons"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].engine == 1) {
+                                this.text1 = "Engines"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].medbay == 1) {
+                                this.text1 = "Medbay"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].helm == 1) {
+                                this.text1 = "Helm"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].shield == 1) {
+                                this.text1 = "Shield"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].empty == 1 || vessel.blocks[t][k].special == 1) {
+                                this.text1 = "Empty"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].oxygen == 1) {
+                                this.text1 = "Oxygen Systems"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].security == 1) {
+                                this.text1 = "Security"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                //console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y-10, dim.w + 20, dim.h+20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let labels = new Labels()
     function main() {
         if (vessel.hull <= 0) {
             vessel = new Ship()
             start = 0
         }
 
-        if (keysPressed['-'] && recording == 0) {
-            recording = 1
-            video_recorder.record()
-        }
-        if (keysPressed['='] && recording == 1) {
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
+        // if (keysPressed['-'] && recording == 0) {
+        //     recording = 1
+        //     video_recorder.record()
+        // }
+        // if (keysPressed['='] && recording == 1) {
+        //     recording = 0
+        //     video_recorder.stop()
+        //     video_recorder.download('File Name As A String.webm')
+        // }
         if (start == 0) {
             canvas_context.drawImage(title, 0, 0)
             return
@@ -5014,7 +5824,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // enemy = new EnemyShip(Math.floor(Math.random()*2))
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
             // // mag_canvas_context.clearRect(0, 0, mag_canvas.width, mag_canvas.height)  // refreshes the image
-            gamepadAPI.update() //checks for button presses/stick movement on the connected controller)
+            // gamepadAPI.update() //checks for button presses/stick movement on the connected controller)
             // // // game code goes here
             // wad.draw()
             enemy.draw()
@@ -5022,6 +5832,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let w = 0; w < enemy.weapons.length; w++) {
                 enemy.weapons[w].work()
             }
+            labels.draw()
         }
     }
 
