@@ -2159,6 +2159,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.shieldPower = 0
             this.weaponPower = 0
             this.helmPower = 0
+            this.fireproof = 0
+            this.airless = 0
             if (this.type == 1) {
                 this.stats[2] = 2
                 this.shieldPower = 1
@@ -2170,6 +2172,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.type == 13) {
                 this.energy = 1
+                this.airless = 1
             }
             if(this.type == 10){
                 this.stats[2] += .5
@@ -2187,6 +2190,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if(this.type == 13){
                 this.stats[0]*=2
+                this.fireproof = 1
                 for(let t = 1;t<this.stats.length;t++){
                     this.stats[t]*=.8
                 }
@@ -2429,10 +2433,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.tile.draw()
             }
             if (this.tile.air < 50) {
+                if(this.airless == 0){
                 this.health -= ((50 - this.tile.air) / 50) * .5
+                }
             }
             if (this.tile.fire < 50) {
-                this.health -= ((50-this.tile.fire) / 50) * 1.5
+                if(this.fireproof == 0){
+                    this.health -= ((50-this.tile.fire) / 50) * 1.5
+                }
             }
             this.tile.fire += 3
             if(this.tile.fire > 100){
@@ -2559,6 +2567,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
+
+    class RedX {
+        constructor(x, y) {
+            const angle = Math.PI / 4
+            this.point1 = new Point(x + (Math.cos(angle) * 10), y + (Math.sin(angle) * 10))
+            this.point2 = new Point(x + (Math.cos(angle) * -10), y + (Math.sin(angle) * -10))
+            this.point3 = new Point(x + (Math.cos(angle + Math.PI * .5) * 10), y + (Math.sin(angle + Math.PI * .5) * 10))
+            this.point4 = new Point(x + (Math.cos(angle + Math.PI * .5) * -10), y + (Math.sin(angle + Math.PI * .5) * -10))
+
+            this.link1 = new LineOP(this.point1, this.point2, "red", 3)
+            this.link2 = new LineOP(this.point3, this.point4, "red", 3)
+        }
+        draw() {
+            this.link1.draw()
+            this.link2.draw()
+        }
+    }
+
     class Weapon {
         constructor(type) {
             this.frame = 0
@@ -2648,6 +2674,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 1.8
                 this.puncture = 1
                 this.fireChance = 50
+            }  else if (this.type == 9) {
+                this.name1 = "Heat"
+                this.name2 = "Beam"
+                this.max = 1200
+                this.damage = 10
+                // this.bomb = 1
+                this.beam = 1
+                this.real = 1
+                this.crew = 1.8
+                // this.puncture = 1
+                this.fireChance = 200
+                this.double = 0
             } else if (this.type == 100) {
                 this.name1 = "Wodopom"
                 this.name2 = ""
@@ -2695,6 +2733,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
+                if(this.beam == 1){
+                    this.angle = Math.random()*Math.PI*2
+                }
                 this.firing = 10
                 this.target = tile
                 this.charge = 0
@@ -2725,9 +2766,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                             if (this.puncture == 1) {
                                 let n = enemy.neighbors(tile)
-                                //console.log(n)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].integrity -= this.damage
+                                }
+                            }
+                            if (this.beam == 1) {
+                                let n = enemy.neighbors(tile)
+                                for (let r = 0; r < n.length; r++) {
+                                    n[r].fire -= this.fireChance
+                                    if(Math.random() < (this.fireChance/300)){
+                                        if(n[r].oxygen == 1){
+                                            n[r].integrity -= this.damage
+                                            enemy.hull -= this.damage * .1
+                                        }
+                                        n[r].onFire = 1
+                                        n[r].fire = 0
+                                    }
                                 }
                             }
                             enemy.hull -= this.damage * .1
@@ -2772,6 +2826,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let n = vessel.neighbors(tile)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].integrity -= this.damage
+                                }
+                            }
+                            if (this.beam == 1) {
+                                let n = vessel.neighbors(tile)
+                                for (let r = 0; r < n.length; r++) {
+                                    n[r].fire -= this.fireChance
+                                    if(Math.random() < (this.fireChance/300)){
+                                        if(n[r].oxygen == 1){
+                                            n[r].integrity -= this.damage
+                                            vessel.hull -= this.damage * .1
+                                        }
+                                        n[r].onFire = 1
+                                        n[r].fire = 0
+                                    }
                                 }
                             }
                             vessel.hull -= this.damage * .1
@@ -2969,6 +3037,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 16 * ((10 - this.firing) / 8.1), "#FFFFFF")
                     link3.draw()
                     this.firing -= 2
+                } else if (this.type == 9) {
+                    let site5 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*5), this.target.y+(Math.sin(this.angle)*(10-this.firing)*5))
+                    site5.draw()
+                    let site = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*4), this.target.y+(Math.sin(this.angle)*(10-this.firing)*4))
+                    site.draw()
+                    let site2 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*3), this.target.y+(Math.sin(this.angle)*(10-this.firing)*3))
+                    site2.draw()
+                    let site3 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*2), this.target.y+(Math.sin(this.angle)*(10-this.firing)*2))
+                    site3.draw()
+                    this.firing -= .2
                 } else if (this.type == 100) {
 
 
@@ -3047,6 +3125,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(bigmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 8) {
                 canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }  else if (this.type == 9) {
+                canvas_context.drawImage(heatbeam, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 100) {
                 this.frame++
                 canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -3092,6 +3172,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let wodopomimg = new Image()
     wodopomimg.src = "wodopom.png"
+
+    let heatbeam = new Image()
+    heatbeam.src = "heatbeam.png"
 
 
     let mediummmissle = new Image()
@@ -4817,7 +4900,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 10) {
@@ -4831,7 +4914,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 15) {
@@ -4845,7 +4928,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                 } else {
@@ -4859,15 +4942,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 100) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 500) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 9))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
                         this.weapons.push(wep5)
                     }
                 }
@@ -5685,7 +5768,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 9)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 10)))
                         } else {
                             // this.wegflag = 1
 
@@ -5698,7 +5781,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 9)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 10)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -5844,6 +5927,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         draw() {
             if (!keysPressed['Shift']) {
+                return
+            }
+
+            if(start == 1){
+                for(let t = 0;t<stars.stars.length;t++){
+                    if(stars.stars[t].body.isPointInside(TIP_engine)){
+    
+                        this.text1 = stars.stars[t].name
+                        this.text2 = ''
+                        this.text3 = ''
+                        this.text4 = ''
+                        let dim = {}
+                        canvas_context.font = "12px comic sans ms"
+                        dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                        dim.h = 12
+                        ////console.log(dim)
+                        let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                        rect.draw()
+                        canvas_context.fillStyle = "white"
+                        let py = TIP_engine.y + 5
+                        canvas_context.fillText(this.text1, rect.x + 10, py)
+                        // py += 12
+                        // canvas_context.fillText(this.text2, rect.x + 10, py)
+                        // py += 12
+                        // canvas_context.fillText(this.text3, rect.x + 10, py)
+                        // py += 12
+                        // canvas_context.fillText(this.text4, rect.x + 10, py)
+                    }
+                }
                 return
             }
 
@@ -6370,6 +6482,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             stars.draw()
             vessel.draw()
+            labels.draw()
         } else {
 
             // enemy = new EnemyShip(Math.floor(Math.random()*2))
