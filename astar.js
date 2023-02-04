@@ -74,7 +74,7 @@ var astar = {
       for (var i = 0, il = neighbors.length; i < il; ++i) {
         var neighbor = neighbors[i];
         //////console.log(neighbor)
-        if (neighbor.closed || !neighbor.isWall()) {
+        if (neighbor.closed || (!neighbor.isWall() && neighbor == end)) {
           // Not a valid node to process, skip to next neighbor.
           continue;
         }
