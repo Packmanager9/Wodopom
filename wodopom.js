@@ -1293,7 +1293,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             vessel.upgradeMenu.check(TIP_engine)
             vessel.upgradeMenu.levels.check(TIP_engine)
 
-            if (vessel.upgradeMenu.open == 1) {
+            if (vessel.upgradeMenu.open == 1 && start == 2) {
                 return
             }
             // //////////////console.log(vessel.energy.upgradeMenu)
@@ -4803,6 +4803,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.now = Date.now()
             this.type = type
             this.level = level
+            this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
