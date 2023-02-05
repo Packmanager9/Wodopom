@@ -1316,7 +1316,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //         }
             //     }
             // }
-            
+
             //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
             //             // //////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
 
@@ -1862,7 +1862,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.air = 100
             this.fire = 100
             this.newfire = 100
-            this.tag = Math.floor(Math.random()*18)
+            this.tag = Math.floor(Math.random() * 18)
             this.id = id;
         }
         isWall() {
@@ -2041,9 +2041,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.onFire == 1) {
                 // if(Math.random()<.5){
                 this.tag++
-                this.tag%=18
+                this.tag %= 18
                 // }
-                canvas_context.drawImage(fire,this.tag*(fire.width/18),0, fire.width/18, fire.height, this.x, this.y, this.width, this.height)
+                canvas_context.drawImage(fire, this.tag * (fire.width / 18), 0, fire.width / 18, fire.height, this.x, this.y, this.width, this.height)
             }
         }
         draw() {
@@ -2126,13 +2126,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 15; t++) {
+    for (let t = 1; t < 16; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
     }
     let rat = 720 / 512
 
+    let z = 13
     class Guy {
         constructor(tile) {
             this.name = getRandomLightColor()
@@ -2140,7 +2141,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.tile.walkable = false
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
-            this.type = Math.floor(Math.random() * 14)
+            this.type = Math.floor(Math.random() * 15)
+            // z++
             this.selected = 0
             this.target = {}
             this.path = [this.tile]
@@ -2150,10 +2152,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.turning = 0
             this.flagpath = [this.tile]
             this.stats = [4 + Math.floor(this.type * .5), 1, 1, 1, 1, 1, 1, 1, 1]
+            this.skillslist = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+            // for(let t= 0;t<this.skillslist.length;t++){
+            //     this.skillslist[t]+= (Math.random()*1.5)
+            // }
             this.repair = 2
+            this.extinguish = 2
             this.energy = 0
+            this.skills = ''
             if (this.type == 7) {
                 this.stats[0] = 2
+                this.skills += 'Fast+++, '
             }
 
             this.shieldPower = 0
@@ -2161,108 +2170,172 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.helmPower = 0
             this.fireproof = 0
             this.airless = 0
+
             if (this.type == 1) {
-                this.stats[2] = 2
+                this.stats[2] += 1
+            }
+            if (this.type == 1) {
+                this.stats[2] += 2
                 this.shieldPower = 1
+                this.skills += 'Shield++++, '
             }
             if (this.type == 6) {
                 this.regen = 1
+                this.skills += 'Regen+++, '
             } else {
                 this.regen = 0
             }
             if (this.type == 13) {
                 this.energy = 1
                 this.airless = 1
+                this.skills += 'Energetic, Breathless, '
             }
-            if(this.type == 10){
+            this.isMedbay = 0
+            if (this.type == 14) {
+                this.isMedbay = 1
+                this.stats[0] = 4
+                this.skills += 'Medical++, fast+'
+            }
+            if (this.type == 10) {
                 this.stats[2] += .5
                 this.shieldPower = .1
                 this.stats[1] += .5
                 this.weaponPower = .1
                 this.stats[0] = 7
+                this.skills += 'Weapon++, Shield++, '
             }
-            if(this.type == 0){
-                this.health*=3
-                this.maxhealth = this.health
-                this.stats[0]*=6
-                this.damage*=2
+            if (this.type == 0) {
+                // this.health*=3
+                // this.maxhealth = this.health
+                this.stats[0] *= 6
+                this.damage *= 2
                 this.stats[5] += 1
-            }
-            if(this.type == 13){
-                this.stats[0]*=2
+                this.extinguish = 10
+                this.repair = 10
                 this.fireproof = 1
-                for(let t = 1;t<this.stats.length;t++){
-                    this.stats[t]*=.8
+                this.skills += 'Fireproof+, Fight+++, Extinguish++, Repair++, Slow--, '
+            }
+            if (this.type == 13) {
+                this.stats[0] *= 2
+                for (let t = 1; t < this.stats.length; t++) {
+                    this.stats[t] *= .8
                 }
+                this.skills += 'Slow, '
             }
             this.rate = this.stats[0]
             this.health = 170 + (this.type * 10)
             this.maxhealth = this.health
+            if (this.type == 0) {
+                this.health *= 3
+                this.maxhealth = this.health
+            }
             // this.health *= .1
             this.pulsecheck = 0
             this.damage = 5
             this.barter = 1
 
             // let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
-  
-            if(this.type == 1){
-                this.stats[2] += 1
-            }
-            if(this.type == 2){
+
+            if (this.type == 2) {
                 this.stats[6] += 1
                 this.regen = .5
                 this.damage = 6
+                this.skills += 'Regen++, Engineer+, Fight+, '
             }
-            if(this.type == 3){
+            if (this.type == 3) {
                 this.stats[1] += .5
                 this.damage = 7
+                this.skills += 'Weapons+, Fight++, '
             }
-            if(this.type == 4){
+            if (this.type == 4) {
                 this.rate = 6
                 this.stats[6] += .7
                 this.stats[3] += .7
                 this.health *= .9
                 this.maxhealth = this.health
+                this.skills += 'Helm+, Engineer+, '
             }
-            if(this.type == 5){
+            if (this.type == 5) {
                 this.stats[3] += .7
-                this.health *=1.2
+                this.health *= 1.2
                 this.maxhealth = this.health
                 this.damage = 6
                 this.barter = 1.05
+                this.skills += 'Thrifty++, Helm+, Fight++, '
             }
-            if(this.type == 6){
+            if (this.type == 6) {
                 this.stats[5] += .7
                 this.damage = 6
                 this.rate = 8
+                this.skills += 'Security+, Fight+, '
             }
-            if(this.type == 7){
+            if (this.type == 7) {
                 this.stats[1] += .7
                 this.damage = 6
+                this.skills += 'Weapons+, Fight+, '
             }
-            if(this.type == 8){
+            if (this.type == 8) {
                 this.regen = .25
                 this.stats[1] += 1.2
                 this.damage = 6
+                this.skills += 'Regen+, Fight+, '
             }
-            if(this.type == 9){
+            if (this.type == 9) {
                 this.stats[1] += 2
                 this.weaponPower = 1
+                this.skills += 'Weapons+++, '
             }
-            if(this.type == 11){
+            if (this.type == 11) {
                 this.stats[3] += 2
                 this.helmPower = 1
+                this.skills += 'Helm+++, '
             }
-            if(this.type == 12){
+            if (this.type == 12) {
                 this.barter = 1.03
                 this.damage = 7
                 this.health += 50
                 this.stats[6] += .1
                 this.stats[3] -= .2
                 this.maxhealth = this.health
+                this.skills += 'Thrifty+, Fight++, Helm-, Engine+'
             }
+            // this.health = 1
         }
         draw() {
+
+            let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
+            let hass = 0
+            if (vessel.guys.includes(this)) {
+                for (let t = 0; t < vessel.guys.length; t++) {
+                    for (let s = 0; s < sys.length; s++) {
+                        if (vessel.guys[t].tile[sys[s]] == 1) {
+                            if (this.tile[sys[s]] == 1) {
+                                if (vessel.guys[t].isMedbay == 1) {
+                                    hass++
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let t = 0; t < enemy.guys.length; t++) {
+                    for (let s = 0; s < sys.length; s++) {
+                        if (enemy.guys[t].tile[sys[s]] == 1) {
+                            if (this.tile[sys[s]] == 1) {
+                                if (enemy.guys[t].isMedbay == 1) {
+                                    hass++
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            this.health += hass * .5
+            if (this.health > this.maxhealth) {
+                this.health = this.maxhealth
+            }
+
+
             this.pulsecheck++
             if (this.pulsecheck >= 10 && this.tile == this.path[this.step]) {
                 this.pulsecheck = 0
@@ -2418,7 +2491,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.y = (this.tile.y + (this.tile.height * .5)) * l
                 this.body.x += (this.path[Math.min(this.step + 1, this.path.length - 1)].x + (this.path[Math.min(this.step + 1, this.path.length - 1)].width * .5)) * this.cound
                 this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
-                this.body.x *= 1 /this.rate
+                this.body.x *= 1 / this.rate
                 this.body.y *= 1 / this.rate
                 // ////////////console.log(this.tile)
                 this.tile.draw = (new Tile()).draw
@@ -2433,17 +2506,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.tile.draw()
             }
             if (this.tile.air < 50) {
-                if(this.airless == 0){
-                this.health -= ((50 - this.tile.air) / 50) * .5
+                if (this.airless == 0) {
+                    this.health -= ((50 - this.tile.air) / 50) * .5
                 }
             }
             if (this.tile.fire < 50) {
-                if(this.fireproof == 0){
-                    this.health -= ((50-this.tile.fire) / 50) * 1.5
+                if (this.fireproof == 0) {
+                    this.health -= ((50 - this.tile.fire) / 50) * 1.5
                 }
             }
-            this.tile.fire += 3
-            if(this.tile.fire > 100){
+            this.tile.fire += this.extinguish
+            if (this.tile.fire > 100) {
                 this.tile.fire = 100
             }
             canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
@@ -2674,7 +2747,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 1.8
                 this.puncture = 1
                 this.fireChance = 50
-            }  else if (this.type == 9) {
+            } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam"
                 this.max = 1200
@@ -2733,8 +2806,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                if(this.beam == 1){
-                    this.angle = Math.random()*Math.PI*2
+                if (this.beam == 1) {
+                    this.angle = Math.random() * Math.PI * 2
                 }
                 this.firing = 10
                 this.target = tile
@@ -2751,16 +2824,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     if (Math.random() < enemy.dodgeRate()) {
+
+                        for (let t = 0; t < vessel.guys.length; t++) {
+                            if (vessel.guys[t].tile.weapon == 1) {
+                                vessel.guys[t].skillslist[1] += .01
+                            }
+                        }
+
+
                         if (enemy.shield.state > 0 && this.bomb != 1) {
                             enemy.shield.state -= this.double
                             enemy.shield.charge = 0
                             if (enemy.shield.state <= 0) {
                                 enemy.shield.state = 0
                             }
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].tile.shield == 1) {
+                                    enemy.guys[t].skillslist[2] += .01
+                                }
+                            }
                         } else {
                             tile.integrity -= this.damage
                             tile.fire -= this.fireChance
-                            if(Math.random() < (this.fireChance/300)){
+                            if (Math.random() < (this.fireChance / 300)) {
                                 tile.onFire = 1
                                 tile.fire = 0
                             }
@@ -2774,8 +2860,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let n = enemy.neighbors(tile)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].fire -= this.fireChance
-                                    if(Math.random() < (this.fireChance/300)){
-                                        if(n[r].oxygen == 1){
+                                    if (Math.random() < (this.fireChance / 300)) {
+                                        if (n[r].oxygen == 1) {
                                             n[r].integrity -= this.damage
                                             enemy.hull -= this.damage * .1
                                         }
@@ -2813,12 +2899,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     if (Math.random() < vessel.dodgeRate()) {
+
+                        for (let t = 0; t < enemy.guys.length; t++) {
+                            if (enemy.guys[t].tile.weapon == 1) {
+                                enemy.guys[t].skillslist[1] += .01
+                            }
+                        }
+
+
+
+
                         if (vessel.shield.state > 0 && this.bomb != 1) {
                             vessel.shield.state -= this.double
                             vessel.shield.charge = 0
                             if (vessel.shield.state <= 0) {
                                 vessel.shield.state = 0
                             }
+                            for (let t = 0; t < vessel.guys.length; t++) {
+                                if (vessel.guys[t].tile.shield == 1) {
+                                    vessel.guys[t].skillslist[2] += .01
+                                }
+                            }
+
                         } else {
                             tile.integrity -= this.damage
                             tile.fire -= this.fireChance
@@ -2832,8 +2934,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let n = vessel.neighbors(tile)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].fire -= this.fireChance
-                                    if(Math.random() < (this.fireChance/300)){
-                                        if(n[r].oxygen == 1){
+                                    if (Math.random() < (this.fireChance / 300)) {
+                                        if (n[r].oxygen == 1) {
                                             n[r].integrity -= this.damage
                                             vessel.hull -= this.damage * .1
                                         }
@@ -2850,6 +2952,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     } else {
+
+                        for (let t = 0; t < vessel.guys.length; t++) {
+                            if (vessel.guys[t].tile.engine == 1) {
+                                vessel.guys[t].skillslist[6] += .01
+                            }
+                            if (vessel.guys[t].tile.helm == 1) {
+                                vessel.guys[t].skillslist[3] += .01
+                            }
+                        }
+
+
+
                         let j = 0
                         while (this.target.marked == 1) {
                             j++
@@ -3038,13 +3152,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     link3.draw()
                     this.firing -= 2
                 } else if (this.type == 9) {
-                    let site5 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*5), this.target.y+(Math.sin(this.angle)*(10-this.firing)*5))
+                    let site5 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5))
                     site5.draw()
-                    let site = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*4), this.target.y+(Math.sin(this.angle)*(10-this.firing)*4))
+                    let site = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4))
                     site.draw()
-                    let site2 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*3), this.target.y+(Math.sin(this.angle)*(10-this.firing)*3))
+                    let site2 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 3), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 3))
                     site2.draw()
-                    let site3 = new RedX(this.target.x+(Math.cos(this.angle)*(10-this.firing)*2), this.target.y+(Math.sin(this.angle)*(10-this.firing)*2))
+                    let site3 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2))
                     site3.draw()
                     this.firing -= .2
                 } else if (this.type == 100) {
@@ -3125,7 +3239,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(bigmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 8) {
                 canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
-            }  else if (this.type == 9) {
+            } else if (this.type == 9) {
                 canvas_context.drawImage(heatbeam, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 100) {
                 this.frame++
@@ -3677,27 +3791,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             this.body.radius = Math.min(this.count * 7, 18)
-            let vverts = [7,9,0,11,4,2]
-            if(vverts.includes(vessel.doors.indexOf(this))){
-                if(this.body.color == "#00ff00" ){
-                    let rect = new RectangleR(this.body.x -2, this.body.y -(this.count*8),4, 4, this.body.color)
+            let vverts = [7, 9, 0, 11, 4, 2]
+            if (vverts.includes(vessel.doors.indexOf(this))) {
+                if (this.body.color == "#00ff00") {
+                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8), 4, 4, this.body.color)
                     rect.draw()
-                    let rect2 = new RectangleR(this.body.x -2, this.body.y +((this.count*8)-4),4, 4, this.body.color)
+                    let rect2 = new RectangleR(this.body.x - 2, this.body.y + ((this.count * 8) - 4), 4, 4, this.body.color)
                     rect2.draw()
-                }else{
-                    let rect = new RectangleR(this.body.x -2, this.body.y -(this.count*8),4, 16*this.count, this.body.color)
+                } else {
+                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8), 4, 16 * this.count, this.body.color)
                     rect.draw()
                 }
-            }else{
-                if(this.body.color == "#00ff00" ){
-                let rect = new RectangleR(this.body.x -(this.count*8), this.body.y -2,4, 4, this.body.color)
-                rect.draw()
-                let rect2 = new RectangleR(this.body.x +((this.count*8)-4), this.body.y -2,4, 4, this.body.color)
-                rect2.draw()
-            }else{
-                let rect = new RectangleR(this.body.x -(this.count*8), this.body.y -2,16*this.count, 4, this.body.color)
-                rect.draw()
-            }
+            } else {
+                if (this.body.color == "#00ff00") {
+                    let rect = new RectangleR(this.body.x - (this.count * 8), this.body.y - 2, 4, 4, this.body.color)
+                    rect.draw()
+                    let rect2 = new RectangleR(this.body.x + ((this.count * 8) - 4), this.body.y - 2, 4, 4, this.body.color)
+                    rect2.draw()
+                } else {
+                    let rect = new RectangleR(this.body.x - (this.count * 8), this.body.y - 2, 16 * this.count, 4, this.body.color)
+                    rect.draw()
+                }
 
             }
         }
@@ -3862,8 +3976,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.hash['helm'].integrity < 95) {
                 dodgerate = 0
             }
-            if(this.boosts[3] == 0 || this.boosts[6] == 0){
-                dodgerate*5
+            if (this.boosts[3] == 0 || this.boosts[6] == 0) {
+                dodgerate * 5
             }
             if (dodgerate == 0) {
                 return 1
@@ -3931,6 +4045,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
                 ac /= bc
+                this.ac = ac
                 canvas_context.fillStyle = "white"
                 canvas_context.font = "15px comic sans ms"
                 canvas_context.fillText(Math.round(ac) + '% ship air', 90, 60)
@@ -3952,8 +4067,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
-                    // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17])]
+                    // this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
+                    this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
 
                     this.first = 1
 
@@ -4015,32 +4130,86 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (this.guys[t].health > this.guys[t].maxhealth) {
                             this.guys[t].health = this.guys[t].maxhealth
                         }
-                        this.boosts[0] += (this.guys[t].stats[0] * Math.min((this.UI.systems[0].demand + this.guys[t].energy), this.UI.systems[0].max))
+                        this.boosts[0] += (this.guys[t].stats[0] * this.guys[t].skillslist[0] * Math.min((this.UI.systems[0].demand + this.guys[t].energy), this.UI.systems[0].max))
                         this.UI.systems[0].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.medbay == 1) {
+                                vessel.guys[w].skillslist[0] += .000003
+                            }
+                        }
                     } else if (this.guys[t].tile.weapon == 1) {
-                        this.boosts[1] += (this.guys[t].stats[1] * Math.min(this.guys[t].weaponPower + (this.UI.systems[1].demand + this.guys[t].energy),this.guys[t].weaponPower + this.UI.systems[1].max))
+                        this.boosts[1] += (this.guys[t].stats[1] * this.guys[t].skillslist[1] * Math.min(this.guys[t].weaponPower + (this.UI.systems[1].demand + this.guys[t].energy), this.guys[t].weaponPower + this.UI.systems[1].max))
                         this.UI.systems[1].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.weapon == 1) {
+                                vessel.guys[w].skillslist[1] += .000003
+                            }
+                        }
                     } else if (this.guys[t].tile.shield == 1) {
-                        this.boosts[2] += (this.guys[t].stats[2] * Math.min(this.guys[t].shieldPower + (this.UI.systems[2].demand + this.guys[t].energy), this.guys[t].shieldPower + this.UI.systems[2].max))
+                        this.boosts[2] += (this.guys[t].stats[2] * this.guys[t].skillslist[2] * Math.min(this.guys[t].shieldPower + (this.UI.systems[2].demand + this.guys[t].energy), this.guys[t].shieldPower + this.UI.systems[2].max))
                         this.UI.systems[2].fed += this.guys[t].energy
+                              for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.shield == 1) {
+                                vessel.guys[w].skillslist[2] += .000003
+                            }
+                        }
                     } else if (this.guys[t].tile.helm == 1) {
-                        this.boosts[3] += (this.guys[t].stats[3] * Math.min(this.guys[t].helmPower +  (this.UI.systems[3].demand + this.guys[t].energy),this.guys[t].helmPower +  this.UI.systems[3].max))
+                        this.boosts[3] += (this.guys[t].stats[3] * this.guys[t].skillslist[3] * Math.min(this.guys[t].helmPower + (this.UI.systems[3].demand + this.guys[t].energy), this.guys[t].helmPower + this.UI.systems[3].max))
                         this.UI.systems[3].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.helm == 1) {
+                                vessel.guys[w].skillslist[3] += .000003
+                            }
+                        }
                     } else if (this.guys[t].tile.oxygen == 1) {
-                        this.boosts[4] += (this.guys[t].stats[4] * Math.min((this.UI.systems[4].demand + this.guys[t].energy), this.UI.systems[4].max))
+                        this.boosts[4] += (this.guys[t].stats[4] * this.guys[t].skillslist[4] * Math.min((this.UI.systems[4].demand + this.guys[t].energy), this.UI.systems[4].max))
                         this.UI.systems[4].fed += this.guys[t].energy
+
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.oxygen == 1) {
+                                if (vessel.ac < 95) {
+                                    vessel.guys[w].skillslist[4] += .001
+                                }
+                            }
+                        }
+
+
                     } else if (this.guys[t].tile.security == 1) {
-                        this.boosts[5] += (this.guys[t].stats[5] * Math.min((this.UI.systems[5].demand + this.guys[t].energy), this.UI.systems[5].max))
+                        this.boosts[5] += (this.guys[t].stats[5] * this.guys[t].skillslist[5] * Math.min((this.UI.systems[5].demand + this.guys[t].energy), this.UI.systems[5].max))
                         this.UI.systems[5].fed += this.guys[t].energy
+
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.security == 1) {
+                                vessel.guys[w].skillslist[5] += .00003
+                            }
+                        }
+
+
                     } else if (this.guys[t].tile.engine == 1) {
-                        this.boosts[6] += (this.guys[t].stats[6] * Math.min((this.UI.systems[6].demand + this.guys[t].energy), this.UI.systems[6].max))
+                        this.boosts[6] += (this.guys[t].stats[6] * this.guys[t].skillslist[6] * Math.min((this.UI.systems[6].demand + this.guys[t].energy), this.UI.systems[6].max))
                         this.UI.systems[6].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.engine == 1) {
+                                vessel.guys[w].skillslist[6] += .000003
+                            }
+                        }
                     } else if (this.guys[t].tile.special == 1) {
-                        this.boosts[7] += (this.guys[t].stats[7] * Math.min((this.UI.systems[7].demand + this.guys[t].energy), this.UI.systems[7].max))
+                        this.boosts[7] += (this.guys[t].stats[7] * this.guys[t].skillslist[7] * Math.min((this.UI.systems[7].demand + this.guys[t].energy), this.UI.systems[7].max))
                         this.UI.systems[7].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.special == 1) {
+                                vessel.guys[w].skillslist[7] += .00003
+                            }
+                        }
                     } else if (this.guys[t].tile.empty == 1) {
-                        this.boosts[8] += (this.guys[t].stats[8] * Math.min((this.UI.systems[8].demand + this.guys[t].energy), this.UI.systems[8].max))
+                        this.boosts[8] += (this.guys[t].stats[8] * this.guys[t].skillslist[8] * Math.min((this.UI.systems[8].demand + this.guys[t].energy), this.UI.systems[8].max))
                         this.UI.systems[8].fed += this.guys[t].energy
+                        for (let w = 0; w < vessel.guys.length; w++) {
+                            if (vessel.guys[w].tile.empty == 1) {
+                                vessel.guys[w].skillslist[8] += .00003
+                            }
+                        }
+
                     }
 
 
@@ -4153,21 +4322,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
-                        if(this.blocks[t][k].onFire == 1){
-                            this.blocks[t][k].fire -= (100-this.blocks[t][k].fire)/50
-                            if(this.blocks[t][k].fire <= 0){
-                                this.blocks[t][k].fire =0
-                                if(this.blocks[t][k].integrity > 30){
+                        if (this.blocks[t][k].onFire == 1) {
+                            this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                            if (this.blocks[t][k].fire <= 0) {
+                                this.blocks[t][k].fire = 0
+                                if (this.blocks[t][k].integrity > 30) {
                                     this.blocks[t][k].integrity -= .05
                                 }
 
-                                if(Math.random() < .01){
+                                if (Math.random() < .01) {
                                     this.hull -= .5
                                 }
                             }
                         }
-                        this.blocks[t][k].fire = Math.max(100-this.blocks[t][k].air, this.blocks[t][k].fire)
-                    } 
+                        this.blocks[t][k].fire = Math.max(100 - this.blocks[t][k].air, this.blocks[t][k].fire)
+                    }
                 }
 
                 if (this.pulse % 2 == 3) {
@@ -4229,7 +4398,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 sum /= n.length * 2
                                 fsum /= n.length * 2
                                 this.blocks[t][k].air = (this.blocks[t][k].air + sum) * .5
-                                this.blocks[t][k].fire = ((this.blocks[t][k].fire*39) + fsum) * .025
+                                this.blocks[t][k].fire = ((this.blocks[t][k].fire * 39) + fsum) * .025
                             }
                         }
                     }
@@ -4276,7 +4445,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             // canvas_context.fillStyle = "White"
                             // canvas_context.fillText(Math.round(this.blocks[t][k].fire), this.blocks[t][k].x + 16, this.blocks[t][k].y + 16)
                         }
-    
+
                         // if (this.blocks[t][k].fire < 50) {
                         //     canvas_context.drawImage(fire, this.blocks[t][k].x, this.blocks[t][k].y)
                         // }
@@ -4691,7 +4860,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.hash['engine'].integrity < 95 || this.boosts[3] == 0) {
                 dodgerate = 0
             }
-            if (this.hash['helm'].integrity < 95|| this.boosts[6] == 0) {
+            if (this.hash['helm'].integrity < 95 || this.boosts[6] == 0) {
                 dodgerate = 0
             }
             if (dodgerate == 0) {
@@ -4870,16 +5039,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 }
 
-                if(Math.random() < this.level/50){
+                if (Math.random() < this.level / 50) {
                     this.guys.push(new Guy(tiles[0]))
                 }
-                if(Math.random() < this.level/100){
+                if (Math.random() < this.level / 100) {
                     this.guys.push(new Guy(tiles[0]))
                 }
-                if(Math.random() < this.level/150){
+                if (Math.random() < this.level / 150) {
                     this.guys.push(new Guy(tiles[0]))
                 }
-                if(Math.random() < this.level/200){
+                if (Math.random() < this.level / 200) {
                     this.guys.push(new Guy(tiles[0]))
                 }
 
@@ -5011,34 +5180,34 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.guys[t].health > this.guys[t].maxhealth) {
                         this.guys[t].health = this.guys[t].maxhealth
                     }
-                    this.boosts[0] += (this.guys[t].stats[0] * Math.min((this.UI.systems[0].demand + this.guys[t].energy), this.UI.systems[0].max))
+                    this.boosts[0] += (this.guys[t].stats[0] * this.guys[t].skillslist[0] * Math.min((this.UI.systems[0].demand + this.guys[t].energy), this.UI.systems[0].max))
                     this.UI.systems[0].fed += this.guys[t].energy
                 } if (this.guys[t].tile.weapon == 1) {
                     // this.UI.systems[1].demand = 1
-                    this.boosts[1] += (this.guys[t].stats[1] * Math.min(this.guys[t].weaponPower + (this.UI.systems[1].demand + this.guys[t].energy), this.guys[t].weaponPower + this.UI.systems[1].max))
+                    this.boosts[1] += (this.guys[t].stats[1] * this.guys[t].skillslist[1] * Math.min(this.guys[t].weaponPower + (this.UI.systems[1].demand + this.guys[t].energy), this.guys[t].weaponPower + this.UI.systems[1].max))
                     this.UI.systems[1].fed += this.guys[t].energy
                     // //////////console.log(Math.min((this.UI.systems[1].demand + this.guys[t].energy), this.UI.systems[1].max))
                 } if (this.guys[t].tile.shield == 1) {
                     // this.UI.systems[2].demand = 1
-                    this.boosts[2] += (this.guys[t].stats[2] * Math.min(this.guys[t].shieldPower + (this.UI.systems[2].demand + this.guys[t].energy), this.guys[t].shieldPower + this.UI.systems[2].max))
+                    this.boosts[2] += (this.guys[t].stats[2] * this.guys[t].skillslist[2] * Math.min(this.guys[t].shieldPower + (this.UI.systems[2].demand + this.guys[t].energy), this.guys[t].shieldPower + this.UI.systems[2].max))
                     this.UI.systems[2].fed += this.guys[t].energy
                 } if (this.guys[t].tile.helm == 1) {
-                    this.boosts[3] += (this.guys[t].stats[3] * Math.min(this.guys[t].helmPower+(this.UI.systems[3].demand + this.guys[t].energy), this.guys[t].helmPower+this.UI.systems[3].max))
+                    this.boosts[3] += (this.guys[t].stats[3] * this.guys[t].skillslist[3] * Math.min(this.guys[t].helmPower + (this.UI.systems[3].demand + this.guys[t].energy), this.guys[t].helmPower + this.UI.systems[3].max))
                     this.UI.systems[3].fed += this.guys[t].energy
                 } if (this.guys[t].tile.oxygen == 1) {
-                    this.boosts[4] += (this.guys[t].stats[4] * Math.min((this.UI.systems[4].demand + this.guys[t].energy), this.UI.systems[4].max))
+                    this.boosts[4] += (this.guys[t].stats[4] * this.guys[t].skillslist[4] * Math.min((this.UI.systems[4].demand + this.guys[t].energy), this.UI.systems[4].max))
                     this.UI.systems[4].fed += this.guys[t].energy
                 } if (this.guys[t].tile.security == 1) {
-                    this.boosts[5] += (this.guys[t].stats[5] * Math.min((this.UI.systems[5].demand + this.guys[t].energy), this.UI.systems[5].max))
+                    this.boosts[5] += (this.guys[t].stats[5] * this.guys[t].skillslist[5] * Math.min((this.UI.systems[5].demand + this.guys[t].energy), this.UI.systems[5].max))
                     this.UI.systems[5].fed += this.guys[t].energy
                 } if (this.guys[t].tile.engine == 1) {
-                    this.boosts[6] += (this.guys[t].stats[6] * Math.min((this.UI.systems[6].demand + this.guys[t].energy), this.UI.systems[6].max))
+                    this.boosts[6] += (this.guys[t].stats[6] * this.guys[t].skillslist[6] * Math.min((this.UI.systems[6].demand + this.guys[t].energy), this.UI.systems[6].max))
                     this.UI.systems[6].fed += this.guys[t].energy
                 } if (this.guys[t].tile.special == 1) {
-                    this.boosts[7] += (this.guys[t].stats[7] * Math.min((this.UI.systems[7].demand + this.guys[t].energy), this.UI.systems[7].max))
+                    this.boosts[7] += (this.guys[t].stats[7] * this.guys[t].skillslist[7] * Math.min((this.UI.systems[7].demand + this.guys[t].energy), this.UI.systems[7].max))
                     this.UI.systems[7].fed += this.guys[t].energy
                 } if (this.guys[t].tile.empty == 1) {
-                    this.boosts[8] += (this.guys[t].stats[8] * Math.min((this.UI.systems[8].demand + this.guys[t].energy), this.UI.systems[8].max))
+                    this.boosts[8] += (this.guys[t].stats[8] * this.guys[t].skillslist[8] * Math.min((this.UI.systems[8].demand + this.guys[t].energy), this.UI.systems[8].max))
                     this.UI.systems[8].fed += this.guys[t].energy
                 }
 
@@ -5177,6 +5346,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     ac /= bc
+                    this.ac = ac
 
                     // //////console.log(ac)
                     for (let t = 0; t < this.blocks.length; t++) {
@@ -5251,7 +5421,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
 
-                        if(fire == 1){
+                        if (fire == 1) {
                             if (this.state == 0) {
                                 let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
                                 for (let h = 0; h < firecount; h++) {
@@ -5323,7 +5493,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                             }
 
-                        }else if (hole == 1) {
+                        } else if (hole == 1) {
                             if (this.state == 0) {
                                 let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
                                 for (let h = 0; h < holecount; h++) {
@@ -5541,21 +5711,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
-                    if(this.blocks[t][k].onFire == 1){
-                        this.blocks[t][k].fire -= (100-this.blocks[t][k].fire)/50
-                        if(this.blocks[t][k].fire <= 0){
-                            this.blocks[t][k].fire =0
-                            if(this.blocks[t][k].integrity > 30){
+                    if (this.blocks[t][k].onFire == 1) {
+                        this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                        if (this.blocks[t][k].fire <= 0) {
+                            this.blocks[t][k].fire = 0
+                            if (this.blocks[t][k].integrity > 30) {
                                 this.blocks[t][k].integrity -= .05
                             }
 
-                            if(Math.random() < .01){
+                            if (Math.random() < .01) {
                                 this.hull -= .5
                             }
                         }
                     }
-                    this.blocks[t][k].fire = Math.max(100-this.blocks[t][k].air, this.blocks[t][k].fire)
-                } 
+                    this.blocks[t][k].fire = Math.max(100 - this.blocks[t][k].air, this.blocks[t][k].fire)
+                }
             }
 
 
@@ -5616,7 +5786,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             sum /= n.length * 2
                             fsum /= n.length * 2
                             this.blocks[t][k].air = (this.blocks[t][k].air + sum) * .5
-                            this.blocks[t][k].fire = ((this.blocks[t][k].fire*39) + fsum) * .025
+                            this.blocks[t][k].fire = ((this.blocks[t][k].fire * 39) + fsum) * .025
                         }
                     }
                 }
@@ -5717,7 +5887,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
-                    this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1)))+1
+                    this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
                     this.bombflag = Math.random()
@@ -5930,10 +6100,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 return
             }
 
-            if(start == 1){
-                for(let t = 0;t<stars.stars.length;t++){
-                    if(stars.stars[t].body.isPointInside(TIP_engine)){
-    
+            if (start == 1) {
+                for (let t = 0; t < stars.stars.length; t++) {
+                    if (stars.stars[t].body.isPointInside(TIP_engine)) {
+
                         this.text1 = stars.stars[t].name
                         this.text2 = ''
                         this.text3 = ''
@@ -5995,13 +6165,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.guys.length; t++) {
                 if (vessel.guys[t].healthbox.isPointInside(TIP_engine)) {
                     this.text1 = `Crewman ${vessel.guys[t].name}`
-                    this.text2 = "Skills"
+                    this.text2 = `Skills: ${vessel.guys[t].skills}`
                     this.text3 = `Health: ${Math.round(vessel.guys[t].health)}/${vessel.guys[t].maxhealth}`
+                    let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
+
                     this.text4 = "System: "
+                    for (let s = 0; s < sys.length; s++) {
+                        if (vessel.guys[t].tile[sys[s]] == 1) {
+                            let sys2 = sys[s].charAt(0).toUpperCase() + sys[s].slice(1);
+                            this.text4 += ' ' + sys2
+                        }
+                    }
+
+
                     let dim = {}
                     canvas_context.font = "12px comic sans ms"
-                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                    dim.h = 44
+                    dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width))
+                    dim.h = 154
                     ////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                     rect.draw()
@@ -6014,6 +6194,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.fillText(this.text3, rect.x + 10, py)
                     py += 12
                     canvas_context.fillText(this.text4, rect.x + 10, py)
+                    for (let r = 0; r < vessel.guys[t].skillslist.length; r++) {
+                        let box1 = new RectangleR(TIP_engine.x + 5, py + 10, 130, 5, "#88888844")
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "9px comic sans ms"
+                        canvas_context.fillText(sys[r], box1.x + box1.width + 10, py + 15)
+                        box1.draw()
+                        let box4 = new RectangleR(TIP_engine.x + 5, py + 10, ((vessel.guys[t].skillslist[r] - 2) / .5) * (130), 5, "#FF0000")
+                        let box3 = new RectangleR(TIP_engine.x + 5, py + 10, ((vessel.guys[t].skillslist[r] - 1.5) / .5) * (130), 5, "#FFFF00")
+                        let box2 = new Rectangle(TIP_engine.x + 5, py + 10, ((vessel.guys[t].skillslist[r] - 1) / .5) * (130), 5, "#00FF00")
+
+                        if (vessel.guys[t].skillslist[r] > 2.5) {
+                            box4.width = 130
+                        }
+                        if (vessel.guys[t].skillslist[r] > 2) {
+                            box3.width = 130
+                        } else {
+                            box4.width = 0
+                        }
+                        if (vessel.guys[t].skillslist[r] >= 1.5) {
+                            box2.width = 130
+                        } else {
+                            box3.width = 0
+                            box4.width = 0
+                        }
+                        box2.draw()
+                        box3.draw()
+                        box4.draw()
+                        py += 12
+                    }
                 }
             }
 
