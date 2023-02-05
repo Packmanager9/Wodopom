@@ -5071,8 +5071,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 canvas_context.fillStyle = "white"
                 canvas_context.font = "10px comic sans ms"
-                if(enemy.guys.length > 0 && enemy.hull > 0){
-                canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 800, 50)
+                if(enemy.guys){
+                    if(enemy.guys.length > 0 && enemy.hull > 0){
+                        canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 800, 50)
+                        }
                 }
             }
 
