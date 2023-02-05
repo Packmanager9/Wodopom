@@ -5062,14 +5062,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
 
         draw() {
-            if (Date.now() - this.now > (1000 * 3 * 60) + (this.level * 1000)) {
-                vessel.fuel--
-                start = 1
-                enemy = new EnemyShip(Math.floor(Math.random() * 2), this.level + 1)
+            if (Date.now() - this.now > (1000 * 3 * 1) + (this.level * 1000)) {
+                if(enemy.guys.length > 0 && enemy.hull > 0){
+                    vessel.fuel--
+                    start = 1
+                    enemy = new EnemyShip(Math.floor(Math.random() * 2), this.level + 1)
+                }
             } else {
                 canvas_context.fillStyle = "white"
                 canvas_context.font = "10px comic sans ms"
+                if(enemy.guys.length > 0 && enemy.hull > 0){
                 canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 800, 50)
+                }
             }
 
             let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
@@ -5420,10 +5424,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.medflag = 1
                 }
             }
-
+            if(this.guys.length > 0){
+                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75){
+                    this.medflag = 1
+                }
+            }
             if (Math.random() < .14) { //.14
 
-                if (Math.random() < .01) {
+                if (Math.random() < .1) {
                     this.guys.sort((a, b) => a.health / a.maxhealth <= b.health / b.maxhealth ? 1 : -1)
                 }
 
