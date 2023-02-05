@@ -5062,7 +5062,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
 
         draw() {
-            if (Date.now() - this.now > (1000 * 3 * 1) + (this.level * 1000)) {
+            if (Date.now() - this.now > (1000 * 3 * 60) + (this.level * 1000)) {
                 if(enemy.guys.length > 0 && enemy.hull > 0){
                     vessel.fuel--
                     start = 1
