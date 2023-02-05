@@ -4072,8 +4072,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    // this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
-                    this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
+                    this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
+                    // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
 
                     this.first = 1
 
