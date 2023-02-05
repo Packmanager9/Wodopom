@@ -2180,10 +2180,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.repair = 5
                 this.extinguish = 3
                 this.skills += 'Repair+, Extinguish+, Shield++++, '
+                this.names = ["Psuch", "Psybie", "Psybo", "Bozbe", "Psychus", "Psybean", "Pinkus", "Dotsy", "Beanbo"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 6) {
                 this.regen = 1
                 this.skills += 'Regen+++, '
+                this.names = ["Bloom", "Gulpod", "Podpak", "Podoak", "Rosthro", "Rost", "Pothra", "Pappthra", "Throcus"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             } else {
                 this.regen = 0
             }
@@ -2191,12 +2195,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.energy = 1
                 this.airless = 1
                 this.skills += 'Energetic+, Breathless+, '
+                this.names = ["Solan", "Soleus", "Sunz", "Tunzt", "Glewrn", "Shyen", "Beam", "Zahp", "Bahtsol"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             this.isMedbay = 0
             if (this.type == 14) {
                 this.isMedbay = 1
                 this.stats[0] = 4
                 this.skills += 'Medical++, fast+'
+                this.names = ["Shetar", "Heaba", "Gibule", "Beatwa", "Clea", "Zipstitch", "Tosuhe", "Figgz", "Plubeah"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 10) {
                 this.stats[2] += .5
@@ -2205,6 +2213,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.weaponPower = .1
                 this.stats[0] = 7
                 this.skills += 'Weapon++, Shield++, '
+                this.names = ["Turtsquine", "Tricky", "Goldie", "Goldy", "Glynte", "Malbowlio", "Aqyrius", "Thumfin", "Rokkar"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 0) {
                 // this.health*=3
@@ -2216,13 +2226,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.repair = 10
                 this.fireproof = 1
                 this.skills += 'Fireproof+, Fight+++, Extinguish++, Repair++, Slow--, '
+                this.names = ["Sheldo", "Snall", "Trurt", "Bendo", "Sheila", "Thump-Pow", "Break-Make", "Clear-Wall", "Dome-Tomb"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 13) {
                 this.stats[0] *= 2
                 for (let t = 1; t < this.stats.length; t++) {
                     this.stats[t] *= .8
                 }
-                this.skills += 'Slow, '
+                this.skills += 'Slow-, '
+
+                //names covered above
             }
             this.rate = this.stats[0]
             this.health = 170 + (this.type * 10)
@@ -2230,6 +2244,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.type == 0) {
                 this.health *= 3
                 this.maxhealth = this.health
+                //names covered above
             }
             // this.health *= .1
             this.pulsecheck = 0
@@ -2243,11 +2258,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.regen = .5
                 this.damage = 6
                 this.skills += 'Regen++, Engineer+, Fight+, '
+
+                this.names = ["Oscar", "Blobby", "Orcarto", "Sibnop", "Purbole", "Punckto", "Fleap", "Hosen", "Bedreo"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 3) {
                 this.stats[1] += .5
                 this.damage = 7
                 this.skills += 'Weapons+, Fight++, '
+
+                this.names = ["Bobbin", "Tentaslip", "Moom", "Bandagal", "Wrab", "Tenbanwra", "Wontombah", "Vieslib", "Banra"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 4) {
                 this.rate = 6
@@ -2256,6 +2277,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.health *= .9
                 this.maxhealth = this.health
                 this.skills += 'Helm+, Engineer+, '
+                this.names = ["Obchovy", "Ubchobie", "Ohboechoey", "Choeboye", "Obobloy", "Fiskcho", "Walfik", "Obochoy", "Chochoy"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 5) {
                 this.stats[3] += .7
@@ -2264,6 +2287,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.damage = 6
                 this.barter = 1.05
                 this.skills += 'Thrifty++, Helm+, Fight++, '
+                this.names = ["Clak", "Pinck", "Grak", "Clyk", "Clok", "Colk", "Colek", "Klack", "Brak"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 6) {
                 this.stats[5] += .7
@@ -2271,27 +2296,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.rate = 8
                 this.airless = 1
                 this.skills += 'Security+, Fight+, Flammable--, Breathless+, '
+                //names covered above
             }
             if (this.type == 7) {
                 this.stats[1] += .7
                 this.damage = 6
                 this.skills += 'Weapons+, Fight+, '
+                this.names = ["Hop", "Hoppe", "Hoop", "Hawp", "Hap", "Haap", "Hahp", "Hawp", "Hyp"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 8) {
                 this.regen = .25
                 this.stats[1] += 1.2
                 this.damage = 6
                 this.skills += 'Regen+, Fight+, '
+                this.names = ["Jomite", "Mojama", "Ommaja", "Mit", "Jom", "Joma", "Jamo", "Jomo", "Jomamul"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 9) {
                 this.stats[1] += 2
                 this.weaponPower = 1
                 this.skills += 'Weapons+++, '
+                this.names = ["Mani", "Stock", "Ockman", "Iasto", "Stoman", "Smanto", "Namitos", "Numman", "Manth", "Nine"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 11) {
                 this.stats[3] += 2
                 this.helmPower = 1
                 this.skills += 'Helm+++, '
+                this.names = ["Pomao", "Jomao", "Pobo", "Podmao", "Peamao", "Pomom", "Pamao", "Pomo", "Pomoo", "Pomoa"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             if (this.type == 12) {
                 this.barter = 1.03
@@ -2301,6 +2335,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.stats[3] -= .2
                 this.maxhealth = this.health
                 this.skills += 'Thrifty+, Fight++, Helm-, Engine+'
+                this.names = ["Pote", "Potte", "Poat", "Pohat", "Pewt", "Plote", "Ploat", "Polte", "Plotle", "Lotle"]
+                this.name = this.names[Math.floor(Math.random()*this.names.length)]
             }
             // this.health = 1
         }
@@ -5373,9 +5409,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (Math.random() < .14) { //.14
+
             if (Math.random() < .01) {
                 this.guys.sort((a,b) => a.health/a.maxhealth <= b.health/b.maxhealth ? 1:-1)
             }
+
+
                 for (let t = 0; t < this.guys.length; t++) {
                     if (this.guys[t].cound > 0) { //.14 connect
                         // //console.log(t)
@@ -5452,6 +5491,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         for (let g = 0; g < this.guys.length; g++) {
                             kiles.push(this.guys[g].tile)
                         }
+                        if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                            priorities[this.guys.length-1] = 'medbay'
+                        }
 
                         while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
                             j++
@@ -5485,6 +5527,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
                                 for (let h = 0; h < (firecount*2); h++) { //*2?
                                     priorities.unshift("onFire")
+                                }
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
                                 }
                                 // //console.log(priorities, t)
 
@@ -5523,6 +5568,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 for (let h = 0; h < (firecount*2); h++) { //*2?
                                     priorities.unshift("onFire")
                                 }
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
+                                }
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                                 let j = 0
                                 let kiles = []
@@ -5560,6 +5608,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 for (let h = 0; h < holecount; h++) {
                                     priorities.unshift("holed")
                                 }
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
+                                }
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                                 let j = 0
                                 let kiles = []
@@ -5594,6 +5645,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
                                 for (let h = 0; h < holecount; h++) {
                                     priorities.unshift("holed")
+                                }
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
                                 }
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                                 let j = 0
@@ -5637,6 +5691,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     kiles.push(this.guys[g].tile)
                                 }
 
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
+                                }
                                 while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
                                     j++
                                     if (j > 1000) {
@@ -5669,6 +5726,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     kiles.push(this.guys[g].tile)
                                 }
 
+                                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75 && this.guys.length > 1){
+                                    priorities[this.guys.length-1] = 'medbay'
+                                }
+
+                                
                                 while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
                                     j++
                                     if (j > 1000) {
