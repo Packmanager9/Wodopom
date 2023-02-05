@@ -2303,7 +2303,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.damage = 7
                 this.rate = 8
                 this.airless = 1
-                this.skills += 'Security+, Fight+, Flammable--, Breathless+, '
+                this.stats[4] += 2
+                this.skills += 'Security+, Fight+, Flammable--, Breathless+, Oxygen++'
                 //names covered above
             }
             if (this.type == 7) {
