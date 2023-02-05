@@ -2303,6 +2303,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         draw() {
 
+            for(let t= 0;t<this.skillslist.length;t++){
+                if(this.skillslist[t] > 2.5){
+                    this.skillslist[t] = 2.5
+                }
+            }
             let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
             let hass = 0
             if (vessel.guys.includes(this)) {
