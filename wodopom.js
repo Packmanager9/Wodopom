@@ -4304,7 +4304,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
 
                 if (this.hash["shield"].integrity >=  100*(1-(1/(11-this.UI.systems[2].max)))) {
-                    this.shield.charge += this.boosts[2]
+                    this.shield.charge += Math.sqrt(this.boosts[2])
                 }
 
                 let oat = 0
@@ -5690,7 +5690,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (this.hash["shield"].integrity >= 100*(1-(1/(11-this.UI.systems[2].max)))) {
-                this.shield.charge += this.boosts[2]
+                this.shield.charge += Math.sqrt(this.boosts[2])
             }
 
 
@@ -6019,8 +6019,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     class Star {
         constructor(x, y) {
             this.name = getRandomColor() + " System"
-            this.body = new Circle(x * 5, y + 20, 50, "white")
-            this.spot = new Polygon(x * 5, y + 20, 5, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+            this.body = new Circle(x * 20, y + 20, 50, "white")
+            this.spot = new Polygon(x * 20, y + 20, 5, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
         }
         draw() {
             // this.body.draw()
@@ -6061,9 +6061,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     class Stars {
         constructor() {
             this.to = 0
-            this.stars = [new Star(130, 360)]
-            for (let t = 0; this.stars.length < 120; t++) {
-                let star = new Star(130 + (Math.random() * (canvas.width)), Math.random() * (canvas.height - 40))
+            this.stars = [new Star(130/4, 360)]
+            for (let t = 0; this.stars.length < 480; t++) {
+                let star = new Star((130/4) + (Math.random() * (canvas.width)), Math.random() * (canvas.height - 40))
                 let wet = 1
                 for (let k = 0; k < this.stars.length; k++) {
                     if (star.body.doesPerimeterTouch(this.stars[k].body)) {
@@ -6079,7 +6079,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         draw() {
             this.link = new LineOP(this.stars[vessel.star].body, this.stars[this.to].body, "red", 2)
-            if (this.link.hypotenuse() < 400) {
+            if (this.link.hypotenuse() < 420) {
                 this.link.color = "#00FF00"
                 this.flag = 1
             } else {
