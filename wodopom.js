@@ -2535,15 +2535,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.rings = []
             this.level = 3
             this.charge = 0
-            this.state = 0
+            this.state = this.level
             this.maxout = 300
         }
         draw() {
 
             if (this == vessel.shield) {
                 this.level = Math.min(vessel.UI.systems[2].max, vessel.UI.systems[2].demand)
+                if(typeof vessel.hash != 'undefined'){
+                if (vessel.hash['shield'].integrity < 100*(1-(1/(11-vessel.UI.systems[2].max)))) {
+                    this.state = 0
+                }
+            }
             } else {
                 this.level = Math.min(enemy.UI.systems[2].max, enemy.UI.systems[2].demand)
+                if(typeof enemy.hash != 'undefined'){
+                if (enemy.hash['shield'].integrity < 100*(1-(1/(11-enemy.UI.systems[2].max)))) {
+                    this.state = 0
+                }
+            }
             }
             let hrat = this.charge / this.maxout
 
@@ -2842,7 +2852,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (enemy.shield.state > 0 && this.bomb != 1) {
                             enemy.shield.state -= this.double
                             enemy.shield.charge = 0
-                            if (enemy.shield.state <= 0) {
+                            if (enemy.shield.state < 0) {
                                 enemy.shield.state = 0
                             }
                             for (let t = 0; t < enemy.guys.length; t++) {
@@ -2919,7 +2929,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.shield.state > 0 && this.bomb != 1) {
                             vessel.shield.state -= this.double
                             vessel.shield.charge = 0
-                            if (vessel.shield.state <= 0) {
+                            if (vessel.shield.state < 0) {
                                 vessel.shield.state = 0
                             }
                             for (let t = 0; t < vessel.guys.length; t++) {
@@ -3889,6 +3899,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.bombs = 20
             this.fuel = 10
             this.shield = new Shields()
+            this.shield.state = this.UI.systems[2].max
             // this.UI.systems[1].max = 10
             // this.UI.systems[1].demand = 10
             this.hull = 300
@@ -4288,7 +4299,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let w = 0; w < this.weapons.length; w++) {
                     if (this.hash["weapon"].integrity >=  100*(1-(1/(11-this.UI.systems[1].max)))) {
                         //////////////console.log( this.boosts[1])
-                        this.weapons[w].charge += this.boosts[1]
+                        this.weapons[w].charge += Math.sqrt(this.boosts[1])
                     }
                 }
 
@@ -4746,7 +4757,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.bombs = 5 + Math.floor(this.level / 2)
             this.fuel = 10
             this.shield = new Shields()
-            // this.shield.state = 2
+            this.shield.state = this.UI.systems[2].max
             this.hull = 25 + (this.level * 7)
             this.maxhull = this.hull
             this.body = new Circle(1000, 360, 100, "red")
@@ -5674,7 +5685,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let w = 0; w < this.weapons.length; w++) {
                 if (this.hash["weapon"].integrity >= 100*(1-(1/(11-this.UI.systems[1].max)))) {
                     //////////////console.log( this.boosts[1])
-                    this.weapons[w].charge += this.boosts[1] // * 5
+                    this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
                 }
             }
 
