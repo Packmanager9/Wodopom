@@ -6471,7 +6471,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.weapons.length; t++) {
                 if (vessel.weapons[t].body.isPointInside(TIP_engine)) {
                     this.text1 = `Weapon: ${vessel.weapons[t].name1 + ' ' + vessel.weapons[t].name2}`
-                    this.text2 = `Charge: ${vessel.weapons[t].charge}/${vessel.weapons[t].max}`
+                    this.text2 = `Charge: ${Math.round(vessel.weapons[t].charge)}/${vessel.weapons[t].max}`
                     let str = 'Idle'
                     if (vessel.weapons[t].charge >= vessel.weapons[t].max) {
                         str = 'Ready'
@@ -6546,7 +6546,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (vessel.shield.healthbar.isPointInside(TIP_engine)) {
                 this.text1 = "Shields"
-                this.text2 = `Charge: ${vessel.shield.charge}/${vessel.shield.maxout}`
+                this.text2 = `Charge: ${Math.round(vessel.shield.charge)}/${vessel.shield.maxout}`
                 this.text3 = "Current: " + vessel.shield.state
                 this.text4 = "Max: " + vessel.shield.level
                 let dim = {}
