@@ -1287,8 +1287,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     return
                 }
             }
-            if(enemy.guys){
-                if ( enemy.guys.length == 0) {
+            if (enemy.guys) {
+                if (enemy.guys.length == 0) {
                     if (enemy.body.isPointInside(TIP_engine)) {
                         enemy.spread = 31
                         return
@@ -1302,6 +1302,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
             vessel.upgradeMenu.levels.check(TIP_engine)
 
             if (vessel.upgradeMenu.open == 1 && start == 2) {
+                if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
+                    if (vessel.scrap >= 2) {
+                        if (vessel.hull <= 295) {
+                            if (enemy.guys) {
+                                if (enemy.guys.length == 0) {
+                                    vessel.hull += 5
+                                    vessel.scrap -= 2
+                                }
+                            } else if (enemy.hull <= 0) {
+                                vessel.hull += 5
+                                vessel.scrap -= 2
+                            }
+                        }
+                    }
+                }
                 return
             }
             // //////////////console.log(vessel.energy.upgradeMenu)
@@ -3565,7 +3580,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.slap = 2
             this.bars = []
             this.first = 0
-
             for (let t = 0; t < this.systems.length; t++) {
                 let box = new Rectangle(this.body.x + 5 + (t * 25), (this.body.y + this.body.height) - 135, 20, 135, "#999999")
                 box.draw()
@@ -3582,7 +3596,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         draw() {
-            this.body.draw()
+            // this.body.draw()
             for (let t = 0; t < this.systems.length; t++) {
                 if (this.first == 0) {
                     this.systems[t].demand = vessel.UI.systems[t].max
@@ -3686,6 +3700,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.open = -1
             this.window = new RectangleR(200, 200, 910, 250, "#444444")
             this.levels = new MenuUI(this.window)
+
+            this.repairButton = new RectangleR(this.window.x + 10, this.window.y + 10, 100, 50, "#FF000044")
         }
         draw() {
             this.button.draw()
@@ -3705,6 +3721,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.wepsto[t].draw()
                     this.wepsto[t].auto = 0
                 }
+
+                this.repairButton.draw()
+                canvas_context.fillStyle = "white"
+                canvas_context.font = "20px comic sans ms"
+                canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                canvas_context.font = "12px comic sans ms"
+                canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+
             }
         }
         check(point) {
@@ -3752,7 +3776,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         balance() {
             if (this == vessel.energy) {
-                this.powersto = vessel.menuBattery.power
+                // if(this == vessel.energy){
+                    this.powersto = vessel.menuBattery.power
+                // }
                 this.power = this.powersto
                 for (let t = 0; t < this.systems.length; t++) {
                     this.power -= this.systems[t].demand
@@ -3819,7 +3845,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     block.draw()
                 }
             } else {
-                this.powersto = vessel.menuBattery.power
+                // this.powersto = vessel.menuBattery.power
                 this.power = this.powersto
                 for (let t = 0; t < this.systems.length; t++) {
                     this.power -= this.systems[t].sto - this.systems[t].fed
@@ -5065,7 +5091,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         draw() {
             if (Date.now() - this.now > (1000 * 3 * 60) + (this.level * 1000)) {
-                if(enemy.guys.length > 0 && enemy.hull > 0){
+                if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
                     enemy = new EnemyShip(Math.floor(Math.random() * 2), this.level + 1)
@@ -5073,10 +5099,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 canvas_context.fillStyle = "white"
                 canvas_context.font = "10px comic sans ms"
-                if(enemy.guys){
-                    if(enemy.guys.length > 0 && enemy.hull > 0){
+                if (enemy.guys) {
+                    if (enemy.guys.length > 0 && enemy.hull > 0) {
                         canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 800, 50)
-                        }
+                    }
                 }
             }
 
@@ -5386,704 +5412,684 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.UI.systems[r].sto <= 0) {
                         this.UI.systems[r].sto = 0
                     }
+                } else {
+                    // if (rooms[r] == "medbay") {
+                        if(this.energy.power > 0){
+                            this.UI.systems[r].sto++
+                            if (this.UI.systems[r].sto >= this.UI.systems[r].max) {
+                                this.UI.systems[r].sto = this.UI.systems[r].max
+                            }
+                        }
+                    // }
                 }
             }
 
+                let kre = Object.keys(this.hash)
+                for (let t = 0; t < kre.length; t++) {
+                    this.hash[kre[t]].integrity /= this.hash[kre[t]].interior
+                    this.hash[kre[t]].xmom /= this.hash[kre[t]].interior
+                    this.hash[kre[t]].ymom /= this.hash[kre[t]].interior
+                    this.hash[kre[t]].air /= this.hash[kre[t]].interior
+                    this.hash[kre[t]].fire /= this.hash[kre[t]].interior
+                }
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+                        for (let r = 0; r < rooms.length; r++) {
+                            if (this.blocks[t][k][rooms[r]] == 1) {
+                                this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
+                                if (this.blocks[t][k].empty == 1 && this.hull > 0) {
 
-            let kre = Object.keys(this.hash)
-            for (let t = 0; t < kre.length; t++) {
-                this.hash[kre[t]].integrity /= this.hash[kre[t]].interior
-                this.hash[kre[t]].xmom /= this.hash[kre[t]].interior
-                this.hash[kre[t]].ymom /= this.hash[kre[t]].interior
-                this.hash[kre[t]].air /= this.hash[kre[t]].interior
-                this.hash[kre[t]].fire /= this.hash[kre[t]].interior
-            }
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    for (let r = 0; r < rooms.length; r++) {
-                        if (this.blocks[t][k][rooms[r]] == 1) {
-                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
-                            if (this.blocks[t][k].empty == 1 && this.hull > 0) {
+                                    this.blocks[t][k].xmom = (Math.random() - .5) * 40
+                                    this.blocks[t][k].ymom = (Math.random() - .5) * 40
+                                } else {
+                                    if (this.blocks[t][k].empty !== 1) {
 
-                                this.blocks[t][k].xmom = (Math.random() - .5) * 40
-                                this.blocks[t][k].ymom = (Math.random() - .5) * 40
-                            } else {
-                                if (this.blocks[t][k].empty !== 1) {
+                                        this.blocks[t][k].xmom = ((this.hash[rooms[r]].xmom))
+                                        this.blocks[t][k].ymom = ((this.hash[rooms[r]].ymom))
+                                    }
 
-                                    this.blocks[t][k].xmom = ((this.hash[rooms[r]].xmom))
-                                    this.blocks[t][k].ymom = ((this.hash[rooms[r]].ymom))
                                 }
-
+                                // this.blocks[t][k].air = ( this.hash[rooms[r]].air) 
                             }
-                            // this.blocks[t][k].air = ( this.hash[rooms[r]].air) 
                         }
                     }
                 }
-            }
 
-            this.medflag = 0
+                this.medflag = 0
 
-            for (let t = 0; t < this.guys.length; t++) {
-                if (this.guys[t].health < this.guys[t].maxhealth * .25) {
-                    this.medflag = 1
+                for (let t = 0; t < this.guys.length; t++) {
+                    if (this.guys[t].health < this.guys[t].maxhealth * .25) {
+                        this.medflag = 1
+                    }
                 }
-            }
-            if(this.guys.length > 0){
-                if(this.guys[this.guys.length-1].health/this.guys[this.guys.length-1].maxhealth < .75){
-                    this.medflag = 1
+                if (this.guys.length > 0) {
+                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75) {
+                        this.medflag = 1
+                    }
                 }
-            }
-            if (Math.random() < .14) { //.14
+                if (Math.random() < .14) { //.14
 
-                if (Math.random() < .1) {
-                    this.guys.sort((a, b) => a.health / a.maxhealth <= b.health / b.maxhealth ? 1 : -1)
+                    if (Math.random() < .1) {
+                        this.guys.sort((a, b) => a.health / a.maxhealth <= b.health / b.maxhealth ? 1 : -1)
+                    }
+
+
+                    for (let t = 0; t < this.guys.length; t++) {
+                        if (this.guys[t].cound > 0) { //.14 connect
+                            // //console.log(t)
+                            continue
+                        }
+                        this.wet = 0
+                        for (let b = 0; b < this.blocks.length; b++) {
+                            for (let k = 0; k < this.blocks[t].length; k++) {
+                                if (this.blocks[b][k].holed == 1 || this.blocks[b][k].onFire == 1) {
+                                    this.wet = 1
+                                }
+                            }
+                        }
+                        let tiles = []
+                        let hole = 0
+                        let holecount = 0
+                        let fire = 0
+                        let firecount = 0
+                        let bc = 0
+                        let ac = 0
+                        for (let b = 0; b < this.blocks.length; b++) {
+                            for (let k = 0; k < this.blocks[t].length; k++) {
+                                if (this.blocks[b][k].marked == 1) {
+                                    bc++
+                                    ac += this.blocks[b][k].air
+                                }
+                            }
+                        }
+                        ac /= bc
+                        this.ac = ac
+
+                        // //////////console.log(ac)
+                        for (let b = 0; b < this.blocks.length; b++) {
+                            for (let k = 0; k < this.blocks[t].length; k++) {
+                                if (this.wet == 1) {
+                                    if (this.blocks[b][k].holed == 1) {
+                                        hole = 1
+                                        holecount++
+                                        //         tiles.push(this.blocks[b][k])
+                                    }
+                                    if (this.blocks[b][k].onFire == 1) {
+                                        fire = 1
+                                        firecount++
+                                        //         tiles.push(this.blocks[b][k])
+                                    }
+                                }
+                                // } else {
+                                if (this.blocks[b][k].marked == 1) {
+                                    tiles.push(this.blocks[b][k])
+                                }
+                                // }
+                            }
+                        }
+                        if (ac < 75) {
+                            this.state = 1
+                        } else {
+                            this.state = 0
+                        }
+                        let tile
+
+                        this.energy.balance()
+                        if (this.guys[t].health < this.guys[t].maxhealth * .25) {
+                            if (this.UI.systems[0].demand < this.UI.systems[0].max) {
+                                if (this.energy.power > 0) {
+                                    this.UI.systems[0].demand++
+                                    this.UI.systems[0].sto = this.UI.systems[0].demand
+                                }
+                            }
+
+                            let priorities = ['medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay']
+                            tile = tiles[Math.floor(Math.random() * tiles.length)]
+                            let j = 0
+                            let kiles = []
+                            for (let g = 0; g < this.guys.length; g++) {
+                                kiles.push(this.guys[g].tile)
+                            }
+                            if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                priorities[this.guys.length - 1] = 'medbay'
+                            }
+
+                            while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                j++
+                                if (j > 1000) {
+                                    break
+                                }
+                                tile = tiles[Math.floor(Math.random() * tiles.length)]
+                            }
+                            if (this.guys[t].tile[priorities[t]] == 1) {
+                                tile = this.guys[t].tile
+                                if (priorities[t] != "holed") {
+                                    let index = rooms.indexOf(priorities[t])
+                                    if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                        if (this.energy.power > 0) {
+                                            this.UI.systems[index].demand++
+                                            this.UI.systems[index].sto = this.UI.systems[index].demand
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            if (this.medflag == 0) {
+                                if (this.UI.systems[0].demand > 0) {
+                                    this.UI.systems[0].demand--
+                                }
+                            }
+
+                            if (fire == 1) {
+                                if (this.state == 0) {
+                                    let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    for (let h = 0; h < (firecount * 2); h++) { //*2?
+                                        priorities.unshift("onFire")
+                                    }
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+                                    // //console.log(priorities, t)
+
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "onFire") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(priorities[t])
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                } else if (this.state == 1) {
+
+                                    let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    for (let h = 0; h < (firecount * 2); h++) { //*2?
+                                        priorities.unshift("onFire")
+                                    }
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "onFire") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(priorities[t])
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            } else if (hole == 1) {
+                                if (this.state == 0) {
+                                    let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    for (let h = 0; h < holecount; h++) {
+                                        priorities.unshift("holed")
+                                    }
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "holed") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(priorities[t])
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                } else if (this.state == 1) {
+
+                                    let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    for (let h = 0; h < holecount; h++) {
+                                        priorities.unshift("holed")
+                                    }
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "holed") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(priorities[t])
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            } else {
+
+                                if (this.state == 0) {
+                                    let priorities = ['weapon', 'shield', 'helm', 'weapon', "shield", 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+                                    //////console.log(kiles, !kiles.includes(tile))
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "holed") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(this.UI.systems[index].max, this.energy.power)
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                } else if (this.state == 1) {
+
+                                    let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
+                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    let j = 0
+                                    let kiles = []
+                                    for (let g = 0; g < this.guys.length; g++) {
+                                        kiles.push(this.guys[g].tile)
+                                    }
+
+                                    if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
+                                        priorities[this.guys.length - 1] = 'medbay'
+                                    }
+
+
+                                    while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
+                                        j++
+                                        if (j > 1000) {
+                                            break
+                                        }
+                                        tile = tiles[Math.floor(Math.random() * tiles.length)]
+                                    }
+
+                                    if (this.guys[t].tile[priorities[t]] == 1) {
+                                        tile = this.guys[t].tile
+                                        if (priorities[t] != "holed") {
+                                            let index = rooms.indexOf(priorities[t])
+                                            if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
+                                                if (this.energy.power > 0) {
+                                                    //////console.log(priorities[t])
+                                                    this.UI.systems[index].demand++
+                                                    this.UI.systems[index].sto = this.UI.systems[index].demand
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        if (this.guys[t].cound > 0) {
+                            this.guys[t].turning = 1
+                            this.guys[t].flagpath = astar.search(this, this.guys[t].tile, tile)
+                            this.guys[t].stogo = tile
+                            if (this.guys[t].flagpath.length > 1) {
+                                this.guys[t].selected = 0
+                            }
+                        } else {
+                            this.guys[t].path = astar.search(enemy, this.guys[t].tile, tile)
+                        }
+                        this.guys[t].stogo = tile
+                    }
                 }
 
 
                 for (let t = 0; t < this.guys.length; t++) {
-                    if (this.guys[t].cound > 0) { //.14 connect
-                        // //console.log(t)
-                        continue
-                    }
-                    this.wet = 0
-                    for (let b = 0; b < this.blocks.length; b++) {
-                        for (let k = 0; k < this.blocks[t].length; k++) {
-                            if (this.blocks[b][k].holed == 1 || this.blocks[b][k].onFire == 1) {
-                                this.wet = 1
-                            }
-                        }
-                    }
-                    let tiles = []
-                    let hole = 0
-                    let holecount = 0
-                    let fire = 0
-                    let firecount = 0
-                    let bc = 0
-                    let ac = 0
-                    for (let b = 0; b < this.blocks.length; b++) {
-                        for (let k = 0; k < this.blocks[t].length; k++) {
-                            if (this.blocks[b][k].marked == 1) {
-                                bc++
-                                ac += this.blocks[b][k].air
-                            }
-                        }
-                    }
-                    ac /= bc
-                    this.ac = ac
-
-                    // //////////console.log(ac)
-                    for (let b = 0; b < this.blocks.length; b++) {
-                        for (let k = 0; k < this.blocks[t].length; k++) {
-                            if (this.wet == 1) {
-                                if (this.blocks[b][k].holed == 1) {
-                                    hole = 1
-                                    holecount++
-                                    //         tiles.push(this.blocks[b][k])
-                                }
-                                if (this.blocks[b][k].onFire == 1) {
-                                    fire = 1
-                                    firecount++
-                                    //         tiles.push(this.blocks[b][k])
-                                }
-                            }
-                            // } else {
-                            if (this.blocks[b][k].marked == 1) {
-                                tiles.push(this.blocks[b][k])
-                            }
-                            // }
-                        }
-                    }
-                    if (ac < 75) {
-                        this.state = 1
-                    } else {
-                        this.state = 0
-                    }
-                    let tile
-
-                    this.energy.balance()
-                    if (this.guys[t].health < this.guys[t].maxhealth * .25) {
-                        if (this.UI.systems[0].demand < this.UI.systems[0].max) {
-                            if (this.energy.power > 0) {
-                                this.UI.systems[0].demand++
-                                this.UI.systems[0].sto = this.UI.systems[0].demand
-                            }
-                        }
-
-                        let priorities = ['medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay', 'medbay']
-                        tile = tiles[Math.floor(Math.random() * tiles.length)]
-                        let j = 0
-                        let kiles = []
-                        for (let g = 0; g < this.guys.length; g++) {
-                            kiles.push(this.guys[g].tile)
-                        }
-                        if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                            priorities[this.guys.length - 1] = 'medbay'
-                        }
-
-                        while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                            j++
-                            if (j > 1000) {
-                                break
-                            }
-                            tile = tiles[Math.floor(Math.random() * tiles.length)]
-                        }
-                        if (this.guys[t].tile[priorities[t]] == 1) {
-                            tile = this.guys[t].tile
-                            if (priorities[t] != "holed") {
-                                let index = rooms.indexOf(priorities[t])
-                                if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                    if (this.energy.power > 0) {
-                                        this.UI.systems[index].demand++
-                                        this.UI.systems[index].sto = this.UI.systems[index].demand
-                                    }
-                                }
-                            }
-                        }
-
-                    } else {
-                        if (this.medflag == 0) {
-                            if (this.UI.systems[0].demand > 0) {
-                                this.UI.systems[0].demand--
-                            }
-                        }
-
-                        if (fire == 1) {
-                            if (this.state == 0) {
-                                let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                for (let h = 0; h < (firecount * 2); h++) { //*2?
-                                    priorities.unshift("onFire")
-                                }
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-                                // //console.log(priorities, t)
-
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "onFire") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(priorities[t])
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-
-                            } else if (this.state == 1) {
-
-                                let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                for (let h = 0; h < (firecount * 2); h++) { //*2?
-                                    priorities.unshift("onFire")
-                                }
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "onFire") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(priorities[t])
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-
-                        } else if (hole == 1) {
-                            if (this.state == 0) {
-                                let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                for (let h = 0; h < holecount; h++) {
-                                    priorities.unshift("holed")
-                                }
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "holed") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(priorities[t])
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-
-                            } else if (this.state == 1) {
-
-                                let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                for (let h = 0; h < holecount; h++) {
-                                    priorities.unshift("holed")
-                                }
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "holed") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(priorities[t])
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-
-                        } else {
-
-                            if (this.state == 0) {
-                                let priorities = ['weapon', 'shield', 'helm', 'weapon', "shield", 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-                                //////console.log(kiles, !kiles.includes(tile))
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "holed") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(this.UI.systems[index].max, this.energy.power)
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-                            } else if (this.state == 1) {
-
-                                let priorities = ["oxygen", 'weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
-                                tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                let j = 0
-                                let kiles = []
-                                for (let g = 0; g < this.guys.length; g++) {
-                                    kiles.push(this.guys[g].tile)
-                                }
-
-                                if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
-                                    priorities[this.guys.length - 1] = 'medbay'
-                                }
-
-
-                                while (!(tile[priorities[t]] == 1 && !kiles.includes(tile))) {
-                                    j++
-                                    if (j > 1000) {
-                                        break
-                                    }
-                                    tile = tiles[Math.floor(Math.random() * tiles.length)]
-                                }
-
-                                if (this.guys[t].tile[priorities[t]] == 1) {
-                                    tile = this.guys[t].tile
-                                    if (priorities[t] != "holed") {
-                                        let index = rooms.indexOf(priorities[t])
-                                        if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
-                                            if (this.energy.power > 0) {
-                                                //////console.log(priorities[t])
-                                                this.UI.systems[index].demand++
-                                                this.UI.systems[index].sto = this.UI.systems[index].demand
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                    if (this.guys[t].cound > 0) {
-                        this.guys[t].turning = 1
-                        this.guys[t].flagpath = astar.search(this, this.guys[t].tile, tile)
-                        this.guys[t].stogo = tile
-                        if (this.guys[t].flagpath.length > 1) {
-                            this.guys[t].selected = 0
-                        }
-                    } else {
-                        this.guys[t].path = astar.search(enemy, this.guys[t].tile, tile)
-                    }
-                    this.guys[t].stogo = tile
+                    this.guys[t].draw()
                 }
-            }
-
-
-            for (let t = 0; t < this.guys.length; t++) {
-                this.guys[t].draw()
-            }
 
 
 
-            for (let w = 0; w < this.weapons.length; w++) {
-                if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-                    ////////////////console.log( this.boosts[1])
-                    this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
+                for (let w = 0; w < this.weapons.length; w++) {
+                    if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
+                        ////////////////console.log( this.boosts[1])
+                        this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
+                    }
                 }
-            }
 
-            if (this.hash["shield"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[2].max)))) {
-                this.shield.charge += Math.sqrt(this.boosts[2])
-            }
-
+                if (this.hash["shield"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[2].max)))) {
+                    this.shield.charge += Math.sqrt(this.boosts[2])
+                }
 
 
 
-            let oat = 0
-            if (this.UI.systems[4].demand < 1 || !(this.hash["oxygen"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[4].max))))) {
-                oat = 1
-            } else if (this.hash["oxygen"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[4].max)))) {
+
+                let oat = 0
+                if (this.UI.systems[4].demand < 1 || !(this.hash["oxygen"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[4].max))))) {
+                    oat = 1
+                } else if (this.hash["oxygen"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[4].max)))) {
+                    for (let t = 0; t < this.blocks.length; t++) {
+                        for (let k = 0; k < this.blocks[t].length; k++) {
+                            this.blocks[t][k].air += (this.boosts[4] + this.UI.systems[4].demand) / 10
+                            if (this.blocks[t][k].air > 100) {
+                                this.blocks[t][k].air = 100
+                            }
+                        }
+                    }
+                }
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
-                        this.blocks[t][k].air += (this.boosts[4] + this.UI.systems[4].demand) / 10
-                        if (this.blocks[t][k].air > 100) {
-                            this.blocks[t][k].air = 100
-                        }
+                        this.blocks[t][k].newair = this.blocks[t][k].air
+                        this.blocks[t][k].newfire = this.blocks[t][k].fire
                     }
                 }
-            }
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    this.blocks[t][k].newair = this.blocks[t][k].air
-                    this.blocks[t][k].newfire = this.blocks[t][k].fire
-                }
-            }
-
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    if (oat == 1) {
-                        if (this.blocks[t][k].marked == 1) {
-                            this.blocks[t][k].air -= (this.guys.length / 180)
-                            // this.blocks[t][k].air = Math.round(this.blocks[t][k].air)
-                        }
-                    }
-                }
-            }
-
-            this.pulse++
-
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    this.blocks[t][k].newair = this.blocks[t][k].air
-                    this.blocks[t][k].newfire = this.blocks[t][k].fire
-                }
-            }
-
-
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    if (this.blocks[t][k].onFire == 1) {
-                        this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
-                        if (this.blocks[t][k].fire <= 0) {
-                            this.blocks[t][k].fire = 0
-                            if (this.blocks[t][k].integrity > 30) {
-                                this.blocks[t][k].integrity -= .05
-                            }
-
-                            if (Math.random() < .01) {
-                                this.hull -= .5
-                            }
-                        }
-                    }
-                    this.blocks[t][k].fire = Math.max(100 - this.blocks[t][k].air, this.blocks[t][k].fire)
-                }
-            }
-
-
-            if (this.pulse % 2 == 3) {
-
-                // for (let t = this.blocks.length - 1; t >= 0; t--) {
-                //     for (let k = this.blocks[t].length - 1; k >= 0; k--) {
-                //         if (this.blocks[t][k].marked == 1) {
-                //             let n = this.neighbors(this.blocks[t][k])
-                //             for (let f = n.length - 1; f >= 0; f--) {
-                //                 if (n[f].marked == 1) {
-                //                     this.blocks[t][k].hair = (this.blocks[t][k].air + (n[f].air * 1)) * .5
-                //                 }
-                //             }
-                //             for (let f = 0; f < n.length; f++) {
-                //                 if (n[f].marked == 1) {
-                //                     this.blocks[t][k].chair = (this.blocks[t][k].air + (n[f].air * 1)) * .5
-                //                 }
-                //             }
-
-                //             this.blocks[t][k].air = (this.blocks[t][k].hair + this.blocks[t][k].chair) * .5
-                //         }
-                //     }
-                // }
-                // for (let t = 0; t < this.blocks.length; t++) {
-                //     for (let k = 0; k < this.blocks[t].length; k++) {
-                //         if (this.blocks[t][k].marked == 1) {
-                //             let n = this.neighbors(this.blocks[t][k])
-                //             for (let f = 0; f < n.length; f++) {
-                //                 if (n[f].marked == 1) {
-                //                     this.blocks[t][k].air = (this.blocks[t][k].air + (n[f].air * 1)) * .5
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-
-            } else {
 
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
-                        if (this.blocks[t][k].marked == 1) {
+                        if (oat == 1) {
+                            if (this.blocks[t][k].marked == 1) {
+                                this.blocks[t][k].air -= (this.guys.length / 180)
+                                // this.blocks[t][k].air = Math.round(this.blocks[t][k].air)
+                            }
+                        }
+                    }
+                }
+
+                this.pulse++
+
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+                        this.blocks[t][k].newair = this.blocks[t][k].air
+                        this.blocks[t][k].newfire = this.blocks[t][k].fire
+                    }
+                }
+
+
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+                        if (this.blocks[t][k].onFire == 1) {
+                            this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                            if (this.blocks[t][k].fire <= 0) {
+                                this.blocks[t][k].fire = 0
+                                if (this.blocks[t][k].integrity > 30) {
+                                    this.blocks[t][k].integrity -= .05
+                                }
+
+                                if (Math.random() < .01) {
+                                    this.hull -= .5
+                                }
+                            }
+                        }
+                        this.blocks[t][k].fire = Math.max(100 - this.blocks[t][k].air, this.blocks[t][k].fire)
+                    }
+                }
+
+
+                if (this.pulse % 2 == 3) {
+
+                    // for (let t = this.blocks.length - 1; t >= 0; t--) {
+                    //     for (let k = this.blocks[t].length - 1; k >= 0; k--) {
+                    //         if (this.blocks[t][k].marked == 1) {
+                    //             let n = this.neighbors(this.blocks[t][k])
+                    //             for (let f = n.length - 1; f >= 0; f--) {
+                    //                 if (n[f].marked == 1) {
+                    //                     this.blocks[t][k].hair = (this.blocks[t][k].air + (n[f].air * 1)) * .5
+                    //                 }
+                    //             }
+                    //             for (let f = 0; f < n.length; f++) {
+                    //                 if (n[f].marked == 1) {
+                    //                     this.blocks[t][k].chair = (this.blocks[t][k].air + (n[f].air * 1)) * .5
+                    //                 }
+                    //             }
+
+                    //             this.blocks[t][k].air = (this.blocks[t][k].hair + this.blocks[t][k].chair) * .5
+                    //         }
+                    //     }
+                    // }
+                    // for (let t = 0; t < this.blocks.length; t++) {
+                    //     for (let k = 0; k < this.blocks[t].length; k++) {
+                    //         if (this.blocks[t][k].marked == 1) {
+                    //             let n = this.neighbors(this.blocks[t][k])
+                    //             for (let f = 0; f < n.length; f++) {
+                    //                 if (n[f].marked == 1) {
+                    //                     this.blocks[t][k].air = (this.blocks[t][k].air + (n[f].air * 1)) * .5
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
+
+                } else {
+
+                    for (let t = 0; t < this.blocks.length; t++) {
+                        for (let k = 0; k < this.blocks[t].length; k++) {
+                            if (this.blocks[t][k].marked == 1) {
+                                let n = this.neighbors(this.blocks[t][k])
+                                let sum = 0
+                                let fsum = 0
+                                for (let f = 0; f < n.length; f++) {
+                                    if (n[f].marked == 1) {
+                                        sum += (n[f].air * 1)
+                                        fsum += (n[f].fire * 1)
+                                    }
+                                }
+                                for (let f = n.length - 1; f >= 0; f--) {
+                                    if (n[f].marked == 1) {
+                                        sum += (n[f].air * 1)
+                                        fsum += (n[f].fire * 1)
+                                    }
+                                }
+                                sum /= n.length * 2
+                                fsum /= n.length * 2
+                                this.blocks[t][k].air = (this.blocks[t][k].air + sum) * .5
+                                this.blocks[t][k].fire = ((this.blocks[t][k].fire * 39) + fsum) * .025
+                            }
+                        }
+                    }
+
+                    // for (let t = this.blocks.length - 1; t >= 0; t--) {
+                    //     for (let k = this.blocks[t].length - 1; k >= 0; k--) {
+                    //         if (this.blocks[t][k].marked == 1) {
+                    //             let n = this.neighbors(this.blocks[t][k])
+                    //             for (let f = n.length - 1; f >= 0; f--) {
+                    //                 if (n[f].marked == 1) {
+                    //                     this.blocks[t][k].air = (this.blocks[t][k].air + (n[f].air * 1)) * .5
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                }
+
+
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+                        // this.blocks[t][k].air = this.blocks[t][k].newair
+                    }
+                }
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+
+                        if (this.blocks[t][k].holed == 1) {
+                            this.blocks[t][k].air -= 7
                             let n = this.neighbors(this.blocks[t][k])
-                            let sum = 0
-                            let fsum = 0
                             for (let f = 0; f < n.length; f++) {
                                 if (n[f].marked == 1) {
-                                    sum += (n[f].air * 1)
-                                    fsum += (n[f].fire * 1)
+                                    n[f].air -= 5
                                 }
                             }
-                            for (let f = n.length - 1; f >= 0; f--) {
-                                if (n[f].marked == 1) {
-                                    sum += (n[f].air * 1)
-                                    fsum += (n[f].fire * 1)
-                                }
-                            }
-                            sum /= n.length * 2
-                            fsum /= n.length * 2
-                            this.blocks[t][k].air = (this.blocks[t][k].air + sum) * .5
-                            this.blocks[t][k].fire = ((this.blocks[t][k].fire * 39) + fsum) * .025
                         }
-                    }
-                }
-
-                // for (let t = this.blocks.length - 1; t >= 0; t--) {
-                //     for (let k = this.blocks[t].length - 1; k >= 0; k--) {
-                //         if (this.blocks[t][k].marked == 1) {
-                //             let n = this.neighbors(this.blocks[t][k])
-                //             for (let f = n.length - 1; f >= 0; f--) {
-                //                 if (n[f].marked == 1) {
-                //                     this.blocks[t][k].air = (this.blocks[t][k].air + (n[f].air * 1)) * .5
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-            }
-
-
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-                    // this.blocks[t][k].air = this.blocks[t][k].newair
-                }
-            }
-            for (let t = 0; t < this.blocks.length; t++) {
-                for (let k = 0; k < this.blocks[t].length; k++) {
-
-                    if (this.blocks[t][k].holed == 1) {
-                        this.blocks[t][k].air -= 7
-                        let n = this.neighbors(this.blocks[t][k])
-                        for (let f = 0; f < n.length; f++) {
-                            if (n[f].marked == 1) {
-                                n[f].air -= 5
-                            }
+                        if (this.blocks[t][k].air <= 0) {
+                            this.blocks[t][k].air = 0
                         }
-                    }
-                    if (this.blocks[t][k].air <= 0) {
-                        this.blocks[t][k].air = 0
-                    }
-                    if (this.blocks[t][k].fire <= 0) {
-                        this.blocks[t][k].fire = 0
-                    }
-                    if (this.blocks[t][k].marked == 1) {
-                        // canvas_context.fillStyle = "White"
-                        // canvas_context.fillText(Math.round(this.blocks[t][k].fire), this.blocks[t][k].x + 16, this.blocks[t][k].y + 16)
-                    }
-                    if (this.blocks[t][k].air < 50) {
+                        if (this.blocks[t][k].fire <= 0) {
+                            this.blocks[t][k].fire = 0
+                        }
                         if (this.blocks[t][k].marked == 1) {
-
-                            let airwarn = new Rectangle(this.blocks[t][k].x, this.blocks[t][k].y, this.blocks[t][k].width, this.blocks[t][k].height, "#FF0000")
-                            let o = this.blocks[t][k].air
-                            if (o < 50) {
-                                airwarn.color = "#FF000011"
-                            }
-                            if (o < 45) {
-                                airwarn.color = "#FF000018"
-                            }
-                            if (o < 40) {
-                                airwarn.color = "#FF000025"
-                            }
-                            if (o < 35) {
-                                airwarn.color = "#FF000032"
-                            }
-                            if (o < 30) {
-                                airwarn.color = "#FF000042"
-                            }
-                            if (o < 25) {
-                                airwarn.color = "#FF000052"
-                            }
-                            if (o < 20) {
-                                airwarn.color = "#FF000062"
-                            }
-                            airwarn.draw()
+                            // canvas_context.fillStyle = "White"
+                            // canvas_context.fillText(Math.round(this.blocks[t][k].fire), this.blocks[t][k].x + 16, this.blocks[t][k].y + 16)
                         }
-                    }
-                }
-            }
+                        if (this.blocks[t][k].air < 50) {
+                            if (this.blocks[t][k].marked == 1) {
 
-            for (let t = 0; t < this.doors.length; t++) {
-                // this.doors[t].draw()
-            }
-            if (this.ondeath != 1) {
-                this.ondeath--
-                if (this.hull <= 0) {
-                    if (this.ondeath < 0) {
-                        this.ondeath = 14
-                    }
-                }
-                if (this.guys.length <= 0) {
-                    if (this.ondeath < 0) {
-                        this.ondeath = 14
-                        this.crewless = 1
-                    }
-                }
-                if (this.ondeath > 0) {
-                    if (this.crewless != 1) {
-                        let link = new Circle(this.body.x, this.body.y, 100 * ((14 - this.ondeath) / 8), "#FF000088")
-                        link.draw()
-                        let link2 = new Circle(this.body.x, this.body.y, 80 * ((14 - this.ondeath) / 8.05), "#FFAA0088")
-                        link2.draw()
-                        let link3 = new Circle(this.body.x, this.body.y, 60 * ((14 - this.ondeath) / 8.1), "#FFFF0088")
-                        link3.draw()
-                    }
-                }
-            } else {
-                if (typeof this.spread == "undefined") {
-                    this.spread = 0
-                    this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
-                    this.wegflag = Math.random()
-                    this.crewflag = Math.random()
-                    this.bombflag = Math.random()
-                    this.fuelflag = Math.random()
-                }
-                this.body.draw()
-                canvas_context.fillStyle = "white"
-                canvas_context.font = "30px comic sans ms"
-                canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
-                if (this.crewflag < (this.level / 30) && vessel.guys.length < 9) {
-                    canvas_context.fillText("+1 Crew!", 720, 240)
-                }
-
-                let index = -1
-                if (this.wegflag < (this.level / 30)) {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        if (vessel.weapons[t].real != 1) {
-                            index = t
-                            break
+                                let airwarn = new Rectangle(this.blocks[t][k].x, this.blocks[t][k].y, this.blocks[t][k].width, this.blocks[t][k].height, "#FF0000")
+                                let o = this.blocks[t][k].air
+                                if (o < 50) {
+                                    airwarn.color = "#FF000011"
+                                }
+                                if (o < 45) {
+                                    airwarn.color = "#FF000018"
+                                }
+                                if (o < 40) {
+                                    airwarn.color = "#FF000025"
+                                }
+                                if (o < 35) {
+                                    airwarn.color = "#FF000032"
+                                }
+                                if (o < 30) {
+                                    airwarn.color = "#FF000042"
+                                }
+                                if (o < 25) {
+                                    airwarn.color = "#FF000052"
+                                }
+                                if (o < 20) {
+                                    airwarn.color = "#FF000062"
+                                }
+                                airwarn.draw()
+                            }
                         }
                     }
                 }
 
-                if (this.wegflag < (this.level / 30 && index > -1)) {
-                    canvas_context.fillText("+1 Weapon!", 720, 280)
+                for (let t = 0; t < this.doors.length; t++) {
+                    // this.doors[t].draw()
                 }
-                if (this.bombflag < .3) {
-                    canvas_context.fillText(this.bombs + " Bombs!", 720, 320)
-                }
-                if (this.fuelflag < .5) {
-                    canvas_context.fillText(3 + " fuel!", 720, 360)
-                }
-
-                canvas_context.fillText("Jump", this.body.x - (this.body.radius * .5), this.body.y)
-                if (this.spread >= 30) {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        vessel.weapons[t].charge = 0
+                if (this.ondeath != 1) {
+                    this.ondeath--
+                    if (this.hull <= 0) {
+                        if (this.ondeath < 0) {
+                            this.ondeath = 14
+                        }
                     }
-                    vessel.fuel--
-                    start = 1
-                    vessel.scrap += this.loot
+                    if (this.guys.length <= 0) {
+                        if (this.ondeath < 0) {
+                            this.ondeath = 14
+                            this.crewless = 1
+                        }
+                    }
+                    if (this.ondeath > 0) {
+                        if (this.crewless != 1) {
+                            let link = new Circle(this.body.x, this.body.y, 100 * ((14 - this.ondeath) / 8), "#FF000088")
+                            link.draw()
+                            let link2 = new Circle(this.body.x, this.body.y, 80 * ((14 - this.ondeath) / 8.05), "#FFAA0088")
+                            link2.draw()
+                            let link3 = new Circle(this.body.x, this.body.y, 60 * ((14 - this.ondeath) / 8.1), "#FFFF0088")
+                            link3.draw()
+                        }
+                    }
+                } else {
+                    if (typeof this.spread == "undefined") {
+                        this.spread = 0
+                        this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
+                        this.wegflag = Math.random()
+                        this.crewflag = Math.random()
+                        this.bombflag = Math.random()
+                        this.fuelflag = Math.random()
+                    }
+                    this.body.draw()
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "30px comic sans ms"
+                    canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
+                    if (this.crewflag < (this.level / 30) && vessel.guys.length < 9) {
+                        canvas_context.fillText("+1 Crew!", 720, 240)
+                    }
+
                     let index = -1
                     if (this.wegflag < (this.level / 30)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
@@ -6092,56 +6098,84 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 break
                             }
                         }
-                        if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 10)))
-                        } else {
-                            // this.wegflag = 1
+                    }
 
-                            //new 
-                            for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
-                                if (vessel.upgradeMenu.wepsto[t].real != 1) {
+                    if (this.wegflag < (this.level / 30 && index > -1)) {
+                        canvas_context.fillText("+1 Weapon!", 720, 280)
+                    }
+                    if (this.bombflag < .3) {
+                        canvas_context.fillText(this.bombs + " Bombs!", 720, 320)
+                    }
+                    if (this.fuelflag < .5) {
+                        canvas_context.fillText(3 + " fuel!", 720, 360)
+                    }
+
+                    canvas_context.fillText("Jump", this.body.x - (this.body.radius * .5), this.body.y)
+                    if (this.spread >= 30) {
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            vessel.weapons[t].charge = 0
+                        }
+                        vessel.fuel--
+                        start = 1
+                        vessel.scrap += this.loot
+                        let index = -1
+                        if (this.wegflag < (this.level / 30)) {
+                            for (let t = 0; t < vessel.weapons.length; t++) {
+                                if (vessel.weapons[t].real != 1) {
                                     index = t
                                     break
                                 }
                             }
-
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 10)))
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 10)))
                             } else {
-                                this.wegflag = 1
-                            }
+                                // this.wegflag = 1
 
-                        }
-                    }
-                    if (this.bombflag < .3) {
-                        vessel.bombs += this.bombs
-                    }
-                    if (this.fuelflag < .5) {
-                        vessel.fuel += 3
-                    }
-                    if (this.crewflag < (this.level / 30)) {
-                        if (vessel.guys.length < 9) {
-                            let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
-                            let j = 0
-                            while (!tile.walkable) {
-                                j++
-                                if (j > 100) {
-                                    break
+                                //new 
+                                for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                                    if (vessel.upgradeMenu.wepsto[t].real != 1) {
+                                        index = t
+                                        break
+                                    }
                                 }
-                                tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
+
+                                if (index > -1) {
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 10)))
+                                } else {
+                                    this.wegflag = 1
+                                }
+
                             }
-                            let guy = new Guy(tile)
-                            guy.draw()
-                            vessel.guys.push(guy)
                         }
+                        if (this.bombflag < .3) {
+                            vessel.bombs += this.bombs
+                        }
+                        if (this.fuelflag < .5) {
+                            vessel.fuel += 3
+                        }
+                        if (this.crewflag < (this.level / 30)) {
+                            if (vessel.guys.length < 9) {
+                                let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
+                                let j = 0
+                                while (!tile.walkable) {
+                                    j++
+                                    if (j > 100) {
+                                        break
+                                    }
+                                    tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
+                                }
+                                let guy = new Guy(tile)
+                                guy.draw()
+                                vessel.guys.push(guy)
+                            }
+                        }
+                        enemy = new EnemyShip(Math.floor(Math.random() * 2), this.level + 1)
                     }
-                    enemy = new EnemyShip(Math.floor(Math.random() * 2), this.level + 1)
                 }
+
+
             }
-
-
         }
-    }
 
     class Star {
         constructor(x, y) {
