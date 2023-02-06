@@ -3722,12 +3722,58 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.wepsto[t].auto = 0
                 }
 
-                this.repairButton.draw()
-                canvas_context.fillStyle = "white"
-                canvas_context.font = "20px comic sans ms"
-                canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
-                canvas_context.font = "12px comic sans ms"
-                canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+
+                if (enemy.guys) {
+                    if (enemy.guys.length == 0) {
+                        this.repairButton.color = "#00FF0044"
+                        this.repairButton.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+
+                    }else if (enemy.hull <= 0) {
+
+                        this.repairButton.color = "#00FF0044"
+                        this.repairButton.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+
+
+                        
+                    }else{
+                        this.repairButton.color = "#ff000044"
+                        this.repairButton.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40,)
+                    }
+                } else if (enemy.hull <= 0) {
+                    this.repairButton.color = "#00FF0044"
+                    this.repairButton.draw()
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+
+                }else{
+                    this.repairButton.color = "#ff000044"
+                    this.repairButton.draw()
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40,)
+                }
+
+                
 
             }
         }
