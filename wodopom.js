@@ -2151,6 +2151,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.count = 0
             this.type = Math.floor(Math.random() * 15)
             // z++
+            this.airless = 0
+            this.fireproof = 0
             this.selected = 0
             this.target = {}
             this.path = [this.tile]
