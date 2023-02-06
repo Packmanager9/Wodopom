@@ -2441,14 +2441,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.pulsecheck = 0
             }
 
-            if (this.pulsecheck >= 10 && this.tile == this.path[this.step]) {
+            if (this.pulsecheck >= 10 && this.tile == this.path[this.path.length-1]) {
                 this.pulsecheck = 0
                 if (vessel.guys.includes(this)) {
 
                     if (this.tile == this.path[0]) {
                         for (let t = 0; t < vessel.guys.length; t++) {
                             if (this != vessel.guys[t]) {
-                                if (this.tile == vessel.guys[t].tile && !(vessel.guys[t].tile == vessel.guys[t].path[vessel.guys[t].step])) {
+                                if (this.tile == vessel.guys[t].tile && !(vessel.guys[t].tile == vessel.guys[t].path[vessel.guys[t].path.length-1])) {
                                     let n = vessel.neighbors(this.tile)
                                     for (let r = 0; r < n.length; r++) {
                                         if (n[r].walkable == true) {
@@ -2706,7 +2706,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this == vessel.shield) {
                     this.rings.push(new CircleR(vessel.body.x, vessel.body.y, 296 + (t * 12), "cyan"))
                 } else {
-                    this.rings.push(new CircleR(enemy.body.x, enemy.body.y, 296 + (t * 12), "cyan"))
+                    this.rings.push(new CircleR(enemy.body.x, enemy.body.y, 196 + (t * 12), "cyan"))
                 }
             }
 
@@ -4075,7 +4075,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.UI = new ShipUI(-1)
             this.energy = new Battery(9, this.UI.systems)
             this.warn = 0
-            this.scrap = 5000
+            this.scrap = 50
             this.bombs = 20
             this.fuel = 10
             this.shield = new Shields()
