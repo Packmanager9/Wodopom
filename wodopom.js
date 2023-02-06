@@ -5467,6 +5467,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.medflag = 1
                     }
                 }
+
+                if (this.medflag == 0) {
+                    if (this.UI.systems[0].demand > 0) {
+                        this.UI.systems[0].demand--
+                    }
+                }
                 if (Math.random() < .14) { //.14
 
                     if (Math.random() < .1) {
