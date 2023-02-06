@@ -1308,11 +1308,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (enemy.guys) {
                                 if (enemy.guys.length == 0) {
                                     vessel.hull += 5
-                                    vessel.scrap -= 2
+                                    vessel.scrap -= 5
                                 }
                             } else if (enemy.hull <= 0) {
                                 vessel.hull += 5
-                                vessel.scrap -= 2
+                                vessel.scrap -= 5
                             }
                         }
                     }
@@ -2387,7 +2387,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-            } else {
+            } else   if (enemy.guys.includes(this)) {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     for (let s = 0; s < sys.length; s++) {
                         if (enemy.guys[t].tile[sys[s]] == 1) {
@@ -3731,7 +3731,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.font = "20px comic sans ms"
                         canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
                         canvas_context.font = "12px comic sans ms"
-                        canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+                        canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
 
                     }else if (enemy.hull <= 0) {
 
@@ -3741,7 +3741,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.font = "20px comic sans ms"
                         canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
                         canvas_context.font = "12px comic sans ms"
-                        canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+                        canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
 
 
                         
@@ -3761,7 +3761,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.font = "20px comic sans ms"
                     canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
                     canvas_context.font = "12px comic sans ms"
-                    canvas_context.fillText("2 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+                    canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
 
                 }else{
                     this.repairButton.color = "#ff000044"
