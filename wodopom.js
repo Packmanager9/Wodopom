@@ -3828,7 +3828,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         draw() {
-            if (this == vessel.battery) {
+            if (this == vessel.energy) {
                 this.powersto = vessel.menuBattery.power
                 this.power = this.powersto
                 for (let t = 0; t < this.systems.length; t++) {
