@@ -1303,7 +1303,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (vessel.upgradeMenu.open == 1 && start == 2) {
                 if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
-                    if (vessel.scrap >= 2) {
+                    if (vessel.scrap >= 5) {
                         if (vessel.hull <= 295) {
                             if (enemy.guys) {
                                 if (enemy.guys.length == 0) {
@@ -2847,9 +2847,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.link2.draw()
         }
     }
+    class CyanX {
+        constructor(x, y) {
+            const angle = Math.PI / 4
+            this.point1 = new Point(x + (Math.cos(angle) * 10), y + (Math.sin(angle) * 10))
+            this.point2 = new Point(x + (Math.cos(angle) * -10), y + (Math.sin(angle) * -10))
+            this.point3 = new Point(x + (Math.cos(angle + Math.PI * .5) * 10), y + (Math.sin(angle + Math.PI * .5) * 10))
+            this.point4 = new Point(x + (Math.cos(angle + Math.PI * .5) * -10), y + (Math.sin(angle + Math.PI * .5) * -10))
+
+            this.link1 = new LineOP(this.point1, this.point2, "Cyan", 3)
+            this.link2 = new LineOP(this.point3, this.point4, "Cyan", 3)
+        }
+        draw() {
+            this.link1.draw()
+            this.link2.draw()
+        }
+    }
+    class X {
+        constructor(x, y, color, size) {
+            const angle = Math.PI / 4
+            this.point1 = new Point(x + (Math.cos(angle) * size), y + (Math.sin(angle) * size))
+            this.point2 = new Point(x + (Math.cos(angle) * -size), y + (Math.sin(angle) * -size))
+            this.point3 = new Point(x + (Math.cos(angle + Math.PI * .5) * size), y + (Math.sin(angle + Math.PI * .5) * size))
+            this.point4 = new Point(x + (Math.cos(angle + Math.PI * .5) * -size), y + (Math.sin(angle + Math.PI * .5) * -size))
+
+            this.link1 = new LineOP(this.point1, this.point2, color, 3)
+            this.link2 = new LineOP(this.point3, this.point4, color, 3)
+        }
+        draw() {
+            this.link1.draw()
+            this.link2.draw()
+        }
+    }
 
     class Weapon {
         constructor(type) {
+            this.bullets = []
             this.center = new Circle(452, 95)
             this.frame = 0
             this.max = 50000000000000000000000
@@ -2950,6 +2983,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.puncture = 1
                 this.fireChance = 200
                 this.double = 0
+            } else if (this.type == 10) {
+                this.name1 = "Ion"
+                this.name2 = "Pellet I"
+                this.max = 200
+                this.damage = 1
+                this.real = 1
+                this.crew = .5
+                this.fireChance = 1
+                this.double = 1
+            } else if (this.type == 11) {
+                this.name1 = "Ion"
+                this.name2 = "Pellet II"
+                this.max = 300
+                this.damage = 5
+                this.real = 1
+                this.crew = 1
+                this.fireChance = 20
+                this.double = 2
+            } else if (this.type == 12) {
+                this.name1 = "Crew Ion"
+                this.name2 = "Pellet I"
+                this.max = 250
+                this.damage = 5
+                this.real = 1
+                this.crew = 10
+                this.fireChance = 1
+                this.double = 1
             } else if (this.type == 100) {
                 this.name1 = "Wodopom"
                 this.name2 = ""
@@ -3291,6 +3351,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= .5
                     }
                 } else if (this.type == 4) {
+                    //mega laser
                     if (vessel.weapons.includes(this)) {
                         let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
                         link.draw()
@@ -3335,6 +3396,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     link3.draw()
                     this.firing -= 2
                 } else if (this.type == 8) {
+                    //mega bomb
                     let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26 * ((10 - this.firing) / 8), "#FF0000")
                     link.draw()
                     let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20 * ((10 - this.firing) / 8.05), "#FFAA00")
@@ -3343,6 +3405,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     link3.draw()
                     this.firing -= 2
                 } else if (this.type == 9) {
+                    //heatbeam
                     let site5 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5))
                     site5.draw()
                     let site = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4))
@@ -3352,6 +3415,88 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let site3 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2))
                     site3.draw()
                     this.firing -= .2
+                }  else if (this.type == 10) {
+                    let site5 = new CyanX(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5))
+                    site5.draw()
+
+                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 20, "cyan")
+                    ring.draw()
+                    this.firing -= 2
+
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    }else{
+                        link.target = ring
+                        link.object = enemy.center
+                    }
+
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+
+                    xmom*=link.hypotenuse()/5
+                    ymom*=link.hypotenuse()/5
+
+                    let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
+                    bullet.life = 5
+                    this.bullets.push(bullet)
+                    //ion1
+                }  else if (this.type == 11) {
+                    let site5 = new X(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), "teal", 12)
+                    site5.draw()
+
+                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 24, "teal")
+                    ring.draw()
+                    this.firing -= 2
+
+
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    }else{
+                        link.target = ring
+                        link.object = enemy.center
+                    }
+
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+
+                    xmom*=link.hypotenuse()/5
+                    ymom*=link.hypotenuse()/5
+
+                    let bullet = new Circle(link.object.x, link.object.y, 6, "teal", -xmom, -ymom)
+                    bullet.life = 5
+                    this.bullets.push(bullet)
+
+                    
+                    //ion2
+                }  else if (this.type == 12) {
+                    let site5 = new X(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), "#aaff00", 13)
+                    site5.draw()
+
+                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 26, "#aaff00")
+                    ring.draw()
+                    this.firing -= 2
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    }else{
+                        link.target = ring
+                        link.object = enemy.center
+                    }
+
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+
+                    xmom*=link.hypotenuse()/5
+                    ymom*=link.hypotenuse()/5
+
+                    let bullet = new Circle(link.object.x, link.object.y, 7, "#aaff00", -xmom, -ymom)
+                    bullet.life = 5
+                    this.bullets.push(bullet)
                 } else if (this.type == 100) {
 
 
@@ -3370,6 +3515,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         draw() {
+            for(let t =0;t<this.bullets.length;t++){
+                this.bullets[t].life--
+                if(this.bullets[t].life <= 0){
+                    this.bullets.splice(t,1)
+                }
+            }
+            for(let t =0;t<this.bullets.length;t++){
+                let o = new Point(this.bullets[t].x, this.bullets[t].y)
+                this.bullets[t].move()
+                this.bullets[t].draw()
+                let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius*2)
+                link.draw()
+            }
 
             if (keysPressed[vessel.weapons.indexOf(this) + 1]) {
                 for (let t = 0; t < vessel.weapons.length; t++) {
@@ -3432,6 +3590,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 9) {
                 canvas_context.drawImage(heatbeam, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            } else if (this.type == 10) {
+                canvas_context.drawImage(ion1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            } else if (this.type == 11) {
+                canvas_context.drawImage(ion2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            } else if (this.type == 12) {
+                canvas_context.drawImage(ion3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 100) {
                 this.frame++
                 canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -3474,6 +3638,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
     megalaser.src = "megalaser.png"
     let crewlaser = new Image()
     crewlaser.src = "crewlaser.png"
+
+
+
+    let ion1 = new Image()
+    ion1.src = "iongun1.png"
+    let ion2 = new Image()
+    ion2.src = "iongun2.png"
+    let ion3 = new Image()
+    ion3.src = "iongun3.png"
 
     let wodopomimg = new Image()
     wodopomimg.src = "wodopom.png"
@@ -6551,7 +6724,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 10)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 13)))
                         } else {
                             // this.wegflag = 1
 
@@ -6564,7 +6737,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 10)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 13)))
                             } else {
                                 this.wegflag = 1
                             }
