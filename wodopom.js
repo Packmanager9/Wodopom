@@ -4229,7 +4229,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.UI = new ShipUI(-1)
             this.energy = new Battery(9, this.UI.systems)
             this.warn = 0
-            this.scrap = 5000
+            this.scrap = 50
             this.bombs = 20
             this.fuel = 10
             this.shield = new Shields()
@@ -4728,7 +4728,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].onFire == 1) {
-                            this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                            if(this.UI.systems[5].sto >= 7){
+                                this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50)*.5
+                            }else{
+                                this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                            }
                             if (this.blocks[t][k].fire <= 0) {
                                 this.blocks[t][k].fire = 0
                                 if (this.blocks[t][k].integrity > 30) {
@@ -6241,7 +6245,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].onFire == 1) {
-                        this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                        if(this.UI.systems[5].sto >= 7){
+                            this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50)*.5
+                        }else{
+                            this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
+                        }
                         if (this.blocks[t][k].fire <= 0) {
                             this.blocks[t][k].fire = 0
                             if (this.blocks[t][k].integrity > 30) {
@@ -6787,7 +6795,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         let rect = new RectangleR(TIP_engine.x - (dim.w + 20), TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
-                        if (vessel.UI.systems[5].sto >= 7) {
+                        if (vessel.UI.systems[5].sto >= 6) {
 
                         } else {
                             rect.height -= 110
@@ -6803,7 +6811,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         py += 12
                         canvas_context.fillText(this.text4, rect.x + 10, py)
                         for (let r = 0; r < enemy.guys[t].skillslist.length; r++) {
-                            if (vessel.UI.systems[5].sto >= 7) {
+                            if (vessel.UI.systems[5].sto >= 6) {
                                 let box1 = new RectangleR(TIP_engine.x + 5 - (dim.w + 20), py + 10, 130, 5, "#88888844")
                                 canvas_context.fillStyle = "white"
                                 canvas_context.font = "9px comic sans ms"
@@ -6935,6 +6943,34 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 py += 12
                 canvas_context.fillText(this.text4, rect.x + 10, py)
             }
+
+
+            if (vessel.UI.systems[5].sto >= 4) {
+
+                if (enemy.healthbar.isPointInside(TIP_engine)) {
+                    this.text1 = "Enemy Hull"
+                    this.text2 = `Integrity: ${enemy.hull}/${enemy.maxhull}`
+                    this.text3 = "Current Shield: " + enemy.shield.state
+                    this.text4 = "Max: " + enemy.shield.level
+                    let dim = {}
+                    canvas_context.font = "12px comic sans ms"
+                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                    dim.h = 36
+                    //////////////console.log(dim)
+                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                    rect.draw()
+                    canvas_context.fillStyle = "white"
+                    let py = TIP_engine.y + 5
+                    canvas_context.fillText(this.text1, rect.x + 10, py)
+                    py += 12
+                    canvas_context.fillText(this.text2, rect.x + 10, py)
+                    py += 12
+                    canvas_context.fillText(this.text3, rect.x + 10, py)
+                    // py += 12
+                    // canvas_context.fillText(this.text4, rect.x + 10, py)
+                }
+            }
+
             if (vessel.healthbar.isPointInside(TIP_engine)) {
                 this.text1 = "Hull"
                 this.text2 = `Integrity: ${vessel.hull}/${vessel.maxhull}`
