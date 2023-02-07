@@ -5747,10 +5747,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             continue
                         }
                     }
-                    this.UI.systems[r].sto--
-                    if (this.UI.systems[r].sto <= 0) {
-                        this.UI.systems[r].sto = 0
-                    }
+                    // if (rooms[r] == "medbay") {
+
+                    // }else{
+                        this.UI.systems[r].sto--
+                        if (this.UI.systems[r].sto <= 0) {
+                            this.UI.systems[r].sto = 0
+                        }
+                    // }
                 } else {
                     // if (rooms[r] == "medbay") {
                     if (this.energy.power > 0) {
@@ -5810,10 +5814,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.energy.balance()
             if (this.medflag == 0) {
                 if (this.UI.systems[0].sto > 0) {
-                    this.UI.systems[0].sto--
+                    // this.UI.systems[0].sto--
+                    if (this.UI.systems[0].sto <= 0) {
+                        this.UI.systems[0].sto = 0
+                    }
                 }
             } else {
-                if (this.UI.systems[0].demand > 0) {
+                if (this.UI.systems[0].sto < this.UI.systems[0].max) {
                     if (this.energy.power > 0) {
                         this.UI.systems[0].sto++
                     }
@@ -5887,10 +5894,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let tile
 
                     if (this.guys[t].health < this.guys[t].maxhealth * .25) {
-                        if (this.UI.systems[0].demand < this.UI.systems[0].max) {
+                        if (this.UI.systems[0].sto < this.UI.systems[0].max) {
                             if (this.energy.power > 0) {
-                                this.UI.systems[0].demand++
-                                this.UI.systems[0].sto = this.UI.systems[0].demand
+                                this.UI.systems[0].sto++
+                                // this.UI.systems[0].sto = this.UI.systems[0].demand
                             }
                         }
 
