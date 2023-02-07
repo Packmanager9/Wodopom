@@ -2193,7 +2193,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 17; t++) {
+    for (let t = 1; t < 18; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
@@ -2208,7 +2208,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.tile.walkable = false
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
-            this.type = Math.floor(Math.random() * 16)
+            this.type =  Math.floor(Math.random() * 17)
             // z++
             this.airless = 0
             this.fireproof = 0
@@ -2251,7 +2251,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.type == 6) {
                 this.regen = 1
-                this.skills += 'Regen+++, '
+                this.skills += 'Regen+++,  Makes Air++, '
                 this.names = ["Bloom", "Gulpod", "Podpak", "Podoak", "Rosthro", "Rost", "Pothra", "Pappthra", "Throcus"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             } else {
@@ -2280,8 +2280,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.energy = 1
                 this.repair += 1
                 this.damage = 2
-                this.skills += 'Energetic+, Fast+, Repair+, Oxygen+, Makes Air++, Fight--, Security--'
+                this.skills += 'Energetic+, Fast+, Repair+, Oxygen+, Fight--, Security--'
                 this.names = ["Geliphant", "Phantigel", "Gelp", "Phelli", "Gelphi", "Phelliglant", "Gnaiphel", "Trungle", "Gelypheyl"]
+                this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            }
+            if (this.type == 16) {
+                this.stats[0] = 6
+                this.stats[1] += 1
+                this.stats[3] += 1
+                // this.energy = 1
+                this.repair += 5
+                this.damage = 5
+                this.skills += 'Fast+, Repair++, Helm+, Weapons+'
+                this.names = ["Banandroid", "Nanbot", "Banabot", "Peeldroid", "Bananuits", "Banonlos", "Ananans", "Plantaindroid", "Nanananana"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
 
@@ -2691,6 +2702,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.tile.fire += this.extinguish
             if (this.tile.fire > 100) {
                 this.tile.fire = 100
+            }
+            canvas_context.imageSmoothingEnabled = true
+            if(this.type == 16){
+                canvas_context.imageSmoothingEnabled = false
+            }else{
+
             }
             canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
 
