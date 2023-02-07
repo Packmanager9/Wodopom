@@ -5507,10 +5507,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 }
 
-                if (Math.random() < this.level / 1) {
+                if (Math.random() < this.level / 50) {
                     this.guys.push(new Guy(tiles[0]))
                 }
-                if (Math.random() < this.level / 1) {
+                if (Math.random() < this.level / 100) {
                     this.guys.push(new Guy(tiles[5]))
                 }
                 if (Math.random() < this.level / 150) {
