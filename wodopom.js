@@ -1545,7 +1545,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         break
                     }
                 }
-                stars.check(TIP_engine)
+                if(start == 2){
+                    stars.check(TIP_engine)
+                }
             }
 
             ////////////////////////console.log(JSON.stringify(enemy.blocks))
