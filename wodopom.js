@@ -1545,7 +1545,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         break
                     }
                 }
-                if(start == 1){
+                if (start == 1) {
                     stars.check(TIP_engine)
                 }
             }
@@ -2994,8 +2994,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 20
-                this.buy = 50
-                this.sell = 15
+                this.buy = 40
+                this.sell = 12
             } else if (this.type == 2) {
                 this.name1 = "Double"
                 this.name2 = "Laser"
@@ -3004,7 +3004,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.double = 2
                 this.fireChance = 20
-                this.buy = 70
+                this.buy = 60
                 this.sell = 45
             } else if (this.type == 3) {
                 this.name1 = "Triple"
@@ -3014,7 +3014,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.double = 3
                 this.fireChance = 30
-                this.buy = 100
+                this.buy = 80
                 this.sell = 65
             } else if (this.type == 4) {
                 this.name1 = "Crew"
@@ -3025,7 +3025,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 1
                 this.crew = 8
                 this.fireChance = 40
-                this.buy = 100
+                this.buy = 85
                 this.sell = 65
             } else if (this.type == 5) {
                 this.name1 = "Mega"
@@ -3036,7 +3036,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 2
                 this.double = 2
                 this.fireChance = 35
-                this.buy = 120
+                this.buy = 100
                 this.sell = 85
             } else if (this.type == 6) {
                 this.name1 = "Medium"
@@ -3046,7 +3046,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 30
-                this.buy = 60
+                this.buy = 45
                 this.sell = 20
             } else if (this.type == 7) {
                 this.name1 = "Big"
@@ -3056,7 +3056,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.crew = 1.5
-                this.buy = 65
+                this.buy = 55
                 this.sell = 25
                 this.fireChance = 45
             } else if (this.type == 8) {
@@ -3069,8 +3069,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 1.8
                 this.puncture = 1
                 this.fireChance = 50
-                this.buy = 95
-                this.sell = 65
+                this.buy = 60
+                this.sell = 40
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam"
@@ -3638,7 +3638,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.firing -= 2
 
 
-                    let link = new LineOP()
+                    let link = new LineOP(ring, ring)
                     if (vessel.weapons.includes(this)) {
                         link.target = ring
                         link.object = this.center
@@ -4265,52 +4265,56 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
 
 
-                if (this.shopdraw == 1) {
-                    this.shopbox.draw()
-                    this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
-                    this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
-                    // this.buyButton.draw()
-                    this.sellButton.draw()
-                    canvas_context.fillStyle = "black"
-                    canvas_context.font = "20px comic sans ms"
-                    this.index = -1
-                    for (let t = 0; t < this.wepsto.length; t++) {
-                        if (this.wepsto[t].selected == 1) {
-                            this.index = t
+                if (stars.stars[vessel.star].shop == 1) {
+                    if (this.shopdraw == 1) {
+                        this.shopbox.draw()
+                        this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
+                        this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
+                        // this.buyButton.draw()
+                        this.sellButton.draw()
+                        canvas_context.fillStyle = "black"
+                        canvas_context.font = "20px comic sans ms"
+                        this.index = -1
+                        for (let t = 0; t < this.wepsto.length; t++) {
+                            if (this.wepsto[t].selected == 1) {
+                                this.index = t
+                            }
                         }
-                    }
-                    canvas_context.fillStyle = "white"
-                    canvas_context.font = "20px comic sans ms"
-                    canvas_context.fillText(`${this.wepsto[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
-                    // canvas_context.fillText(`${this.wepsto[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
-                    canvas_context.fillStyle = "black"
-                    canvas_context.font = "20px comic sans ms"
-                    // canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
-                    canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
-                } else if (this.shopdraw == 2) {
-                    this.shopbox.draw()
-                    this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
-                    this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
-                    this.buyButton.draw()
-                    // this.sellButton.draw()
-                    canvas_context.fillStyle = "black"
-                    canvas_context.font = "20px comic sans ms"
-                    this.index = -1
-                    for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
-                        if (stars.stars[vessel.star].weapons[t].selected == 1) {
-                            this.index = t
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText(`${this.wepsto[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
+                        // canvas_context.fillText(`${this.wepsto[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
+                        canvas_context.fillStyle = "black"
+                        canvas_context.font = "20px comic sans ms"
+                        // canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
+                        canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
+                    } else if (this.shopdraw == 2) {
+                        this.shopbox.draw()
+                        this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
+                        this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
+                        this.buyButton.draw()
+                        // this.sellButton.draw()
+                        canvas_context.fillStyle = "black"
+                        canvas_context.font = "20px comic sans ms"
+                        this.index = -1
+                        for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                            if (stars.stars[vessel.star].weapons[t].selected == 1) {
+                                this.index = t
+                            }
                         }
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        // canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
+                        canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
+                        canvas_context.fillStyle = "black"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
+                        // canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
                     }
-                    canvas_context.fillStyle = "white"
-                    canvas_context.font = "20px comic sans ms"
-                    // canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
-                    canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
-                    canvas_context.fillStyle = "black"
-                    canvas_context.font = "20px comic sans ms"
-                    canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
-                    // canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
-                }
 
+                }
+            } else {
+                this.shopdraw = 0
             }
         }
         check(point) {
@@ -4360,13 +4364,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                if (this.tab == 1) {
-                    for (let k = 0; k < stars.stars[vessel.star].weapons.length; k++) {
-                        if (stars.stars[vessel.star].weapons[k].body.isPointInside(point)) {
-                            gwet = 3
+
+                if (stars.stars[vessel.star].shop == 1) {
+                    if (this.tab == 1) {
+                        for (let k = 0; k < stars.stars[vessel.star].weapons.length; k++) {
+                            if (stars.stars[vessel.star].weapons[k].body.isPointInside(point)) {
+                                gwet = 3
+                            }
                         }
                     }
-
                 }
                 if (gwet == 3) {
 
@@ -4433,12 +4439,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let t = 0; t < this.wepsto.length; t++) {
                         if (this.wepsto[t].body.isPointInside(point)) {
                             this.wepsto[t].selected = 1
-                            if (this.wepsto[t].selectedSto == 1 && this.wepsto[t].type != -1) {
-                                this.shopdraw = 1
-                                this.shopbox.x = TIP_engine.x
-                                this.shopbox.y = TIP_engine.y
-                            } else {
-                                this.shopdraw = 0
+
+                            if (stars.stars[vessel.star].shop == 1) {
+                                if (this.wepsto[t].selectedSto == 1 && this.wepsto[t].type != -1) {
+                                    this.shopdraw = 1
+                                    this.shopbox.x = TIP_engine.x
+                                    this.shopbox.y = TIP_engine.y
+                                } else {
+                                    this.shopdraw = 0
+                                }
                             }
                         }
                     }
