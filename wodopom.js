@@ -1281,19 +1281,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
             TIP_engine.y = YS_engine
             TIP_engine.body = TIP_engine
             ////console.log(TIP_engine)
-            if (enemy.hull <= 0) {
-                if (enemy.body.isPointInside(TIP_engine)) {
-                    enemy.spread = 31
-                    return
-                }
-            }
-            if (enemy.guys) {
-                if (enemy.guys.length == 0) {
+
+            if (vessel.upgradeMenu.open == 1){
+
+            }else{
+                if (enemy.hull <= 0) {
                     if (enemy.body.isPointInside(TIP_engine)) {
                         enemy.spread = 31
                         return
                     }
                 }
+                if (enemy.guys) {
+                    if (enemy.guys.length == 0) {
+                        if (enemy.body.isPointInside(TIP_engine)) {
+                            enemy.spread = 31
+                            return
+                        }
+                    }
+                }
+    
             }
 
 
