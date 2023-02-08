@@ -2193,7 +2193,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 18; t++) {
+    for (let t = 1; t < 20; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
@@ -2208,7 +2208,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.tile.walkable = false
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
-            this.type =  Math.floor(Math.random() * 17)
+            this.type =  Math.floor(Math.random() * 18)
             // z++
             this.airless = 0
             this.fireproof = 0
@@ -2293,6 +2293,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.damage = 5
                 this.skills += 'Fast+, Repair++, Helm+, Weapons+'
                 this.names = ["Banandroid", "Nanbot", "Banabot", "Peeldroid", "Bananuits", "Banonlos", "Ananans", "Plantaindroid", "Nanananana"]
+                this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            }
+            if (this.type == 17) {
+                // this.stats[0] = 6
+                this.stats[2] += 1.2
+                this.stats[6] += 1.2
+                // this.energy = 1
+                this.repair += 5
+                this.damage = 5
+                this.skills += 'Repair++, Engine++, Shield++, Flammable--, Slow-'
+                this.names = ["Runnybabbit", "Splat", "Eggresst", "Yolkenstien", "Albubert", "Bunegg", "Ovolago", "Lagovo", "Rabolk"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
 
@@ -2693,8 +2704,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.tile.fire < 50) {
                 if (this.fireproof == 0) {
-                    this.health -= (((50 - this.tile.fire) / 50) * 1.5) + (this.regen * .8)
-                    if (this.type == 6) {
+                    this.health -= (((50 - this.tile.fire) / 50) * 1.5) + (this.regen * .9)
+                    if (this.type == 6 || this.type == 17) {
                         this.health -= (((50 - this.tile.fire) / 50) * 1.5)
                     }
                 }
