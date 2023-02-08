@@ -1282,9 +1282,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             TIP_engine.body = TIP_engine
             ////console.log(TIP_engine)
 
-            if (vessel.upgradeMenu.open == 1){
+            if (vessel.upgradeMenu.open == 1) {
 
-            }else{
+            } else {
                 if (enemy.hull <= 0) {
                     if (enemy.body.isPointInside(TIP_engine)) {
                         enemy.spread = 31
@@ -1299,15 +1299,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-    
+
             }
 
+
+            if (vessel.upgradeMenu.open == 1 && start == 2) {
+
+                if (vessel.upgradeMenu.shopdraw == 1) {
+
+                    if (vessel.upgradeMenu.sellButton.isPointInside(TIP_engine)) {
+                        vessel.upgradeMenu.wepsto[vessel.upgradeMenu.index].sold()
+                        return
+                    }
+
+                }
+                if (vessel.upgradeMenu.shopdraw == 2) {
+
+                    if (vessel.upgradeMenu.buyButton.isPointInside(TIP_engine)) {
+                        stars.stars[vessel.star].weapons[vessel.upgradeMenu.index].bought()
+                        return
+                    }
+
+                }
+
+
+            }
 
             vessel.menuBattery.check(TIP_engine)
             vessel.upgradeMenu.check(TIP_engine)
             vessel.upgradeMenu.levels.check(TIP_engine)
 
             if (vessel.upgradeMenu.open == 1 && start == 2) {
+
+
                 if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
                     if (vessel.scrap >= 5) {
                         if (vessel.hull <= 295) {
@@ -2459,7 +2483,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.secont = 0
         }
         draw() {
-
+            if (this.type == 100) {
+                return
+            }
             if (enemy.guys) {
                 if (this.secont == 0 && enemy.guys.includes(this)) {
                     this.secont = 1
@@ -2945,6 +2971,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.crew = 1
             this.puncture = 0
             this.fireChance = 0
+            if (this.type == -1) {
+                this.buy = 0
+                this.sell = 0
+            }
             if (this.type == 0) {
                 this.name1 = "Basic"
                 this.name2 = "Laser"
@@ -2952,6 +2982,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.damage = 35
                 this.real = 1
                 this.fireChance = 10
+                this.buy = 50
+                this.sell = 15
             } else if (this.type == 1) {
                 this.name1 = "Basic"
                 this.name2 = "Bomb"
@@ -2960,6 +2992,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 20
+                this.buy = 50
+                this.sell = 15
             } else if (this.type == 2) {
                 this.name1 = "Double"
                 this.name2 = "Laser"
@@ -2968,6 +3002,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.double = 2
                 this.fireChance = 20
+                this.buy = 70
+                this.sell = 45
             } else if (this.type == 3) {
                 this.name1 = "Triple"
                 this.name2 = "Laser"
@@ -2976,6 +3012,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.double = 3
                 this.fireChance = 30
+                this.buy = 100
+                this.sell = 65
             } else if (this.type == 4) {
                 this.name1 = "Crew"
                 this.name2 = "Laser"
@@ -2985,6 +3023,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 1
                 this.crew = 8
                 this.fireChance = 40
+                this.buy = 100
+                this.sell = 65
             } else if (this.type == 5) {
                 this.name1 = "Mega"
                 this.name2 = "Laser"
@@ -2994,6 +3034,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 2
                 this.double = 2
                 this.fireChance = 35
+                this.buy = 120
+                this.sell = 85
             } else if (this.type == 6) {
                 this.name1 = "Medium"
                 this.name2 = "Bomb"
@@ -3002,6 +3044,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 30
+                this.buy = 60
+                this.sell = 20
             } else if (this.type == 7) {
                 this.name1 = "Big"
                 this.name2 = "Bomb"
@@ -3010,6 +3054,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.bomb = 1
                 this.real = 1
                 this.crew = 1.5
+                this.buy = 65
+                this.sell = 25
                 this.fireChance = 45
             } else if (this.type == 8) {
                 this.name1 = "Mega"
@@ -3021,6 +3067,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 1.8
                 this.puncture = 1
                 this.fireChance = 50
+                this.buy = 95
+                this.sell = 65
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam"
@@ -3033,6 +3081,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.puncture = 1
                 this.fireChance = 200
                 this.double = 0
+                this.buy = 45
+                this.sell = 20
             } else if (this.type == 10) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet I"
@@ -3042,6 +3092,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = .5
                 this.fireChance = 1
                 this.double = 1
+                this.buy = 45
+                this.sell = 20
             } else if (this.type == 11) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet II"
@@ -3051,6 +3103,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 1
                 this.fireChance = 20
                 this.double = 2
+                this.buy = 55
+                this.sell = 28
             } else if (this.type == 12) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet I"
@@ -3060,6 +3114,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crew = 10
                 this.fireChance = 1
                 this.double = 1
+                this.buy = 60
+                this.sell = 30
             } else if (this.type == 100) {
                 this.name1 = "Wodopom"
                 this.name2 = ""
@@ -3072,8 +3128,84 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.wod = 1
                 this.double = 10
                 this.fireChance = 0
+                this.buy = 1
+                this.sell = 2
+            } else if (this.type == 101) {
+                this.name1 = "Laser"
+                this.name2 = "IOU"
+                this.max = 9000000000
+                this.damage = 1
+                this.bomb = 0
+                this.real = 1
+                this.crew = 0
+                this.puncture = 1
+                this.wod = 1
+                this.double = 0
+                this.fireChance = 0
+                this.buy = 50
+                this.sell = 50
             }
             // this.fireChance = 0
+        }
+        sold() {
+            if (vessel.weapons.includes(this)) {
+                vessel.weapons[vessel.weapons.indexOf(this)] = new Weapon(-1)
+                vessel.scrap += this.sell
+                vessel.upgradeMenu.shopdraw = 0
+            }
+            if (vessel.upgradeMenu.wepsto.includes(this)) {
+                vessel.upgradeMenu.wepsto[vessel.upgradeMenu.wepsto.indexOf(this)] = new Weapon(-1)
+                vessel.scrap += this.sell
+                vessel.upgradeMenu.shopdraw = 0
+            }
+        }
+        bought() {
+            // if(shop.weapons.includes(this)){
+            //     shop.weapons[shop.weapons.indexOf(this)] = new Weapon(this.type)
+            //     vessel.scrap -= this.buy
+            // }
+            let f = 0
+            let index = -1
+            for (let t = 0; t < vessel.weapons.length; t++) {
+                if (vessel.weapons[t].type == -1) {
+                    index = t
+                    f = 1
+                    break
+                }
+            }
+            if (f == 0) {
+                for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                    if (vessel.upgradeMenu.wepsto[t].type == -1) {
+                        index = t
+                        f = 2
+                        break
+                    }
+                }
+                if (f == 2) {
+
+                    if (vessel.scrap >= this.buy) {
+                        if (stars.stars[vessel.star].weapons.includes(this)) {
+                            vessel.upgradeMenu.wepsto[index] = new Weapon(this.type)
+                            stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1)
+
+
+                            vessel.scrap -= this.buy
+                            vessel.upgradeMenu.shopdraw = 0
+                        }
+                    }
+                }
+
+            } else {
+                if (stars.stars[vessel.star].weapons.includes(this)) {
+                    if (vessel.scrap >= this.buy) {
+                        vessel.weapons[index] = new Weapon(this.type)
+                        stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1)
+
+                        vessel.scrap -= this.buy
+                        vessel.upgradeMenu.shopdraw = 0
+                    }
+                }
+            }
         }
         fire(tile) {
             if (this.charge >= this.max) {
@@ -3593,9 +3725,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.beingchecked--
             if (vessel.weapons.includes(this)) {
                 this.body.x = 270 + (100 * vessel.weapons.indexOf(this))
-            } else {
+            } else if (vessel.upgradeMenu.wepsto.includes(this)) {
                 this.body.x = (vessel.upgradeMenu.window.x + 400) + ((100 * vessel.upgradeMenu.wepsto.indexOf(this)) % 500)
                 this.body.y = (vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(vessel.upgradeMenu.wepsto.indexOf(this) / 5))
+            } else {
+                this.body.x = (vessel.upgradeMenu.window.x + 400) + ((100 * stars.stars[vessel.star].weapons.indexOf(this)) % 500)
+                this.body.y = (vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(stars.stars[vessel.star].weapons.indexOf(this) / 5))
             }
             if (this.selected == 1) {
                 this.body.color = "#666666"
@@ -3652,6 +3787,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else if (this.type == 100) {
                 this.frame++
                 canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            } else if (this.type == 101) {
+                // this.frame++
+                canvas_context.drawImage(iou, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             }
 
 
@@ -3700,6 +3838,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     ion2.src = "iongun2.png"
     let ion3 = new Image()
     ion3.src = "iongun3.png"
+    let iou = new Image()
+    iou.src = 'iou.png'
 
     let wodopomimg = new Image()
     wodopomimg.src = "wodopom.png"
@@ -3998,6 +4138,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     system.src = "system.png"
     class UpgradeMenu {
         constructor() {
+            this.tab = -1
+            this.shoptag = 0
+            this.shopbox = new RectangleR(0, 0, 200, 100, "#88888888")
             this.wepsto = []
             // for(let t = 0;t<8;t++){
             //     let v = new Weapon(t)
@@ -4005,9 +4148,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     this.wepsto.push(v)
             // }
             for (let t = 0; t < 15; t++) {
-                let v = new Weapon(-1)
-                v.auto = 0
-                this.wepsto.push(v)
+                if (t != 0) {
+                    let v = new Weapon(-1)
+                    v.auto = 0
+                    this.wepsto.push(v)
+                } else {
+
+                    let v = new Weapon(101)
+                    v.auto = 0
+                    this.wepsto.push(v)
+                }
             }
             this.button = new RectangleR(1, 540, 40, 40, "#444444")
             this.open = -1
@@ -4030,11 +4180,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("Hull: " + vessel.hull, this.window.x + 270, this.window.y + 60)
                 canvas_context.fillText("Fuel: " + vessel.fuel, this.window.x + 270, this.window.y + 80)
                 canvas_context.fillText("Bombs: " + vessel.bombs, this.window.x + 270, this.window.y + 100)
-                for (let t = 0; t < this.wepsto.length; t++) {
-                    this.wepsto[t].draw()
-                    this.wepsto[t].auto = 0
-                }
+                this.cargo = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y + 25, 50, 25, "#88888888")
+                this.shopsquare = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y, 50, 25, "#88888888")
 
+                if (stars.stars[vessel.star].shop == 1) {
+                    this.cargo.draw()
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "15px comic sans ms"
+                    canvas_context.fillText("Cargo", this.cargo.x + 5, this.cargo.y + 15,)
+
+                    this.shopsquare.draw()
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "15px comic sans ms"
+                    canvas_context.fillText("Shop", this.shopsquare.x + 5, this.shopsquare.y + 15,)
+                } else {
+                    this.tab = -1
+                }
+                if (this.tab == 1) {
+                    // canvas_context.
+                    // canvas_context.fillText()
+
+                    for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                        stars.stars[vessel.star].weapons[t].draw()
+                        stars.stars[vessel.star].weapons[t].auto = 0
+                    }
+
+                } else {
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        this.wepsto[t].draw()
+                        this.wepsto[t].auto = 0
+                    }
+                }
 
                 if (enemy.guys) {
                     if (enemy.guys.length == 0) {
@@ -4087,11 +4263,69 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
 
 
+                if (this.shopdraw == 1) {
+                    this.shopbox.draw()
+                    this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
+                    this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
+                    // this.buyButton.draw()
+                    this.sellButton.draw()
+                    canvas_context.fillStyle = "black"
+                    canvas_context.font = "20px comic sans ms"
+                    this.index = -1
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        if (this.wepsto[t].selected == 1) {
+                            this.index = t
+                        }
+                    }
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText(`${this.wepsto[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
+                    // canvas_context.fillText(`${this.wepsto[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
+                    canvas_context.fillStyle = "black"
+                    canvas_context.font = "20px comic sans ms"
+                    // canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
+                    canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
+                } else if (this.shopdraw == 2) {
+                    this.shopbox.draw()
+                    this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
+                    this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
+                    this.buyButton.draw()
+                    // this.sellButton.draw()
+                    canvas_context.fillStyle = "black"
+                    canvas_context.font = "20px comic sans ms"
+                    this.index = -1
+                    for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                        if (stars.stars[vessel.star].weapons[t].selected == 1) {
+                            this.index = t
+                        }
+                    }
+                    canvas_context.fillStyle = "white"
+                    canvas_context.font = "20px comic sans ms"
+                    // canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
+                    canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
+                    canvas_context.fillStyle = "black"
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
+                    // canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
+                }
 
             }
         }
         check(point) {
             if (this.open == 1) {
+
+                if (stars.stars[vessel.star].shop == 1) {
+                    if (this.shopsquare.isPointInside(point)) {
+                        this.tab = 1
+                        this.shopdraw = 0
+                        return
+                    }
+                }
+                if (this.cargo.isPointInside(point)) {
+                    this.tab = -1
+                    this.shopdraw = 0
+                    return
+                }
 
 
                 for (let k = 0; k < vessel.weapons.length; k++) {
@@ -4105,15 +4339,104 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
 
-
-
+                let gwet = 0
                 for (let t = 0; t < this.wepsto.length; t++) {
                     if (this.wepsto[t].body.isPointInside(point)) {
                         for (let k = 0; k < vessel.weapons.length; k++) {
                             if (vessel.weapons[k].selected == 1) {
-                                let swap = new Weapon(this.wepsto[t].type)
-                                this.wepsto[t] = new Weapon(vessel.weapons[k].type)
-                                vessel.weapons[k] = swap
+                                gwet = 1
+                            }
+                        }
+                    }
+                }
+                for (let k = 0; k < vessel.weapons.length; k++) {
+                    if (vessel.weapons[k].body.isPointInside(point)) {
+                        for (let t = 0; t < this.wepsto.length; t++) {
+                            if (this.wepsto[t].selected == 1) {
+                                gwet = 2
+                            }
+                        }
+                    }
+                }
+                if (this.tab == 1) {
+                    for (let k = 0; k < stars.stars[vessel.star].weapons.length; k++) {
+                        if (stars.stars[vessel.star].weapons[k].body.isPointInside(point)) {
+                            gwet = 3
+                        }
+                    }
+
+                }
+                if (gwet == 3) {
+
+                    for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                        if (stars.stars[vessel.star].weapons[t].selectedSto == 1) {
+                            stars.stars[vessel.star].weapons[t].selectedSto = 0
+                        }
+                        if (stars.stars[vessel.star].weapons[t].selected == 1) {
+                            stars.stars[vessel.star].weapons[t].selectedSto = 1
+                        }
+                        stars.stars[vessel.star].weapons[t].selected = 0
+                    }
+
+                    for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                        if (stars.stars[vessel.star].weapons[t].body.isPointInside(point)) {
+                            stars.stars[vessel.star].weapons[t].selected = 1
+                            if (stars.stars[vessel.star].weapons[t].selectedSto == 1 && stars.stars[vessel.star].weapons[t].type != -1) {
+                                this.shopdraw = 2
+                                this.shopbox.x = TIP_engine.x
+                                this.shopbox.y = TIP_engine.y
+                            } else {
+                                this.shopdraw = 0
+                            }
+                        }
+                    }
+
+
+                } else if (gwet == 1) {
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        if (this.wepsto[t].body.isPointInside(point)) {
+                            for (let k = 0; k < vessel.weapons.length; k++) {
+                                if (vessel.weapons[k].selected == 1) {
+                                    let swap = new Weapon(this.wepsto[t].type)
+                                    this.wepsto[t] = new Weapon(vessel.weapons[k].type)
+                                    vessel.weapons[k] = swap
+                                }
+                            }
+                        }
+                    }
+                } else if (gwet == 2) {
+
+                    for (let k = 0; k < vessel.weapons.length; k++) {
+                        if (vessel.weapons[k].body.isPointInside(point)) {
+                            for (let t = 0; t < this.wepsto.length; t++) {
+                                if (this.wepsto[t].selected == 1) {
+                                    let swap = new Weapon(this.wepsto[t].type)
+                                    this.wepsto[t] = new Weapon(vessel.weapons[k].type)
+                                    vessel.weapons[k] = swap
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        if (this.wepsto[t].selectedSto == 1) {
+                            this.wepsto[t].selectedSto = 0
+                        }
+                        if (this.wepsto[t].selected == 1) {
+                            this.wepsto[t].selectedSto = 1
+                        }
+                        this.wepsto[t].selected = 0
+                    }
+
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        if (this.wepsto[t].body.isPointInside(point)) {
+                            this.wepsto[t].selected = 1
+                            if (this.wepsto[t].selectedSto == 1 && this.wepsto[t].type != -1) {
+                                this.shopdraw = 1
+                                this.shopbox.x = TIP_engine.x
+                                this.shopbox.y = TIP_engine.y
+                            } else {
+                                this.shopdraw = 0
                             }
                         }
                     }
@@ -5701,6 +6024,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         draw() {
 
+
             for (let t = 0; t < this.UI.systems.length; t++) {
                 this.UI.systems[t].fed = 0
             }
@@ -5817,6 +6141,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17])]
 
+                if (stars.stars[vessel.star].shop == 1) {
+                    this.guys = []
+                    this.shop = 1
+                }
 
 
                 // this.guys = []
@@ -5832,7 +6160,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 10) {
@@ -5846,7 +6175,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 15) {
@@ -5860,7 +6189,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
                         this.weapons.push(wep5)
                     }
                 } else {
@@ -5874,15 +6203,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 100) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 500) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 10))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
                         this.weapons.push(wep5)
                     }
                 }
@@ -6058,7 +6387,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // if (rooms[r] == "medbay") {
 
                     if (rooms[r] == "medbay") {
-                        if(this.energy.power > 0 && this.UI.systems[0].sto <  this.UI.systems[0].max){
+                        if (this.energy.power > 0 && this.UI.systems[0].sto < this.UI.systems[0].max) {
                             this.UI.systems[r].sto++
                             // //console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
                             // //console.log("med")
@@ -6725,7 +7054,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < this.doors.length; t++) {
                 // this.doors[t].draw()
             }
-            if (this.ondeath != 1) {
+            if (this.ondeath != 1 || this.shop == 1) {
+
+                if (this.shop == 1) {
+                    this.crewless = 1
+                    this.shop = 2
+                }
                 this.ondeath--
                 if (this.hull <= 0) {
                     if (this.ondeath < 0) {
@@ -6756,11 +7090,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.crewflag = Math.random()
                     this.bombflag = Math.random()
                     this.fuelflag = Math.random()
+                    if (this.shop == 2) {
+
+                        this.loot = 0
+                        this.wegflag = 1
+                        this.crewflag = 1
+                        this.bombflag = 1
+                        this.fuelflag = 1
+                    }
                 }
                 this.body.draw()
                 canvas_context.fillStyle = "white"
                 canvas_context.font = "30px comic sans ms"
-                canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
+                if (this.shop == 2) {
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Welcome to my emporium!", 620, 70)
+                    canvas_context.fillText("Check your inventory to shop.", 620, 100)
+                    canvas_context.fillText("Double click items to open buy/sell menu.", 620, 130)
+                    canvas_context.fillText("Or simply rest a while.", 620, 160)
+                } else {
+
+                    canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
+                }
                 if (this.crewflag < (this.level / 30) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
@@ -6855,8 +7206,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     class Star {
         constructor(x, y) {
             this.name = getRandomColor() + " System"
+            if (Math.random() < .1) {
+                this.shop = 1
+                this.name = getRandomColor() + " Emporium"
+            }
             this.body = new Circle(x * 20, y + 20, 50, "white")
             this.spot = new Polygon(x * 20, y + 20, 5, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+
+            this.weapons = []
+            for (let t = 0; t < 3; t++) {
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 13)))
+            }
+            for (let t = 0; t < 12; t++) {
+                this.weapons.push(new Weapon(-1))
+            }
+
         }
         draw() {
             // this.body.draw()
