@@ -7378,7 +7378,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.flag = 0
                 this.link.color = "#FF0000"
             }
-            this.link.draw()
+            if(this.link.object.x < this.link.target.x){
+                this.link.draw()
+            }
             for (let t = 0; t < this.stars.length; t++) {
                 this.stars[t].draw()
             }
