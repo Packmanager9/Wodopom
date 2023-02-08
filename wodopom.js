@@ -2120,32 +2120,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.tag++
                 this.tag %= 18
                 // }
-                let frat = (50-this.fire)/50
-                if(frat < .1){
+                let frat = (50 - this.fire) / 50
+                if (frat < .1) {
                     frat = .1
-                }else if(frat < .2){
+                } else if (frat < .2) {
                     frat = .2
-                }else if(frat < .3){
+                } else if (frat < .3) {
                     frat = .3
-                }else if(frat < .4){
+                } else if (frat < .4) {
                     frat = .4
-                }else if(frat < .5){
+                } else if (frat < .5) {
                     frat = .5
-                }else if(frat < .6){
+                } else if (frat < .6) {
                     frat = .6
-                }else if(frat < .75){
+                } else if (frat < .75) {
                     frat = .75
-                }else if(frat < .9){
+                } else if (frat < .9) {
                     frat = .9
-                }else if(frat >= 1){
+                } else if (frat >= 1) {
                     frat = 1
                 }
-                canvas_context.drawImage(fire, this.tag * (fire.width / 18), 0, fire.width / 18, fire.height, this.x+((1-frat)*this.width*.5), this.y+((1-frat)*this.height*.5), this.width*(frat), this.height*(frat))
+                canvas_context.drawImage(fire, this.tag * (fire.width / 18), 0, fire.width / 18, fire.height, this.x + ((1 - frat) * this.width * .5), this.y + ((1 - frat) * this.height * .5), this.width * (frat), this.height * (frat))
             }
         }
         draw() {
-            if(this.walkable == false){
-                if(this.integrity > 99){
+            if (this.walkable == false) {
+                if (this.integrity > 99) {
                     this.integrity = 100
                 }
             }
@@ -2549,7 +2549,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-            } else if(enemy.guys){
+            } else if (enemy.guys) {
                 if (enemy.guys.includes(this)) {
                     for (let t = 0; t < enemy.guys.length; t++) {
                         for (let s = 0; s < sys.length; s++) {
@@ -3482,6 +3482,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             for (let t = 0; t < this.bullets.length; t++) {
                 let o = new Point(this.bullets[t].x, this.bullets[t].y)
+                this.bullets[t].draw()
                 this.bullets[t].move()
                 this.bullets[t].draw()
                 let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
@@ -3648,7 +3649,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "cyan")
                     ring.draw()
-                    if(this.firing == 10){
+                    if (this.firing == 10) {
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -3658,13 +3659,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.target = ring
                             link.object = enemy.body
                         }
-    
+
                         let xmom = Math.cos(link.angle())
                         let ymom = Math.sin(link.angle())
-    
+
                         xmom *= link.hypotenuse() / 5
                         ymom *= link.hypotenuse() / 5
-    
+
                         let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
                         ////console.log(bullet)
                         bullet.life = 6
@@ -3682,27 +3683,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 24, "teal")
                     ring.draw()
 
-                    if(this.firing == 10){
-                    let link = new LineOP(ring, ring)
-                    if (vessel.weapons.includes(this)) {
-                        link.target = ring
-                        link.object = this.center
-                    } else {
-                        link.target = ring
-                        link.object = enemy.body
+                    if (this.firing == 10) {
+                        let link = new LineOP(ring, ring)
+                        if (vessel.weapons.includes(this)) {
+                            link.target = ring
+                            link.object = this.center
+                        } else {
+                            link.target = ring
+                            link.object = enemy.body
+                        }
+
+                        let xmom = Math.cos(link.angle())
+                        let ymom = Math.sin(link.angle())
+
+                        xmom *= link.hypotenuse() / 5
+                        ymom *= link.hypotenuse() / 5
+
+                        let bullet = new Circle(link.object.x, link.object.y, 6, "teal", -xmom, -ymom)
+                        bullet.life = 6
+                        this.bullets.push(bullet)
                     }
-
-                    let xmom = Math.cos(link.angle())
-                    let ymom = Math.sin(link.angle())
-
-                    xmom *= link.hypotenuse() / 5
-                    ymom *= link.hypotenuse() / 5
-
-                    let bullet = new Circle(link.object.x, link.object.y, 6, "teal", -xmom, -ymom)
-                    bullet.life = 6
-                    this.bullets.push(bullet)
-                }
-                this.firing -= 2
+                    this.firing -= 2
 
 
                     //ion2
@@ -3712,28 +3713,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26, "#aaff00")
                     ring.draw()
-                    if(this.firing == 10){
-                    let link = new LineOP()
-                    if (vessel.weapons.includes(this)) {
-                        link.target = ring
-                        link.object = this.center
-                    } else {
-                        link.target = ring
-                        link.object = enemy.body
+                    if (this.firing == 10) {
+                        let link = new LineOP()
+                        if (vessel.weapons.includes(this)) {
+                            link.target = ring
+                            link.object = this.center
+                        } else {
+                            link.target = ring
+                            link.object = enemy.body
+                        }
+
+                        let xmom = Math.cos(link.angle())
+                        let ymom = Math.sin(link.angle())
+
+                        xmom *= link.hypotenuse() / 5
+                        ymom *= link.hypotenuse() / 5
+
+                        let bullet = new Circle(link.object.x, link.object.y, 7, "#aaff00", -xmom, -ymom)
+                        bullet.life = 6
+                        this.bullets.push(bullet)
                     }
 
-                    let xmom = Math.cos(link.angle())
-                    let ymom = Math.sin(link.angle())
-
-                    xmom *= link.hypotenuse() / 5
-                    ymom *= link.hypotenuse() / 5
-
-                    let bullet = new Circle(link.object.x, link.object.y, 7, "#aaff00", -xmom, -ymom)
-                    bullet.life = 6
-                    this.bullets.push(bullet)
-                }
-
-                this.firing -= 2
+                    this.firing -= 2
                 } else if (this.type == 100) {
 
 
@@ -6085,7 +6086,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
 
         draw() {
-            if(this.first == 0){
+            if (this.first == 0) {
                 this.now = Date.now()
             }
 
@@ -7296,6 +7297,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.spot.body.x < 1280 && this.spot.body.x > 0) {
                 this.spot.draw()
             }
+            if (stars.to == stars.stars.indexOf(this)) {
+
+                if (stars.to != vessel.star) {
+                    if (this.shop == 1) {
+                        let link = new LineOP(this.body, new Point(this.body.x - 20, this.body.y), "white", 1)
+                        link.draw()
+                        let rect = new RectangleR(this.body.x - 80, this.body.y - 20, 60, 40, "#FFFF8844")
+                        rect.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Shop", rect.x + 5, rect.y + 20)
+                    } else {
+                        let link = new LineOP(this.body, new Point(this.body.x - 20, this.body.y), "white", 1)
+                        link.draw()
+                        let rect = new RectangleR(this.body.x - 60, this.body.y - 12, 40, 24, "#FF888844")
+                        rect.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "10px comic sans ms"
+                        canvas_context.fillText("Fight", rect.x + 10, rect.y + 16)
+                    }
+                }
+            }
         }
         check(point) {
             if (this.body.x < 640) {
@@ -7347,6 +7370,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.link.hypotenuse() < 420) {
                 this.link.color = "#00FF00"
                 this.flag = 1
+                if (this.to == vessel.star) {
+                    this.flag = 0
+                    this.link.color = "#FF0000"
+                }
             } else {
                 this.flag = 0
                 this.link.color = "#FF0000"
