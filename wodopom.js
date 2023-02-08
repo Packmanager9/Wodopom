@@ -2198,6 +2198,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
         ing.src = `r${t}.png`
         rs.push(ing)
     }
+
+    let runnyblast = new Image()
+    runnyblast.src = "runnyblast.png"
+
     let rat = 720 / 512
 
     let z = 13
@@ -2208,8 +2212,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.tile.walkable = false
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
-            this.type =  Math.floor(Math.random() * 18)
+            this.type = Math.floor(Math.random() * 18)
             // z++
+            this.hit = 100
             this.airless = 0
             this.fireproof = 0
             this.selected = 0
@@ -2715,16 +2720,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.tile.fire = 100
             }
             canvas_context.imageSmoothingEnabled = true
-            if(this.type == 16){
+            if (this.type == 16) {
                 canvas_context.imageSmoothingEnabled = false
-            }else{
+            } else {
 
             }
-            canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
+            if (this.hit > 4 || this.type != 17) {
+                canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
+            } else {
+                if (Math.random() < .09) {
+                    this.hit++
+                }
+                canvas_context.drawImage(runnyblast, 64 * (this.hit % (runnyblast.width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
+            }
 
-            if(this.oxygenating == 1){
+            if (this.oxygenating == 1) {
                 this.tile.air += 11
-                if(this.tile.air > 100){
+                if (this.tile.air > 100) {
                     this.tile.air = 100
                 }
             }
@@ -3153,6 +3165,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             for (let t = 0; t < enemy.guys.length; t++) {
                                 if (enemy.guys[t].tile == tile) {
                                     enemy.guys[t].health -= this.damage * this.crew
+                                    enemy.guys[t].hit = 0
+
                                 }
                             }
                         }
@@ -3227,6 +3241,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             for (let t = 0; t < vessel.guys.length; t++) {
                                 if (vessel.guys[t].tile == tile) {
                                     vessel.guys[t].health -= this.damage * this.crew
+                                    vessel.guys[t].hit = 0
                                 }
                             }
                         }
@@ -3443,11 +3458,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let site3 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2))
                     site3.draw()
                     this.firing -= .2
-                }  else if (this.type == 10) {
-                    let site5 = new CyanX(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5))
+                } else if (this.type == 10) {
+                    let site5 = new CyanX(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
                     site5.draw()
 
-                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 20, "cyan")
+                    let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "cyan")
                     ring.draw()
                     this.firing -= 2
 
@@ -3455,7 +3470,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (vessel.weapons.includes(this)) {
                         link.target = ring
                         link.object = this.center
-                    }else{
+                    } else {
                         link.target = ring
                         link.object = enemy.center
                     }
@@ -3463,18 +3478,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let xmom = Math.cos(link.angle())
                     let ymom = Math.sin(link.angle())
 
-                    xmom*=link.hypotenuse()/5
-                    ymom*=link.hypotenuse()/5
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
 
                     let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
                     bullet.life = 5
                     this.bullets.push(bullet)
                     //ion1
-                }  else if (this.type == 11) {
-                    let site5 = new X(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), "teal", 12)
+                } else if (this.type == 11) {
+                    let site5 = new X(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), "teal", 12)
                     site5.draw()
 
-                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 24, "teal")
+                    let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 24, "teal")
                     ring.draw()
                     this.firing -= 2
 
@@ -3483,7 +3498,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (vessel.weapons.includes(this)) {
                         link.target = ring
                         link.object = this.center
-                    }else{
+                    } else {
                         link.target = ring
                         link.object = enemy.center
                     }
@@ -3491,27 +3506,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let xmom = Math.cos(link.angle())
                     let ymom = Math.sin(link.angle())
 
-                    xmom*=link.hypotenuse()/5
-                    ymom*=link.hypotenuse()/5
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
 
                     let bullet = new Circle(link.object.x, link.object.y, 6, "teal", -xmom, -ymom)
                     bullet.life = 5
                     this.bullets.push(bullet)
 
-                    
+
                     //ion2
-                }  else if (this.type == 12) {
-                    let site5 = new X(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), "#aaff00", 13)
+                } else if (this.type == 12) {
+                    let site5 = new X(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), "#aaff00", 13)
                     site5.draw()
 
-                    let ring = new CircleR(this.target.x + (this.target.width * .5),  this.target.y + (this.target.height * .5), 26, "#aaff00")
+                    let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26, "#aaff00")
                     ring.draw()
                     this.firing -= 2
                     let link = new LineOP()
                     if (vessel.weapons.includes(this)) {
                         link.target = ring
                         link.object = this.center
-                    }else{
+                    } else {
                         link.target = ring
                         link.object = enemy.center
                     }
@@ -3519,8 +3534,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let xmom = Math.cos(link.angle())
                     let ymom = Math.sin(link.angle())
 
-                    xmom*=link.hypotenuse()/5
-                    ymom*=link.hypotenuse()/5
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
 
                     let bullet = new Circle(link.object.x, link.object.y, 7, "#aaff00", -xmom, -ymom)
                     bullet.life = 5
@@ -3543,17 +3558,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         draw() {
-            for(let t =0;t<this.bullets.length;t++){
+            for (let t = 0; t < this.bullets.length; t++) {
                 this.bullets[t].life--
-                if(this.bullets[t].life <= 0){
-                    this.bullets.splice(t,1)
+                if (this.bullets[t].life <= 0) {
+                    this.bullets.splice(t, 1)
                 }
             }
-            for(let t =0;t<this.bullets.length;t++){
+            for (let t = 0; t < this.bullets.length; t++) {
                 let o = new Point(this.bullets[t].x, this.bullets[t].y)
                 this.bullets[t].move()
                 this.bullets[t].draw()
-                let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius*2)
+                let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
                 link.draw()
             }
 
@@ -4940,9 +4955,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < this.blocks.length; t++) {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].onFire == 1) {
-                            if(this.UI.systems[5].sto >= 7){
-                                this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50)*.5
-                            }else{
+                            if (this.UI.systems[5].sto >= 7) {
+                                this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50) * .5
+                            } else {
                                 this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
                             }
                             if (this.blocks[t][k].fire <= 0) {
@@ -6013,10 +6028,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // if (rooms[r] == "medbay") {
 
                     // }else{
-                        this.UI.systems[r].sto--
-                        if (this.UI.systems[r].sto <= 0) {
-                            this.UI.systems[r].sto = 0
-                        }
+                    this.UI.systems[r].sto--
+                    if (this.UI.systems[r].sto <= 0) {
+                        this.UI.systems[r].sto = 0
+                    }
                     // }
                 } else {
                     // if (rooms[r] == "medbay") {
@@ -6515,9 +6530,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].onFire == 1) {
-                        if(this.UI.systems[5].sto >= 7){
-                            this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50)*.5
-                        }else{
+                        if (this.UI.systems[5].sto >= 7) {
+                            this.blocks[t][k].fire -= ((100 - this.blocks[t][k].fire) / 50) * .5
+                        } else {
                             this.blocks[t][k].fire -= (100 - this.blocks[t][k].fire) / 50
                         }
                         if (this.blocks[t][k].fire <= 0) {
