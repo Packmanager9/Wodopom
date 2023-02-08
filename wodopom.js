@@ -1545,7 +1545,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         break
                     }
                 }
-                if(start == 2){
+                if(start == 1){
                     stars.check(TIP_engine)
                 }
             }
