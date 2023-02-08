@@ -7350,7 +7350,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         constructor() {
             this.to = 0
             this.stars = [new Star(130 / 4, 360)]
-            for (let t = 0; this.stars.length < 480; t++) {
+            for (let t = 0; this.stars.length < 580; t++) {
                 let star = new Star((130 / 4) + (Math.random() * (canvas.width)), Math.random() * (canvas.height - 40))
                 let wet = 1
                 for (let k = 0; k < this.stars.length; k++) {
