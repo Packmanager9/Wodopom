@@ -15,99 +15,99 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    function CanvasCaptureToWEBM(canvas, bitrate) {
-        // the video_recorder is set to  '= new CanvasCaptureToWEBM(canvas, 4500000);' in the setup, 
-        // it uses the same canvas as the rest of the file.
-        // to start a recording call .record() on video_recorder
-        /*
-        for example, 
-        if(keysPressed['-'] && recording == 0){
-            recording = 1
-            video_recorder.record()
-        }
-        if(keysPressed['='] && recording == 1){
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
-        */
-        this.record = Record
-        this.stop = Stop
-        this.download = saveToDownloads
-        let blobCaptures = []
-        let outputFormat = {}
-        let recorder = {}
-        let canvasInput = canvas.captureStream()
-        if (typeof canvasInput == undefined || !canvasInput) {
-            return
-        }
-        const video = document.createElement('video')
-        video.style.display = 'none'
+    // function CanvasCaptureToWEBM(canvas, bitrate) {
+    //     // the video_recorder is set to  '= new CanvasCaptureToWEBM(canvas, 4500000);' in the setup, 
+    //     // it uses the same canvas as the rest of the file.
+    //     // to start a recording call .record() on video_recorder
+    //     /*
+    //     for example, 
+    //     if(keysPressed['-'] && recording == 0){
+    //         recording = 1
+    //         video_recorder.record()
+    //     }
+    //     if(keysPressed['='] && recording == 1){
+    //         recording = 0
+    //         video_recorder.stop()
+    //         video_recorder.download('File Name As A String.webm')
+    //     }
+    //     */
+    //     this.record = Record
+    //     this.stop = Stop
+    //     this.download = saveToDownloads
+    //     let blobCaptures = []
+    //     let outputFormat = {}
+    //     let recorder = {}
+    //     let canvasInput = canvas.captureStream()
+    //     if (typeof canvasInput == undefined || !canvasInput) {
+    //         return
+    //     }
+    //     const video = document.createElement('video')
+    //     video.style.display = 'none'
 
-        function Record() {
-            let formats = [
-                "video/webm\;codecs=h264",
-                "video/webm\;codecs=vp8",
-                'video/vp8',
-                "video/webm",
-                'video/webm,codecs=vp9',
-                "video/webm\;codecs=daala",
-                "video/mpeg"
-            ];
+    //     function Record() {
+    //         let formats = [
+    //             "video/webm\;codecs=h264",
+    //             "video/webm\;codecs=vp8",
+    //             'video/vp8',
+    //             "video/webm",
+    //             'video/webm,codecs=vp9',
+    //             "video/webm\;codecs=daala",
+    //             "video/mpeg"
+    //         ];
 
-            for (let t = 0; t < formats.length; t++) {
-                if (MediaRecorder.isTypeSupported(formats[t])) {
-                    outputFormat = formats[t]
-                    break
-                }
-            }
-            if (typeof outputFormat != "string") {
-                return
-            } else {
-                let videoSettings = {
-                    mimeType: outputFormat,
-                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-                };
-                blobCaptures = []
-                try {
-                    recorder = new MediaRecorder(canvasInput, videoSettings)
-                } catch (error) {
-                    return;
-                }
-                recorder.onstop = handleStop
-                recorder.ondataavailable = handleAvailableData
-                recorder.start(100)
-            }
-        }
-        function handleAvailableData(event) {
-            if (event.data && event.data.size > 0) {
-                blobCaptures.push(event.data)
-            }
-        }
-        function handleStop() {
-            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-            video.src = window.URL.createObjectURL(superBuffer)
-        }
-        function Stop() {
-            recorder.stop()
-            video.controls = true
-        }
-        function saveToDownloads(input) { // specifying a file name for the output
-            const name = input || 'video_out.webm'
-            const blob = new Blob(blobCaptures, { type: outputFormat })
-            const url = window.URL.createObjectURL(blob)
-            const storageElement = document.createElement('a')
-            storageElement.style.display = 'none'
-            storageElement.href = url
-            storageElement.download = name
-            document.body.appendChild(storageElement)
-            storageElement.click()
-            setTimeout(() => {
-                document.body.removeChild(storageElement)
-                window.URL.revokeObjectURL(url)
-            }, 100)
-        }
-    }
+    //         for (let t = 0; t < formats.length; t++) {
+    //             if (MediaRecorder.isTypeSupported(formats[t])) {
+    //                 outputFormat = formats[t]
+    //                 break
+    //             }
+    //         }
+    //         if (typeof outputFormat != "string") {
+    //             return
+    //         } else {
+    //             let videoSettings = {
+    //                 mimeType: outputFormat,
+    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+    //             };
+    //             blobCaptures = []
+    //             try {
+    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
+    //             } catch (error) {
+    //                 return;
+    //             }
+    //             recorder.onstop = handleStop
+    //             recorder.ondataavailable = handleAvailableData
+    //             recorder.start(100)
+    //         }
+    //     }
+    //     function handleAvailableData(event) {
+    //         if (event.data && event.data.size > 0) {
+    //             blobCaptures.push(event.data)
+    //         }
+    //     }
+    //     function handleStop() {
+    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+    //         video.src = window.URL.createObjectURL(superBuffer)
+    //     }
+    //     function Stop() {
+    //         recorder.stop()
+    //         video.controls = true
+    //     }
+    //     function saveToDownloads(input) { // specifying a file name for the output
+    //         const name = input || 'video_out.webm'
+    //         const blob = new Blob(blobCaptures, { type: outputFormat })
+    //         const url = window.URL.createObjectURL(blob)
+    //         const storageElement = document.createElement('a')
+    //         storageElement.style.display = 'none'
+    //         storageElement.href = url
+    //         storageElement.download = name
+    //         document.body.appendChild(storageElement)
+    //         storageElement.click()
+    //         setTimeout(() => {
+    //             document.body.removeChild(storageElement)
+    //             window.URL.revokeObjectURL(url)
+    //         }, 100)
+    //     }
+    // }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -1250,7 +1250,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         canvas.style.background = style
         window.setInterval(function () {
@@ -9095,15 +9095,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             start = 0
         }
 
-        if (keysPressed['-'] && recording == 0) {
-            recording = 1
-            video_recorder.record()
-        }
-        if (keysPressed['='] && recording == 1) {
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
+        // if (keysPressed['-'] && recording == 0) {
+        //     recording = 1
+        //     video_recorder.record()
+        // }
+        // if (keysPressed['='] && recording == 1) {
+        //     recording = 0
+        //     video_recorder.stop()
+        //     video_recorder.download('File Name As A String.webm')
+        // }
         if (start == 0) {
             canvas_context.drawImage(title, 0, 0)
             return
