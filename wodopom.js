@@ -3031,7 +3031,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 2
                 this.fireChance = 20
                 this.buy = 60
-                this.sell = 45
+                this.sell = 30
             } else if (this.type == 3) {
                 this.name1 = "Triple"
                 this.name2 = "Laser"
@@ -3041,18 +3041,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 3
                 this.fireChance = 30
                 this.buy = 80
-                this.sell = 65
+                this.sell = 40
             } else if (this.type == 4) {
                 this.name1 = "Crew"
                 this.name2 = "Laser"
                 this.max = 650
-                this.damage = 35
+                this.damage = 34
                 this.real = 1
                 this.double = 1
-                this.crew = 8
+                this.crew = 9
                 this.fireChance = 40
                 this.buy = 85
-                this.sell = 65
+                this.sell = 40
             } else if (this.type == 5) {
                 this.name1 = "Mega"
                 this.name2 = "Laser"
@@ -3063,7 +3063,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 2
                 this.fireChance = 35
                 this.buy = 100
-                this.sell = 85
+                this.sell = 45
             } else if (this.type == 6) {
                 this.name1 = "Medium"
                 this.name2 = "Bomb"
@@ -3073,7 +3073,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.fireChance = 30
                 this.buy = 45
-                this.sell = 20
+                this.sell = 18
             } else if (this.type == 7) {
                 this.name1 = "Big"
                 this.name2 = "Bomb"
@@ -3083,7 +3083,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.crew = 1.5
                 this.buy = 55
-                this.sell = 25
+                this.sell = 24
                 this.fireChance = 45
             } else if (this.type == 8) {
                 this.name1 = "Mega"
@@ -3096,7 +3096,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.puncture = 1
                 this.fireChance = 50
                 this.buy = 60
-                this.sell = 40
+                this.sell = 30
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam"
@@ -3107,7 +3107,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.real = 1
                 this.crew = 1.8
                 // this.puncture = 1
-                this.fireChance = 200
+                this.fireChance = 300
                 this.double = 0
                 this.buy = 45
                 this.sell = 20
@@ -3132,17 +3132,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireChance = 20
                 this.double = 2
                 this.buy = 55
-                this.sell = 28
+                this.sell = 22
             } else if (this.type == 12) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet I"
                 this.max = 250
-                this.damage = 5
+                this.damage = 6
                 this.real = 1
-                this.crew = 10
-                this.fireChance = 1
+                this.crew = 18
+                this.fireChance = 40
                 this.double = 1
                 this.buy = 60
+                this.sell = 24
+            } else if (this.type == 13) {
+                this.name1 = "Crew Ion"
+                this.name2 = "Pellet II"
+                this.max = 375
+                this.damage = 12
+                this.real = 1
+                this.crew = 14
+                this.fireChance = 49
+                this.double = 1
+                this.buy = 70
                 this.sell = 30
             } else if (this.type == 100) {
                 this.name1 = "Wodopom"
@@ -3735,6 +3746,38 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     this.firing -= 2
+                } else if (this.type == 13) {
+                    let site5 = new X(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), "#AA0000", 13)
+                    site5.draw()
+
+                    let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26, "#AA0000")
+                    ring.draw()
+                    if (this.firing == 10) {
+                        let link = new LineOP()
+                        if (vessel.weapons.includes(this)) {
+                            link.target = ring
+                            link.object = this.center
+                        } else {
+                            link.target = ring
+                            link.object = enemy.body
+                        }
+
+                        let xmom = Math.cos(link.angle())
+                        let ymom = Math.sin(link.angle())
+
+                        xmom *= link.hypotenuse() / 5
+                        ymom *= link.hypotenuse() / 5
+
+                        let bullet = new Circle(link.object.x, link.object.y, 7, "red", -xmom, -ymom)
+                        bullet.life = 6
+                        this.bullets.push(bullet)
+
+                        let bullet2 = new Circle(link.object.x, link.object.y, 4, "black", -xmom, -ymom)
+                        bullet2.life = 6
+                        this.bullets.push(bullet2)
+                    }
+
+                    this.firing -= 2
                 } else if (this.type == 100) {
 
 
@@ -3838,6 +3881,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(ion2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 12) {
                 canvas_context.drawImage(ion3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            } else if (this.type == 13) {
+                canvas_context.drawImage(ion4, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 100) {
                 this.frame++
                 canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -3892,6 +3937,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     ion2.src = "iongun2.png"
     let ion3 = new Image()
     ion3.src = "iongun3.png"
+    let ion4 = new Image()
+    ion4.src = "iongun4.png"
     let iou = new Image()
     iou.src = 'iou.png'
 
@@ -6226,7 +6273,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        // let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
@@ -6241,7 +6288,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 15) {
@@ -6255,7 +6302,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         this.weapons.push(wep5)
                     }
                 } else {
@@ -6269,15 +6316,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 100) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 500) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 13))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 14))
                         this.weapons.push(wep5)
                     }
                 }
@@ -7178,12 +7225,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < (this.level / 30) && vessel.guys.length < 9) {
+                if (this.crewflag < Math.max((this.level+5) / 100,.7) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
                 let index = -1
-                if (this.wegflag < (this.level / 30)) {
+                if (this.wegflag < Math.max((this.level+5) / 100,.7)) {
                     for (let t = 0; t < vessel.weapons.length; t++) {
                         if (vessel.weapons[t].real != 1) {
                             index = t
@@ -7211,7 +7258,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     start = 1
                     vessel.scrap += this.loot
                     let index = -1
-                    if (this.wegflag < (this.level / 30)) {
+                    if (this.wegflag < Math.max((this.level+5) / 100,.7)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             if (vessel.weapons[t].real != 1) {
                                 index = t
@@ -7219,7 +7266,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 13)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 14)))
                         } else {
                             // this.wegflag = 1
 
@@ -7232,7 +7279,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 13)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 14)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -7245,7 +7292,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < (this.level / 30)) {
+                    if (this.crewflag < Math.max((this.level+5) / 100,.7)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -7281,7 +7328,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             this.weapons = []
             for (let t = 0; t < 3; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 13)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 14)))
             }
             for (let t = 0; t < 12; t++) {
                 this.weapons.push(new Weapon(-1))
