@@ -1305,7 +1305,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (vessel.upgradeMenu.open == 1 && start == 2) {
 
-                if (vessel.upgradeMenu.shopdraw == 1) {
+                if (vessel.upgradeMenu.shopdraw == 1 && vessel.upgradeMenu.ket == 2) {
 
                     if (vessel.upgradeMenu.sellButton.isPointInside(TIP_engine)) {
                         vessel.upgradeMenu.wepsto[vessel.upgradeMenu.index].sold()
@@ -1313,7 +1313,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                 }
-                if (vessel.upgradeMenu.shopdraw == 2) {
+                if (vessel.upgradeMenu.shopdraw == 2&& vessel.upgradeMenu.ket == 1) {
 
                     if (vessel.upgradeMenu.buyButton.isPointInside(TIP_engine)) {
                         stars.stars[vessel.star].weapons[vessel.upgradeMenu.index].bought()
@@ -4224,7 +4224,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 return
             }
             canvas_context.fillStyle = "white"
-            canvas_context.font = "10px comic sans ms"
+            canvas_context.font = "9px comic sans ms"
             canvas_context.fillText(this.name1, this.body.x + 48, this.body.y + 10)
             canvas_context.fillText(vessel.weapons.indexOf(this) + 1, this.body.x + 5, this.body.y + this.body.height - 2)
             canvas_context.fillText(this.name2, this.body.x + 48, this.body.y + 25)
@@ -4697,6 +4697,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.cargo = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y + 25, 50, 25, "#88888888")
                 this.shopsquare = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y, 50, 25, "#88888888")
 
+                if (this.tab == 1) {
+                this.cargo.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) -50
+                this.cargo.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(0 / 5))) +25
+                this.shopsquare.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) -50
+                this.shopsquare.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(0 / 5))) +0
+                }else{
+                    this.cargo.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) -50
+                    this.cargo.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(0 / 5))) +0
+                    this.shopsquare.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) -50
+                    this.shopsquare.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(0 / 5))) +25
+
+                }
+                
                 if (stars.stars[vessel.star].shop == 1) {
                     this.cargo.draw()
                     canvas_context.fillStyle = "white"
@@ -4776,9 +4789,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40,)
                 }
 
+               this.ket = 0
+                for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                    if (stars.stars[vessel.star].weapons[t].selected == 1) {
+                        if (stars.stars[vessel.star].weapons[t].type != -1) {
+                       this.ket = 1
+                        }
+                    }
+                }
+                if(this.ket != 1){
+                    for (let t = 0; t < this.wepsto.length; t++) {
+                        if (this.wepsto[t].selected == 1) {
+                            if (this.wepsto[t].type != -1) {
+                                this.ket = 2
+                            }
+                        }
+                    }
+                }
 
                 if (stars.stars[vessel.star].shop == 1) {
-                    if (this.shopdraw == 1) {
+                    if (this.shopdraw == 1 && this.ket == 2) {
                         this.shopbox.draw()
                         this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
                         this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
@@ -4800,7 +4830,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.font = "20px comic sans ms"
                         // canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
                         canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
-                    } else if (this.shopdraw == 2) {
+                    } else if (this.shopdraw == 2 && this.ket == 1) {
                         this.shopbox.draw()
                         this.sellButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 10, 80, 40, "#00ff00")
                         this.buyButton = new RectangleR(this.shopbox.x + 10, this.shopbox.y + 50, 80, 40, "#ff0000")
@@ -4821,7 +4851,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.fillStyle = "black"
                         canvas_context.font = "20px comic sans ms"
                         canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
-                        // canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
                     }
 
                 }
@@ -4902,6 +4931,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (stars.stars[vessel.star].weapons[t].body.isPointInside(point)) {
                             stars.stars[vessel.star].weapons[t].selected = 1
                             if (stars.stars[vessel.star].weapons[t].selectedSto == 1 && stars.stars[vessel.star].weapons[t].type != -1) {
+                                for(let w = 0;w<vessel.weapons.length;w++){
+                                    vessel.weapons[w].selected = 0
+                                }
+                                for(let w = 0;w<vessel.upgradeMenu.wepsto.length;w++){
+                                    vessel.upgradeMenu.wepsto[w].selected = 0
+                                }
                                 this.shopdraw = 2
                                 this.shopbox.x = TIP_engine.x
                                 this.shopbox.y = TIP_engine.y
@@ -4954,6 +4989,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                             if (stars.stars[vessel.star].shop == 1) {
                                 if (this.wepsto[t].selectedSto == 1 && this.wepsto[t].type != -1) {
+                                    for(let w = 0;w<stars.stars[vessel.star].weapons.length;w++){
+                                        stars.stars[vessel.star].weapons[w].selected = 0
+                                    }
+                                    for(let w = 0;w<vessel.weapons.length;w++){
+                                        vessel.weapons[w].selected = 0
+                                    }
                                     this.shopdraw = 1
                                     this.shopbox.x = TIP_engine.x
                                     this.shopbox.y = TIP_engine.y
@@ -5559,8 +5600,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    // this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
-                    this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
+                    this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
+                    // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
                     // this.guys = [new Guy(tiles[0])]
                     this.first = 1
 
@@ -7621,6 +7662,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
                     this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
+                    vessel.scrap += this.loot
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
                     this.bombflag = Math.random()
@@ -7633,54 +7675,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.bombflag = 1
                         this.fuelflag = 1
                     }
-                }
-                this.body.draw()
-                canvas_context.fillStyle = "white"
-                canvas_context.font = "30px comic sans ms"
-                if (this.shop == 2) {
-                    canvas_context.font = "20px comic sans ms"
-                    canvas_context.fillText("Welcome to my emporium!", 620, 70)
-                    canvas_context.fillText("Check your inventory to shop.", 620, 100)
-                    canvas_context.fillText("Double click items to open buy/sell menu.", 620, 130)
-                    canvas_context.fillText("Or simply rest a while.", 620, 160)
-                } else {
-
-                    canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
-                }
-                if (this.crewflag < Math.max((this.level + 5) / 300, .7) && vessel.guys.length < 9) {
-                    canvas_context.fillText("+1 Crew!", 720, 240)
-                }
-
-                let index = -1
-                if (this.wegflag < Math.max((this.level + 5) / 300, .7)) {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        if (vessel.weapons[t].real != 1) {
-                            index = t
-                            break
-                        }
-                    }
-                }
-
-                if (this.wegflag < (this.level / 30 && index > -1)) {
-                    canvas_context.fillText("+1 Weapon!", 720, 280)
-                }
-                if (this.bombflag < .3) {
-                    canvas_context.fillText(this.bombs + " Bombs!", 720, 320)
-                }
-                if (this.fuelflag < .5) {
-                    canvas_context.fillText(3 + " fuel!", 720, 360)
-                }
-
-                canvas_context.fillText("Jump", this.body.x - (this.body.radius * .5), this.body.y)
-                if (this.spread >= 30) {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        vessel.weapons[t].charge = 0
-                    }
-                    vessel.fuel--
-                    start = 1
-                    vessel.scrap += this.loot
                     let index = -1
-                    if (this.wegflag < Math.max((this.level + 5) / 300, .7)) {
+                    if (this.wegflag < Math.min((this.level + 5) / 300, .7)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             if (vessel.weapons[t].real != 1) {
                                 index = t
@@ -7714,7 +7710,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.max((this.level + 5) / 300, .7)) {
+                    if (this.crewflag < Math.min((this.level + 5) / 300, .7)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -7730,6 +7726,51 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             vessel.guys.push(guy)
                         }
                     }
+                }
+                this.body.draw()
+                canvas_context.fillStyle = "white"
+                canvas_context.font = "30px comic sans ms"
+                if (this.shop == 2) {
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Welcome to my emporium!", 620, 70)
+                    canvas_context.fillText("Check your inventory to shop.", 620, 100)
+                    canvas_context.fillText("Double click items to open buy/sell menu.", 620, 130)
+                    canvas_context.fillText("Or simply rest a while.", 620, 160)
+                } else {
+
+                    canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
+                }
+                if (this.crewflag < Math.min((this.level + 5) / 300, .7) && vessel.guys.length < 9) {
+                    canvas_context.fillText("+1 Crew!", 720, 240)
+                }
+
+                let index = -1
+                if (this.wegflag < Math.min((this.level + 5) / 300, .7)) {
+                    for (let t = 0; t < vessel.weapons.length; t++) {
+                        if (vessel.weapons[t].real != 1) {
+                            index = t
+                            break
+                        }
+                    }
+                }
+
+                if (this.wegflag < (this.level / 30 && index > -1)) {
+                    canvas_context.fillText("+1 Weapon!", 720, 280)
+                }
+                if (this.bombflag < .3) {
+                    canvas_context.fillText(this.bombs + " Bombs!", 720, 320)
+                }
+                if (this.fuelflag < .5) {
+                    canvas_context.fillText(3 + " fuel!", 720, 360)
+                }
+
+                canvas_context.fillText("Jump", this.body.x - (this.body.radius * .5), this.body.y)
+                if (this.spread >= 30) {
+                    for (let t = 0; t < vessel.weapons.length; t++) {
+                        vessel.weapons[t].charge = 0
+                    }
+                    vessel.fuel--
+                    start = 1
                     enemy = new EnemyShip(Math.floor(Math.random() * 10), this.level + 1)
                 }
             }
