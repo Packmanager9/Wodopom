@@ -2304,10 +2304,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.type = 1
             } else if (pomcheck == 2) {
                 pomcheck = 3
-                this.type = 18
+                this.type = 11
             } else {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 18)
+                    this.type = Math.floor(Math.random() * 19)
                 }
             }
             // z++
