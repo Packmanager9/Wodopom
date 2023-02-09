@@ -2261,6 +2261,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let rat = 720 / 512
 
     let z = 13
+    let pomcheck = 0
     class Guy {
         constructor(tile) {
             this.name = getRandomLightColor()
@@ -2269,6 +2270,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
             this.type = Math.floor(Math.random() * 18)
+            if (pomcheck == 0) {
+                pomcheck = 1
+                this.type = 12
+            } else  if (pomcheck == 1) {
+                pomcheck = 2
+                this.type = 1
+            } else  if (pomcheck == 2) {
+                pomcheck = 3
+                this.type = 11
+            } else {
+                while (this.type == 11) {
+                    this.type = Math.floor(Math.random() * 18)
+                }
+            }
             // z++
             this.hit = 100
             this.airless = 0
@@ -2490,6 +2505,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.type == 11) {
                 this.stats[3] += 2
                 this.helmPower = 1
+                this.health = 369
+                this.maxhealth = this.health
                 this.skills += 'Helm+++, '
                 this.names = ["Pomao", "Jomao", "Pobo", "Podmao", "Peamao", "Pomom", "Pamao", "Pomo", "Pomoo", "Pomoa"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
@@ -2498,10 +2515,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.barter = 1.03
                 this.damage = 7
                 this.health += 50
-                this.stats[6] += .1
-                this.stats[3] -= .2
+                this.stats[6] += .5
+                this.stats[3] -= .25
+                this.stats[2] -= .25
+                this.stats[1] += .25
                 this.maxhealth = this.health
-                this.skills += 'Thrifty+, Fight++, Helm-, Engine+'
+                this.skills += 'Thrifty+, Fight++, Helm-, Engine++, Weapons+'
                 this.names = ["Pote", "Potte", "Poat", "Pohat", "Pewt", "Plote", "Ploat", "Polte", "Plotle", "Lotle"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
@@ -7225,12 +7244,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < Math.max((this.level+5) / 300,.7) && vessel.guys.length < 9) {
+                if (this.crewflag < Math.max((this.level + 5) / 300, .7) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
                 let index = -1
-                if (this.wegflag < Math.max((this.level+5) / 300,.7)) {
+                if (this.wegflag < Math.max((this.level + 5) / 300, .7)) {
                     for (let t = 0; t < vessel.weapons.length; t++) {
                         if (vessel.weapons[t].real != 1) {
                             index = t
@@ -7258,7 +7277,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     start = 1
                     vessel.scrap += this.loot
                     let index = -1
-                    if (this.wegflag < Math.max((this.level+5) / 300,.7)) {
+                    if (this.wegflag < Math.max((this.level + 5) / 300, .7)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             if (vessel.weapons[t].real != 1) {
                                 index = t
@@ -7292,7 +7311,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.max((this.level+5) / 300,.7)) {
+                    if (this.crewflag < Math.max((this.level + 5) / 300, .7)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -7425,7 +7444,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.flag = 0
                 this.link.color = "#FF0000"
             }
-            if(this.link.object.x < this.link.target.x){
+            if (this.link.object.x < this.link.target.x) {
                 this.link.draw()
             }
             for (let t = 0; t < this.stars.length; t++) {
