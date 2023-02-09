@@ -2249,7 +2249,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 19; t++) {
+    for (let t = 1; t < 20; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
@@ -2385,6 +2385,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.damage = 5
                 this.skills += 'Repair++, Engine++, Shield++, Flammable--, Slow-'
                 this.names = ["Runnybabbit", "Splat", "Eggresst", "Yolkenstien", "Albubert", "Bunegg", "Ovolago", "Lagovo", "Rabolk"]
+                this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            }
+            if (this.type == 18) {
+                // this.stats[0] = 6
+                this.stats[2] += 1.2
+                this.stats[6] += 1.2
+                // this.energy = 1
+                this.repair += 5
+                this.damage = 5
+                this.stretch = 1
+                this.tiles = [this.tile, this.tile, this.tile]
+                this.skills += 'Stretch++'
+                this.names = ["Gumnut"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
 
@@ -2725,6 +2738,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 // //////////////////////////////console.log(this.tile)
                 this.tile.walkable = false
+                if(this.stretch == 1){
+                    this.tiles.splice(0,1)
+                    this.tiles.push(this.tile)
+                }
             }
             // this.cound =this.stats[0]
             // } else {
@@ -2810,7 +2827,70 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             }
 
-            if (this.energydeathtag > -1) {
+            if(this.stretch == 1){
+                for(let t = 0;t<this.tiles.length;t++){
+                    // if (this.path.length > 1) {
+                    //     this.body.x = (this.tiles[t].x + (this.tiles[t].width * .5)) * l
+                    //     this.body.y = (this.tiles[t].y + (this.tiles[t].height * .5)) * l
+                    //     this.body.x += (this.path[Math.min(this.step + 1, this.path.length - 1)].x + (this.path[Math.min(this.step + 1, this.path.length - 1)].width * .5)) * this.cound
+                    //     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
+                    //     this.body.x *= 1 / this.rate
+                    //     this.body.y *= 1 / this.rate
+                    //     // //////////////////////////////console.log(this.tiles[t])
+                    //     this.tiles[t].draw = (new Tile()).draw
+                    //     // this.tiles[t].color = "green"
+                    //     // this.tiles[t].draw()
+                    // } else {
+                    if(t == 0){
+
+                        this.body.x = (this.tiles[t].x + (this.tiles[t].width * .5)) * l
+                        this.body.y = (this.tiles[t].y + (this.tiles[t].height * .5)) * l
+                        this.body.x += (this.tiles[t+1].x + (this.tiles[t+1].width * .5)) * this.cound
+                        this.body.y += (this.tiles[t+1].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
+                        this.body.x *= 1 / this.rate
+                        this.body.y *= 1 / this.rate
+                        // //////////////////////////////console.log(this.tiles[t])
+                        this.tiles[t].draw = (new Tile()).draw
+                        // this.tiles[t].color = "green"
+                        // this.tiles[t].draw()
+                    }else{
+
+                        this.body.x = (this.tiles[t].x + (this.tiles[t].width * .5))
+                        this.body.y = (this.tiles[t].y + (this.tiles[t].height * .5))
+                        let link = new LineOP
+                    }
+        
+                        // this.tiles[t].color = "red"
+                        // this.tiles[t].draw()
+                    // }
+                    if (vessel.guys.includes(this) || vessel.UI.systems[5].sto > 0) {
+                        canvas_context.drawImage(rs[this.type], 64 * (this.hit % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
+                    }
+                }
+                if (this.path.length > 1) {
+                    this.body.x = (this.tile.x + (this.tile.width * .5)) * l
+                    this.body.y = (this.tile.y + (this.tile.height * .5)) * l
+                    this.body.x += (this.path[Math.min(this.step + 1, this.path.length - 1)].x + (this.path[Math.min(this.step + 1, this.path.length - 1)].width * .5)) * this.cound
+                    this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
+                    this.body.x *= 1 / this.rate
+                    this.body.y *= 1 / this.rate
+                    // //////////////////////////////console.log(this.tile)
+                    this.tile.draw = (new Tile()).draw
+                    // this.tile.color = "green"
+                    // this.tile.draw()
+                } else {
+    
+                    this.body.x = (this.tile.x + (this.tile.width * .5))
+                    this.body.y = (this.tile.y + (this.tile.height * .5))
+    
+                    // this.tile.color = "red"
+                    // this.tile.draw()
+                }
+                if (vessel.guys.includes(this) || vessel.UI.systems[5].sto > 0) {
+                    canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
+                }
+
+            }else if (this.energydeathtag > -1) {
                 this.cound = 0
                 if (Math.random() < .09) {
                     this.energydeathtag--
@@ -7675,35 +7755,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.bombflag = 1
                         this.fuelflag = 1
                     }
-                    let index = -1
-                    if (this.wegflag < Math.min((this.level + 5) / 300, .7)) {
-                        for (let t = 0; t < vessel.weapons.length; t++) {
-                            if (vessel.weapons[t].real != 1) {
-                                index = t
-                                break
-                            }
-                        }
-                        if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 20)))
-                        } else {
-                            // this.wegflag = 1
-
-                            //new 
-                            for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
-                                if (vessel.upgradeMenu.wepsto[t].real != 1) {
-                                    index = t
-                                    break
-                                }
-                            }
-
-                            if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 20)))
-                            } else {
-                                this.wegflag = 1
-                            }
-
-                        }
-                    }
                     if (this.bombflag < .3) {
                         vessel.bombs += this.bombs
                     }
@@ -7751,6 +7802,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             index = t
                             break
                         }
+                    }
+                    if (index > -1) {
+                        vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                    } else {
+                        // this.wegflag = 1
+
+                        //new 
+                        for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                            if (vessel.upgradeMenu.wepsto[t].real != 1) {
+                                index = t
+                                break
+                            }
+                        }
+
+                        if (index > -1) {
+                            vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                        } else {
+                            this.wegflag = 1
+                        }
+
                     }
                 }
 
