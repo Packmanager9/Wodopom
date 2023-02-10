@@ -6904,7 +6904,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.type = type
             // zz++
             this.level = level
-            this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
+            this.loot = Math.floor((this.level * 1.15) + (Math.random() * (this.level * 1.15))) + 2 //1
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
@@ -6919,11 +6919,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             this.warn = 0
             this.scrap = 35
-            this.bombs = 5 + Math.floor(this.level / 2)
+            this.bombs = 6 + Math.floor(this.level / 2) //5
             this.fuel = 10
             this.shield = new Shields()
             this.shield.state = this.UI.systems[2].max
-            this.hull = 25 + (this.level * 7)
+            this.hull = 25 + (this.level * 6) //7
             this.maxhull = this.hull
             this.body = new Circle(1000, 360, 100, "red")
             this.weapons = []
@@ -7428,17 +7428,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                if (this.level < 6) {
+                if (this.level < 8) {
                     this.guys = [new Guy(tiles[1])]
-                } else if (this.level < 12) {
+                } else if (this.level < 16) {
                     this.guys = [new Guy(tiles[1]), new Guy(tiles[2])]
-                } else if (this.level < 18) {
-                    this.guys = [new Guy(tiles[1]), new Guy(tiles[2]), new Guy(tiles[3])]
                 } else if (this.level < 24) {
+                    this.guys = [new Guy(tiles[1]), new Guy(tiles[2]), new Guy(tiles[3])]
+                } else if (this.level < 32) {
                     this.guys = [new Guy(tiles[1]), new Guy(tiles[2]), new Guy(tiles[3]), new Guy(tiles[4])]
                 } else {
                     this.guys = [new Guy(tiles[1]), new Guy(tiles[2]), new Guy(tiles[3]), new Guy(tiles[4]), new Guy(tiles[5])]
-
                 }
 
                 if (Math.random() < this.level / 50) {
@@ -7466,7 +7465,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.guys = []
                 this.first = 1
                 this.weapons = []
-                if (this.level < 5) {
+                if (this.level < 7) {
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(-1)
                     let wep3 = new Weapon(-1)
@@ -7480,7 +7479,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
-                } else if (this.level < 10) {
+                } else if (this.level < 14) {
 
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(1)
@@ -7494,7 +7493,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let wep5 = new Weapon(Math.floor(Math.random() * 20))
                         this.weapons.push(wep5)
                     }
-                } else if (this.level < 15) {
+                } else if (this.level < 21) {
 
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(1)
@@ -8573,7 +8572,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
-                    this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
+                    this.loot = Math.floor((this.level * 1.15) + (Math.random() * (this.level * 1.15))) + 2 //1
                     vessel.scrap += this.loot
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
