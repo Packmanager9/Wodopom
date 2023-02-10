@@ -8426,6 +8426,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.guys[t].draw()
             }
 
+            for (let t = 0; t < this.guys.length; t++) {
+                this.guys[t].bodydraw()
+            }
 
 
             for (let w = 0; w < this.weapons.length; w++) {
