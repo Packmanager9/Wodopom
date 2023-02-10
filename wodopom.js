@@ -8484,7 +8484,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.min((this.level + 5) / 300, .7)) {
+                    if (this.crewflag < Math.min((this.level + 15) / 300, .7)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -8514,12 +8514,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < Math.min((this.level + 5) / 300, .7) && vessel.guys.length < 9) {
+                if (this.crewflag < Math.min((this.level + 15) / 300, .7) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
                 let index = -1
-                if (this.wegflag < Math.min((this.level + 5) / 300, .7)) {
+                if (this.wegflag < Math.min((this.level + 15) / 300, .7)) {
                     for (let t = 0; t < vessel.weapons.length; t++) {
                         if (vessel.weapons[t].real != 1) {
                             index = t
