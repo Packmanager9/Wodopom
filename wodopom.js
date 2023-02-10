@@ -1345,15 +1345,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (enemy.hull <= 0) {
                     if (enemy.body.isPointInside(TIP_engine)) {
-                        enemy.spread = 31
-                        return
+                        if (enemy.spread == 0) {
+                            enemy.spread = 31
+                            return
+                        }
                     }
                 }
                 if (enemy.guys) {
                     if (enemy.guys.length == 0) {
                         if (enemy.body.isPointInside(TIP_engine)) {
-                            enemy.spread = 31
-                            return
+                            if (enemy.spread == 0) {
+                                enemy.spread = 31
+                                return
+                            }
                         }
                     }
                 }
@@ -3052,7 +3056,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            this.health += this.regen
+            this.health += (this.regen * .5) //1
             if (this.health > this.maxhealth) {
                 this.health = this.maxhealth
             }
@@ -4623,7 +4627,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 enemy.shield.charge = 0
                             }
                         }
+                    }
                     } else if (this.type == 19) {
+                        console.log(this)
                         let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
                         ring.draw()
                         let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
@@ -4692,7 +4698,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
 
                     }
-                }
+                
             }
         }
         draw() {
