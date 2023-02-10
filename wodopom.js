@@ -919,7 +919,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.nodes.push(node)
                     this.angle += this.angleIncrement
                 } else {
-                    let node = new Circle(this.body.x + (this.size * 2 * (Math.cos(this.angle))), this.body.y + (this.size * 2* (Math.sin(this.angle))), 0, "transparent")
+                    let node = new Circle(this.body.x + (this.size * 2 * (Math.cos(this.angle))), this.body.y + (this.size * 2 * (Math.sin(this.angle))), 0, "transparent")
                     this.nodes.push(node)
                     this.angle += this.angleIncrement
                 }
@@ -3530,8 +3530,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.type == -1) {
                 this.buy = 0
                 this.sell = 0
-            }
-            if (this.type == 0) {
+            } if (this.type == 0) {
                 this.name1 = "Basic"
                 this.name2 = "Laser"
                 this.max = 500
@@ -3786,6 +3785,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireChance = 0
                 this.buy = 50
                 this.sell = 50
+            }
+            if (this.type == -2) {
+                this.name1 = "Basic"
+                this.name2 = "Laser"
+                this.max = 1
+                this.damage = 99
+                this.real = 1
+                this.fireChance = 1000
+                this.buy = 50
+                this.sell = 15
+                this.type = 16
             }
             // this.fireChance = 0
         }
@@ -6146,10 +6156,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
-                    // this.weapons.push(new Weapon(4))
-                    // this.weapons.push(new Weapon(13))
-                    // this.weapons.push(new Weapon(16))
+                    // this.weapons.push(new Weapon(5))
                     // this.weapons.push(new Weapon(19))
+                    // this.weapons.push(new Weapon(101))
+                    // this.weapons.push(new Weapon(-2))
+                    // this.weapons.push(new Weapon(-2))
+                    // this.weapons.push(new Weapon(-2))
+                    // this.weapons.push(new Weapon(-2))
                 }
                 // canvas_context.drawImage(shipimage, 0, 0, 256, 256, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
 
@@ -8479,7 +8492,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.fuelflag = 1
                     }
                     if (this.bombflag < .3) {
-                        vessel.bombs += this.bombs
+                        vessel.bombs += this.bombs + 1
                     }
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
@@ -8500,6 +8513,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             vessel.guys.push(guy)
                         }
                     }
+
+                    let index = -1
+                    if (this.wegflag < Math.min((this.level + 15) / 300, .7)) {
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            if (vessel.weapons[t].real != 1) {
+                                index = t
+                                break
+                            }
+                        }
+                        if (index > -1) {
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                        } else {
+                            // this.wegflag = 1
+
+                            //new 
+                            for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                                if (vessel.upgradeMenu.wepsto[t].real != 1) {
+                                    index = t
+                                    break
+                                }
+                            }
+
+                            if (index > -1) {
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                            } else {
+                                this.wegflag = 1
+                            }
+
+                        }
+                    }
+
+
+
                 }
                 this.body.draw()
                 canvas_context.fillStyle = "white"
@@ -8518,37 +8564,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
-                let index = -1
                 if (this.wegflag < Math.min((this.level + 15) / 300, .7)) {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        if (vessel.weapons[t].real != 1) {
-                            index = t
-                            break
-                        }
-                    }
-                    if (index > -1) {
-                        vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 20)))
-                    } else {
-                        // this.wegflag = 1
-
-                        //new 
-                        for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
-                            if (vessel.upgradeMenu.wepsto[t].real != 1) {
-                                index = t
-                                break
-                            }
-                        }
-
-                        if (index > -1) {
-                            vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 20)))
-                        } else {
-                            this.wegflag = 1
-                        }
-
-                    }
-                }
-
-                if (this.wegflag < (this.level / 30 && index > -1)) {
                     canvas_context.fillText("+1 Weapon!", 720, 280)
                 }
                 if (this.bombflag < .3) {
@@ -8773,17 +8789,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                         dim.h = 44
                         ////////////////////////////console.log(dim)
-                        let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                        let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
                         rect.draw()
                         canvas_context.fillStyle = "white"
                         let py = TIP_engine.y + 5
-                        canvas_context.fillText(this.text1, rect.x + 10, py)
+                        canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
                         py += 12
-                        canvas_context.fillText(this.text2, rect.x + 10, py)
+                        canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
                         py += 12
-                        canvas_context.fillText(this.text3, rect.x + 10, py)
+                        canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
                         py += 12
-                        canvas_context.fillText(this.text4, rect.x + 10, py)
+                        canvas_context.fillText(this.text4, rect.x + 10, py - (dim.h + 10))
                     }
                     vessel.UI.systems[t].bars[k].y += 2
                     vessel.UI.systems[t].bars[k].height -= 4
@@ -8931,10 +8947,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             for (let t = 0; t < vessel.weapons.length; t++) {
-                if (vessel.weapons[t].body.isPointInside(TIP_engine)) {
+                if (vessel.weapons[t].body.isPointInside(TIP_engine) && vessel.weapons[t].type != -1) {
                     this.text1 = `Weapon: ${vessel.weapons[t].name1 + ' ' + vessel.weapons[t].name2}`
                     this.text2 = `Charge: ${Math.round(vessel.weapons[t].charge)}/${vessel.weapons[t].max}`
                     let str = 'Idle'
+                    let lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+
+                    if (vessel.weapons[t].railgun == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce"
+                    } else if (vessel.weapons[t].bomb == 1){
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
+                    } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101){
+                         lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    } else if (vessel.weapons[t].sap >= 1){
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields"
+                    } else if (vessel.weapons[t].crew > 1){
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew +"x"
+                    }else{
+                        lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    }
                     if (vessel.weapons[t].charge >= vessel.weapons[t].max) {
                         str = 'Ready'
                     } else {
@@ -8946,18 +8977,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // this.text4 = "Max: " + vessel.shield.level
                     let dim = {}
                     canvas_context.font = "12px comic sans ms"
-                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                    dim.h = 44
+                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
+                    dim.h = 56
                     ////////////////////////////console.log(dim)
-                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
+                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                     rect.draw()
                     canvas_context.fillStyle = "white"
                     let py = TIP_engine.y + 5
-                    canvas_context.fillText(this.text1, rect.x + 10, py)
+                    canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10),rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    if (vessel.weapons[t].railgun == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.weapons[t].bomb == 1){
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.weapons[t].beam == 1){
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.weapons[t].sap >= 1){
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.weapons[t].crew > 1){
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: "+ vessel.weapons[t].crew +"x", rect.x + 10, py - (dim.h + 10))
+                    }else{
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    }
                     py += 12
-                    canvas_context.fillText(this.text2, rect.x + 10, py)
-                    py += 12
-                    canvas_context.fillText(this.text3, rect.x + 10, py)
+                    // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                     // py += 12
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
                 }
@@ -9508,27 +9557,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let starfirst = 0
     function main() {
-        if(starfirst == 0){
+        if (starfirst == 0) {
             starss = []
-            starcanvas_context.clearRect(0,0,starcanvas.width,starcanvas.height)
+            starcanvas_context.clearRect(0, 0, starcanvas.width, starcanvas.height)
             for (let t = 0; t < 500; t++) {
                 let starb = new StarX(Math.random() * 1280, Math.random() * 720, getRandomLightColor(), Math.random() + 1, Math.random() * Math.PI * 2)
                 starb.draw()
                 starss.push(starb)
                 if (Math.random() < .05) {
-        
+
                     let starb = new StarX(Math.random() * 1280, Math.random() * 720, getRandomLightColor(), Math.random() * 5, Math.random() * Math.PI * 2)
                     starb.draw()
                     starss.push(starb)
                 }
                 if (Math.random() < .01) {
-        
+
                     let starb = new StarX(Math.random() * 1280, Math.random() * 720, getRandomLightColor(), Math.random() * 10, Math.random() * Math.PI * 2)
                     starb.draw()
                     starss.push(starb)
                 }
             }
-            starfirst =1
+            starfirst = 1
             for (let t = 0; t < starss.length; t++) {
                 starss[t].draw()
             }
