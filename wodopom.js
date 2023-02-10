@@ -7361,7 +7361,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
-                    enemy = new EnemyShip(Math.floor(Math.random() * 21), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 20), this.level + 1)
                 }
             } else {
                 canvas_context.fillStyle = "white"
@@ -8592,7 +8592,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.min((this.level + 15) / 300, .7)) {
+                    if (this.crewflag < Math.min((this.level + 33) / 300, .7)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -8655,7 +8655,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < Math.min((this.level + 15) / 300, .7) && vessel.guys.length < 9) {
+                if (this.crewflag < Math.min((this.level + 33) / 300, .7) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
@@ -8677,7 +8677,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     vessel.fuel--
                     start = 1
                     starfirst = 0
-                    enemy = new EnemyShip(Math.floor(Math.random() * 21), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 20), this.level + 1)
                 }
             }
 
@@ -8825,7 +8825,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let title = new Image()
     title.src = "title.png"
     let vessel = new Ship()
-    let enemy = new EnemyShip(Math.floor(Math.random() * 21), 1)
+    let enemy = new EnemyShip(Math.floor(Math.random() * 20), 1)
 
     vessel.draw()
     let stars = new Stars()
