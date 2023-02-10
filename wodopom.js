@@ -2635,6 +2635,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             // this.health = 1
             this.secont = 0
+            // this.energy = 1
         }
         draw() {
             if (this.type == 100) {
@@ -3334,18 +3335,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
         draw() {
 
             if (this == vessel.shield) {
-                this.level = Math.min(vessel.UI.systems[2].max, vessel.UI.systems[2].sto)
+                this.level = Math.min(vessel.UI.systems[2].max, vessel.UI.systems[2].sto+vessel.UI.systems[2].fed)
                 if (typeof vessel.hash != 'undefined') {
                     if (vessel.hash['shield'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[2].max)))) {
                         this.state = 0
                     }
                 }
+                if(vessel.UI.systems[2].sto+vessel.UI.systems[2].fed <= 0){
+                    this.state  = 0
+                }
             } else {
-                this.level = Math.min(enemy.UI.systems[2].max, enemy.UI.systems[2].sto)
+                this.level = Math.min(enemy.UI.systems[2].max, enemy.UI.systems[2].sto+enemy.UI.systems[2].fed)
                 if (typeof enemy.hash != 'undefined') {
                     if (enemy.hash['shield'].integrity < 100 * (1 - (1 / (11 - enemy.UI.systems[2].max)))) {
                         this.state = 0
                     }
+                }
+                if(enemy.UI.systems[2].sto+enemy.UI.systems[2].fed <= 0){
+                    this.state  = 0
                 }
             }
             let hrat = this.charge / this.maxout
@@ -4975,9 +4982,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body.draw()
             for (let t = 0; t < this.systems.length; t++) {
 
+                console.log(this.systems[t].fed)
                 if ((this.systems[t].demand + this.systems[t].fed) > this.systems[t].sto) {
                     this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
-                    { }
                 } else {
                     this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
                 }
