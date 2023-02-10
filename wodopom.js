@@ -3549,6 +3549,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireChance = 20
                 this.buy = 40
                 this.sell = 12
+                this.double = 0
             } else if (this.type == 2) {
                 this.name1 = "Double"
                 this.name2 = "Laser"
@@ -3601,6 +3602,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireChance = 30
                 this.buy = 45
                 this.sell = 18
+                this.double = 0
             } else if (this.type == 7) {
                 this.name1 = "Big"
                 this.name2 = "Bomb"
@@ -3612,6 +3614,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.buy = 55
                 this.sell = 24
                 this.fireChance = 45
+                this.double = 0
             } else if (this.type == 8) {
                 this.name1 = "Mega"
                 this.name2 = "Bomb"
@@ -3624,6 +3627,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireChance = 50
                 this.buy = 60
                 this.sell = 30
+                this.double = 0
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam"
@@ -6893,10 +6897,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
+    let zz = 10
     class EnemyShip {
         constructor(type, level) {
             this.now = Date.now()
             this.type = type
+            // zz++
             this.level = level
             this.loot = Math.floor((this.level * 1.1) + (Math.random() * (this.level * 1.1))) + 1
             this.ondeath = 0
@@ -6981,6 +6987,56 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         for (let f = 0; f < keys.length; f++) {
                             tile[keys[f]] = enemyship10[t][k][keys[f]]
                         }
+                    } else if (this.type == 10) {
+                        let keys = Object.keys(enemyship11[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship11[t][k][keys[f]]
+                        }
+                    } else if (this.type == 11) {
+                        let keys = Object.keys(enemyship12[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship12[t][k][keys[f]]
+                        }
+                    } else if (this.type == 12) {
+                        let keys = Object.keys(enemyship13[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship13[t][k][keys[f]]
+                        }
+                    } else if (this.type == 13) {
+                        let keys = Object.keys(enemyship14[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship14[t][k][keys[f]]
+                        }
+                    } else if (this.type == 14) {
+                        let keys = Object.keys(enemyship15[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship15[t][k][keys[f]]
+                        }
+                    } else if (this.type == 15) {
+                        let keys = Object.keys(enemyship16[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship16[t][k][keys[f]]
+                        }
+                    } else if (this.type == 16) {
+                        let keys = Object.keys(enemyship17[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship17[t][k][keys[f]]
+                        }
+                    } else if (this.type == 17) {
+                        let keys = Object.keys(enemyship18[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship18[t][k][keys[f]]
+                        }
+                    } else if (this.type == 18) {
+                        let keys = Object.keys(enemyship19[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship19[t][k][keys[f]]
+                        }
+                    } else if (this.type == 19) {
+                        let keys = Object.keys(enemyship20[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship20[t][k][keys[f]]
+                        }
                     }
                     tile.air = 100
                     tile.fire = 100
@@ -7017,7 +7073,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         if (tile.security > 0) {
                             tile.color = "#88888844"
-                            if (this.type == 3 || this.type == 6) {
+                            if (this.type == 3 || this.type == 6 || this.type == 10) {
                                 tile.medbay = 1
                                 tile.color = "#88FF8844"
                             }
@@ -7115,6 +7171,46 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else if (this.type == 9) {
                 for (let t = 0; t < enemyship10doors.length; t++) {
                     this.doors.push(new Door(enemyship10doors[t].body.x, enemyship10doors[t].body.y))
+                }
+            } else if (this.type == 10) {
+                for (let t = 0; t < enemyship11doors.length; t++) {
+                    this.doors.push(new Door(enemyship11doors[t].body.x, enemyship11doors[t].body.y))
+                }
+            } else if (this.type == 11) {
+                for (let t = 0; t < enemyship12doors.length; t++) {
+                    this.doors.push(new Door(enemyship12doors[t].body.x, enemyship12doors[t].body.y))
+                }
+            } else if (this.type == 12) {
+                for (let t = 0; t < enemyship13doors.length; t++) {
+                    this.doors.push(new Door(enemyship13doors[t].body.x, enemyship13doors[t].body.y))
+                }
+            } else if (this.type == 13) {
+                for (let t = 0; t < enemyship14doors.length; t++) {
+                    this.doors.push(new Door(enemyship14doors[t].body.x, enemyship14doors[t].body.y))
+                }
+            } else if (this.type == 14) {
+                for (let t = 0; t < enemyship15doors.length; t++) {
+                    this.doors.push(new Door(enemyship15doors[t].body.x, enemyship15doors[t].body.y))
+                }
+            } else if (this.type == 15) {
+                for (let t = 0; t < enemyship16doors.length; t++) {
+                    this.doors.push(new Door(enemyship16doors[t].body.x, enemyship16doors[t].body.y))
+                }
+            } else if (this.type == 16) {
+                for (let t = 0; t < enemyship17doors.length; t++) {
+                    this.doors.push(new Door(enemyship17doors[t].body.x, enemyship17doors[t].body.y))
+                }
+            } else if (this.type == 17) {
+                for (let t = 0; t < enemyship18doors.length; t++) {
+                    this.doors.push(new Door(enemyship18doors[t].body.x, enemyship18doors[t].body.y))
+                }
+            } else if (this.type == 18) {
+                for (let t = 0; t < enemyship19doors.length; t++) {
+                    this.doors.push(new Door(enemyship19doors[t].body.x, enemyship19doors[t].body.y))
+                }
+            } else if (this.type == 19) {
+                for (let t = 0; t < enemyship20doors.length; t++) {
+                    this.doors.push(new Door(enemyship20doors[t].body.x, enemyship20doors[t].body.y))
                 }
             }
             this.weapons = []
@@ -7265,7 +7361,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
-                    enemy = new EnemyShip(Math.floor(Math.random() * 10), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 21), this.level + 1)
                 }
             } else {
                 canvas_context.fillStyle = "white"
@@ -8582,7 +8678,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     vessel.fuel--
                     start = 1
                     starfirst = 0
-                    enemy = new EnemyShip(Math.floor(Math.random() * 10), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 21), this.level + 1)
                 }
             }
 
@@ -8730,7 +8826,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let title = new Image()
     title.src = "title.png"
     let vessel = new Ship()
-    let enemy = new EnemyShip(Math.floor(Math.random() * 10), 1)
+    let enemy = new EnemyShip(Math.floor(Math.random() * 21), 1)
 
     vessel.draw()
     let stars = new Stars()
@@ -8978,7 +9074,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let dim = {}
                     canvas_context.font = "12px comic sans ms"
                     dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
-                    dim.h = 56
+                    dim.h = 68
                     ////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                     rect.draw()
@@ -9005,7 +9101,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }else{
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                     }
-                    py += 12
+                    py += 13
+                    canvas_context.fillText("Breaks "+Math.floor((vessel.weapons[t].double / 1) * 1)+ " Shield", rect.x + 10, py - (dim.h + 10))
                     // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                     // py += 12
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
