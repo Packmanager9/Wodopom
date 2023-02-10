@@ -2309,8 +2309,58 @@ window.addEventListener('DOMContentLoaded', (event) => {
         firesounds.push(firesound)
     }
 
+    let blast = new Audio()
+    blast.src = "blast.mp3"
+
+    let laser1 = new Audio()
+    laser1.src = "laser1.mp3"
+
+    let laser2 = new Audio()
+    laser2.src = "laser2.mp3"
+
+    let laser3 = new Audio()
+    laser3.src = "laser3.mp3"
+
+    let ion1aud = new Audio()
+    ion1aud.src = "ion1.mp3"
+    let ion2aud = new Audio()
+    ion2aud.src = "ion2.mp3"
+    let crewion1aud = new Audio()
+    crewion1aud.src = "crewion1.mp3"
+    let crewion2aud = new Audio()
+    crewion2aud.src = "crewion2.mp3"
+
+
+    let rail1aud = new Audio()
+    rail1aud.src = "rail1.mp3"
+
+    let rail2aud = new Audio()
+    rail2aud.src = "rail2.mp3"
+
+    let rail3aud = new Audio()
+    rail3aud.src = "rail3.mp3"
+
+
+
+    let sap1aud = new Audio()
+    sap1aud.src = "sap1aud.mp3"
+    let sap2aud = new Audio()
+    sap2aud.src = "sap2aud.mp3"
+    let sap3aud = new Audio()
+    sap3aud.src = "sap3aud.mp3"
+
+
+
+    let crewlaseraud= new Audio()
+    crewlaseraud.src = "crewlaser.mp3"
+
+    let megalaseraud= new Audio()
+    megalaseraud.src = "megalaser.mp3"
+
     let airlockopen = new Audio()
     airlockopen.src = "airlockopen.mp3"
+    let heatbeamaud = new Audio()
+    heatbeamaud.src = "heatbeamaud.mp3"
 
 
     let doorclose = new Audio()
@@ -3911,6 +3961,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.bombs <= 0) {
                             return
                         }
+                        blast.play()
                     }
                 }
                 if (enemy.weapons.includes(this)) {
@@ -3921,6 +3972,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (enemy.bombs <= 0) {
                             return
                         }
+                        blast.play()
                     }
                 }
                 if (this.beam == 1) {
@@ -4198,8 +4250,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.firing > 0) {
                 if (this.type == 0) {
-                    if (vessel.weapons.includes(this)) {
+                    if(this.firing == 10){
+                        laser1.play()
+                    }
 
+                    if (vessel.weapons.includes(this)) {
+                        //basic laser
                         let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "red", 7)
                         link.draw()
                         let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "white", 3)
@@ -4214,6 +4270,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing--
                     }
                 } else if (this.type == 1) {
+                    //basic bomb
                     let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 17 * ((10 - this.firing) / 8), "#FF0000")
                     link.draw()
                     let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 13 * ((10 - this.firing) / 8.05), "#FFAA00")
@@ -4222,6 +4279,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     link3.draw()
                     this.firing -= 2
                 } else if (this.type == 2) {
+                    //double laser
+
+                    if(this.firing == 10){
+                        laser2.play()
+                    }
                     if (vessel.weapons.includes(this)) {
                         if (this.firing < 4 || this.firing > 6) {
                             let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "orange", 9)
@@ -4240,6 +4302,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= .7
                     }
                 } else if (this.type == 3) {
+                    //triple laser
+                    if(this.firing == 10){
+                        laser3.play()
+                    }
                     if (vessel.weapons.includes(this)) {
                         if (this.firing < 2.5 || this.firing > 7.5 || (this.firing > 4 && this.firing < 6)) {
                             let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Purple", 9)
@@ -4259,6 +4325,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 } else if (this.type == 4) {
                     //mega laser
+                    if(this.firing == 10){
+                        crewlaseraud.play()
+                    }
                     if (vessel.weapons.includes(this)) {
                         let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
                         link.draw()
@@ -4273,6 +4342,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= .5
                     }
                 } else if (this.type == 5) {
+                    if(this.firing == 10){
+                        megalaseraud.play()
+                    }
                     if (vessel.weapons.includes(this)) {
                         let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 12)
                         link.draw()
@@ -4287,6 +4359,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= 1
                     }
                 } else if (this.type == 6) {
+                    //medium bobm?
                     let link = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 22 * ((10 - this.firing) / 8), "#FF0000")
                     link.draw()
                     let link2 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 16 * ((10 - this.firing) / 8.05), "#FFAA00")
@@ -4312,6 +4385,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     link3.draw()
                     this.firing -= 2
                 } else if (this.type == 9) {
+                    if(this.firing == 10){
+                        heatbeamaud.play()
+                    }
                     //heatbeam
                     let site5 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5))
                     site5.draw()
@@ -4329,6 +4405,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "cyan")
                     ring.draw()
                     if (this.firing == 10) {
+                        ion1aud.play()
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4363,6 +4440,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     ring.draw()
 
                     if (this.firing == 10) {
+                        ion2aud.play()
                         let link = new LineOP(ring, ring)
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4393,6 +4471,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26, "#aaff00")
                     ring.draw()
                     if (this.firing == 10) {
+                        crewion1aud.play()
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4421,6 +4500,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 26, "#AA0000")
                     ring.draw()
                     if (this.firing == 10) {
+                        crewion2aud.play()
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4453,6 +4533,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     ring.draw()
                     if (this.firing == 10) {
+                        //rail1?
+                    if(this.firing == 10){
+                        rail1aud.play()
+                    }
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4485,6 +4569,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     ring.draw()
                     if (this.firing == 10 || this.firing == 5) {
+                        if(this.firing == 10){
+                            rail2aud.play()
+                        }
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4516,7 +4603,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     ring.draw()
-                    if (this.firing == 10 || this.firing == 5) {
+                    if (this.firing == 10) { // || this.firing == 5
+                        if(this.firing == 10){
+                            rail3aud.play()
+                        }
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -4543,6 +4633,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     this.firing -= 1
                 } else if (this.type == 17) {
+                    if(this.firing == 10){
+                        sap1aud.play()
+                    }
                     let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing) * 36)) - 20, 5), "#FF000044")
                     ring.draw()
                     let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing) * 36)) - 20, 5), "#FF000044")
@@ -4599,6 +4692,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 } else if (this.type == 18) {
+                    if(this.firing == 10){
+                        sap2aud.play()
+                    }
                     let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 2) * 36)) - 15, 5), "#FF00FF44")
                     ring.draw()
                     let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 2) * 36)) - 15, 5), "#FF00FF44")
@@ -4653,6 +4749,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     } else if (this.type == 19) {
+                        if(this.firing == 10){
+                            sap3aud.play()
+                        }
                         //console.log(this)
                         let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
                         ring.draw()
