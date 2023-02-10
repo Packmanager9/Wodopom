@@ -4522,44 +4522,46 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.firing -= .2
                     if (this.firing <= 0) {
                         if (enemy.weapons.includes(this)) {
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
-                                    vessel.guys[t].health -= this.damage * this.crew
-                                    if (vessel.guys[t].energy > 0) {
-                                        vessel.guys[t].health -= vessel.guys[t].health * 2
-                                        vessel.guys[t].energydeathtag = 15
-                                        enemy.energy.powersto += 1
-                                    }
-                                    vessel.guys[t].hit = 0
-                                }
-                            }
                             if (vessel.shield.state >= this.sap) {
                                 enemy.shield.state += this.sap
                                 vessel.shield.state -= this.sap
                             } else {
+                                if (vessel.shield.state == 0) {
+                                    for (let t = 0; t < vessel.guys.length; t++) {
+                                        if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
+                                            vessel.guys[t].health -= this.damage * this.crew
+                                            if (vessel.guys[t].energy > 0) {
+                                                vessel.guys[t].health -= vessel.guys[t].health * 2
+                                                vessel.guys[t].energydeathtag = 15
+                                                enemy.energy.powersto += 1
+                                            }
+                                            vessel.guys[t].hit = 0
+                                        }
+                                    }
+                                }
                                 enemy.shield.state += vessel.shield.state
                                 vessel.shield.state = 0
                                 vessel.shield.charge = 0
                             }
                         } else {
-
-
-                            for (let t = 0; t < enemy.guys.length; t++) {
-                                if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
-                                    enemy.guys[t].health -= this.damage * this.crew
-                                    if (enemy.guys[t].energy > 0) {
-                                        enemy.guys[t].health -= enemy.guys[t].health * 2
-                                        enemy.guys[t].energydeathtag = 15
-                                        vessel.menuBattery.power += 1
-                                        vessel.menuBattery.powersto += 1
-                                    }
-                                    enemy.guys[t].hit = 0
-                                }
-                            }
                             if (enemy.shield.state >= this.sap) {
                                 vessel.shield.state += this.sap
                                 enemy.shield.state -= this.sap
                             } else {
+                                if (enemy.shield.state == 0) {
+                                    for (let t = 0; t < enemy.guys.length; t++) {
+                                        if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
+                                            enemy.guys[t].health -= this.damage * this.crew
+                                            if (enemy.guys[t].energy > 0) {
+                                                enemy.guys[t].health -= enemy.guys[t].health * 2
+                                                enemy.guys[t].energydeathtag = 15
+                                                vessel.menuBattery.power += 1
+                                                vessel.menuBattery.powersto += 1
+                                            }
+                                            enemy.guys[t].hit = 0
+                                        }
+                                    }
+                                }
                                 vessel.shield.state += enemy.shield.state
                                 enemy.shield.state = 0
                                 enemy.shield.charge = 0
@@ -4576,119 +4578,120 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.firing -= .2
                     if (this.firing <= 0) {
                         if (enemy.weapons.includes(this)) {
-
-
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
-                                    vessel.guys[t].health -= this.damage * this.crew
-                                    if (vessel.guys[t].energy > 0) {
-                                        vessel.guys[t].health -= vessel.guys[t].health * 2
-                                        vessel.guys[t].energydeathtag = 15
-                                        enemy.energy.powersto += 1
-                                    }
-                                    vessel.guys[t].hit = 0
-                                }
-                            }
                             if (vessel.shield.state >= this.sap) {
                                 enemy.shield.state += this.sap
                                 vessel.shield.state -= this.sap
                             } else {
+                                if (vessel.shield.state == 0) {
+                                    for (let t = 0; t < vessel.guys.length; t++) {
+                                        if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
+                                            vessel.guys[t].health -= this.damage * this.crew
+                                            if (vessel.guys[t].energy > 0) {
+                                                vessel.guys[t].health -= vessel.guys[t].health * 2
+                                                vessel.guys[t].energydeathtag = 15
+                                                enemy.energy.powersto += 1
+                                            }
+                                            vessel.guys[t].hit = 0
+                                        }
+                                    }
+                                }
                                 enemy.shield.state += vessel.shield.state
                                 vessel.shield.state = 0
                                 vessel.shield.charge = 0
                             }
                         } else {
-
-                            for (let t = 0; t < enemy.guys.length; t++) {
-                                if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
-                                    enemy.guys[t].health -= this.damage * this.crew
-                                    if (enemy.guys[t].energy > 0) {
-                                        enemy.guys[t].health -= enemy.guys[t].health * 2
-                                        enemy.guys[t].energydeathtag = 15
-                                        vessel.menuBattery.power += 1
-                                        vessel.menuBattery.powersto += 1
-                                    }
-                                    enemy.guys[t].hit = 0
-                                }
-                            }
                             if (enemy.shield.state >= this.sap) {
                                 vessel.shield.state += this.sap
                                 enemy.shield.state -= this.sap
                             } else {
+                                if (enemy.shield.state == 0) {
+                                    for (let t = 0; t < enemy.guys.length; t++) {
+                                        if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
+                                            enemy.guys[t].health -= this.damage * this.crew
+                                            if (enemy.guys[t].energy > 0) {
+                                                enemy.guys[t].health -= enemy.guys[t].health * 2
+                                                enemy.guys[t].energydeathtag = 15
+                                                vessel.menuBattery.power += 1
+                                                vessel.menuBattery.powersto += 1
+                                            }
+                                            enemy.guys[t].hit = 0
+                                        }
+                                    }
+                                }
                                 vessel.shield.state += enemy.shield.state
                                 enemy.shield.state = 0
                                 enemy.shield.charge = 0
                             }
-
-
-                            //djd
                         }
-                    }
-                } else if (this.type == 19) {
-                    let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
-                    ring.draw()
-                    let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
-                    ring2.draw()
-                    this.firing -= .2
-                    if (this.firing <= 0) {
-                        if (enemy.weapons.includes(this)) {
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
-                                    vessel.guys[t].health -= this.damage * this.crew
-                                    if (vessel.guys[t].energy > 0) {
-                                        vessel.guys[t].health -= vessel.guys[t].health * 2
-                                        vessel.guys[t].energydeathtag = 15
-                                        enemy.energy.powersto += 1
+                    } else if (this.type == 19) {
+                        let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
+                        ring.draw()
+                        let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
+                        ring2.draw()
+                        this.firing -= .2
+                        if (this.firing <= 0) {
+                            if (enemy.weapons.includes(this)) {
+                                if (vessel.shield.state >= this.sap) {
+                                    enemy.shield.state += this.sap
+                                    vessel.shield.state -= this.sap
+                                } else {
+                                    if (vessel.shield.state == 0) {
+                                        for (let t = 0; t < vessel.guys.length; t++) {
+                                            if (vessel.guys[t].body.doesPerimeterTouch(ring)) {
+                                                vessel.guys[t].health -= this.damage * this.crew
+                                                if (vessel.guys[t].energy > 0) {
+                                                    vessel.guys[t].health -= vessel.guys[t].health * 2
+                                                    vessel.guys[t].energydeathtag = 15
+                                                    enemy.energy.powersto += 1
+                                                }
+                                                vessel.guys[t].hit = 0
+                                            }
+                                        }
                                     }
-                                    vessel.guys[t].hit = 0
+                                    enemy.shield.state += vessel.shield.state
+                                    vessel.shield.state = 0
+                                    vessel.shield.charge = 0
+                                }
+                            } else {
+                                if (enemy.shield.state >= this.sap) {
+                                    vessel.shield.state += this.sap
+                                    enemy.shield.state -= this.sap
+                                } else {
+                                    if (enemy.shield.state == 0) {
+                                        for (let t = 0; t < enemy.guys.length; t++) {
+                                            if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
+                                                enemy.guys[t].health -= this.damage * this.crew
+                                                if (enemy.guys[t].energy > 0) {
+                                                    enemy.guys[t].health -= enemy.guys[t].health * 2
+                                                    enemy.guys[t].energydeathtag = 15
+                                                    vessel.menuBattery.power += 1
+                                                    vessel.menuBattery.powersto += 1
+                                                }
+                                                enemy.guys[t].hit = 0
+                                            }
+                                        }
+                                    }
+                                    vessel.shield.state += enemy.shield.state
+                                    enemy.shield.state = 0
+                                    enemy.shield.charge = 0
                                 }
                             }
+                        }
+                    } else if (this.type == 100) {
 
-                            if (vessel.shield.state >= this.sap) {
-                                enemy.shield.state += this.sap
-                                vessel.shield.state -= this.sap
-                            } else {
-                                enemy.shield.state += vessel.shield.state
-                                vessel.shield.state = 0
-                                vessel.shield.charge = 0
+
+                        if (vessel.weapons.includes(this)) {
+                            let g = Math.max(10 - this.firing)
+                            for (let k = 0; k < g; k++) {
+                                let link = new Circle(enemy.body.x, enemy.body.y, (260 - (30 * k)) * ((10 - this.firing) / 8), getRandomLightColor() + '22')
+                                link.draw()
                             }
+                            this.firing -= .4
                         } else {
-                            for (let t = 0; t < enemy.guys.length; t++) {
-                                if (enemy.guys[t].body.doesPerimeterTouch(ring)) {
-                                    enemy.guys[t].health -= this.damage * this.crew
-                                    if (enemy.guys[t].energy > 0) {
-                                        enemy.guys[t].health -= enemy.guys[t].health * 2
-                                        enemy.guys[t].energydeathtag = 15
-                                        vessel.menuBattery.power += 1
-                                        vessel.menuBattery.powersto += 1
-                                    }
-                                    enemy.guys[t].hit = 0
-                                }
-                            }
-                            if (enemy.shield.state >= this.sap) {
-                                vessel.shield.state += this.sap
-                                enemy.shield.state -= this.sap
-                            } else {
-                                vessel.shield.state += enemy.shield.state
-                                enemy.shield.state = 0
-                                enemy.shield.charge = 0
-                            }
+                            //they should never have this
                         }
+
                     }
-                } else if (this.type == 100) {
-
-
-                    if (vessel.weapons.includes(this)) {
-                        let g = Math.max(10 - this.firing)
-                        for (let k = 0; k < g; k++) {
-                            let link = new Circle(enemy.body.x, enemy.body.y, (260 - (30 * k)) * ((10 - this.firing) / 8), getRandomLightColor() + '22')
-                            link.draw()
-                        }
-                        this.firing -= .4
-                    } else {
-                        //they should never have this
-                    }
-
                 }
             }
         }
@@ -7037,6 +7040,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         for (let f = 0; f < keys.length; f++) {
                             tile[keys[f]] = enemyship20[t][k][keys[f]]
                         }
+                    } else if (this.type == 20) {
+                        let keys = Object.keys(enemyship21[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship21[t][k][keys[f]]
+                        }
+                    } else if (this.type == 21) {
+                        let keys = Object.keys(enemyship22[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship22[t][k][keys[f]]
+                        }
+                    } else if (this.type == 22) {
+                        let keys = Object.keys(enemyship23[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship23[t][k][keys[f]]
+                        }
+                    } else if (this.type == 23) {
+                        let keys = Object.keys(enemyship24[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship24[t][k][keys[f]]
+                        }
+                    } else if (this.type == 24) {
+                        let keys = Object.keys(enemyship25[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship25[t][k][keys[f]]
+                        }
                     }
                     tile.air = 100
                     tile.fire = 100
@@ -7212,6 +7240,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < enemyship20doors.length; t++) {
                     this.doors.push(new Door(enemyship20doors[t].body.x, enemyship20doors[t].body.y))
                 }
+            } else if (this.type == 20) {
+                for (let t = 0; t < enemyship21doors.length; t++) {
+                    this.doors.push(new Door(enemyship21doors[t].body.x, enemyship21doors[t].body.y))
+                }
+            } else if (this.type == 21) {
+                for (let t = 0; t < enemyship22doors.length; t++) {
+                    this.doors.push(new Door(enemyship22doors[t].body.x, enemyship22doors[t].body.y))
+                }
+            } else if (this.type == 22) {
+                for (let t = 0; t < enemyship23doors.length; t++) {
+                    this.doors.push(new Door(enemyship23doors[t].body.x, enemyship23doors[t].body.y))
+                }
+            } else if (this.type == 23) {
+                for (let t = 0; t < enemyship24doors.length; t++) {
+                    this.doors.push(new Door(enemyship24doors[t].body.x, enemyship24doors[t].body.y))
+                }
+            } else if (this.type == 24) {
+                for (let t = 0; t < enemyship25doors.length; t++) {
+                    this.doors.push(new Door(enemyship25doors[t].body.x, enemyship25doors[t].body.y))
+                }
             }
             this.weapons = []
 
@@ -7361,7 +7409,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
-                    enemy = new EnemyShip(Math.floor(Math.random() * 20), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 25), this.level + 1)
                 }
             } else {
                 canvas_context.fillStyle = "white"
@@ -8677,7 +8725,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     vessel.fuel--
                     start = 1
                     starfirst = 0
-                    enemy = new EnemyShip(Math.floor(Math.random() * 20), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 25), this.level + 1)
                 }
             }
 
@@ -8825,7 +8873,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let title = new Image()
     title.src = "title.png"
     let vessel = new Ship()
-    let enemy = new EnemyShip(Math.floor(Math.random() * 20), 1)
+    let enemy = new EnemyShip(Math.floor(Math.random() * 25), 1)
 
     vessel.draw()
     let stars = new Stars()
@@ -9046,20 +9094,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.text1 = `Weapon: ${vessel.weapons[t].name1 + ' ' + vessel.weapons[t].name2}`
                     this.text2 = `Charge: ${Math.round(vessel.weapons[t].charge)}/${vessel.weapons[t].max}`
                     let str = 'Idle'
-                    let lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    let lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
 
                     if (vessel.weapons[t].railgun == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce"
-                    } else if (vessel.weapons[t].bomb == 1){
+                    } else if (vessel.weapons[t].bomb == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
-                    } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101){
-                         lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
-                    } else if (vessel.weapons[t].sap >= 1){
+                    } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101) {
+                        lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    } else if (vessel.weapons[t].sap >= 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields"
-                    } else if (vessel.weapons[t].crew > 1){
-                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew +"x"
-                    }else{
-                        lsrt = "Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    } else if (vessel.weapons[t].crew > 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x"
+                    } else {
+                        lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
                     }
                     if (vessel.weapons[t].charge >= vessel.weapons[t].max) {
                         str = 'Ready'
@@ -9085,23 +9133,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     py += 13
                     canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
                     py += 13
-                    canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage+ ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10),rect.x + 10, py - (dim.h + 10))
+                    canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
                     py += 13
                     if (vessel.weapons[t].railgun == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
-                    } else if (vessel.weapons[t].bomb == 1){
+                    } else if (vessel.weapons[t].bomb == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
-                    } else if (vessel.weapons[t].beam == 1){
+                    } else if (vessel.weapons[t].beam == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
-                    } else if (vessel.weapons[t].sap >= 1){
+                    } else if (vessel.weapons[t].sap >= 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields", rect.x + 10, py - (dim.h + 10))
-                    } else if (vessel.weapons[t].crew > 1){
-                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: "+ vessel.weapons[t].crew +"x", rect.x + 10, py - (dim.h + 10))
-                    }else{
+                    } else if (vessel.weapons[t].crew > 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x", rect.x + 10, py - (dim.h + 10))
+                    } else {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                     }
                     py += 13
-                    canvas_context.fillText("Breaks "+Math.floor((vessel.weapons[t].double / 1) * 1)+ " Shield", rect.x + 10, py - (dim.h + 10))
+                    canvas_context.fillText("Breaks " + Math.floor((vessel.weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
                     // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                     // py += 12
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
