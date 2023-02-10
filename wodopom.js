@@ -3180,6 +3180,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             this.tile.fire += this.extinguish
+            if(this.tiles){
+                for(let t = 0;t<this.tiles.length;t++){
+                    this.tile[t].fire += this.extinguish
+                }
+            }
             if (this.tile.fire > 100) {
                 this.tile.fire = 100
             }
