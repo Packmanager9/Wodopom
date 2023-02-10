@@ -2311,6 +2311,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let blast = new Audio()
     blast.src = "blast.mp3"
+    let wodopomsong = new Audio()
+    wodopomsong.src = "wodopomsong.mp3"
+    wodopomsong.volume = .3
 
     let laser1 = new Audio()
     laser1.src = "laser1.mp3"
@@ -9859,6 +9862,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let starfirst = 0
     function main() {
+        wodopomsong.play()
         if (starfirst == 0) {
             starss = []
             starcanvas_context.clearRect(0, 0, starcanvas.width, starcanvas.height)
