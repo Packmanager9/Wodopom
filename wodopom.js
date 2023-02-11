@@ -6316,6 +6316,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ////////////////////////////////////////console.log("h")
                         tile.color = "#FFFFFF44"
                     }
+                    if (tile.special == 1) {
+                        ////////////////////////////////////////console.log("h")
+                        tile.color = "#AA00FF44"
+                    }
                     if (tile.engine == 1) {
                         ////////////////////////////////////////console.log("h")
                         tile.color = "#ffaa0044"
@@ -6379,6 +6383,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         UIdraw() {
             this.teleButton.draw()
+            canvas_context.drawImage(energydeathimg, 64 * (12 % (energydeathimg.width / 64)), 0, 64, 64, this.teleButton.x, this.teleButton.y, 40,40)
+
             this.hrat = this.hull / this.maxhull
             this.healthbar = new RectangleR(180, 10, 250, 10, "transparent")
             this.healthbar.draw()
@@ -7478,7 +7484,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     tile.xmom = (Math.random() - .5) * 30
                     tile.ymom = (Math.random() - .5) * 30
 
-                    if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
+                    if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                         tile.marked = 1
                         ////////////////////////////////////////console.log("w")
                         tile.walkable = true
@@ -7515,7 +7521,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             tile.color = "#FFAA0044"
                         }
                         if (tile.special > 0) {
-                            tile.color = "#AAFF8844"
+                            tile.color = "#aa00ff44"
                         }
                     } else {
                         tile.marked = -1
@@ -9642,11 +9648,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText(this.text4, rect.x + 10, py)
             }
             if (vessel.upgradeMenu.button.isPointInside(TIP_engine)) {
-                this.text1 = "Upgrade menu"
+                this.text1 = "Upgrade Menu"
                 let dim = {}
                 canvas_context.font = "12px comic sans ms"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 12
+                dim.h = 10
+                ////////////////////////////////console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text2, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text3, rect.x + 10, py)
+                // py += 12
+                // canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+            if (vessel.teleButton.isPointInside(TIP_engine)) {
+                this.text1 = "Teleport Crew"
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                dim.h = 10
                 ////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
@@ -9891,8 +9916,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
-                            if (enemy.blocks[t][k].empty == 1 || enemy.blocks[t][k].special == 1) {
+                            if (enemy.blocks[t][k].empty == 1 ) {
                                 this.text1 += "Empty"
+
+                                if (vessel.UI.systems[5].sto >= 2) {
+                                    this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
+                                } else {
+                                    this.text2 = ''
+                                }
+
+                                if (vessel.UI.systems[5].sto <= 4) {
+                                    this.text3 = ''
+                                } else {
+                                    this.text3 = `Power ${enemy.UI.systems[8].sto}`
+                                }
+
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                if (vessel.UI.systems[5].sto > 4) {
+                                    dim.h = 24 + 12
+                                }
+                                if (vessel.UI.systems[5].sto < 2) {
+                                    dim.h = 24 - 12
+                                }
+                                ////////////////////////////////console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                                rect.draw()
+                            }
+                            if (enemy.blocks[t][k].special == 1) {
+                                this.text1 += "Teleporter"
 
                                 if (vessel.UI.systems[5].sto >= 2) {
                                     this.text2 = `Hull: ${Math.floor(enemy.blocks[t][k].integrity)}, Air: ${Math.round(enemy.blocks[t][k].air)}`
@@ -10093,8 +10147,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
                                 //py += 12
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
-                            } else if (vessel.blocks[t][k].empty == 1 || vessel.blocks[t][k].special == 1) {
+                            } else if (vessel.blocks[t][k].empty == 1) {
                                 this.text1 = "Empty"
+                                this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
+                                this.text3 = '1'
+                                let dim = {}
+                                canvas_context.font = "12px comic sans ms"
+                                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
+                                dim.h = 24
+                                ////////////////////////////////console.log(dim)
+                                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                                rect.draw()
+                                canvas_context.fillStyle = "white"
+                                let py = TIP_engine.y + 5
+                                canvas_context.fillText(this.text1, rect.x + 10, py)
+                                py += 12
+                                canvas_context.fillText(this.text2, rect.x + 10, py)
+                                //py += 12
+                                //canvas_context.fillText(this.text3, rect.x + 10, py)
+                            }else if (vessel.blocks[t][k].special == 1) {
+                                this.text1 = "Teleporter"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
