@@ -1435,16 +1435,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     return
             // }
 
-            // for (let t = 0; t < enemy.blocks.length; t++) {
-            //     for (let k = 0; k < enemy.blocks[t].length; k++) {
-            //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
-            //             if (keysPressed['p']) {
-            //                 enemy.blocks[t][k].fire = -100
-            //                 enemy.blocks[t][k].onFire = 1
-            //             }
-            //         }
-            //     }
-            // }
+            for (let t = 0; t < enemy.blocks.length; t++) {
+                for (let k = 0; k < enemy.blocks[t].length; k++) {
+                    if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
+                        if (keysPressed['p']) {
+                            enemy.blocks[t][k].fire = -100
+                            enemy.blocks[t][k].onFire = 1
+                        }
+                    }
+                }
+            }
 
             //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
             //             // //////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
@@ -1547,10 +1547,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
                     if (vessel.blocks[t][k].isPointInside(TIP_engine)) {
-                        // if (keysPressed['p']) {
-                        //     vessel.blocks[t][k].fire = -100
-                        //     // vessel.blocks[t][k].onFire = 1
-                        // }
+                        if (keysPressed['p']) {
+                            vessel.blocks[t][k].fire = -100
+                            // vessel.blocks[t][k].onFire = 1
+                        }
                         // //////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
                         // if (keysPressed['m']) {
                         //     vessel.blocks[t][k].medbay = 1
@@ -2092,8 +2092,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
+    let engineblast = new Image()
+    engineblast.src = "engineblast.png"
+    let engineblastr = new Image()
+    engineblastr.src = "engineblastr.png"
+
     class Tile {
         constructor(x, y, width, height, color, id, size, posx, posy, walkable) {
+            this.left = 0
+            this.right = 0
             this.newlyOnFire = 0
             this.onFire = 0
             this.faction = -1
@@ -2367,6 +2374,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.integrity > 99) {
                     this.integrity = 100
                 }
+            }
+            if(this.left == 1){
+                if(vessel.hash){
+
+                    if (vessel.hash['engine'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[6].max)))) {
+                        if(vessel.UI.systems[6].sto + vessel.UI.systems[6].fed  > 0){
+                            canvas_context.drawImage(engineblast,(1+Math.floor(Math.random()*4))*(32),0,engineblast.width/5, engineblast.height, this.x-(this.width*2), this.y, this.width*2, this.height)
+                        }else{
+                            canvas_context.drawImage(engineblast,0,0,engineblast.width/5, engineblast.height, this.x-(this.width*2), this.y, this.width*2, this.height)
+                        }
+                    }else{
+                        canvas_context.drawImage(engineblast,0,0,engineblast.width/5, engineblast.height, this.x-(this.width*2), this.y, this.width*2, this.height)
+
+                    }
+                }
+            }
+            if(this.right == 1){
+
+                if(enemy.hash){
+                if (enemy.hash['engine'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[6].max)))) {
+                if(enemy.UI.systems[6].sto + enemy.UI.systems[6].fed  > 0){
+                    canvas_context.drawImage(engineblastr,(1+Math.floor(Math.random()*4))*(32),0,engineblastr.width/5, engineblastr.height, this.x+(this.width), this.y, this.width*2, this.height)
+                }else{
+                    canvas_context.drawImage(engineblastr,0,0,engineblastr.width/5, engineblastr.height, this.x+(this.width), this.y, this.width*2, this.height)
+                }
+            }else{
+                canvas_context.drawImage(engineblastr,0,0,engineblastr.width/5, engineblastr.height, this.x+(this.width), this.y, this.width*2, this.height)
+
+            }
+            }
             }
             // this.counterset++
             // if (this.counterset % 3 == 0) {
@@ -6487,6 +6524,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
+            this.supratiles.sort((a,b) => a.x > b.x ? 1:-1)
+            this.supratiles[0].left = 1
+            this.supratiles[2].left = 1
+            this.supratiles[3].left = 1
+            this.supratiles[1].left = 1
             this.first = 0
 
             this.weapons = []
@@ -8013,6 +8055,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
+
+            this.supratiles.sort((a,b) => a.x > b.x ? -1:1)
+            for(let t = 0;t<this.supratiles.length;t++){
+                if(this.supratiles[t].x == this.supratiles[0].x){
+                    this.supratiles[t].right = 1
+                }
+            }
+
+
                 if (this.level < 8) {
                     this.guys = [new Guy(tiles[1])]
                 } else if (this.level < 16) {
