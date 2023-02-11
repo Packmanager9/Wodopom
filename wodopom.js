@@ -1513,9 +1513,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             for (let t = 0; t < enemy.doors.length; t++) {
                 if (right <= 0) {
-                    if (enemy.doors[t].check(TIP_engine)) {
-                        return
-                    }
+                    // if (enemy.doors[t].check(TIP_engine)) {
+                    //     return //why was this here?
+                    // }
                 }
             }
             right = 0
@@ -6244,6 +6244,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         check(point) {
+            if (vessel.hash['security'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[5].max)))) {
+                return
+
+            }
+            if (vessel.UI.systems[5].sto+vessel.UI.systems[5].fed <= 0) {
+                return
+
+            }
             if (start == 1) {
                 return
             }
@@ -6344,6 +6352,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         check(point) {
+            
+            if (vessel.hash['security'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[5].max)))) {
+                return
+
+            }
+            if (vessel.UI.systems[5].sto+vessel.UI.systems[5].fed <= 0) {
+                return
+
+            }
             this.t = 0
             let worm = 0
             for (let t = 0; t < vessel.guys.length; t++) {
@@ -8291,6 +8308,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.guys[t].stretch == 1) {
 
                     for (let q = 0; q < this.guys[t].tiles.length; q++) {
+                        if(this.guys[q].hostile == 1){
+                            continue
+                        }
 
                         // this.guys[t].draw()
                         this.guys[t].tiles[q].integrity += (1 / 6) * this.guys[t].repair
