@@ -1717,43 +1717,45 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                         if (enemy.guys) {
                             enemy.guys.sort((a, b) => a.selected > b.selected ? -1 : 1)
-                            if (enemy.guys[0].selected == 1) {
-                                whet = 1
-                            }
-                            if (enemy.guys[0].tile.t != tile.t || enemy.guys[0].tile.k != tile.k) {
-                                if (enemy.guys[0].selected == 1 && enemy.guys[0].hostile == 1) {
-                                    if (enemy.guys[0].cound > 0) {
-                                        enemy.guys[0].turning = 1
-                                        enemy.guys[0].flagpath = astar.search(enemy, enemy.guys[0].tile, tile)
-                                        enemy.guys[0].stogo = tile
-                                        if (enemy.guys[0].flagpath.length > 1) {
-                                            enemy.guys[0].selected = 0
-                                        }
-                                    } else {
-                                        enemy.guys[0].path = astar.search(enemy, enemy.guys[0].tile, tile)
-                                        enemy.guys[0].stogo = tile
-                                        if (enemy.guys[0].path.length > 1) {
-                                            enemy.guys[0].selected = 0
-                                        }
-                                    }
+                            if(enemy.guys.length > 0){
+                                if (enemy.guys[0].selected == 1) {
                                     whet = 1
                                 }
+                                if (enemy.guys[0].tile.t != tile.t || enemy.guys[0].tile.k != tile.k) {
+                                    if (enemy.guys[0].selected == 1 && enemy.guys[0].hostile == 1) {
+                                        if (enemy.guys[0].cound > 0) {
+                                            enemy.guys[0].turning = 1
+                                            enemy.guys[0].flagpath = astar.search(enemy, enemy.guys[0].tile, tile)
+                                            enemy.guys[0].stogo = tile
+                                            if (enemy.guys[0].flagpath.length > 1) {
+                                                enemy.guys[0].selected = 0
+                                            }
+                                        } else {
+                                            enemy.guys[0].path = astar.search(enemy, enemy.guys[0].tile, tile)
+                                            enemy.guys[0].stogo = tile
+                                            if (enemy.guys[0].path.length > 1) {
+                                                enemy.guys[0].selected = 0
+                                            }
+                                        }
+                                        whet = 1
+                                    }
+                                }
+    
+                                // if (whet == 0) {
+                                //     if (tile.marked == 1) {
+                                //         if (tile.holed != 1) {
+                                //             tile.holed = 1
+                                //             enemy.hull -= 2
+                                //         } else {
+                                //             tile.holed = 0
+                                //         }
+                                //     }
+                                // }
+    
+                                // for (let g = 0; g < enemy.guys.length; g++) {
+                                //     // enemy.guys[g].selected = 0
+                                // }
                             }
-
-                            // if (whet == 0) {
-                            //     if (tile.marked == 1) {
-                            //         if (tile.holed != 1) {
-                            //             tile.holed = 1
-                            //             enemy.hull -= 2
-                            //         } else {
-                            //             tile.holed = 0
-                            //         }
-                            //     }
-                            // }
-
-                            // for (let g = 0; g < enemy.guys.length; g++) {
-                            //     // enemy.guys[g].selected = 0
-                            // }
                         }
                         break
                     }
@@ -7493,13 +7495,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
-    let zz = 10
+    let zz = 29
     class EnemyShip {
         constructor(type, level) {
             this.now = Date.now()
             this.type = type
             // zz++
-            this.level = level
+            this.level = level 
             this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
             this.ondeath = 0
             this.pulse = 0
@@ -7657,6 +7659,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let keys = Object.keys(enemyship25[t][k])
                         for (let f = 0; f < keys.length; f++) {
                             tile[keys[f]] = enemyship25[t][k][keys[f]]
+                        }
+                    } else if (this.type == 25) {
+                        let keys = Object.keys(enemyship26[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship26[t][k][keys[f]]
+                        }
+                    } else if (this.type == 26) {
+                        let keys = Object.keys(enemyship27[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship27[t][k][keys[f]]
+                        }
+                    } else if (this.type == 27) {
+                        let keys = Object.keys(enemyship28[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship28[t][k][keys[f]]
+                        }
+                    } else if (this.type == 28) {
+                        let keys = Object.keys(enemyship29[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship29[t][k][keys[f]]
+                        }
+                    } else if (this.type == 29) {
+                        let keys = Object.keys(enemyship30[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship30[t][k][keys[f]]
                         }
                     }
                     tile.air = 100
@@ -7852,6 +7879,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else if (this.type == 24) {
                 for (let t = 0; t < enemyship25doors.length; t++) {
                     this.doors.push(new Door(enemyship25doors[t].body.x, enemyship25doors[t].body.y))
+                }
+            } else if (this.type == 25) {
+                for (let t = 0; t < enemyship26doors.length; t++) {
+                    this.doors.push(new Door(enemyship26doors[t].body.x, enemyship26doors[t].body.y))
+                }
+            } else if (this.type == 26) {
+                for (let t = 0; t < enemyship27doors.length; t++) {
+                    this.doors.push(new Door(enemyship27doors[t].body.x, enemyship27doors[t].body.y))
+                }
+            } else if (this.type == 27) {
+                for (let t = 0; t < enemyship28doors.length; t++) {
+                    this.doors.push(new Door(enemyship28doors[t].body.x, enemyship28doors[t].body.y))
+                }
+            } else if (this.type == 28) {
+                for (let t = 0; t < enemyship29doors.length; t++) {
+                    this.doors.push(new Door(enemyship29doors[t].body.x, enemyship29doors[t].body.y))
+                }
+            } else if (this.type == 29) {
+                for (let t = 0; t < enemyship30doors.length; t++) {
+                    this.doors.push(new Door(enemyship30doors[t].body.x, enemyship30doors[t].body.y))
                 }
             }
             this.weapons = []
@@ -8308,9 +8355,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                 if (this.guys[t].stretch == 1) {
-
+ 
                     for (let q = 0; q < this.guys[t].tiles.length; q++) {
-                        if (this.guys[q].hostile == 1) {
+                        if (this.guys[t].hostile == 1) {
                             continue
                         }
 
