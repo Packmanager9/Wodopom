@@ -7439,7 +7439,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.type = type
             // zz++
             this.level = level
-            this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 2) //1
+            this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
@@ -9208,7 +9208,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
-                    this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 2) //1
+                    this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                     vessel.scrap += this.loot
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
