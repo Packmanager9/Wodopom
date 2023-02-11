@@ -3841,6 +3841,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Weapon {
         constructor(type) {
+
+            this.metatarget = {}
             this.bullets = []
             this.center = new Circle(452, 95)
             this.frame = 0
@@ -4474,6 +4476,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < enemy.blocks.length; t++) {
                     for (let k = 0; k < enemy.blocks.length; k++) {
                         if (enemy.blocks[t][k].isPointInside(point)) {
+                            if(keysPressed['Shift']){   
+                                this.metatarget = enemy.blocks[t][k]
+                            }
+                            if(keysPressed['x']){   
+                                this.metatarget ={}
+                            }
                             this.fire(enemy.blocks[t][k])
                             return
                         }
@@ -4532,28 +4540,52 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (this.auto == 1) {
                 if (vessel.weapons.includes(this)) {
-                    for (let t = 0; t < enemy.blocks.length; t++) {
-                        for (let k = 0; k < enemy.blocks.length; k++) {
-                            if (enemy.blocks[t][k].marked == 1) {
-                                if (Math.random() < .05) {
-                                    this.fire(enemy.blocks[t][k])
-                                    break
-                                }
-                            }
+                    
+                    if(this.metatarget.marked == 1){
+                        if(enemy.supratiles.includes(this.metatarget)){
+                            this.fire(this.metatarget)
+                        }else{
+
+                            let io = Math.floor(Math.random()*enemy.supratiles.length)
+
+                            this.fire(enemy.supratiles[io])
                         }
+                    }else{
+
+                    let io = Math.floor(Math.random()*enemy.supratiles.length)
+
+                    this.fire(enemy.supratiles[io])
                     }
+
+
+                    
+                    // for (let t = 0; t < enemy.blocks.length; t++) {
+                    //     for (let k = 0; k < enemy.blocks.length; k++) {
+                    //         if (enemy.blocks[t][k].marked == 1) {
+                    //             if (Math.random() < .05) {
+                    //                 this.fire(enemy.blocks[t][k])
+                    //                 break
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 } else {
 
-                    for (let t = 0; t < vessel.blocks.length; t++) {
-                        for (let k = 0; k < vessel.blocks.length; k++) {
-                            if (vessel.blocks[t][k].marked == 1) {
-                                if (Math.random() < .05) {
-                                    this.fire(vessel.blocks[t][k])
-                                    break
-                                }
-                            }
-                        }
-                    }
+
+                    let io = Math.floor(Math.random()*vessel.supratiles.length)
+
+                    this.fire(vessel.supratiles[io])
+
+                    // for (let t = 0; t < vessel.blocks.length; t++) {
+                    //     for (let k = 0; k < vessel.blocks.length; k++) {
+                    //         if (vessel.blocks[t][k].marked == 1) {
+                    //             if (Math.random() < .05) {
+                    //                 this.fire(vessel.blocks[t][k])
+                    //                 break
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
 
             }
@@ -10574,6 +10606,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
                 enemy.draw()
                 vessel.draw()
+                if(enemy.supratiles){
+                    if(enemy.hull > 0){
+
+                        for(let w = 0;w<vessel.weapons.length;w++){
+                            if(enemy.supratiles.includes(vessel.weapons[w].metatarget)){
+                                let bead = new CircleR(vessel.weapons[w].metatarget.x+(vessel.weapons[w].metatarget.width*.5), vessel.weapons[w].metatarget.y+(vessel.weapons[w].metatarget.height*.5), 10, "black")
+                                bead.draw()
+                                // let beadX = new X(vessel.weapons[w].metatarget.x+(vessel.weapons[w].metatarget.width*.5), vessel.weapons[w].metatarget.y+(vessel.weapons[w].metatarget.height*.5), "yellow", 10)
+                                // beadX.draw()
+                                canvas_context.fillStyle = "yellow"
+                                canvas_context.font = "10px comic sans ms"
+                                canvas_context.fillText(w+1, bead.x-3, bead.y+3)
+                            }
+                        }
+                    }
+                }
                 for (let w = 0; w < enemy.weapons.length; w++) {
                     enemy.weapons[w].work()
                 }
@@ -10585,6 +10633,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
                 enemy.draw()
                 vessel.draw()
+                if(enemy.supratiles){
+                    if(enemy.hull > 0){
+                    for(let w = 0;w<vessel.weapons.length;w++){
+                        if(enemy.supratiles.includes(vessel.weapons[w].metatarget)){
+                            let bead = new CircleR(vessel.weapons[w].metatarget.x+(vessel.weapons[w].metatarget.width*.5), vessel.weapons[w].metatarget.y+(vessel.weapons[w].metatarget.height*.5), 10, "black")
+                            bead.draw()
+                            // let beadX = new X(vessel.weapons[w].metatarget.x+(vessel.weapons[w].metatarget.width*.5), vessel.weapons[w].metatarget.y+(vessel.weapons[w].metatarget.height*.5), "yellow", 10)
+                            // beadX.draw()
+
+                            canvas_context.fillStyle = "yellow"
+                            canvas_context.font = "10px comic sans ms"
+                            canvas_context.fillText(w+1, bead.x-3, bead.y+3)
+
+                        }
+                    }
+                }
+                }
                 for (let w = 0; w < enemy.weapons.length; w++) {
                     enemy.weapons[w].work()
                 }
