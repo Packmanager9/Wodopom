@@ -4050,6 +4050,51 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.double = 0
                 this.buy = 40
                 this.sell = 22
+            } else if (this.type == 20) {
+                this.name1 = "Hard"
+                this.name2 = "Beam I"
+                this.beam = 1
+                this.sap = 0
+                this.railgun = 0
+                this.max = 650*2
+                this.damage = 40*2
+                this.real = 1
+                this.crew = .2
+                this.fireChance = 10
+                this.double = 0
+                this.buy = 80
+                this.sell = 44
+                this.hard = 1
+            } else if (this.type == 21) {
+                this.name1 = "Hard"
+                this.name2 = "Beam II"
+                this.beam = 1
+                this.sap = 0
+                this.railgun = 0
+                this.max = 840*2
+                this.damage = 70*2
+                this.real = 1
+                this.crew = .2
+                this.fireChance = 20
+                this.double = 0
+                this.buy = 110
+                this.sell = 64
+                this.hard = 1
+            } else if (this.type == 22) {
+                this.name1 = "Hard"
+                this.name2 = "Beam III"
+                this.beam = 1
+                this.sap = 0
+                this.railgun = 0
+                this.max = 1125*2
+                this.damage = 120*2
+                this.real = 1
+                this.crew = .2
+                this.fireChance = 30
+                this.double = 0
+                this.buy = 120
+                this.sell = 74
+                this.hard = 1
             } else if (this.type == 100) {
                 this.name1 = "Wodopom"
                 this.name2 = ""
@@ -4226,7 +4271,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                         } else {
-                            tile.integrity -= this.damage
+                            if(this.hard == 1){
+
+                                tile.integrity -= this.damage/10
+                            }else{
+
+                                tile.integrity -= this.damage
+                            }
                             tile.fire -= this.fireChance
                             if (Math.random() < (this.fireChance / 300)) {
                                 tile.onFire = 1
@@ -4312,7 +4363,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                         } else {
-                            tile.integrity -= this.damage
+                            if(this.hard == 1){
+
+                                tile.integrity -= this.damage/10
+                            }else{
+
+                                tile.integrity -= this.damage
+                            }
                             tile.fire -= this.fireChance
                             if (this.railgun == 1) {
                                 tile.integrity -= this.damage * 5
@@ -5019,6 +5076,54 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
+                } else if(this.type == 20){
+
+                    if (this.firing == 10) {
+                        heatbeamaud.play()
+                    }
+                    //heatbeam
+                    let site5 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5), "#aaFF00", 8)
+                    site5.draw()
+                    let site = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4), "#aaFF00", 8)
+                    site.draw()
+                    let site2 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 3), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 3), "#aaFF00", 8)
+                    site2.draw()
+                    let site3 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2), "#aaFF00", 8)
+                    site3.draw()
+                    this.firing -= .2
+                    
+                } else if(this.type == 21){
+
+                    if (this.firing == 10) {
+                        heatbeamaud.play()
+                    }
+                    //heatbeam
+                    let site5 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5), "#ffffff", 8)
+                    site5.draw()
+                    let site = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4), "#ffffff", 8)
+                    site.draw()
+                    let site2 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 3), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 3), "#ffffff", 8)
+                    site2.draw()
+                    let site3 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2), "#ffffff", 8)
+                    site3.draw()
+                    this.firing -= .2
+                    
+                } else if(this.type == 22){
+
+                    if (this.firing == 10) {
+                        heatbeamaud.play()
+                    }
+                    //heatbeam
+                    let site5 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5), "#FF00FF", 12)
+                    site5.draw()
+                    let site = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4), "#FF00FF", 12)
+                    site.draw()
+                    let site2 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 3), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 3), "#FF00FF", 12)
+                    site2.draw()
+                    let site3 = new X(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2), "#FF00FF",12)
+                    site3.draw()
+                    this.firing -= .2
+                    
                 } else if (this.type == 100) {
 
 
@@ -5137,6 +5242,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(shieldsap2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 19) {
                 canvas_context.drawImage(shieldsap3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }  else if (this.type == 20) {
+                canvas_context.drawImage(hardbeam1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }  else if (this.type == 21) {
+                canvas_context.drawImage(hardbeam2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+            }  else if (this.type == 22) {
+                canvas_context.drawImage(hardbeam3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
             } else if (this.type == 100) {
                 this.frame++
                 canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -5208,6 +5319,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
     shieldsap2.src = "shieldsap2.png"
     let shieldsap3 = new Image()
     shieldsap3.src = "shieldsap3.png"
+
+
+    let  hardbeam1 = new Image()
+    hardbeam1.src = "hardbeam1.png"
+    let  hardbeam2 = new Image()
+    hardbeam2.src = "hardbeam2.png"
+    let  hardbeam3 = new Image()
+    hardbeam3.src = "hardbeam3.png"
+
 
     let iou = new Image()
     iou.src = 'iou.png'
@@ -5547,13 +5667,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (enemy.hull <= 0) {
                 for (let t = 0; t < enemy.guys.length; t++) {
-                    vessel.guys.push(enemy.guys[t].clone(vessel.supratiles[t], enemy.guys[t].type))
+                    if(enemy.guys[t].hostile == 1){
+                        vessel.guys.push(enemy.guys[t].clone(vessel.supratiles[t], enemy.guys[t].type))
+                    }
                 }
 
                 vessel.copies = []
                 enemy.guys = []
-            }
-            if (enemy.guys) {
+            }else if (enemy.guys) {
                 // //console.log(c, enemy.guys.length)
                 if (enemy.guys.length == 0 || c == enemy.guys.length) {
 
@@ -7333,7 +7454,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             this.warn = 0
             this.scrap = 35
-            this.bombs = 6 + Math.floor(this.level / 2) //5
+            this.bombs = 6 + Math.floor(this.level / 3) //5    /2
             this.fuel = 10
             this.shield = new Shields()
             this.shield.state = this.UI.systems[2].max
@@ -7939,7 +8060,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        // let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
@@ -7954,7 +8075,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 21) {
@@ -7968,7 +8089,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         this.weapons.push(wep5)
                     }
                 } else {
@@ -7982,15 +8103,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 100) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < this.level / 500) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 20))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 23))
                         this.weapons.push(wep5)
                     }
                 }
@@ -9133,7 +9254,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 23)))
                         } else {
                             // this.wegflag = 1
 
@@ -9146,7 +9267,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 20)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 23)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -9212,7 +9333,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             this.weapons = []
             for (let t = 0; t < 3; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 20)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 23)))
             }
             for (let t = 0; t < 12; t++) {
                 this.weapons.push(new Weapon(-1))
@@ -9560,21 +9681,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.weapons[t].body.isPointInside(TIP_engine) && vessel.weapons[t].type != -1) {
                     this.text1 = `Weapon: ${vessel.weapons[t].name1 + ' ' + vessel.weapons[t].name2}`
                     this.text2 = `Charge: ${Math.round(vessel.weapons[t].charge)}/${vessel.weapons[t].max}`
-                    let str = 'Idle'
                     let lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                    let str = 'Idle'
+                    if(vessel.weapons[t].hard != 1){
+                        let lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+
+                    }else{
+                    let lsrt = "Tile harm: " + Math.round(vessel.weapons[t].damage/10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+
+                    }
 
                     if (vessel.weapons[t].railgun == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce"
                     } else if (vessel.weapons[t].bomb == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
                     } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101) {
-                        lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                        if(vessel.weapons[t].hard != 1){
+                             lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+    
+                        }else{
+                         lsrt = "Tile harm: " + Math.round(vessel.weapons[t].damage/10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+    
+                        }
+    
                     } else if (vessel.weapons[t].sap >= 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields"
                     } else if (vessel.weapons[t].crew > 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x"
                     } else {
-                        lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+                        if(vessel.weapons[t].hard != 1){
+                             lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+    
+                        }else{
+                         lsrt = "Tile harm: " + Math.round(vessel.weapons[t].damage/10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
+    
+                        }
+    
                     }
                     if (vessel.weapons[t].charge >= vessel.weapons[t].max) {
                         str = 'Ready'
@@ -9600,7 +9742,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     py += 13
                     canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
                     py += 13
-                    canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+                    if(vessel.weapons[t].hard != 1){
+                        canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    }else{
+                        canvas_context.fillText("Tile harm: " + Math.round(vessel.weapons[t].damage/10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    }
+
                     py += 13
                     if (vessel.weapons[t].railgun == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
