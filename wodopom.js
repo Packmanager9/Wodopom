@@ -4233,7 +4233,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name2 = "Cannon I"
                     // this.beam = 1
                     this.sap = 0
-                    this.railgun = 0
+                    // this.railgun = 0
                     this.max = 460
                     this.damage = 55
                     this.real = 1
@@ -4249,7 +4249,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name2 = "Cannon II"
                     // this.beam = 1
                     this.sap = 0
-                    this.railgun = 0
+                    // this.railgun = 0
                     this.max = 600
                     this.damage = 105
                     this.real = 1
@@ -4265,7 +4265,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name2 = "Cannon III"
                     // this.beam = 1
                     this.sap = 0
-                    this.railgun = 0
+                    // this.railgun = 0
                     this.max =  960
                     this.damage = 235
                     this.real = 1
@@ -6111,6 +6111,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                 this.buyBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y+110, 110, 50, "#88888888")
+                this.sellBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y+170, 110, 50, "#88888888")
 
                 if (this.tab == 1) {
                     this.cargo.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) - 50
@@ -6127,10 +6128,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 if (stars.stars[vessel.star].shop == 1) {
                     this.buyBombs.draw()
+                    this.sellBombs.draw()
                     canvas_context.fillStyle = "white"
                     canvas_context.font = "15px comic sans ms"
                     canvas_context.fillText("5 Scrap", this.buyBombs.x + 30, this.buyBombs.y + 42,)
                     canvas_context.fillText("Buy Bomb", this.buyBombs.x + 25, this.buyBombs.y + 15)
+                    canvas_context.fillText("Sell Bomb", this.sellBombs.x + 25, this.sellBombs.y + 15)
+                    canvas_context.fillText("1 Scrap", this.sellBombs.x + 30, this.sellBombs.y + 42,)
                     this.cargo.draw()
                     canvas_context.fillStyle = "white"
                     canvas_context.font = "15px comic sans ms"
@@ -6298,6 +6302,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if(vessel.scrap >= 5){
                         vessel.bombs++
                         vessel.scrap-=5
+                    }
+                }
+                if (this.sellBombs.isPointInside(point)) {
+                    if(vessel.bombs >= 1){
+                        vessel.bombs--
+                        vessel.scrap+=1
                     }
                 }
                 
@@ -10250,6 +10260,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     if (vessel.weapons[t].railgun == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce"
+                    } else if (vessel.weapons[t].scrap > 0) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + `% Costs ${vessel.weapons[t].scrap} Scrap`
                     } else if (vessel.weapons[t].bomb == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
                     } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101) {
@@ -10310,6 +10322,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     py += 13
                     if (vessel.weapons[t].railgun == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.weapons[t].scrap > 0) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + `% Costs ${vessel.weapons[t].scrap} Scrap`, rect.x + 10, py - (dim.h + 10))
+                        
                     } else if (vessel.weapons[t].bomb == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
                     } else if (vessel.weapons[t].beam == 1) {
