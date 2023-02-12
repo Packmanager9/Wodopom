@@ -4479,6 +4479,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if(keysPressed['Shift']){   
                                 this.metatarget = enemy.blocks[t][k]
                             }
+                            if(keysPressed[`${vessel.weapons.indexOf(this)+1}`]){   
+                                this.metatarget = enemy.blocks[t][k]
+                            }
                             if(keysPressed['z']){   
                                 this.metatarget = enemy.blocks[t][k]
                             }
