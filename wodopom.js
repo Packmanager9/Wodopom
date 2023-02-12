@@ -1369,6 +1369,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
+                if(vessel.engineCharge >= 10000){
+                    if(vessel.jumper.isPointInside(TIP_engine)){
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            vessel.weapons[t].charge = 0
+                        }
+                        vessel.fuel--
+                        start = 1
+                        starfirst = 0
+                        enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
+                        return
+                    }
+                }
 
             }
 
@@ -1435,16 +1447,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     return
             // }
 
-            for (let t = 0; t < enemy.blocks.length; t++) {
-                for (let k = 0; k < enemy.blocks[t].length; k++) {
-                    if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
-                        if (keysPressed['p']) {
-                            enemy.blocks[t][k].fire = -100
-                            enemy.blocks[t][k].onFire = 1
-                        }
-                    }
-                }
-            }
+            // for (let t = 0; t < enemy.blocks.length; t++) {
+            //     for (let k = 0; k < enemy.blocks[t].length; k++) {
+            //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
+            //             if (keysPressed['p']) {
+            //                 enemy.blocks[t][k].fire = -100
+            //                 enemy.blocks[t][k].onFire = 1
+            //             }
+            //         }
+            //     }
+            // }
 
             //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
             //             // ////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
@@ -1547,10 +1559,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
                     if (vessel.blocks[t][k].isPointInside(TIP_engine)) {
-                        if (keysPressed['p']) {
-                            vessel.blocks[t][k].fire = -100
-                            // vessel.blocks[t][k].onFire = 1
-                        }
+                        // if (keysPressed['p']) {
+                        //     vessel.blocks[t][k].fire = -100
+                        //     // vessel.blocks[t][k].onFire = 1
+                        // }
                         // ////////////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
                         // if (keysPressed['m']) {
                         //     vessel.blocks[t][k].medbay = 1
@@ -2609,7 +2621,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 pomcheck = 4
                 this.type = 19
             } else {
-                if (type == -1 || this.type == 11) {
+                if (type == -1 && this.type == 11) {
                     while (this.type == 11) {
                         this.type = Math.floor(Math.random() * 20)
                     }
@@ -5384,18 +5396,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
                             link.object = this.center
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         } else {
                             link.target = ring
                             link.object = enemy.body
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         }
-                        let xmom = Math.cos(link.angle())
-                        let ymom = Math.sin(link.angle())
-                        xmom *= link.hypotenuse() / 3
-                        ymom *= link.hypotenuse() / 3
-                        let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom*.5,ymom*.5)
-                        ast.life = 4
-                        ast.noline = 1
-                        this.bullets.push(ast)
                     }
                     this.firing--
                 }  else if (this.type == 24) {
@@ -5408,18 +5428,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
                             link.object = this.center
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         } else {
                             link.target = ring
                             link.object = enemy.body
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         }
-                        let xmom = Math.cos(link.angle())
-                        let ymom = Math.sin(link.angle())
-                        xmom *= link.hypotenuse() / 3
-                        ymom *= link.hypotenuse() / 3
-                        let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom*.5,ymom*.5)
-                        ast.life = 4
-                        ast.noline = 1
-                        this.bullets.push(ast)
                     }
                     this.firing--
                 }  else if (this.type == 25) {
@@ -5432,18 +5460,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
                             link.object = this.center
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         } else {
                             link.target = ring
                             link.object = enemy.body
+                            let xmom = Math.cos(link.angle())
+                            let ymom = Math.sin(link.angle())
+                            xmom *= link.hypotenuse() / 3
+                            ymom *= link.hypotenuse() / 3
+                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom*.5,ymom*.5)
+                            ast.life = 4
+                            ast.noline = 1
+                            this.bullets.push(ast)
                         }
-                        let xmom = Math.cos(link.angle())
-                        let ymom = Math.sin(link.angle())
-                        xmom *= link.hypotenuse() / 3
-                        ymom *= link.hypotenuse() / 3
-                        let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom*.5,ymom*.5)
-                        ast.life = 4
-                        ast.noline = 1
-                        this.bullets.push(ast)
                     }
                     this.firing--
                 } else if (this.type == 100) {
@@ -6830,6 +6866,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Ship {
         constructor(width, height, posx, posy, gridPoints) {
+            this.engineCharge = 0
             this.angle = 0
             this.teleButton = new RectangleR(1, 500, 40, 40, "purple")
             this.shake = 0
@@ -6969,6 +7006,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.healthbar.draw()
             canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
 
+            if(this.boosts){
+                vessel.engineCharge +=  Math.sqrt(1-this.dodgeRate())*10
+                this.jumper = new RectangleR(this.healthbar.x+(this.healthbar.width)+100, this.healthbar.y, 200*(vessel.engineCharge/10000), 40, "#FFFFFF44")
+                this.jumper2 = new RectangleR(this.healthbar.x+(this.healthbar.width)+100, this.healthbar.y, 200, 40, "#FFFFFF44")
+                this.jumper.draw()
+                this.jumper2.draw()
+                if(vessel.engineCharge >= 10000){
+                    vessel.engineCharge = 10000
+                    canvas_context.fillStyle = "#00FF00"
+                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.fillText("Jump", this.jumper.x + (65), this.jumper.y+22)
+                }else{
+                    let wet = 0
+                    if (this.hash['engine'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[6].max)))) {
+                        wet = 1
+                    }
+                    if (this.hash['helm'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[3].max)))) {
+                        wet = 1
+                    }
+                    if(wet == 1){
+                        canvas_context.fillStyle = "#FF0000"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Broken System", this.jumper.x + (25), this.jumper.y+22)
+                    }else if((1-this.dodgeRate()) > 0){
+                        canvas_context.fillStyle = "#FFFF00"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Charging Jump", this.jumper.x + (25), this.jumper.y+22)
+                    }else{
+                        canvas_context.fillStyle = "#FFAA00"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Stalled", this.jumper.x + (55), this.jumper.y+22)
+                    }
+                }
+            }
+
+
 
 
             for (let t = 0; t < this.weapons.length; t++) {
@@ -7002,9 +7075,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // //////////////////////////////////console.log( 1-(1/(11-this.UI.systems[6].max)))
             if (this.hash['engine'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[6].max)))) {
                 dodgerate = 0
+                this.boosts[3] = 0
+                this.boosts[6] = 0
             }
             if (this.hash['helm'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[3].max)))) {
                 dodgerate = 0
+                this.boosts[3] = 0
+                this.boosts[6] = 0
             }
             if (this.boosts[3] == 0 || this.boosts[6] == 0) {
                 dodgerate *= .5
@@ -8451,7 +8528,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
-                    enemy = new EnemyShip(Math.floor(Math.random() * 25), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
                 }
             } else {
                 canvas_context.fillStyle = "white"
@@ -9848,7 +9925,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     vessel.fuel--
                     start = 1
                     starfirst = 0
-                    enemy = new EnemyShip(Math.floor(Math.random() * 25), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
                 }
             }
 
@@ -9951,6 +10028,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 vessel.star = stars.stars.indexOf(this)
                 let subx = this.body.x
                 start = 2
+                vessel.engineCharge = 0
 
                 starfirst = 0
                 for (let t = 0; t < stars.stars.length; t++) {
@@ -10032,7 +10110,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let title = new Image()
     title.src = "title.png"
     let vessel = new Ship()
-    let enemy = new EnemyShip(Math.floor(Math.random() * 25), 1)
+    let enemy = new EnemyShip(Math.floor(Math.random() * 30), 1)
 
     vessel.draw()
     let stars = new Stars()
