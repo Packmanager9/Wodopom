@@ -2953,9 +2953,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
         }
-        clone(tile) {
+        clone(tile, type = this.type) {
 
-            let guy = new Guy(tile, this.type)
+            let guy = new Guy(tile, type)
             guy.health = this.health
 
             for (let t = 0; t < this.skillslist.length; t++) {
@@ -3528,6 +3528,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.selected == 1) {
                 // control(this.body)
                 // this.tile.color = '#00ff0022'
+                console.log(this.tile)
                 this.tile.draw()
             }
             if (Math.random() < .1 || this.type == 15) {
@@ -4321,11 +4322,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.beam == 1) {
                     this.angle = Math.random() * Math.PI * 2
                 }
-                if(this.firing <= 0){
+                if (this.firing <= 0) {
                     this.firing = 10
                     this.target = tile
                     this.charge = 0
-                }else{
+                } else {
                     this.target = tile
                     return
                 }
@@ -4612,10 +4613,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.fire(enemy.supratiles[io])
                         }
                     } else {
+                        if (enemy.supratiles) {
+                            let io = Math.floor(Math.random() * enemy.supratiles.length)
 
-                        let io = Math.floor(Math.random() * enemy.supratiles.length)
-
-                        this.fire(enemy.supratiles[io])
+                            this.fire(enemy.supratiles[io])
+                        }
                     }
 
 
@@ -5838,7 +5840,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (enemy.hull <= 0) {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     if (enemy.guys[t].hostile == 1) {
-                        vessel.guys.push(enemy.guys[t].clone(vessel.supratiles[t], enemy.guys[t].type))
+                        let w = {}
+                        for (let f = 0; f < vessel.blocks.length; f++) {
+                            for (let k = 0; k < vessel.blocks[f].length; k++) {
+                                if(typeof w.x == 'undefined'){
+                                    if (vessel.blocks[f][k].marked == 1) {
+                                        if (vessel.blocks[f][k].walkable == true) {
+                                            w = vessel.blocks[f][k]
+                                        }
+                                    }   
+                                }
+                            }
+                        }
+                        let newguy = new Guy(w, enemy.guys[t].type)
+                        newguy.health = enemy.guys[t].health
+                        vessel.guys.push(newguy)
                     }
                 }
 
@@ -5849,7 +5865,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length == 0 || c == enemy.guys.length) {
 
                     for (let t = 0; t < enemy.guys.length; t++) {
-                        vessel.guys.push(enemy.guys[t].clone(vessel.supratiles[t], enemy.guys[t].type))
+                    
+                        let w = {}
+                        for (let f = 0; f < vessel.blocks.length; f++) {
+                            for (let k = 0; k < vessel.blocks[f].length; k++) {
+                                if(typeof w.x == 'undefined'){
+                                    if (vessel.blocks[f][k].marked == 1) {
+                                        if (vessel.blocks[f][k].walkable == true) {
+                                            w = vessel.blocks[f][k]
+                                        }
+                                    }   
+                            }
+                        }
+                        }
+                        let newguy = new Guy(w, enemy.guys[t].type)
+                        newguy.health = enemy.guys[t].health
+                        vessel.guys.push(newguy)
                     }
                     vessel.copies = []
                     enemy.guys = []
@@ -6671,6 +6702,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].marked == 1) {
+
+                        this.blocks[t][k].draw = (new Tile()).draw
                         this.supratiles.push(this.blocks[t][k])
                     }
                 }
@@ -9555,7 +9588,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.fillText("+1 Weapon!", 720, 280)
                 }
                 if (this.bombflag < .3) {
-                    canvas_context.fillText((this.bombs+1) + " Bombs!", 720, 320)
+                    canvas_context.fillText((this.bombs + 1) + " Bombs!", 720, 320)
                 }
                 if (this.fuelflag < .5) {
                     canvas_context.fillText(3 + " fuel!", 720, 360)
@@ -10774,7 +10807,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
                 enemy.draw()
                 vessel.draw()
-                for(let t = 0;t<vessel.upgradeMenu.wepsto.length;t++){
+                for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
                     if (vessel.upgradeMenu.wepsto[t].crewType != -1) {
                         vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], vessel.upgradeMenu.wepsto[t].crewType))
                         vessel.upgradeMenu.wepsto[vessel.upgradeMenu.wepsto.indexOf(vessel.upgradeMenu.wepsto[t])] = new Weapon(-1)
