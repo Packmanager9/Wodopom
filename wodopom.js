@@ -7627,7 +7627,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.now = Date.now()
             this.type = type
             // zz++
-            this.level = level + 5
+            this.level = level
             this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
             this.ondeath = 0
             this.pulse = 0
