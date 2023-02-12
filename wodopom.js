@@ -8541,17 +8541,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.guys = [new Guy(tiles[1]), new Guy(tiles[2]), new Guy(tiles[3]), new Guy(tiles[4]), new Guy(tiles[5])]
                 }
 
-                if (Math.random() < this.level / 50) {
-                    this.guys.push(new Guy(tiles[0]))
-                }
-                if (Math.random() < this.level / 100) {
-                    this.guys.push(new Guy(tiles[6]))
-                }
-                if (Math.random() < this.level / 150) {
-                    this.guys.push(new Guy(tiles[7]))
-                }
-                if (Math.random() < this.level / 200) {
-                    this.guys.push(new Guy(tiles[8]))
+                if (this.level <= 3) {
+
+                }else{
+                    if (Math.random() < this.level / 50) {
+                        this.guys.push(new Guy(tiles[0]))
+                    }
+                    if (Math.random() < this.level / 100) {
+                        this.guys.push(new Guy(tiles[6]))
+                    }
+                    if (Math.random() < this.level / 150) {
+                        this.guys.push(new Guy(tiles[7]))
+                    }
+                    if (Math.random() < this.level / 200) {
+                        this.guys.push(new Guy(tiles[8]))
+                    }
                 }
 
                 // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17])]
