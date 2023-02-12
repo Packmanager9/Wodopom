@@ -15,89 +15,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    // function CanvasCaptureToWEBM(canvas, bitrate) {
-    //     // it uses the same canvas as the rest of the file.
-    //     // to start a recording call .record() on video_recorder
-    //     /*
-    //     for example, 
-    //     */
-    //     this.record = Record
-    //     this.stop = Stop
-    //     this.download = saveToDownloads
-    //     let blobCaptures = []
-    //     let outputFormat = {}
-    //     let recorder = {}
-    //     let canvasInput = canvas.captureStream()
-    //     if (typeof canvasInput == undefined || !canvasInput) {
-    //         return
-    //     }
-    //     const video = document.createElement('video')
-    //     video.style.display = 'none'
+    function CanvasCaptureToWEBM(canvas, bitrate) {
+        // it uses the same canvas as the rest of the file.
+        // to start a recording call .record() on video_recorder
+        /*
+        for example, 
+        */
+        this.record = Record
+        this.stop = Stop
+        this.download = saveToDownloads
+        let blobCaptures = []
+        let outputFormat = {}
+        let recorder = {}
+        let canvasInput = canvas.captureStream()
+        if (typeof canvasInput == undefined || !canvasInput) {
+            return
+        }
+        const video = document.createElement('video')
+        video.style.display = 'none'
 
-    //     function Record() {
-    //         let formats = [
-    //             "video/webm\;codecs=h264",
-    //             "video/webm\;codecs=vp8",
-    //             'video/vp8',
-    //             "video/webm",
-    //             'video/webm,codecs=vp9',
-    //             "video/webm\;codecs=daala",
-    //             "video/mpeg"
-    //         ];
+        function Record() {
+            let formats = [
+                "video/webm\;codecs=h264",
+                "video/webm\;codecs=vp8",
+                'video/vp8',
+                "video/webm",
+                'video/webm,codecs=vp9',
+                "video/webm\;codecs=daala",
+                "video/mpeg"
+            ];
 
-    //         for (let t = 0; t < formats.length; t++) {
-    //             if (MediaRecorder.isTypeSupported(formats[t])) {
-    //                 outputFormat = formats[t]
-    //                 break
-    //             }
-    //         }
-    //         if (typeof outputFormat != "string") {
-    //             return
-    //         } else {
-    //             let videoSettings = {
-    //                 mimeType: outputFormat,
-    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-    //             };
-    //             blobCaptures = []
-    //             try {
-    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
-    //             } catch (error) {
-    //                 return;
-    //             }
-    //             recorder.onstop = handleStop
-    //             recorder.ondataavailable = handleAvailableData
-    //             recorder.start(100)
-    //         }
-    //     }
-    //     function handleAvailableData(event) {
-    //         if (event.data && event.data.size > 0) {
-    //             blobCaptures.push(event.data)
-    //         }
-    //     }
-    //     function handleStop() {
-    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-    //         video.src = window.URL.createObjectURL(superBuffer)
-    //     }
-    //     function Stop() {
-    //         recorder.stop()
-    //         video.controls = true
-    //     }
-    //     function saveToDownloads(input) { // specifying a file name for the output
-    //         const name = input || 'video_out.webm'
-    //         const blob = new Blob(blobCaptures, { type: outputFormat })
-    //         const url = window.URL.createObjectURL(blob)
-    //         const storageElement = document.createElement('a')
-    //         storageElement.style.display = 'none'
-    //         storageElement.href = url
-    //         storageElement.download = name
-    //         document.body.appendChild(storageElement)
-    //         storageElement.click()
-    //         setTimeout(() => {
-    //             document.body.removeChild(storageElement)
-    //             window.URL.revokeObjectURL(url)
-    //         }, 100)
-    //     }
-    // }
+            for (let t = 0; t < formats.length; t++) {
+                if (MediaRecorder.isTypeSupported(formats[t])) {
+                    outputFormat = formats[t]
+                    break
+                }
+            }
+            if (typeof outputFormat != "string") {
+                return
+            } else {
+                let videoSettings = {
+                    mimeType: outputFormat,
+                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+                };
+                blobCaptures = []
+                try {
+                    recorder = new MediaRecorder(canvasInput, videoSettings)
+                } catch (error) {
+                    return;
+                }
+                recorder.onstop = handleStop
+                recorder.ondataavailable = handleAvailableData
+                recorder.start(100)
+            }
+        }
+        function handleAvailableData(event) {
+            if (event.data && event.data.size > 0) {
+                blobCaptures.push(event.data)
+            }
+        }
+        function handleStop() {
+            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+            video.src = window.URL.createObjectURL(superBuffer)
+        }
+        function Stop() {
+            recorder.stop()
+            video.controls = true
+        }
+        function saveToDownloads(input) { // specifying a file name for the output
+            const name = input || 'video_out.webm'
+            const blob = new Blob(blobCaptures, { type: outputFormat })
+            const url = window.URL.createObjectURL(blob)
+            const storageElement = document.createElement('a')
+            storageElement.style.display = 'none'
+            storageElement.href = url
+            storageElement.download = name
+            document.body.appendChild(storageElement)
+            storageElement.click()
+            setTimeout(() => {
+                document.body.removeChild(storageElement)
+                window.URL.revokeObjectURL(url)
+            }, 100)
+        }
+    }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -1295,7 +1295,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         starcanvas_context = starcanvas.getContext('2d');
         shake_context = shake.getContext('2d');
@@ -2560,7 +2560,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 20; t++) {
+    for (let t = 1; t < 21; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
@@ -2591,7 +2591,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
             if (type == -1) {
-                this.type = Math.floor(Math.random() * 19)
+                this.type = Math.floor(Math.random() * 20)
             } else {
                 // //console.log("dd")
                 this.type = type
@@ -2605,10 +2605,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else if (pomcheck == 2) {
                 pomcheck = 3
                 this.type = 11
+            } else if (pomcheck == 5) {
+                pomcheck = 4
+                this.type = 19
             } else {
                 if (type == -1) {
                     while (this.type == 11) {
-                        this.type = Math.floor(Math.random() * 19)
+                        this.type = Math.floor(Math.random() * 20)
                     }
                 }
             }
@@ -2638,6 +2641,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.extinguish = 2
             this.energy = 0
             this.skills = ''
+
+            this.damage = 5
             if (this.type == 18) {
                 this.stats[0] = 4
                 this.skills += 'Fast++, '
@@ -2736,6 +2741,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
 
+            if (this.type == 19) {
+                this.repair*=.5
+                this.extinguish = 0
+                this.stats[0] = 6
+                this.damage = 20
+                // this.stretch = 1
+                this.energy = 1
+                // this.tiles = [this.tile, this.tile, this.tile, this.tile, this.tile, this.tile]
+                this.fireproof = 1
+                this.skills += 'Non-Extinguishing---, Repair--, Fight+++, Fireproof+, Energetic++, '
+                this.names = ["Fireknife", "Sparky", "Ignus", "Slifier"]
+                this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            }
+
 
             if (this.type == 10) {
                 this.stats[2] += .5
@@ -2779,7 +2798,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             // this.health *= .1
             this.pulsecheck = 0
-            this.damage = 5
             this.barter = 1
 
             // let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
@@ -6792,7 +6810,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
-                    // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
+                    // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17])]
                     // this.guys = [new Guy(tiles[0])]
                     this.first = 1
 
@@ -7559,7 +7577,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.now = Date.now()
             this.type = type
             // zz++
-            this.level = level 
+            this.level = level+5 
             this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
             this.ondeath = 0
             this.pulse = 0
@@ -10597,15 +10615,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             start = 0
         }
         // CanvasC
-        // if (keysPressed['-'] && recording == 0) {
-        //     recording = 1
-        //     video_recorder.record()
-        // }
-        // if (keysPressed['='] && recording == 1) {
-        //     recording = 0
-        //     video_recorder.stop()
-        //     video_recorder.download('File Name As A String.webm')
-        // }
+        if (keysPressed['-'] && recording == 0) {
+            recording = 1
+            video_recorder.record()
+        }
+        if (keysPressed['='] && recording == 1) {
+            recording = 0
+            video_recorder.stop()
+            video_recorder.download('File Name As A String.webm')
+        }
         if (start == 0) {
             canvas_context.drawImage(title, 0, 0)
             // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
