@@ -15,89 +15,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    function CanvasCaptureToWEBM(canvas, bitrate) {
-        // it uses the same canvas as the rest of the file.
-        // to start a recording call .record() on video_recorder
-        /*
-        for example, 
-        */
-        this.record = Record
-        this.stop = Stop
-        this.download = saveToDownloads
-        let blobCaptures = []
-        let outputFormat = {}
-        let recorder = {}
-        let canvasInput = canvas.captureStream()
-        if (typeof canvasInput == undefined || !canvasInput) {
-            return
-        }
-        const video = document.createElement('video')
-        video.style.display = 'none'
+    // function CanvasCaptureToWEBM(canvas, bitrate) {
+    //     // it uses the same canvas as the rest of the file.
+    //     // to start a recording call .record() on video_recorder
+    //     /*
+    //     for example, 
+    //     */
+    //     this.record = Record
+    //     this.stop = Stop
+    //     this.download = saveToDownloads
+    //     let blobCaptures = []
+    //     let outputFormat = {}
+    //     let recorder = {}
+    //     let canvasInput = canvas.captureStream()
+    //     if (typeof canvasInput == undefined || !canvasInput) {
+    //         return
+    //     }
+    //     const video = document.createElement('video')
+    //     video.style.display = 'none'
 
-        function Record() {
-            let formats = [
-                "video/webm\;codecs=h264",
-                "video/webm\;codecs=vp8",
-                'video/vp8',
-                "video/webm",
-                'video/webm,codecs=vp9',
-                "video/webm\;codecs=daala",
-                "video/mpeg"
-            ];
+    //     function Record() {
+    //         let formats = [
+    //             "video/webm\;codecs=h264",
+    //             "video/webm\;codecs=vp8",
+    //             'video/vp8',
+    //             "video/webm",
+    //             'video/webm,codecs=vp9',
+    //             "video/webm\;codecs=daala",
+    //             "video/mpeg"
+    //         ];
 
-            for (let t = 0; t < formats.length; t++) {
-                if (MediaRecorder.isTypeSupported(formats[t])) {
-                    outputFormat = formats[t]
-                    break
-                }
-            }
-            if (typeof outputFormat != "string") {
-                return
-            } else {
-                let videoSettings = {
-                    mimeType: outputFormat,
-                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-                };
-                blobCaptures = []
-                try {
-                    recorder = new MediaRecorder(canvasInput, videoSettings)
-                } catch (error) {
-                    return;
-                }
-                recorder.onstop = handleStop
-                recorder.ondataavailable = handleAvailableData
-                recorder.start(100)
-            }
-        }
-        function handleAvailableData(event) {
-            if (event.data && event.data.size > 0) {
-                blobCaptures.push(event.data)
-            }
-        }
-        function handleStop() {
-            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-            video.src = window.URL.createObjectURL(superBuffer)
-        }
-        function Stop() {
-            recorder.stop()
-            video.controls = true
-        }
-        function saveToDownloads(input) { // specifying a file name for the output
-            const name = input || 'video_out.webm'
-            const blob = new Blob(blobCaptures, { type: outputFormat })
-            const url = window.URL.createObjectURL(blob)
-            const storageElement = document.createElement('a')
-            storageElement.style.display = 'none'
-            storageElement.href = url
-            storageElement.download = name
-            document.body.appendChild(storageElement)
-            storageElement.click()
-            setTimeout(() => {
-                document.body.removeChild(storageElement)
-                window.URL.revokeObjectURL(url)
-            }, 100)
-        }
-    }
+    //         for (let t = 0; t < formats.length; t++) {
+    //             if (MediaRecorder.isTypeSupported(formats[t])) {
+    //                 outputFormat = formats[t]
+    //                 break
+    //             }
+    //         }
+    //         if (typeof outputFormat != "string") {
+    //             return
+    //         } else {
+    //             let videoSettings = {
+    //                 mimeType: outputFormat,
+    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+    //             };
+    //             blobCaptures = []
+    //             try {
+    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
+    //             } catch (error) {
+    //                 return;
+    //             }
+    //             recorder.onstop = handleStop
+    //             recorder.ondataavailable = handleAvailableData
+    //             recorder.start(100)
+    //         }
+    //     }
+    //     function handleAvailableData(event) {
+    //         if (event.data && event.data.size > 0) {
+    //             blobCaptures.push(event.data)
+    //         }
+    //     }
+    //     function handleStop() {
+    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+    //         video.src = window.URL.createObjectURL(superBuffer)
+    //     }
+    //     function Stop() {
+    //         recorder.stop()
+    //         video.controls = true
+    //     }
+    //     function saveToDownloads(input) { // specifying a file name for the output
+    //         const name = input || 'video_out.webm'
+    //         const blob = new Blob(blobCaptures, { type: outputFormat })
+    //         const url = window.URL.createObjectURL(blob)
+    //         const storageElement = document.createElement('a')
+    //         storageElement.style.display = 'none'
+    //         storageElement.href = url
+    //         storageElement.download = name
+    //         document.body.appendChild(storageElement)
+    //         storageElement.click()
+    //         setTimeout(() => {
+    //             document.body.removeChild(storageElement)
+    //             window.URL.revokeObjectURL(url)
+    //         }, 100)
+    //     }
+    // }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -1295,7 +1295,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         starcanvas_context = starcanvas.getContext('2d');
         shake_context = shake.getContext('2d');
@@ -5423,6 +5423,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let shiphealth = new Image()
     shiphealth.src = "shiphealth.png"
 
+    let ship1img = new Image()
+    ship1img.src = "ship1.png"
+
 
 
     let bat = new Image()
@@ -6470,6 +6473,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Ship {
         constructor(width, height, posx, posy, gridPoints) {
+            this.angle = 0 
             this.teleButton = new RectangleR(1, 500, 40, 40, "purple")
             this.shake = 0
             this.copies = []
@@ -6693,8 +6697,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             if (start == 1) {
-                canvas_context.drawImage(shipimage, 0, 0, 256, 256, stars.stars[this.star].body.x - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * .5, stars.stars[this.star].body.radius * .5)
-                // //////////////////////////////////console.log("hif")
+                vessel.angle += .01
+                canvas_context.drawImage(shipimage, 0, 0, 256, 256, stars.stars[this.star].body.x - (Math.cos(vessel.angle)*(stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius*.5), stars.stars[this.star].body.y -  (Math.sin(vessel.angle)*(stars.stars[this.star].body.radius * 1))- (stars.stars[this.star].body.radius*.5), stars.stars[this.star].body.radius *1, stars.stars[this.star].body.radius *1)
+                // console.log("hif")
             } else {
 
                 for (let t = 0; t < this.blocks.length; t++) {
@@ -7527,9 +7532,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
-    let zz = 29
+    let zz = 0
     class EnemyShip {
         constructor(type, level) {
+            this.angle = 0 
             this.now = Date.now()
             this.type = type
             // zz++
@@ -7724,7 +7730,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     tile.onFire = 0
                     tile.xmom = (Math.random() - .5) * 30
                     tile.ymom = (Math.random() - .5) * 30
-
+                    tile.color = "#8888FF44"
                     if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                         tile.marked = 1
                         ////////////////////////////////////////console.log("w")
@@ -8266,6 +8272,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             // this.body.draw()
+
+            
+            // canvas_context.drawImage(ship1img, 0, 0, 512, 512, this.blocks[0][0].x, this.blocks[0][0].y, 512, 512)
+      
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].marked == 1) {
@@ -10567,15 +10577,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             start = 0
         }
         // CanvasC
-        if (keysPressed['-'] && recording == 0) {
-            recording = 1
-            video_recorder.record()
-        }
-        if (keysPressed['='] && recording == 1) {
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
+        // if (keysPressed['-'] && recording == 0) {
+        //     recording = 1
+        //     video_recorder.record()
+        // }
+        // if (keysPressed['='] && recording == 1) {
+        //     recording = 0
+        //     video_recorder.stop()
+        //     video_recorder.download('File Name As A String.webm')
+        // }
         if (start == 0) {
             canvas_context.drawImage(title, 0, 0)
             // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
@@ -10583,14 +10593,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
         } else if (start == 1) {
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
 
-            var grd = canvas_context.createLinearGradient(0, 0, stars.stars[vessel.star].body.x, 0);
-            grd.addColorStop(0, "#888888");
-            grd.addColorStop(1, "#000000");
-            canvas_context.fillStyle = grd;
-            canvas_context.fillRect(0, 0, stars.stars[vessel.star].body.x, 720);
 
             canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
             canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
+            var grd = canvas_context.createLinearGradient(0, 0, stars.stars[vessel.star].body.x, 0);
+            grd.addColorStop(0, "#888888");
+            // grd.addColorStop(.5, "#88888888");
+            grd.addColorStop(1, "#00000000");
+            canvas_context.fillStyle = grd;
+            canvas_context.fillRect(0, 0, stars.stars[vessel.star].body.x, 720);
 
             stars.draw()
             vessel.draw()
