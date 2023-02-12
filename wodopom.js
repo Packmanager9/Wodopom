@@ -3861,7 +3861,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         constructor(type, crew = -1) {
             if (crew != -1) {
                 let crew2 = new Guy({}, crew)
-
+                this.firing = -1
                 this.crewType = crew
                 this.name1 = "Hire"
                 this.name2 = "Crewmen"
@@ -3883,6 +3883,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.buy = 50
                 this.sell = 50
             } else {
+                this.firing = -1
                 this.crewType = -1
                 this.metatarget = {}
                 this.bullets = []
@@ -4320,9 +4321,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.beam == 1) {
                     this.angle = Math.random() * Math.PI * 2
                 }
-                this.firing = 10
-                this.target = tile
-                this.charge = 0
+                if(this.firing <= 0){
+                    this.firing = 10
+                    this.target = tile
+                    this.charge = 0
+                }else{
+                    this.target = tile
+                    return
+                }
                 if (vessel.weapons.includes(this)) {
                     if (enemy.hull <= 0 || enemy.guys.length == 0) {
                         return
@@ -9549,7 +9555,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.fillText("+1 Weapon!", 720, 280)
                 }
                 if (this.bombflag < .3) {
-                    canvas_context.fillText(this.bombs + " Bombs!", 720, 320)
+                    canvas_context.fillText((this.bombs+1) + " Bombs!", 720, 320)
                 }
                 if (this.fuelflag < .5) {
                     canvas_context.fillText(3 + " fuel!", 720, 360)
@@ -9791,7 +9797,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 return
             }
 
-            let rooms = ['Medbay', 'Weapons', 'Shield', 'Helm', 'Oxygen', 'Security', 'Engine', 'Empty', 'Empty']
+            let rooms = ['Medbay', 'Weapons', 'Shield', 'Helm', 'Oxygen', 'Security', 'Engine', 'Teleporter', 'Empty']
             for (let t = 0; t < vessel.UI.systems.length; t++) {
                 for (let k = 0; k < vessel.UI.systems[t].bars.length; k++) {
                     vessel.UI.systems[t].bars[k].y -= 2
