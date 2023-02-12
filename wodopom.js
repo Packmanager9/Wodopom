@@ -4479,7 +4479,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if(keysPressed['Shift']){   
                                 this.metatarget = enemy.blocks[t][k]
                             }
+                            if(keysPressed['z']){   
+                                this.metatarget = enemy.blocks[t][k]
+                            }
+                            if(keysPressed['q']){   
+                                this.metatarget = enemy.blocks[t][k]
+                            }
                             if(keysPressed['x']){   
+                                this.metatarget ={}
+                            }
+                            if(keysPressed['w']){   
                                 this.metatarget ={}
                             }
                             this.fire(enemy.blocks[t][k])
@@ -5228,6 +5237,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     // //////////////console.log(link)
             //     link.draw()
             // }
+            if (vessel.weapons.includes(this)) {
+                if(this.selected == 1){
+                    if(keysPressed['a']){
+                        this.auto*=-1
+                        keysPressed['a'] = false
+                    }
+                }
+            }
 
             if (keysPressed[vessel.weapons.indexOf(this) + 1]) {
                 for (let t = 0; t < vessel.weapons.length; t++) {
