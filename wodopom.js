@@ -4020,8 +4020,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.name1 = "Railgun"
                 this.name2 = "I"
                 this.railgun = 1
-                this.max = 450
-                this.damage = 10
+                this.max = 420
+                this.damage = 18
                 this.real = 1
                 this.crew = 2
                 this.fireChance = 5
@@ -4032,8 +4032,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.name1 = "Railgun"
                 this.name2 = "II"
                 this.railgun = 1
-                this.max = 750
-                this.damage = 20
+                this.max = 720
+                this.damage = 32
                 this.real = 1
                 this.crew = 2
                 this.fireChance = 10
@@ -4044,8 +4044,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.name1 = "Railgun"
                 this.name2 = "Repeater I"
                 this.railgun = 1
-                this.max = 500
-                this.damage = 15
+                this.max = 520
+                this.damage = 27
                 this.real = 1
                 this.crew = 2
                 this.fireChance = 12
@@ -4325,7 +4325,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 tile.fire = 0
                             }
                             if (this.railgun == 1) {
-                                tile.integrity -= this.damage * 5
+                                tile.integrity -= this.damage * 3//5
                             }
                             if (this.puncture == 1) {
                                 let n = enemy.neighbors(tile)
@@ -4413,7 +4413,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                             tile.fire -= this.fireChance
                             if (this.railgun == 1) {
-                                tile.integrity -= this.damage * 5
+                                tile.integrity -= this.damage * 3 //5
                             }
                             if (this.puncture == 1) {
                                 let n = vessel.neighbors(tile)
@@ -6796,8 +6796,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep2)
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
-                    // this.weapons.push(new Weapon(5))
-                    // this.weapons.push(new Weapon(19))
+                    // this.weapons.push(new Weapon(15))
+                    // this.weapons.push(new Weapon(16))
                     // this.weapons.push(new Weapon(101))
                     // this.weapons.push(new Weapon(-2))
                     // this.weapons.push(new Weapon(-2))
