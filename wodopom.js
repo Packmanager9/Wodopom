@@ -1313,7 +1313,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
 
         window.addEventListener('contextmenu', e => {
-            e.preventDefault()
+            // e.preventDefault()
             right += 20
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
@@ -1377,7 +1377,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         vessel.fuel--
                         start = 1
                         starfirst = 0
-                        enemy = new EnemyShip(Math.floor(Math.random() * 35), this.level + 1)
+                        enemy = new EnemyShip(Math.floor(Math.random() * 35), enemy.level + 1)
                         return
                     }
                 }
