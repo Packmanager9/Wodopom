@@ -9049,9 +9049,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < this.supratiles.length; t++) {
                     if (this.supratiles[t].x == this.supratiles[0].x) {
                         this.supratiles[t].weaponized = 1
+                        this.wepmax+=2
+                        continue
                     }
                     // let n = enemy.neighbors(this.supratiles[t])
-                    let wet = 1
+                    let wet = 0
                     for (let k = 0; k < this.supratiles.length; k++) {
                         if (k == t) {
                             continue
@@ -9064,7 +9066,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (wet == 0) {
                         this.supratiles[t].weaponized = 1
-                        this.wepmax++
+                        this.wepmax+=2
                     }
                 }
 
@@ -9111,7 +9113,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.first = 1
                 this.weapons = []
                 if (this.level < 7) {
-                    // for(let  k = 0;k<25;k++){
+                    console.log(this.wepmax)
+                    // for(let  k = 0;k<this.wepmax;k++){
                     // this.weapons.push(new Weapon(k))
                     // }
                     let wep1 = new Weapon(0)
