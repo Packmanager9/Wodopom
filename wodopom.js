@@ -2450,7 +2450,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 23) {
                                         canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 24) {
-                                        canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                        canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
                                         canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     }
