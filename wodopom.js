@@ -2453,8 +2453,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
                                         canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
+                                        canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     }
-
+                                    
 
                                 }
                                 vessel.wepDrawCount++
@@ -2515,8 +2517,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
                                             canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
+                                            canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
-
+                                        
                                     }
 
                                     vessel.wepDrawCount++
@@ -2589,9 +2593,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
                                     } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
                                         canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
+                                        canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
                                     }
-
-
+                                    
                                 }
                                 enemy.wepDrawCount++
 
@@ -2651,8 +2656,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
                                             canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
+                                            canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
-
+                                        
                                     }
 
                                     enemy.wepDrawCount++
@@ -2771,6 +2778,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         firesound.volume = .5 - (t / 10)
         firesounds.push(firesound)
     }
+
+    let scrap = new Audio()
+    scrap.src = "scrap.mp3"
 
     let blast = new Audio()
     blast.src = "blast.mp3"
@@ -4315,7 +4325,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 2) {
                     this.name1 = "Double"
                     this.name2 = "Laser"
-                    this.max = 900
+                    this.max = 760 //900
                     this.damage = 80
                     this.real = 1
                     this.double = 2
@@ -4325,7 +4335,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 3) {
                     this.name1 = "Triple"
                     this.name2 = "Laser"
-                    this.max = 1300
+                    this.max = 1000 //1300
                     this.damage = 135
                     this.real = 1
                     this.double = 3
@@ -4346,7 +4356,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 5) {
                     this.name1 = "Mega"
                     this.name2 = "Laser"
-                    this.max = 1400
+                    this.max = 1100 //1400
                     this.damage = 140
                     this.real = 1
                     this.crew = 2
@@ -4357,7 +4367,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 6) {
                     this.name1 = "Medium"
                     this.name2 = "Bomb"
-                    this.max = 1500
+                    this.max = 1250
                     this.damage = 130
                     this.bomb = 1
                     this.real = 1
@@ -4368,7 +4378,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 7) {
                     this.name1 = "Big"
                     this.name2 = "Bomb"
-                    this.max = 1800
+                    this.max = 1500
                     this.damage = 180
                     this.bomb = 1
                     this.real = 1
@@ -4380,7 +4390,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 8) {
                     this.name1 = "Mega"
                     this.name2 = "Bomb"
-                    this.max = 2900
+                    this.max = 2000 //2900
                     this.damage = 300
                     this.bomb = 1
                     this.real = 1
@@ -4392,7 +4402,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.double = 0
                 } else if (this.type == 9) {
                     this.name1 = "Heat"
-                    this.name2 = "Beam"
+                    this.name2 = "Beam II"
                     this.max = 1200
                     this.damage = 10
                     // this.bomb = 1
@@ -4402,8 +4412,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // this.puncture = 1
                     this.fireChance = 300
                     this.double = 0
-                    this.buy = 45
-                    this.sell = 20
+                    this.buy = 60
+                    this.sell = 31
                 } else if (this.type == 10) {
                     this.name1 = "Ion"
                     this.name2 = "Pellet I"
@@ -4476,7 +4486,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name1 = "Railgun"
                     this.name2 = "Repeater I"
                     this.railgun = 1
-                    this.max = 520
+                    this.max = 490 //520
                     this.damage = 27
                     this.real = 1
                     this.crew = 2
@@ -4529,10 +4539,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.beam = 1
                     this.sap = 0
                     this.railgun = 0
-                    this.max = 650 * 2
+                    this.max =  900
                     this.damage = 55 * 2
                     this.real = 1
-                    this.crew = .2
+                    this.crew = .5
                     this.fireChance = 10
                     this.double = 0
                     this.buy = 60
@@ -4544,10 +4554,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.beam = 1
                     this.sap = 0
                     this.railgun = 0
-                    this.max = 840 * 2
+                    this.max = 1140
                     this.damage = 85 * 2
                     this.real = 1
-                    this.crew = .2
+                    this.crew = .5
                     this.fireChance = 20
                     this.double = 0
                     this.buy = 90
@@ -4559,10 +4569,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.beam = 1
                     this.sap = 0
                     this.railgun = 0
-                    this.max = 1125 * 2
+                    this.max = 1700
                     this.damage = 135 * 2
                     this.real = 1
-                    this.crew = .2
+                    this.crew = .5
                     this.fireChance = 30
                     this.double = 0
                     this.buy = 110
@@ -4575,7 +4585,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     // this.railgun = 0
                     this.max = 460
-                    this.damage = 55
+                    this.damage = 70
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 22
@@ -4591,7 +4601,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     // this.railgun = 0
                     this.max = 600
-                    this.damage = 105
+                    this.damage = 150
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 33
@@ -4607,7 +4617,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     // this.railgun = 0
                     this.max = 960
-                    this.damage = 235
+                    this.damage = 320
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 44
@@ -4616,6 +4626,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sell = 40
                     this.scrap = 3
                     // this.hard = 1
+                } else if (this.type == 26) {
+                    this.name1 = "Heat"
+                    this.name2 = "Beam I"
+                    this.max = 400
+                    this.damage = 5
+                    // this.bomb = 1
+                    this.beam = 1
+                    this.real = 1
+                    this.crew = 1.8
+                    // this.puncture = 1
+                    this.fireChance = 300
+                    this.double = 0
+                    this.buy = 45
+                    this.sell = 20
+                    this.mini = 1
                 } else if (this.type == 100) {
                     this.name1 = "Wodopom"
                     this.name2 = ""
@@ -4828,6 +4853,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (this.beam == 1) {
+                                if(this.mini == 1){
+
+                                }else{
                                 let n = enemy.neighbors(tile)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].fire -= this.fireChance
@@ -4839,6 +4867,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         n[r].onFire = 1
                                         n[r].fire = 0
                                     }
+                                }
                                 }
                             }
                             enemy.hull -= this.damage * .1
@@ -4922,6 +4951,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (this.beam == 1) {
+                                if(this.mini == 1){
+
+                                }else{
                                 let n = vessel.neighbors(tile)
                                 for (let r = 0; r < n.length; r++) {
                                     n[r].fire -= this.fireChance
@@ -4934,6 +4966,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         n[r].fire = 0
                                     }
                                 }
+                            }
                             }
                             vessel.hull -= this.damage * .1
                             if (this.sap <= 0) {
@@ -5721,11 +5754,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     site3.draw()
                     this.firing -= .2
                 } else if (this.type == 23) {
+                    if (this.firing == 10) {
+                        scrap.play()
+                    }
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     if (this.firing % 5 == 1) { // || this.firing == 5
-                        if (this.firing == 10) {
-                            rail3aud.play()
-                        }
                         let link = new LineOP()
                         if (vessel.weapons.includes(this)) {
                             link.target = ring
@@ -5734,7 +5767,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5745,7 +5778,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5753,6 +5786,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     this.firing--
                 } else if (this.type == 24) {
+                    if (this.firing == 10) {
+                        scrap.play()
+                    }
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     if (this.firing % 3 == 1) { // || this.firing == 5
                         if (this.firing == 10) {
@@ -5766,7 +5802,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5777,7 +5813,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5785,6 +5821,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     this.firing--
                 } else if (this.type == 25) {
+                    if (this.firing == 10) {
+                        scrap.play()
+                    }
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
                     if (this.firing % 2 == 1) { // || this.firing == 5
                         if (this.firing == 10) {
@@ -5798,7 +5837,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5809,13 +5848,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
                         }
                     }
                     this.firing--
+                } else if (this.type == 26) {
+                    if (this.firing == 10) {
+                        heatbeamaud.play()
+                    }
+                    //heatbeam
+                    let site5 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 5), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 5))
+                    site5.draw()
+                    let site = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 4), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 4))
+                    site.draw()
+                    let site2 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 3), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 3))
+                    site2.draw()
+                    let site3 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2))
+                    site3.draw()
+                    this.firing -= 2
                 } else if (this.type == 100) {
 
 
@@ -5974,6 +6027,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.drawImage(scrapcannon2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 } else if (this.type == 25) {
                     canvas_context.drawImage(scrapcannon3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                } else if (this.type == 26) {
+                    canvas_context.drawImage(heatbeam2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 } else if (this.type == 100) {
                     this.frame++
                     canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -6144,6 +6199,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let heatbeam = new Image()
     heatbeam.src = "heatbeam.png"
+    let heatbeam2 = new Image()
+    heatbeam2.src = "heatbeam2.png"
+    let heatbeamr2 = new Image()
+    heatbeamr2.src = "heatbeamr2.png"
 
 
     let mediummmissle = new Image()
@@ -9126,7 +9185,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        // let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 27))
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
@@ -9141,7 +9200,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 27))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 21) {
@@ -9155,7 +9214,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 27))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 29) {
@@ -9170,19 +9229,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
@@ -9197,37 +9256,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
                             this.weapons.push(wep5)
                         }
                     }
@@ -10401,7 +10460,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 26)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 27)))
                         } else {
                             // this.wegflag = 1
 
@@ -10414,7 +10473,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
 
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 26)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 27)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -10490,7 +10549,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (Math.random() < .5) {
 
                 for (let t = 0; t < 3; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 26)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
                 }
                 for (let t = 0; t < 12; t++) {
                     this.weapons.push(new Weapon(-1))
@@ -10507,7 +10566,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (Math.random() < .8) {
 
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 26)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
@@ -10518,7 +10577,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     } else {
 
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 26)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
                         }
                         for (let t = 0; t < 2; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
