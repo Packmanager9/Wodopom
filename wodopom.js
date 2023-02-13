@@ -1377,7 +1377,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         vessel.fuel--
                         start = 1
                         starfirst = 0
-                        enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
+                        enemy = new EnemyShip(Math.floor(Math.random() * 35), this.level + 1)
                         return
                     }
                 }
@@ -8466,7 +8466,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
-    let zz = 4
+    let zz = 29
     class EnemyShip {
         constructor(type, level) {
             this.wepDrawCount = 0
@@ -8659,6 +8659,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let keys = Object.keys(enemyship30[t][k])
                         for (let f = 0; f < keys.length; f++) {
                             tile[keys[f]] = enemyship30[t][k][keys[f]]
+                        }
+                    } else if (this.type == 30) {
+                        let keys = Object.keys(enemyship31[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship31[t][k][keys[f]]
+                        }
+                    } else if (this.type == 31) {
+                        let keys = Object.keys(enemyship32[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship32[t][k][keys[f]]
+                        }
+                    } else if (this.type == 32) {
+                        let keys = Object.keys(enemyship33[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship33[t][k][keys[f]]
+                        }
+                    } else if (this.type == 33) {
+                        let keys = Object.keys(enemyship34[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship34[t][k][keys[f]]
+                        }
+                    } else if (this.type == 34) {
+                        let keys = Object.keys(enemyship35[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = enemyship35[t][k][keys[f]]
                         }
                     }
                     tile.air = 100
@@ -8875,6 +8900,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < enemyship30doors.length; t++) {
                     this.doors.push(new Door(enemyship30doors[t].body.x, enemyship30doors[t].body.y))
                 }
+            } else if (this.type == 30) {
+                for (let t = 0; t < enemyship31doors.length; t++) {
+                    this.doors.push(new Door(enemyship31doors[t].body.x, enemyship31doors[t].body.y))
+                }
+            } else if (this.type == 31) {
+                for (let t = 0; t < enemyship32doors.length; t++) {
+                    this.doors.push(new Door(enemyship32doors[t].body.x, enemyship32doors[t].body.y))
+                }
+            } else if (this.type == 32) {
+                for (let t = 0; t < enemyship33doors.length; t++) {
+                    this.doors.push(new Door(enemyship33doors[t].body.x, enemyship33doors[t].body.y))
+                }
+            } else if (this.type == 33) {
+                for (let t = 0; t < enemyship34doors.length; t++) {
+                    this.doors.push(new Door(enemyship34doors[t].body.x, enemyship34doors[t].body.y))
+                }
+            } else if (this.type == 34) {
+                for (let t = 0; t < enemyship35doors.length; t++) {
+                    this.doors.push(new Door(enemyship35doors[t].body.x, enemyship35doors[t].body.y))
+                }
             }
             this.weapons = []
 
@@ -9027,7 +9072,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys.length > 0 && enemy.hull > 0) {
                     vessel.fuel--
                     start = 1
-                    enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 35), this.level + 1)
                 }
             } else {
                 canvas_context.fillStyle = "white"
@@ -10527,7 +10572,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     vessel.fuel--
                     start = 1
                     starfirst = 0
-                    enemy = new EnemyShip(Math.floor(Math.random() * 30), this.level + 1)
+                    enemy = new EnemyShip(Math.floor(Math.random() * 35), this.level + 1)
                 }
             }
 
@@ -10712,7 +10757,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let title = new Image()
     title.src = "title.png"
     let vessel = new Ship()
-    let enemy = new EnemyShip(Math.floor(Math.random() * 30), 1)
+    let enemy = new EnemyShip(Math.floor(Math.random() * 35), 1)
 
     vessel.draw()
     let stars = new Stars()
