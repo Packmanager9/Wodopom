@@ -5601,8 +5601,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                vessel.menuBattery.power += 1
-                                                vessel.menuBattery.powersto += 1
+                                                if (vessel.menuBattery.powersto < 56) {
+                                                    vessel.menuBattery.power += 1
+                                                    vessel.menuBattery.powersto += 1
+                                                }
                                             }
                                             enemy.guys[t].hit = 0
                                         }
@@ -5660,8 +5662,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                vessel.menuBattery.power += 1
-                                                vessel.menuBattery.powersto += 1
+                                                if (vessel.menuBattery.powersto < 56) {
+                                                    vessel.menuBattery.power += 1
+                                                    vessel.menuBattery.powersto += 1
+                                                }
                                             }
                                             enemy.guys[t].hit = 0
                                         }
@@ -5718,8 +5722,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                vessel.menuBattery.power += 1
-                                                vessel.menuBattery.powersto += 1
+                                                if (vessel.menuBattery.powersto < 56) {
+                                                    vessel.menuBattery.power += 1
+                                                    vessel.menuBattery.powersto += 1
+                                                }
                                             }
                                             enemy.guys[t].hit = 0
                                         }
@@ -6423,6 +6429,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 box.draw()
                 for (let k = 0; k < this.systems[t].max; k++) {
                     this.systems[t].bars[k] = new Rectangle(box.x + 2, (((box.y + 135) - (k * 12)) - 12), 16, 10, "#DDDDDD")
+
                     if (this.systems[t].demand + this.systems[t].fed > k) {
                         this.systems[t].bars[k].color = "#00ff00"
                     }
@@ -6430,7 +6437,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.systems[t].bars[k].color = "orange"
                     }
                     this.systems[t].bars[k].draw()
-                }
+                   }
             }
         }
         draw() {
@@ -6454,15 +6461,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 for (let k = 0; k < this.systems[t].max; k++) {
                     this.systems[t].bars[k] = new Rectangle(box.x + 2, (((box.y + 135) - (k * 12)) - 12), 16, 10, "#FFDDDD")
+                   let wet = 0
                     if (this.systems[t].demand + this.systems[t].fed > k) {
                         this.systems[t].bars[k].color = "#FF0000"
+                        wet = 1
                     }
                     if (this.systems[t].fed > k) {
                         this.systems[t].bars[k].color = "orange"
+                        wet = 1
                     }
                     this.systems[t].bars[k].draw()
                     canvas_context.drawImage(bat, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
                 }
+                
                 // box.y+=135
                 if (t == 0) {
                     canvas_context.drawImage(medbayimage, 16 * (this.count % 4), 0, 16, 16, box.x, box.y - 20, 16, 16)
@@ -6483,6 +6494,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (t == 8) {
                     canvas_context.drawImage(emptyimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
                 }
+                if(this.systems[t].demand < 10){
+                    if(15 + (this.systems[t].demand * 5) <= vessel.scrap){
+
+                        canvas_context.fillStyle = "#00ff00"
+                        canvas_context.font = "10px comic sans ms"
+                        canvas_context.fillText(15 + (this.systems[t].demand * 5), box.x, box.y-25)
+                    }else{
+    
+                    canvas_context.fillStyle = "#FF0000"
+                    canvas_context.font = "10px comic sans ms"
+                    canvas_context.fillText(15 + (this.systems[t].demand * 5), box.x, box.y-25)
+                    }
+                }
+         
                 this.systems[t].fed = 0
             }
 
@@ -7103,6 +7128,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 let block = new RectangleR(vessel.upgradeMenu.window.x + 2 + ((t % 4) * 10), (vessel.upgradeMenu.window.y + vessel.upgradeMenu.window.height) - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
                 block.draw()
             }
+
+            if(vessel.energy.powersto <= vessel.scrap){
+
+                canvas_context.fillStyle = "#00ff00"
+                canvas_context.font = "15px comic sans ms"
+                canvas_context.fillText( (vessel.energy.powersto), this.box.x+8, this.box.y-15)
+            }else{
+
+            canvas_context.fillStyle = "#FF0000"
+            canvas_context.font = "15px comic sans ms"
+            canvas_context.fillText( (vessel.energy.powersto), this.box.x+8, this.box.y-15)
+            }
+            
         }
     }
     class Airlock {
@@ -10796,7 +10834,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.text = ''
         }
         draw() {
-            if (!keysPressed['Shift']) {
+            if (!keysPressed['Shift'] && !keysPressed['z']) {
                 return
             }
 
@@ -11101,8 +11139,314 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
 
+            
+            if (stars.stars[vessel.star].shop == 1) {
+                if (vessel.upgradeMenu.tab == 1) {
+            for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                if (stars.stars[vessel.star].weapons[t].body.isPointInside(TIP_engine) && stars.stars[vessel.star].weapons[t].type != -1) {
+                    this.text1 = `Weapon: ${stars.stars[vessel.star].weapons[t].name1 + ' ' + stars.stars[vessel.star].weapons[t].name2}`
+                    this.text2 = `Charge: ${Math.round(stars.stars[vessel.star].weapons[t].charge)}/${stars.stars[vessel.star].weapons[t].max}`
+                    let lsrt = "Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
+                    let str = 'Idle'
+                    if (stars.stars[vessel.star].weapons[t].hard != 1) {
+                        let lsrt = "Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
 
+                    } else {
+                        let lsrt = "Tile harm: " + Math.round(stars.stars[vessel.star].weapons[t].damage / 10) + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
 
+                    }
+
+                    if (stars.stars[vessel.star].weapons[t].railgun == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% High Pierce"
+                    } else if (stars.stars[vessel.star].weapons[t].scrap > 0) {
+                        lsrt = "Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + `% Costs ${stars.stars[vessel.star].weapons[t].scrap} Scrap`
+                    } else if (stars.stars[vessel.star].weapons[t].bomb == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
+                    } else if (stars.stars[vessel.star].weapons[t].beam == 1 || stars.stars[vessel.star].weapons[t].type == 101) {
+                        if (stars.stars[vessel.star].weapons[t].hard != 1) {
+                            lsrt = "Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
+
+                        } else {
+                            lsrt = "Tile harm: " + Math.round(stars.stars[vessel.star].weapons[t].damage / 10) + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
+
+                        }
+
+                    } else if (stars.stars[vessel.star].weapons[t].sap >= 1) {
+                        lsrt = "Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Steals Shields"
+                    } else if (stars.stars[vessel.star].weapons[t].crew > 1) {
+                        lsrt = "Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + stars.stars[vessel.star].weapons[t].crew + "x"
+                    } else {
+                        if (stars.stars[vessel.star].weapons[t].hard != 1) {
+                            lsrt = "Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
+
+                        } else {
+                            lsrt = "Tile harm: " + Math.round(stars.stars[vessel.star].weapons[t].damage / 10) + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10)
+
+                        }
+
+                    }
+                    if (stars.stars[vessel.star].weapons[t].charge >= stars.stars[vessel.star].weapons[t].max) {
+                        str = 'Ready'
+                    } else {
+                        if (vessel.boosts[1] > 0) {
+                            str = 'Charging'
+                        }
+                    }
+                    this.text3 = "State: " + str
+                    // this.text4 = "Max: " + vessel.shield.level
+                    let dim = {}
+                    canvas_context.font = "12px comic sans ms"
+                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
+                    dim.h = 68
+                    //////////////////////////////////////////console.log(dim)
+                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
+                    rect.draw()
+                    canvas_context.fillStyle = "white"
+                    let py = TIP_engine.y + 5
+                    canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    if (stars.stars[vessel.star].weapons[t].hard != 1) {
+                        canvas_context.fillText("Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    } else {
+                        canvas_context.fillText("Tile harm: " + Math.round(stars.stars[vessel.star].weapons[t].damage / 10) + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    }
+
+                    py += 13
+                    if (stars.stars[vessel.star].weapons[t].railgun == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
+                    } else if (stars.stars[vessel.star].weapons[t].scrap > 0) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + `% Costs ${stars.stars[vessel.star].weapons[t].scrap} Scrap`, rect.x + 10, py - (dim.h + 10))
+
+                    } else if (stars.stars[vessel.star].weapons[t].bomb == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
+                    } else if (stars.stars[vessel.star].weapons[t].beam == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    } else if (stars.stars[vessel.star].weapons[t].sap >= 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Steals Shields", rect.x + 10, py - (dim.h + 10))
+                    } else if (stars.stars[vessel.star].weapons[t].crew > 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + stars.stars[vessel.star].weapons[t].crew + "x", rect.x + 10, py - (dim.h + 10))
+                    } else {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    }
+                    py += 13
+                    canvas_context.fillText("Breaks " + Math.floor((stars.stars[vessel.star].weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                    // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
+                    // py += 12
+                    // canvas_context.fillText(this.text4, rect.x + 10, py)
+                }
+            }
+        }else{
+
+            for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                if (vessel.upgradeMenu.wepsto[t].body.isPointInside(TIP_engine) && vessel.upgradeMenu.wepsto[t].type != -1) {
+                    this.text1 = `Weapon: ${vessel.upgradeMenu.wepsto[t].name1 + ' ' + vessel.upgradeMenu.wepsto[t].name2}`
+                    this.text2 = `Charge: ${Math.round(vessel.upgradeMenu.wepsto[t].charge)}/${vessel.upgradeMenu.wepsto[t].max}`
+                    let lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+                    let str = 'Idle'
+                    if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                        let lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    } else {
+                        let lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    }
+
+                    if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce"
+                    } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + `% Costs ${vessel.upgradeMenu.wepsto[t].scrap} Scrap`
+                    } else if (vessel.upgradeMenu.wepsto[t].bomb == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Shield Bypass"
+                    } else if (vessel.upgradeMenu.wepsto[t].beam == 1 || vessel.upgradeMenu.wepsto[t].type == 101) {
+                        if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                            lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                        } else {
+                            lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                        }
+
+                    } else if (vessel.upgradeMenu.wepsto[t].sap >= 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Steals Shields"
+                    } else if (vessel.upgradeMenu.wepsto[t].crew > 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.upgradeMenu.wepsto[t].crew + "x"
+                    } else {
+                        if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                            lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                        } else {
+                            lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                        }
+
+                    }
+                    if (vessel.upgradeMenu.wepsto[t].charge >= vessel.upgradeMenu.wepsto[t].max) {
+                        str = 'Ready'
+                    } else {
+                        if (vessel.boosts[1] > 0) {
+                            str = 'Charging'
+                        }
+                    }
+                    this.text3 = "State: " + str
+                    // this.text4 = "Max: " + vessel.shield.level
+                    let dim = {}
+                    canvas_context.font = "12px comic sans ms"
+                    dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
+                    dim.h = 68
+                    //////////////////////////////////////////console.log(dim)
+                    let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
+                    rect.draw()
+                    canvas_context.fillStyle = "white"
+                    let py = TIP_engine.y + 5
+                    canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
+                    py += 13
+                    if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                        canvas_context.fillText("Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    } else {
+                        canvas_context.fillText("Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                    }
+
+                    py += 13
+                    if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + `% Costs ${vessel.upgradeMenu.wepsto[t].scrap} Scrap`, rect.x + 10, py - (dim.h + 10))
+
+                    } else if (vessel.upgradeMenu.wepsto[t].bomb == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.upgradeMenu.wepsto[t].beam == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.upgradeMenu.wepsto[t].sap >= 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Steals Shields", rect.x + 10, py - (dim.h + 10))
+                    } else if (vessel.upgradeMenu.wepsto[t].crew > 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.upgradeMenu.wepsto[t].crew + "x", rect.x + 10, py - (dim.h + 10))
+                    } else {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                    }
+                    py += 13
+                    canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                    // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
+                    // py += 12
+                    // canvas_context.fillText(this.text4, rect.x + 10, py)
+                }
+            }
+
+        }
+    }else{
+
+        for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+            if (vessel.upgradeMenu.wepsto[t].body.isPointInside(TIP_engine) && vessel.upgradeMenu.wepsto[t].type != -1) {
+                this.text1 = `Weapon: ${vessel.upgradeMenu.wepsto[t].name1 + ' ' + vessel.upgradeMenu.wepsto[t].name2}`
+                this.text2 = `Charge: ${Math.round(vessel.upgradeMenu.wepsto[t].charge)}/${vessel.upgradeMenu.wepsto[t].max}`
+                let lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+                let str = 'Idle'
+                if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                    let lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                } else {
+                    let lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                }
+
+                if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
+                    lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce"
+                } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
+                    lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + `% Costs ${vessel.upgradeMenu.wepsto[t].scrap} Scrap`
+                } else if (vessel.upgradeMenu.wepsto[t].bomb == 1) {
+                    lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Shield Bypass"
+                } else if (vessel.upgradeMenu.wepsto[t].beam == 1 || vessel.upgradeMenu.wepsto[t].type == 101) {
+                    if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                        lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    } else {
+                        lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    }
+
+                } else if (vessel.upgradeMenu.wepsto[t].sap >= 1) {
+                    lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Steals Shields"
+                } else if (vessel.upgradeMenu.wepsto[t].crew > 1) {
+                    lsrt = "Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.upgradeMenu.wepsto[t].crew + "x"
+                } else {
+                    if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                        lsrt = "Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    } else {
+                        lsrt = "Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10)
+
+                    }
+
+                }
+                if (vessel.upgradeMenu.wepsto[t].charge >= vessel.upgradeMenu.wepsto[t].max) {
+                    str = 'Ready'
+                } else {
+                    if (vessel.boosts[1] > 0) {
+                        str = 'Charging'
+                    }
+                }
+                this.text3 = "State: " + str
+                // this.text4 = "Max: " + vessel.shield.level
+                let dim = {}
+                canvas_context.font = "12px comic sans ms"
+                dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
+                dim.h = 68
+                //////////////////////////////////////////console.log(dim)
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
+                rect.draw()
+                canvas_context.fillStyle = "white"
+                let py = TIP_engine.y + 5
+                canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
+                py += 13
+                canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
+                py += 13
+                canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
+                py += 13
+                if (vessel.upgradeMenu.wepsto[t].hard != 1) {
+                    canvas_context.fillText("Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                } else {
+                    canvas_context.fillText("Tile harm: " + Math.round(vessel.upgradeMenu.wepsto[t].damage / 10) + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
+
+                }
+
+                py += 13
+                if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
+                } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + `% Costs ${vessel.upgradeMenu.wepsto[t].scrap} Scrap`, rect.x + 10, py - (dim.h + 10))
+
+                } else if (vessel.upgradeMenu.wepsto[t].bomb == 1) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
+                } else if (vessel.upgradeMenu.wepsto[t].beam == 1) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                } else if (vessel.upgradeMenu.wepsto[t].sap >= 1) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Steals Shields", rect.x + 10, py - (dim.h + 10))
+                } else if (vessel.upgradeMenu.wepsto[t].crew > 1) {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.upgradeMenu.wepsto[t].crew + "x", rect.x + 10, py - (dim.h + 10))
+                } else {
+                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
+                }
+                py += 13
+                canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
+                // py += 12
+                // canvas_context.fillText(this.text4, rect.x + 10, py)
+            }
+        }
+
+    }
             if (vessel.energy.box.isPointInside(TIP_engine)) {
                 this.text1 = "Energy Storage"
                 this.text2 = "Total: " + vessel.energy.powersto
@@ -11769,10 +12113,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Control the power levels of your ship systems with the ship power menu.", 350, 150)
+                canvas_context.fillText("The button with a wrench on it is your inventory and upgrade menu.", 350, 180)
                 canvas_context.fillText("Click to select your crew, click again to direct them to move.", 350, 320)
                 canvas_context.fillText("You can open doors and airlocks by clicking on them.", 350, 500)
 
 
+                canvas_context.fillText("Click to advance.", 1100, 680)
             }else if(tut == 2){
                 stframe+=1
                 canvas_context.clearRect(0,0,1280,720)
@@ -11788,24 +12134,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("(Orange and Yellow) to increase dodge.", 620, 580)
 
 
+                canvas_context.fillText("Click to advance.", 1100, 680)
             }else if(tut == 3){
                 canvas_context.clearRect(0,0,1280,720)
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("General tips:", 50, 50)
-                canvas_context.fillText("Holding shift and mousing over almost anything in the game will give you more information.", 100, 100)
+                canvas_context.fillText("Holding shift (or z) and mousing over almost anything in the game will give you more information.", 100, 100)
                 canvas_context.fillText("The oxygen system is dark blue, if it breaks put a crewmen inside to fix it soon, or your ship will depressurize.", 100, 130)
                 canvas_context.fillText("Weapons are hotkeyed to the number keys in the order they appear at the bottom of the screen in combat.", 100, 160)
                 canvas_context.fillText("Holding a weapon's select key and clicking the enemy ship will set the autofire target for that weapon.", 100, 190)
                 canvas_context.fillText("You can turn autofire on and off with right-click.", 100, 220)
+                canvas_context.fillText("Clicking on the title screen will start the game at the star-map.", 100, 250)
+                canvas_context.fillText("Clicking a star with a green link in the star-map will jump you to combat.", 100, 280)
 
                 canvas_context.fillText("Specific tips:", 50, 450)
-                canvas_context.fillText("Holding shift over the crew health-plate (found in the top left during combat), will tell you their skills and job ranking.", 100, 500)
+                canvas_context.fillText("Holding shift (or z) over the crew health-plate (found in the top left during combat), will tell you their skills and job ranking.", 100, 500)
                 canvas_context.fillText("Try not to run out of bombs, you'll regret it.", 100, 530)
                 canvas_context.fillText("A fire on your ship can be vented using the airlocks at each end of the ship.", 100, 560)
                 canvas_context.fillText("Holes in your ship must be fixed by a crewmen by placing them on top of them.", 100, 590)
                 canvas_context.fillText("The medbay (green) can heal your crew, if it is powered on.", 100, 620)
+                canvas_context.fillText("Remember to upgrade your ship with the scrap you get from combat.", 100, 650)
+                canvas_context.fillText("You will need to upgrade your teleporter at least once to use it.", 100, 680)
 
+                canvas_context.fillText("Click to advance.", 1100, 680)
 
             }else {
                 canvas_context.drawImage(title, 0, 0)
