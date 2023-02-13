@@ -2391,6 +2391,140 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.integrity = 100
                 }
             }
+            if (this.weaponized == 1) {
+                if (enemy.weapons) {
+                    if (enemy.supratiles) {
+                        if (enemy.supratiles.includes(this)) {
+                            if (enemy.wepDrawCount < enemy.weapons.length) {
+                                if (enemy.weapons[enemy.wepDrawCount].real == 1) {
+                                    enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
+                                    enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .25)
+                                    if (enemy.weapons[enemy.wepDrawCount].type == 0) {
+                                        canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
+                                        canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
+                                        canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
+                                        canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
+                                        canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
+                                        canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
+                                        canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
+                                        canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
+                                        canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
+                                        canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
+                                        canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
+                                        canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
+                                        canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
+                                        canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
+                                        canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
+                                        canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
+                                        canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
+                                        canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
+                                        canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
+                                        canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
+                                        canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
+                                        canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
+                                        canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
+                                        canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
+                                        canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
+                                        canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    }
+
+
+                                }
+                                enemy.wepDrawCount++
+
+                                if (enemy.wepDrawCount < enemy.weapons.length) {
+                                    if (enemy.weapons[enemy.wepDrawCount].real == 1) {
+                                        enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
+                                        enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .75)
+                                        if (enemy.weapons[enemy.wepDrawCount].type == 0) {
+                                            canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
+                                            canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
+                                            canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
+                                            canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
+                                            canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
+                                            canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
+                                            canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
+                                            canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
+                                            canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
+                                            canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
+                                            canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
+                                            canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
+                                            canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
+                                            canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
+                                            canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
+                                            canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
+                                            canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
+                                            canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
+                                            canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
+                                            canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
+                                            canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
+                                            canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
+                                            canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
+                                            canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
+                                            canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
+                                            canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }
+
+                                    }
+
+                                    enemy.wepDrawCount++
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
             if (this.left == 1) {
                 if (vessel.hash) {
 
@@ -4849,9 +4983,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing--
                     } else {
 
-                        let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "red", 7)
+                        let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "red", 7)
                         link.draw()
-                        let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "white", 3)
+                        let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "white", 3)
                         lin2k.draw()
                         this.firing--
                     }
@@ -4880,9 +5014,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= .7
                     } else {
                         if (this.firing < 4 || this.firing > 6) {
-                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "orange", 9)
+                            let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "orange", 9)
                             link.draw()
-                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "yellow", 4)
+                            let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "yellow", 4)
                             lin2k.draw()
                         }
                         this.firing -= .7
@@ -4902,9 +5036,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.firing -= .5
                     } else {
                         if (this.firing < 2.5 || this.firing > 7.5 || (this.firing > 4 && this.firing < 6)) {
-                            let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "purple", 9)
+                            let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "purple", 9)
                             link.draw()
-                            let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "magenta", 4)
+                            let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "magenta", 4)
                             lin2k.draw()
                         }
                         this.firing -= .5
@@ -4921,9 +5055,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         lin2k.draw()
                         this.firing -= .5
                     } else {
-                        let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
+                        let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Blue", 11)
                         link.draw()
-                        let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Black", 9)
+                        let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "Black", 9)
                         lin2k.draw()
                         this.firing -= .5
                     }
@@ -4938,9 +5072,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         lin2k.draw()
                         this.firing -= 1
                     } else {
-                        let link = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 12)
+                        let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 12)
                         link.draw()
-                        let lin2k = new LineOP(enemy.body, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#AA00FF", 9)
+                        let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#AA00FF", 9)
                         lin2k.draw()
                         this.firing -= 1
                     }
@@ -4999,7 +5133,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         } else {
                             ////////////////////console.log("d")
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5033,7 +5167,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5064,7 +5198,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5093,7 +5227,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5129,7 +5263,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5164,7 +5298,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5199,7 +5333,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                         }
 
                         let xmom = Math.cos(link.angle())
@@ -5459,12 +5593,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5491,12 +5625,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5523,12 +5657,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
-                            link.object = enemy.body
+                            link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
-                            let ast = new Asterisk(enemy.body.x, enemy.body.y, "gray", 30, xmom * .5, ymom * .5)
+                            let ast = new Asterisk(this.center.x, this.center.y, "gray", 30, xmom * .5, ymom * .5)
                             ast.life = 4
                             ast.noline = 1
                             this.bullets.push(ast)
@@ -5541,7 +5675,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (vessel.weapons.includes(this)) {
                         let g = Math.max(10 - this.firing)
                         for (let k = 0; k < g; k++) {
-                            let link = new Circle(enemy.body.x, enemy.body.y, (260 - (30 * k)) * ((10 - this.firing) / 8), getRandomLightColor() + '22')
+                            let link = new Circle(this.center.x, this.center.y, (260 - (30 * k)) * ((10 - this.firing) / 8), getRandomLightColor() + '22')
                             link.draw()
                         }
                         this.firing -= .4
@@ -5731,6 +5865,69 @@ window.addEventListener('DOMContentLoaded', (event) => {
     specialimage.src = "special.png"
     let emptyimage = new Image()
     emptyimage.src = "empty.png"
+
+
+    let basiclaserr = new Image()
+    basiclaserr.src = "basiclaserr.png"
+    let basicbombr = new Image()
+    basicbombr.src = "basicbombr.png"
+    let doublelaserr = new Image()
+    doublelaserr.src = "doublelaserr.png"
+    let triplelaserr = new Image()
+    triplelaserr.src = "triplelaserr.png"
+    let megalaserr = new Image()
+    megalaserr.src = "megalaserr.png"
+    let crewlaserr = new Image()
+    crewlaserr.src = "crewlaserr.png"
+    let mediummissler = new Image()
+    mediummissler.src = "mediummissler.png"
+    let bigmissler = new Image()
+    bigmissler.src = "bigmissler.png"
+    let megamissler = new Image()
+    megamissler.src = "megamissler.png"
+    let heatbeamr = new Image()
+    heatbeamr.src = "heatbeamr.png"
+    let ion1r = new Image()
+    ion1r.src = "iongunr1.png"
+    let ion2r = new Image()
+    ion2r.src = "iongunr2.png"
+    let ion3r = new Image()
+    ion3r.src = "iongunr3.png"
+    let ion4r = new Image()
+    ion4r.src = "iongunr4.png"
+
+    let railgunr1 = new Image()
+    railgunr1.src = "railgunr1.png"
+    let railgunr2 = new Image()
+    railgunr2.src = "railgunr2.png"
+    let railgunr3 = new Image()
+    railgunr3.src = "railgunr3.png"
+    let shieldsapr1 = new Image()
+    shieldsapr1.src = "shieldsapr.png"
+    let shieldsapr2 = new Image()
+    shieldsapr2.src = "shieldsapr2.png"
+    let shieldsapr3 = new Image()
+    shieldsapr3.src = "shieldsapr3.png"
+
+
+    let hardbeamr1 = new Image()
+    hardbeamr1.src = "hardbeamr1.png"
+    let hardbeamr2 = new Image()
+    hardbeamr2.src = "hardbeamr2.png"
+    let hardbeamr3 = new Image()
+    hardbeamr3.src = "hardbeamr3.png"
+
+    let scrapcannonr1 = new Image()
+    scrapcannonr1.src = "scrapcannonr1.png"
+
+    let scrapcannonr2 = new Image()
+    scrapcannonr2.src = "scrapcannonr2.png"
+
+    let scrapcannonr3 = new Image()
+    scrapcannonr3.src = "scrapcannonr3.png"
+
+
+
 
 
     let basiclaser = new Image()
@@ -8032,15 +8229,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
-    let zz = 7
+    let zz = 4
     class EnemyShip {
         constructor(type, level) {
+            this.wepDrawCount = 0
             this.copies = []
             this.angle = 0
             this.now = Date.now()
             this.type = type
             // zz++
-            this.level = level * 10
+            this.level = level
             this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
             this.ondeath = 0
             this.pulse = 0
@@ -8668,6 +8866,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.supratiles[t].right = 1
                     }
                 }
+                this.wepmax = 0
+                for (let t = 0; t < this.supratiles.length; t++) {
+                    if (this.supratiles[t].x == this.supratiles[(this.supratiles.length - 1)].x) {
+                        this.supratiles[t].weaponized = 1
+                        this.wepmax++
+                    }
+                    // let n = enemy.neighbors(this.supratiles[t])
+                    let wet = 0
+                    for (let k = 0; k < this.supratiles.length; k++) {
+                        if (k == t) {
+                            continue
+                        }
+                        if (this.supratiles[k].x == this.supratiles[t].x - this.supratiles[t].width) {
+                            if (this.supratiles[k].y == this.supratiles[t].y) {
+                                wet = 1
+                            }
+                        }
+                    }
+                    if (wet == 0) {
+                        this.supratiles[t].weaponized = 1
+                        this.wepmax++
+                    }
+                }
 
 
                 if (this.level < 8) {
@@ -8712,6 +8933,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.first = 1
                 this.weapons = []
                 if (this.level < 7) {
+                    // for(let  k = 0;k<25;k++){
+                    // this.weapons.push(new Weapon(k))
+                    // }
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(-1)
                     let wep3 = new Weapon(-1)
@@ -8753,7 +8977,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let wep5 = new Weapon(Math.floor(Math.random() * 26))
                         this.weapons.push(wep5)
                     }
-                } else {
+                } else if (this.level < 29) {
 
                     let wep1 = new Weapon(2)
                     let wep2 = new Weapon(1)
@@ -8764,17 +8988,68 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
                     if (Math.random() < this.level / 100) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
                     if (Math.random() < this.level / 500) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
+                    }
+                }else{
+                let wep1 = new Weapon(2)
+                let wep2 = new Weapon(1)
+                let wep3 = new Weapon(2)
+                let wep4 = new Weapon(Math.floor(Math.random() * 3))
+                this.weapons.push(wep1)
+                this.weapons.push(wep2)
+                this.weapons.push(wep3)
+                this.weapons.push(wep4)
+                if (Math.random() < .9) {
+                    if (this.wepmax > this.weapons.length) {
                         let wep5 = new Weapon(Math.floor(Math.random() * 26))
                         this.weapons.push(wep5)
                     }
+                }
+                if (Math.random() < this.level / 100) {
+                    if (this.wepmax > this.weapons.length) {
+                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        this.weapons.push(wep5)
+                    }
+                }
+                if (Math.random() < this.level / 500) {
+                    if (this.wepmax > this.weapons.length) {
+                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        this.weapons.push(wep5)
+                    }
+                }
+                if (Math.random() < this.level / 500) {
+                    if (this.wepmax > this.weapons.length) {
+                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        this.weapons.push(wep5)
+                    }
+                }
+                if (Math.random() < this.level / 500) {
+                    if (this.wepmax > this.weapons.length) {
+                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        this.weapons.push(wep5)
+                    }
+                }
+                if (Math.random() < this.level / 500) {
+                    if (this.wepmax > this.weapons.length) {
+                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                        this.weapons.push(wep5)
+                    }
+                }
                 }
             }
             // this.body.draw()
@@ -8782,6 +9057,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             // canvas_context.drawImage(ship1img, 0, 0, 512, 512, this.blocks[0][0].x, this.blocks[0][0].y, 512, 512)
 
+            this.wepDrawCount = 0
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].marked == 1) {
