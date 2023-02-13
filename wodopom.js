@@ -4920,19 +4920,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.weapons.includes(this)) {
 
                     if (this.metatarget.marked == 1) {
-                        if (enemy.supratiles.includes(this.metatarget)) {
-                            this.fire(this.metatarget)
-                        } else {
+                        if (enemy) {
+                            if (enemy.supratiles) {
+                                if (enemy.supratiles.includes(this.metatarget)) {
+                                    this.fire(this.metatarget)
+                                } else {
 
-                            let io = Math.floor(Math.random() * enemy.supratiles.length)
+                                    let io = Math.floor(Math.random() * enemy.supratiles.length)
 
-                            this.fire(enemy.supratiles[io])
+                                    this.fire(enemy.supratiles[io])
+                                }
+                            }
                         }
                     } else {
-                        if (enemy.supratiles) {
-                            let io = Math.floor(Math.random() * enemy.supratiles.length)
+                        if (enemy) {
+                            if (enemy.supratiles) {
+                                let io = Math.floor(Math.random() * enemy.supratiles.length)
 
-                            this.fire(enemy.supratiles[io])
+                                this.fire(enemy.supratiles[io])
+                            }
                         }
                     }
 
@@ -9005,51 +9011,51 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.weapons.push(wep5)
                         }
                     }
-                }else{
-                let wep1 = new Weapon(2)
-                let wep2 = new Weapon(1)
-                let wep3 = new Weapon(2)
-                let wep4 = new Weapon(Math.floor(Math.random() * 3))
-                this.weapons.push(wep1)
-                this.weapons.push(wep2)
-                this.weapons.push(wep3)
-                this.weapons.push(wep4)
-                if (Math.random() < .9) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                } else {
+                    let wep1 = new Weapon(2)
+                    let wep2 = new Weapon(1)
+                    let wep3 = new Weapon(2)
+                    let wep4 = new Weapon(Math.floor(Math.random() * 3))
+                    this.weapons.push(wep1)
+                    this.weapons.push(wep2)
+                    this.weapons.push(wep3)
+                    this.weapons.push(wep4)
+                    if (Math.random() < .9) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
-                if (Math.random() < this.level / 100) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                    if (Math.random() < this.level / 100) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
-                if (Math.random() < this.level / 500) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                    if (Math.random() < this.level / 500) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
-                if (Math.random() < this.level / 500) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                    if (Math.random() < this.level / 500) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
-                if (Math.random() < this.level / 500) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                    if (Math.random() < this.level / 500) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
-                if (Math.random() < this.level / 500) {
-                    if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 26))
-                        this.weapons.push(wep5)
+                    if (Math.random() < this.level / 500) {
+                        if (this.wepmax > this.weapons.length) {
+                            let wep5 = new Weapon(Math.floor(Math.random() * 26))
+                            this.weapons.push(wep5)
+                        }
                     }
-                }
                 }
             }
             // this.body.draw()
