@@ -1338,7 +1338,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         start = 1
                     }
                 }else{
-                    tut = -1
+                    if(tut < 3){
+                        tut++
+                    }else{
+                        tut = -1
+                    }
                 }
             }
             right = 0
@@ -2862,6 +2866,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     tut2.src = "tut2.png"
     let tut3 = new Image()
     tut3.src = "tut3.png"
+    let tut4 = new Image()
+    tut4.src = "tut4.png"
+    let tut5 = new Image()
+    tut5.src = "tut5.png"
+    let tut6 = new Image()
+    tut6.src = "tut6.png"
 
     let ximage = new Image()
     ximage.src = "yship.png"
@@ -11751,18 +11761,53 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if(tut == 1){
                 stframe+=1
                 canvas_context.clearRect(0,0,1280,720)
-                canvas_context.drawImage(tut1, (tut1.width/116)*(stframe%116), 0, tut1.width/116, tut1.height,50, 50, tut1.width/116, tut1.height)
-                canvas_context.drawImage(tut2, (tut2.width/88)*(stframe%88), 0, tut2.width/88, tut2.height,50, tut1.height+100, tut2.width/88, tut2.height)
-                canvas_context.drawImage(tut3, (tut3.width/83)*(stframe%83), 0, tut3.width/83, tut3.height,50, tut1.height+tut2.height+150, tut3.width/83, tut3.height)
+                canvas_context.drawImage(tut1, (tut1.width/116)*(stframe%116), 0, tut1.width/116, tut1.height,50, 0, tut1.width/116, tut1.height)
+                canvas_context.drawImage(tut2, (tut2.width/88)*(stframe%88), 0, tut2.width/88, tut2.height,50, tut1.height+20, tut2.width/88, tut2.height)
+                canvas_context.drawImage(tut3, (tut3.width/83)*(stframe%83), 0, tut3.width/83, tut3.height,50, tut1.height+tut2.height+40, tut3.width/83, tut3.height)
+                // canvas_context.drawImage(tut4, (tut4.width/55)*(stframe%55), 0, tut4.width/55, tut4.height,50, tut1.height+tut2.height+40, tut4.width/55, tut4.height)
                 
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Control the power levels of your ship systems with the ship power menu.", 350, 150)
-                canvas_context.fillText("Click to select your crew, click again to direct them to move.", 350, 400)
-                canvas_context.fillText("You can open doors and airlocks by clicking on them.", 350, 650)
+                canvas_context.fillText("Click to select your crew, click again to direct them to move.", 350, 320)
+                canvas_context.fillText("You can open doors and airlocks by clicking on them.", 350, 500)
 
 
-            }else{
+            }else if(tut == 2){
+                stframe+=1
+                canvas_context.clearRect(0,0,1280,720)
+                canvas_context.drawImage(tut4, (tut4.width/55)*(stframe%55), 0, tut4.width/55, tut4.height,50, 0, tut4.width/55, tut4.height)
+                canvas_context.drawImage(tut5, (tut5.width/53)*(stframe%53), 0, tut5.width/53, tut5.height,100, tut4.height+10, tut5.width/53, tut5.height)
+                canvas_context.drawImage(tut6, (tut6.width/105)*(stframe%105), 0, tut6.width/105, tut6.height,-50, tut4.height+10+tut5.height+10, tut6.width/105, tut6.height)
+                
+                canvas_context.font = "20px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("Put crew in the weapons room (Magenta) to charge weapons to fire.", 350, 150)
+                canvas_context.fillText("Put crew in the shield room (Cyan) to charge shields for protection.", 350, 350)
+                canvas_context.fillText("Put crew in the engine room and helm", 620, 550)
+                canvas_context.fillText("(Orange and Yellow) to increase dodge.", 620, 580)
+
+
+            }else if(tut == 3){
+                canvas_context.clearRect(0,0,1280,720)
+                canvas_context.font = "20px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("General tips:", 50, 50)
+                canvas_context.fillText("Holding shift and mousing over almost anything in the game will give you more information.", 100, 100)
+                canvas_context.fillText("The oxygen system is dark blue, if it breaks put a crewmen inside to fix it soon, or your ship will depressurize.", 100, 130)
+                canvas_context.fillText("Weapons are hotkeyed to the number keys in the order they appear at the bottom of the screen in combat.", 100, 160)
+                canvas_context.fillText("Holding a weapon's select key and clicking the enemy ship will set the autofire target for that weapon.", 100, 190)
+                canvas_context.fillText("You can turn autofire on and off with right-click.", 100, 220)
+
+                canvas_context.fillText("Specific tips:", 50, 450)
+                canvas_context.fillText("Holding shift over the crew health-plate (found in the top left during combat), will tell you their skills and job ranking.", 100, 500)
+                canvas_context.fillText("Try not to run out of bombs, you'll regret it.", 100, 530)
+                canvas_context.fillText("A fire on your ship can be vented using the airlocks at each end of the ship.", 100, 560)
+                canvas_context.fillText("Holes in your ship must be fixed by a crewmen by placing them on top of them.", 100, 590)
+                canvas_context.fillText("The medbay (green) can heal your crew, if it is powered on.", 100, 620)
+
+
+            }else {
                 canvas_context.drawImage(title, 0, 0)
                 tutButton.draw()
                 canvas_context.font = "20px comic sans ms"
