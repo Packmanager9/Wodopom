@@ -1313,7 +1313,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
 
         window.addEventListener('contextmenu', e => {
-            // e.preventDefault()
+            e.preventDefault()
             right += 20
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
@@ -1331,7 +1331,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         window.addEventListener('pointerdown', e => {
             if (start == 0) {
-                start = 1
+                if(tut == -1){
+                    if(tutButton.isPointInside(TIP_engine)){
+                        tut = 1
+                    }else{
+                        start = 1
+                    }
+                }else{
+                    tut = -1
+                }
             }
             right = 0
             FLEX_engine = canvas.getBoundingClientRect();
@@ -2847,6 +2855,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
     let rs = []
+
+    let tut1 = new Image()
+    tut1.src = "tut1.png"
+    let tut2 = new Image()
+    tut2.src = "tut2.png"
+    let tut3 = new Image()
+    tut3.src = "tut3.png"
 
     let ximage = new Image()
     ximage.src = "yship.png"
@@ -8252,6 +8267,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             }
 
+            if(start == 0){
+
+
+            }
         }
         cleanDirty() {
             for (var i = 0; i < this.dirtyNodes.length; i++) {
@@ -10762,7 +10781,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     vessel.draw()
     let stars = new Stars()
 
-
     class Labels {
         constructor() {
             this.text = ''
@@ -11681,8 +11699,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let starss = []
     let worldroot = new Point(0, 0)
+    let tut = -1
+    let tutButton = new RectangleR(100, 600, 100, 50, "#FF000044")
 
+    let stframe = 0
     let starfirst = 0
+    canvas_context.clearRect(0,0,1280,720)
     function main() {
         wodopomsong.play()
         if (starfirst == 0) {
@@ -11726,7 +11748,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
         //     video_recorder.download('File Name As A String.webm')
         // }
         if (start == 0) {
-            canvas_context.drawImage(title, 0, 0)
+            if(tut == 1){
+                stframe+=1
+                canvas_context.clearRect(0,0,1280,720)
+                canvas_context.drawImage(tut1, (tut1.width/116)*(stframe%116), 0, tut1.width/116, tut1.height,50, 50, tut1.width/116, tut1.height)
+                canvas_context.drawImage(tut2, (tut2.width/88)*(stframe%88), 0, tut2.width/88, tut2.height,50, tut1.height+100, tut2.width/88, tut2.height)
+                canvas_context.drawImage(tut3, (tut3.width/83)*(stframe%83), 0, tut3.width/83, tut3.height,50, tut1.height+tut2.height+150, tut3.width/83, tut3.height)
+                
+                canvas_context.font = "20px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("Control the power levels of your ship systems with the ship power menu.", 350, 150)
+                canvas_context.fillText("Click to select your crew, click again to direct them to move.", 350, 400)
+                canvas_context.fillText("You can open doors and airlocks by clicking on them.", 350, 650)
+
+
+            }else{
+                canvas_context.drawImage(title, 0, 0)
+                tutButton.draw()
+                canvas_context.font = "20px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("Tutorial", tutButton.x+10, tutButton.y+30)
+            }
+
+
             // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
             return
         } else if (start == 1) {
