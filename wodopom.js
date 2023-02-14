@@ -4444,7 +4444,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name1 = "Mega"
                     this.name2 = "Laser"
                     this.max = 1100 //1400
-                    this.damage = 140
+                    this.damage = 170 //140
                     this.real = 1
                     this.crew = 2
                     this.double = 2
@@ -6746,8 +6746,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.shopsquare = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y, 50, 25, "#88888888")
 
 
-                this.buyBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y + 110, 110, 50, "#88888888")
-                this.sellBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y + 170, 110, 50, "#88888888")
+                this.buyBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y + 110, 110, 30, "#88888888")
+                this.sellBombs = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y + 145, 110, 30, "#88888888")
+                this.buySlot = new RectangleR(this.wepsto[0].body.x - 120, this.wepsto[0].body.y + 180, 110, 30, "#88888888")
 
                 if (this.tab == 1) {
                     this.cargo.x = ((vessel.upgradeMenu.window.x + 400) + ((100 * 0) % 500)) - 50
@@ -6765,12 +6766,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (stars.stars[vessel.star].shop == 1) {
                     this.buyBombs.draw()
                     this.sellBombs.draw()
+                    if(vessel.weapons.length < 10){
+                    this.buySlot.draw()
+                    }
                     canvas_context.fillStyle = "white"
-                    canvas_context.font = "15px comic sans ms"
-                    canvas_context.fillText("5 Scrap", this.buyBombs.x + 30, this.buyBombs.y + 42,)
-                    canvas_context.fillText("Buy Bomb", this.buyBombs.x + 25, this.buyBombs.y + 15)
-                    canvas_context.fillText("Sell Bomb", this.sellBombs.x + 25, this.sellBombs.y + 15)
-                    canvas_context.fillText("1 Scrap", this.sellBombs.x + 30, this.sellBombs.y + 42,)
+                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.fillText("5 Scrap", this.buyBombs.x + 30, this.buyBombs.y + 24)
+                    canvas_context.fillText("Buy Bomb", this.buyBombs.x + 25, this.buyBombs.y + 12)
+                    canvas_context.fillText("Sell Bomb", this.sellBombs.x + 25, this.sellBombs.y + 12)
+                    canvas_context.fillText("1 Scrap", this.sellBombs.x + 30, this.sellBombs.y + 24)
+
+                    if(vessel.weapons.length < 10){
+                    canvas_context.fillText("Buy Weapon ", this.buySlot.x + 15, this.buySlot.y + 12)
+                    canvas_context.fillText("Slot 500 Scrap", this.buySlot.x + 10, this.buySlot.y + 24)
+                    }
                     this.cargo.draw()
                     canvas_context.fillStyle = "white"
                     canvas_context.font = "15px comic sans ms"
@@ -6946,7 +6955,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         vessel.scrap += 1
                     }
                 }
-
+                if (this.buySlot.isPointInside(point)) {
+                    if (vessel.scrap >= 500) {
+                        if(vessel.weapons.length < 10){
+                            vessel.weapons.push(new Weapon(-1))
+                            vessel.scrap -= 500
+                        }
+                    }
+                }
+                
 
 
                 for (let k = 0; k < vessel.weapons.length; k++) {
@@ -8637,7 +8654,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.type = type
             // zz++
             this.level = level
-            this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
+            this.loot = Math.floor((Math.floor(((Math.sqrt(this.level*2)*3.33)+(this.level*.1)+1.4))*.5) + (Math.floor(((Math.sqrt(this.level*2)*3.33)+(this.level*.1)+1.4))*.5*Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
@@ -10621,7 +10638,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
-                    this.loot = Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
+                    this.loot = Math.floor((Math.floor(((Math.sqrt(this.level*2)*3.33)+(this.level*.1)+1.4))*.5) + (Math.floor(((Math.sqrt(this.level*2)*3.33)+(this.level*.1)+1.4))*.5*Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                     vessel.scrap += this.loot
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
@@ -10641,7 +10658,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.min((this.level + 33) / 300, .7)) {
+                    if (this.crewflag < Math.min((this.level + 33) / 300, .125)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -10659,7 +10676,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     let index = -1
-                    if (this.wegflag < Math.min((this.level + 15) / 300, .7)) {
+                    if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             if (vessel.weapons[t].real != 1) {
                                 index = t
@@ -10703,11 +10720,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < Math.min((this.level + 33) / 300, .7) && vessel.guys.length < 9) {
+                if (this.crewflag < Math.min((this.level + 33) / 300, .125) && vessel.guys.length < 9) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
 
-                if (this.wegflag < Math.min((this.level + 15) / 300, .7)) {
+                if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
                     canvas_context.fillText("+1 Weapon!", 720, 280)
                 }
                 if (this.bombflag < .3) {
@@ -11192,6 +11209,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     dim.h = 68
                     ////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
+                    if(rect.width+rect.x > 1280){
+                        rect.x+= 1280-(rect.width+rect.x)
+                    }
                     rect.draw()
                     canvas_context.fillStyle = "white"
                     let py = TIP_engine.y + 5
@@ -11552,10 +11572,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                 dim.h = 44
                 ////////////////////////////////////////////console.log(dim)
-                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
+                let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
-                let py = TIP_engine.y + 5
+                let py = TIP_engine.y - (dim.h + 5)
                 canvas_context.fillText(this.text1, rect.x + 10, py)
                 py += 12
                 canvas_context.fillText(this.text2, rect.x + 10, py)
