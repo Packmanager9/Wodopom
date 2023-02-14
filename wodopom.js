@@ -3117,7 +3117,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.repair += 5
                 this.damage = 5
                 this.stretch = 1
-                this.tiles = [this.tile, this.tile, this.tile, this.tile, this.tile, this.tile, this.tile, this.tile, this.tile, this.tile]
+                this.tiles = [this.tile, this.tile, this.tile, this.tile, this.tile, this.tile]
                 this.skills += 'Stretch++'
                 this.names = ["Gumnut"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
@@ -3513,28 +3513,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     } else {
-
-                        for (let c = 0; c < enemy.guys.length; c++) {
-                            if (enemy.guys[c].stretch == 1) {
-                                // if (this != enemy.guys[c]) {
-                                if (enemy.guys[c].bodies) {
-                                    for (let b = 0; b < enemy.guys[c].bodies.length; b++) {
-                                        let link = new LineOP(this.bodies[t], enemy.guys[c].bodies[b])
-                                        let ang = link.angle()
-                                        let j = 0
-                                        while (this.bodies[t].doesPerimeterTouch(enemy.guys[c].bodies[b])) {
-                                            j++
-                                            if (j > 1000) {
-                                                break
+                        if(enemy.guys){
+                            for (let c = 0; c < enemy.guys.length; c++) {
+                                if (enemy.guys[c].stretch == 1) {
+                                    // if (this != enemy.guys[c]) {
+                                    if (enemy.guys[c].bodies) {
+                                        for (let b = 0; b < enemy.guys[c].bodies.length; b++) {
+                                            let link = new LineOP(this.bodies[t], enemy.guys[c].bodies[b])
+                                            let ang = link.angle()
+                                            let j = 0
+                                            while (this.bodies[t].doesPerimeterTouch(enemy.guys[c].bodies[b])) {
+                                                j++
+                                                if (j > 1000) {
+                                                    break
+                                                }
+                                                enemy.guys[c].bodies[b].x -= Math.cos(ang) * .1
+                                                enemy.guys[c].bodies[b].y -= Math.sin(ang) * .1
+                                                this.bodies[t].x += Math.cos(ang) * .1
+                                                this.bodies[t].y += Math.sin(ang) * .1
                                             }
-                                            enemy.guys[c].bodies[b].x -= Math.cos(ang) * .1
-                                            enemy.guys[c].bodies[b].y -= Math.sin(ang) * .1
-                                            this.bodies[t].x += Math.cos(ang) * .1
-                                            this.bodies[t].y += Math.sin(ang) * .1
                                         }
                                     }
+                                    // }
                                 }
-                                // }
                             }
                         }
                     }
