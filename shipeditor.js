@@ -4252,7 +4252,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // ////////////////////console.log(baseShipTiles)
                     let keys = Object.keys(ship2[t][k])
                     for (let f = 0; f < keys.length; f++) {
-                        tile[keys[f]] = ship2[t][k][keys[f]]
+                        // tile[keys[f]] = ship2[t][k][keys[f]]
                     }
                     ////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {

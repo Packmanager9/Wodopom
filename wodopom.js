@@ -2,6 +2,7 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 
+    let stars
     let right = 0
     // let pomaoimg = new Image()
     // pomaoimg.src = 'rcpomao.png'
@@ -1330,6 +1331,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
         window.addEventListener('pointerdown', e => {
+            if(mode ==1){
+
+            }else{
+                if (keysPressed['c']) {
+                    if (stars.collapsed != 1) {
+                        stars.collapsed = 1
+                        for (let t = 0; t < stars.stars.length; t++) {
+                            stars.stars[t].collapse()
+                        }
+                    }
+                    return
+                }
+                if (keysPressed['e']) {
+                    if (stars.collapsed == 1) {
+                        stars.collapsed = 0
+                        for (let t = 0; t < stars.stars.length; t++) {
+                            stars.stars[t].expand()
+                        }
+                    }
+                    return
+                }
+            }
+           
             if (start == 0) {
                 if (tut == -1) {
 
@@ -1339,7 +1363,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         return
                     } else {
                     }
-                    
+
                     if (blobButton.isPointInside(TIP_engine)) {
                         vessel = new Ship(8)
                         start = 1
@@ -1380,14 +1404,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         return
                     } else {
                     }
+
+                    if (combButton.isPointInside(TIP_engine)) {
+                        vessel = new Ship(9)
+                        start = 1
+                        return
+                    } else {
+                    }
+
+
+
+
                     if (fireButton.isPointInside(TIP_engine)) {
                         vessel = new Ship(3)
                         start = 1
                         return
                     } else {
                     }
-                    
-                    
+
+
                     if (modeButton.isPointInside(TIP_engine)) {
                         mode *= -1
                         stars = new Stars()
@@ -1489,29 +1524,56 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (vessel.upgradeMenu.open == 1 && start == 2) {
 
+                if(mode == 1){
 
-                if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
-                    if (vessel.scrap >= 5) {
-                        if (vessel.hull <= 295) {
-                            if (enemy.guys) {
-                                let c = 0
-                                for (let t = 0; t < enemy.guys.length; t++) {
-                                    if (enemy.guys[t].hostile == 1) {
-                                        c++
+                    if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
+                        if (vessel.scrap >= 5) {
+                            if (vessel.hull <= 295) {
+                                if (enemy.guys) {
+                                    let c = 0
+                                    for (let t = 0; t < enemy.guys.length; t++) {
+                                        if (enemy.guys[t].hostile == 1) {
+                                            c++
+                                        }
                                     }
-                                }
-                                if (enemy.guys.length == 0 || c == enemy.guys.length) {
+                                    if (enemy.guys.length == 0 || c == enemy.guys.length) {
+                                        vessel.hull += 5
+                                        vessel.scrap -= 5
+                                    }
+                                } else if (enemy.hull <= 0) {
                                     vessel.hull += 5
                                     vessel.scrap -= 5
                                 }
-                            } else if (enemy.hull <= 0) {
-                                vessel.hull += 5
-                                vessel.scrap -= 5
                             }
                         }
                     }
+                    return
+                }else{
+                    if(vessel.star == 0){
+                        if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
+                            if (vessel.scrap >= 5) {
+                                if (vessel.hull <= 295) {
+                                    if (enemy.guys) {
+                                        let c = 0
+                                        for (let t = 0; t < enemy.guys.length; t++) {
+                                            if (enemy.guys[t].hostile == 1) {
+                                                c++
+                                            }
+                                        }
+                                        if (enemy.guys.length == 0 || c == enemy.guys.length) {
+                                            vessel.hull += 5
+                                            vessel.scrap -= 5
+                                        }
+                                    } else if (enemy.hull <= 0) {
+                                        vessel.hull += 5
+                                        vessel.scrap -= 5
+                                    }
+                                }
+                            }
+                        }
+                        return
+                    }
                 }
-                return
             }
             // ////////////////////////////////////////////////////console.log(vessel.energy.upgradeMenu)
 
@@ -2530,22 +2592,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.special == 1) {
                 canvas_context.drawImage(teleportersysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
             }
-            if(this.helm == 1 && this.engine == 1){
+            if (this.helm == 1 && this.engine == 1) {
 
                 if (this.engine == 1) {
-                    canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz-5, this.y + subz-5, this.width - subx, this.height - subx)
+                    canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
                 }
                 if (this.helm == 1) {
-                    canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz+5, this.y + subz+5, this.width - subx, this.height - subx)
+                    canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
                 }
-            }else{
+            } else {
 
-            if (this.engine == 1) {
-                canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
-            }
-            if (this.helm == 1) {
-                canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
-            }
+                if (this.engine == 1) {
+                    canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
+                }
+                if (this.helm == 1) {
+                    canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
+                }
             }
 
             if (this.walkable == false) {
@@ -3048,6 +3110,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     shipimage8.src = "ship9.png"
     let shipimage9 = new Image()
     shipimage9.src = "ship10.png"
+    let shipimage10 = new Image()
+    shipimage10.src = "ship11.png"
 
     let shipimage3 = new Image()
     shipimage3.src = "ship4.png"
@@ -3150,6 +3214,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 8) {
+                while (this.type == 11) {
+                    this.type = Math.floor(Math.random() * 20)
+                }
+            }
+            if (vessel.type == 9) {
                 while (this.type == 11) {
                     this.type = Math.floor(Math.random() * 20)
                 }
@@ -4398,12 +4467,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.sto = 0
             this.bars = []
 
-            if(v == 8){
+            if (v == 8) {
 
                 if (this.type == 0) {
                     this.max = 0
                     this.sto = 0
-                    this.demand = 0 
+                    this.demand = 0
                 }
                 if (this.type == 1) {
                     this.demand = 2
@@ -4442,7 +4511,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.max = 0
                 }
 
-            }else  if (v == 0 || v == 1 || v == 2 || v == 4 || v == 5 || v == 6 || v == 7) { //vessel.type ==
+            } else if (v == 0 || v == 1 || v == 2 || v == 4 || v == 5 || v == 6 || v == 7 || v == 9) { //vessel.type ==
 
                 if (this.type == 0) {
                     this.max = 1
@@ -4680,8 +4749,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.puncture = 0
                 this.fireChance = 0
                 this.sap = 0
-                this.buy = 50
+                if(mode == 1){
+
+                    this.buy = 50
+                    this.sell = 50
+                }else{
+
+                this.buy = 100
                 this.sell = 50
+                }
             } else {
                 this.firing = -1
                 this.crewType = -1
@@ -4769,7 +4845,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name1 = "Medium"
                     this.name2 = "Bomb"
                     this.max = 1250
-                    this.damage = 130
+                    this.damage = 150
                     this.bomb = 1
                     this.real = 1
                     this.fireChance = 30
@@ -4780,7 +4856,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.name1 = "Big"
                     this.name2 = "Bomb"
                     this.max = 1500
-                    this.damage = 180
+                    this.damage = 210
                     this.bomb = 1
                     this.real = 1
                     this.crew = 1.5
@@ -5083,6 +5159,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.type = 16
                 }
                 // this.fireChance = 0
+                if(mode == 1){
+
+                }else{
+                    this.buy*=2
+                }
             }
         }
         sold() {
@@ -7154,6 +7235,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys) {
                     if (enemy.guys.length == 0 || c == enemy.guys.length) {
 
+                        if(mode == 1){
+
                         this.repairButton.color = "#00FF0044"
                         this.repairButton.draw()
                         canvas_context.fillStyle = "white"
@@ -7162,6 +7245,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.font = "12px comic sans ms"
                         canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
 
+                        }else{
+
+                    if(vessel.star == 0){
+
+                        this.repairButton.color = "#00FF0044"
+                        this.repairButton.draw()
+                        canvas_context.fillStyle = "white"
+                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25,)
+                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40,)
+                    }
+                        }
                     } else if (enemy.hull <= 0) {
 
                         this.repairButton.color = "#00FF0044"
@@ -7694,10 +7790,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 8) {
-                vverts = [6,7]
+                vverts = [6, 7]
                 if (vessel.doors.includes(this)) {
-                    this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x 
-                    this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y 
+                    this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y
+                    // //console.log("s")
+                }
+            }
+            if (vessel.type == 9) {
+                vverts = [7, 8, 9, 10, 11, 12, 13, 14]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = ship10doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship10doors[vessel.doors.indexOf(this)].body.y
                     // //console.log("s")
                 }
             }
@@ -7919,8 +8023,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 let drop = [1, 2]
                 let up = [0, 3]
                 if (vessel.doors.includes(this)) {
-                    this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x 
-                    this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y 
+                    this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y
+                }
+            }
+            if (vessel.type == 9) {
+
+                vverts = [0, 1, 2, 3, 4, 5, 6, 7]
+                let drop = [1, 2]
+                let up = [0, 3]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = ship10doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship10doors[vessel.doors.indexOf(this)].body.y
                 }
             }
             if (vverts.includes(vessel.doors.indexOf(this))) {
@@ -8141,6 +8255,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             tile[keys[f]] = ship9[t][k][keys[f]]
                         }
                     }
+                    if (this.type == 9) {
+                        let keys = Object.keys(ship10[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = ship10[t][k][keys[f]]
+                        }
+                    }
                     //////////////////////////////////////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {
                         //////////////////////////////////////////////////////console.log("h")
@@ -8310,11 +8430,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.supratiles[8].left = 1
                 // this.supratiles[1].left = 1
             }
+            if (this.type == 9) {
+                this.supratiles[0].left = 1
+                this.supratiles[2].left = 1
+                this.supratiles[3].left = 1
+                this.supratiles[4].left = 1
+                // this.supratiles[5].left = 1
+                // this.supratiles[6].left = 1
+                // this.supratiles[7].left = 1
+                // this.supratiles[8].left = 1
+                this.supratiles[1].left = 1
+            }
             this.first = 0
 
             this.wepmax = 0
             this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
-            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8) {
+            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9) {
                 this.supratiles.sort((a, b) => a.y > b.y ? 1 : -1)
                 this.supratiles.sort((a, b) => a.x > b.x ? -1 : 1)
 
@@ -8485,6 +8616,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
+            if (this.type == 9) {
+                for (let t = 0; t < ship10doors.length; t++) {
+                    if (t <= 6) {
+                        this.doors.push(new Door(ship10doors[t].body.x - 40, ship10doors[t].body.y + 10))
+                    } else {
+                        this.doors.push(new Airlock(ship10doors[t].body.x - 40, ship10doors[t].body.y + 10))
+                    }
+                }
+            }
             //console.log(ship2doors)
             //console.log(this.doors)
             this.upgradeMenu = new UpgradeMenu(this.type)
@@ -8590,19 +8730,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         draw() {
+            if(this.star == 0){
+                if(stars){
+                    if(stars.stars){
+                        vessel.web = [stars.stars[0].body]
+                    }
+                }
+            }
 
-            if(mode == 1){
+            if (mode == 1) {
 
-            }else{
-                if(start == 1){
-                    for(let t = 0;t<this.web.length-1;t++){
-                        let art = t/this.web.length
-                        let link = new LineOP(this.web[t], this.web[t+1], `rgb(${255-(art*255)}, ${art*255}, ${128})`, 4)
+            } else {
+                if (start == 1) {
+                    for (let t = 0; t < this.web.length - 1; t++) {
+                        let art = t / this.web.length
+                        let link = new LineOP(this.web[t], this.web[t + 1], `rgb(${255 - (art * 255)}, ${art * 255}, ${128})`, 4)
                         link.draw()
                     }
                     let art = 1
-                    let link = new LineOP(this.web[this.web.length-1], stars.stars[this.star].body, `rgb(${255-(art*255)}, ${art*255}, ${128})`, 4)
+                    let link = new LineOP(this.web[this.web.length - 1], stars.stars[this.star].body, `rgb(${255 - (art * 255)}, ${art * 255}, ${128})`, 4)
                     link.draw()
+
+
+                if(mode == 1){
+
+                }else{
+                    if(this.first == 1){
+                        if(stars){
+                            this.starLink = new LineOP(stars.stars[this.star].body, stars.stars[0].body, "yellow", 1)
+                            this.starLink.draw()
+                        }
+                    }
+                }
+
+
                 }
             }
 
@@ -8669,8 +8830,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 8) {
                     canvas_context.drawImage(shipimage9, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
 
+                } else if (this.type == 9) {
+                    canvas_context.drawImage(shipimage10, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
+
                 }
-                
+
                 // //////////////console.log("hif")
             } else {
 
@@ -8759,8 +8923,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.guys = [new Guy(tiles[20], 18), new Guy(tiles[30], 18), new Guy(tiles[31], 18)]
                     } else if (this.type == 7) {
                         this.guys = [new Guy(tiles[4], 16), new Guy(tiles[26], 6), new Guy(tiles[37], 6), new Guy(tiles[45], 16)]
-                    }  else if (this.type == 8) {
+                    } else if (this.type == 8) {
                         this.guys = [new Guy(tiles[13], 2), new Guy(tiles[26], 2), new Guy(tiles[32], 2)]
+                    } else if (this.type == 9) {
+                        this.guys = [new Guy(tiles[0], 7), new Guy(tiles[1], 7), new Guy(tiles[3], 7)]
                     } else {
                         this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
                     }
@@ -8873,6 +9039,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.weapons.push(wep4)
                         this.weapons.push(wep5)
                     }
+                    if (this.type == 9) {
+                        let wep1 = new Weapon(1)
+                        let wep2 = new Weapon(6)
+                        let wep3 = new Weapon(-1)
+                        let wep4 = new Weapon(-1)
+                        // let wep5 = new Weapon(-1)
+                        this.weapons.push(wep1)
+                        this.weapons.push(wep2)
+                        this.weapons.push(wep3)
+                        this.scrap = 55
+                        this.bombs = 32
+                        this.weapons.push(wep4)
+                        // this.weapons.push(wep5)
+                    }
 
 
                     // wep2.name1 = "Basic"
@@ -8977,8 +9157,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 vessel.guys[w].skillslist[2] += .000003
                             }
                         }
-                    } 
-                     if (this.guys[t].tile.helm == 1) {
+                    }
+                    if (this.guys[t].tile.helm == 1) {
                         this.boosts[3] += (this.guys[t].stats[3] * this.guys[t].skillslist[3] * Math.min(this.guys[t].helmPower + (this.UI.systems[3].sto + this.UI.systems[3].fed), this.guys[t].helmPower + this.UI.systems[3].max))
                         this.UI.systems[3].fed += 0 //this.guys[t].energy
                         for (let w = 0; w < vessel.guys.length; w++) {
@@ -8986,8 +9166,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 vessel.guys[w].skillslist[3] += .000003
                             }
                         }
-                    } 
-                     if (this.guys[t].tile.oxygen == 1) {
+                    }
+                    if (this.guys[t].tile.oxygen == 1) {
                         this.boosts[4] += (this.guys[t].stats[4] * this.guys[t].skillslist[4] * Math.min((this.UI.systems[4].sto + this.UI.systems[4].fed), this.UI.systems[4].max))
                         this.UI.systems[4].fed += 0 //this.guys[t].energy
 
@@ -9000,8 +9180,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
 
 
-                    } 
-                     if (this.guys[t].tile.security == 1) {
+                    }
+                    if (this.guys[t].tile.security == 1) {
                         this.boosts[5] += (this.guys[t].stats[5] * this.guys[t].skillslist[5] * Math.min((this.UI.systems[5].sto + this.UI.systems[5].fed), this.UI.systems[5].max))
                         this.UI.systems[5].fed += 0 //this.guys[t].energy
 
@@ -9012,8 +9192,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
 
 
-                    } 
-                     if (this.guys[t].tile.engine == 1) {
+                    }
+                    if (this.guys[t].tile.engine == 1) {
                         this.boosts[6] += (this.guys[t].stats[6] * this.guys[t].skillslist[6] * Math.min((this.UI.systems[6].sto + this.UI.systems[6].fed), this.UI.systems[6].max))
                         this.UI.systems[6].fed += 0 //this.guys[t].energy
                         for (let w = 0; w < vessel.guys.length; w++) {
@@ -9029,8 +9209,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 vessel.guys[w].skillslist[7] += .00003
                             }
                         }
-                    } 
-                     if (this.guys[t].tile.empty == 1) {
+                    }
+                    if (this.guys[t].tile.empty == 1) {
                         this.boosts[8] += (this.guys[t].stats[8] * this.guys[t].skillslist[8] * Math.min((this.UI.systems[8].sto + this.UI.systems[8].fed), this.UI.systems[8].max))
                         this.UI.systems[8].fed += 0 //this.guys[t].energy
                         for (let w = 0; w < vessel.guys.length; w++) {
@@ -9656,8 +9836,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.now = Date.now()
             this.type = type
             // zz++
-            this.level = level
-            this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+            if (mode == 1) {
+                this.level = level
+            } else {
+                let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
+                this.level = Math.floor(link.hypotenuse() / 50)
+            }
+            if (mode == 1) {
+                this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+            } else {
+                let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
+                this.loot = Math.floor(link.hypotenuse() / 120)+1
+            }
             this.ondeath = 0
             this.pulse = 0
             this.UI = new ShipUI(level)
@@ -9672,7 +9862,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             this.warn = 0
             this.scrap = 35
-            this.bombs = 6 + Math.floor(this.level / 3) //5    /2
+            if (this.mode == 1) {
+                this.bombs = 6 + Math.floor(this.level / 3) //5    /2
+            } else {
+                this.bombs = 4 + Math.floor(this.level / 4) //5    /2
+            }
             this.fuel = 10
             this.shield = new Shields()
             this.shield.state = this.UI.systems[2].max
@@ -11693,7 +11887,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 if (typeof this.spread == "undefined") {
                     this.spread = 0
-                    this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
+
+                    if (mode == 1) {
+                        this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+                    } else {
+                        let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
+                        this.loot = Math.floor(link.hypotenuse() / 120)+1
+                    }
+                    // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                     vessel.scrap += this.loot
                     this.wegflag = Math.random()
                     this.crewflag = Math.random()
@@ -11713,7 +11914,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.fuelflag < .5) {
                         vessel.fuel += 3
                     }
-                    if (this.crewflag < Math.min((this.level + 33) / 300, .125)) {
+                    if(mode == 1){
+
+                        if (this.crewflag < Math.min((this.level + 33) / 300, .125)) {
+                            if (vessel.guys.length < 9) {
+                                let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
+                                let j = 0
+                                while (!tile.walkable) {
+                                    j++
+                                    if (j > 100) {
+                                        break
+                                    }
+                                    tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
+                                }
+                                let guy = new Guy(tile)
+                                guy.draw()
+                                vessel.guys.push(guy)
+                            }
+                        }
+                    }else{
+
+                    if (this.crewflag < Math.min((this.level + 33) / 1200, .05)) {
                         if (vessel.guys.length < 9) {
                             let tile = vessel.blocks[Math.floor(Math.random() * vessel.blocks.length)][Math.floor(Math.random() * vessel.blocks.length)]
                             let j = 0
@@ -11729,9 +11950,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             vessel.guys.push(guy)
                         }
                     }
+                    }
+
+                    if(mode == 1){
+                        let index = -1
+                        if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
+                            for (let t = 0; t < vessel.weapons.length; t++) {
+                                if (vessel.weapons[t].real != 1) {
+                                    index = t
+                                    break
+                                }
+                            }
+                            if (index > -1) {
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                            } else {
+                                // this.wegflag = 1
+    
+                                //new 
+                                for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+                                    if (vessel.upgradeMenu.wepsto[t].real != 1) {
+                                        index = t
+                                        break
+                                    }
+                                }
+    
+                                if (index > -1) {
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                                } else {
+                                    this.wegflag = 1
+                                }
+    
+                            }
+                        }
+                    }else{
 
                     let index = -1
-                    if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
+                    if (this.wegflag < Math.min((this.level + 15) / 1000, .05)) {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             if (vessel.weapons[t].real != 1) {
                                 index = t
@@ -11759,6 +12013,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                         }
                     }
+                    }
 
 
 
@@ -11775,12 +12030,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.fillText('+' + this.loot + " Scrap!", 720, 200)
                 }
-                if (this.crewflag < Math.min((this.level + 33) / 300, .125) && vessel.guys.length < 9) {
+                if(mode == 1){
+                    if (this.crewflag < Math.min((this.level + 33) / 300, .125) && vessel.guys.length < 9) {
+                        canvas_context.fillText("+1 Crew!", 720, 240)
+                    }
+    
+                    if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
+                        canvas_context.fillText("+1 Weapon!", 720, 280)
+                    }
+                }else{
+
+                    if (this.crewflag < Math.min((this.level + 33) / 1200, .05)) {
                     canvas_context.fillText("+1 Crew!", 720, 240)
                 }
-
-                if (this.wegflag < Math.min((this.level + 15) / 500, .125)) {
+                1
+                if (this.wegflag < Math.min((this.level + 15) / 1000, .05)) {
                     canvas_context.fillText("+1 Weapon!", 720, 280)
+                }
                 }
                 if (this.bombflag < .3) {
                     canvas_context.fillText((this.bombs + 1) + " Bombs!", 720, 320)
@@ -11815,18 +12081,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
     class Star {
-        constructor(x, y) {
+        constructor(x, y, shop = 0) {
             this.name = getRandomColor() + " System"
-            if (Math.random() < .1) {
-                this.shop = 1
-                this.name = getRandomColor() + " Emporium"
-            }
             if(mode == 1){
-                this.body = new Circle(x * 20,( y)+20, 50, "white")
-                this.spot = new Polygon(x * 20, (( y)+20), 6, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+                if (Math.random() < .1 && shop == 0) {
+                    this.shop = 1
+                    this.name = getRandomColor() + " Emporium"
+                }
             }else{
-                this.body = new Circle(x * 20,( y-360)*20, 50, "white")
-                this.spot = new Polygon(x * 20, (( y-360)*20), 6, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+                if (Math.random() < .05 || shop == 1) {
+                    this.shop = 1
+                    this.name = getRandomColor() + " Emporium"
+                }
+            }
+            if (mode == 1) {
+                this.body = new Circle(x * 20, (y) + 20, 50, "white")
+                this.spot = new Polygon(x * 20, ((y) + 20), 6, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+            } else {
+                this.body = new Circle(x * 20, (y - 360) * 20, 50, "white")
+                this.spot = new Polygon(x * 20, ((y - 360) * 20), 6, getRandomLightColor(), 4 + (Math.random() * 10), (Math.random() * 2) + .2, (Math.random() * 2) + .2)
+                this.link = new LineOP(this.body, this.body)
             }
             this.weapons = []
             if (Math.random() < .5) {
@@ -11873,21 +12147,80 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
         }
+        expand() {
+            this.body.x -= 640
+            this.body.y -= 360
+            this.body.x *= 25
+            this.body.y *= 25
+            this.body.x += 640
+            this.body.y += 360
+
+
+            this.spot.body.x -= 640
+            this.spot.body.y -= 360
+            this.spot.body.x *= 25
+            this.spot.body.y *= 25
+            this.spot.body.x += 640
+            this.spot.body.y += 360
+            this.spot.size *= 5
+
+        }
+        collapse() {
+            this.body.x -= 640
+            this.body.y -= 360
+            this.body.x *= .05
+            this.body.y *= .05
+            this.body.x += 640
+            this.body.y += 360
+
+            this.spot.body.x -= 640
+            this.spot.body.y -= 360
+            this.spot.body.x *= .05
+            this.spot.body.y *= .05
+            this.spot.body.x += 640
+            this.spot.body.y += 360
+            this.spot.size *= .2
+        }
         draw() {
+            if (mode == 1) {
+
+            } else {
+                this.link.target = stars.stars[vessel.star].body
+                if (this.link.hypotenuse() > 1280) {
+                    return
+                }
+            }
             // this.body.draw()
             // control(this.spot, 10)
-            if(mode == 1){
-            if (this.body.x < 640) {
-                return false
+            if (mode == 1) {
+                if (this.body.x < 640) {
+                    return false
+                }
             }
-        }
-        if(mode == 1){
-            if (this.spot.body.x < 1280 && this.spot.body.x > 0) {
-                this.spot.draw()
+            if (mode == 1) {
+                if (this.spot.body.x < 1280 && this.spot.body.x > 0) {
+                    if (stars.collapsed == 1) {
+                        this.body.radius = 2
+                        this.body.draw()
+                    } else {
+                        this.spot.draw()
+                        this.body.radius = 30
+                    }
+                }
+            } else {
+                if (stars.collapsed == 1) {
+
+                    canvas_context.fillStyle = this.spot.color
+                    canvas_context.fillRect(this.body.x - 2, this.body.y - 2, 4, 4)
+
+
+                    this.body.radius = 4
+                    // this.body.draw()
+                } else {
+                    this.spot.draw()
+                    this.body.radius = 30
+                }
             }
-        }else{
-            this.spot.draw()
-        }
             if (stars.to == stars.stars.indexOf(this)) {
 
                 if (stars.to != vessel.star) {
@@ -11912,10 +12245,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         check(point) {
-            if(mode == 1){
-            if (this.body.x < 640) {
-                return false
-            }
+            if (mode == 1) {
+                if (this.body.x < 640) {
+                    return false
+                }
             }
             if (this.body.isPointInside(point)) {
                 vessel.star = stars.stars.indexOf(this)
@@ -11928,8 +12261,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < stars.stars.length; t++) {
                     stars.stars[t].body.x -= subx - 640
                     stars.stars[t].spot.body.x -= subx - 640
-                    if(mode == 1){
-                    }else{
+                    if (mode == 1) {
+                    } else {
                         stars.stars[t].body.y -= suby - 360
                         stars.stars[t].spot.body.y -= suby - 360
 
@@ -11952,12 +12285,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
     class Stars {
         constructor() {
             this.to = 0
-            if(mode == 1){
+            if (mode == 1) {
 
 
-                this.stars = [new Star(130 / 4, 360)]
+                this.stars = [new Star(130 / 4, 360, 1)]
+                if(mode == 1){
+
+                }else{
+                    this.stars[0].shop = 1
+                }
                 for (let t = 0; this.stars.length < 580; t++) {
-                
+
                     let star = new Star(((130 / 4) + (Math.random() * (canvas.width))), Math.random() * (canvas.height - 40))
                     let wet = 1
                     for (let k = 0; k < this.stars.length; k++) {
@@ -11972,12 +12310,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 this.flag = 0
 
-                
-            }else{
-                this.stars = [new Star(130 / 4, 378)]
+
+            } else {
+                this.stars = [new Star(130 / 4, 378,1)]
+
+                if(mode == 1){
+
+                }else{
+                    this.stars[0].shop = 1
+                }
                 for (let t = 0; this.stars.length < 1280; t++) {
-                
-                    let star = new Star(((130 / 4) + (Math.random() * (canvas.width)))*(Math.random()-.5), Math.random() * (canvas.height - 40))
+
+                    let star = new Star(((130 / 4) + (Math.random() * (canvas.width))) * (Math.random() - .5), ((Math.random() * (1280)) * (Math.random() - .5)) + 360)
                     let wet = 1
                     for (let k = 0; k < this.stars.length; k++) {
                         if (star.body.doesPerimeterTouch(this.stars[k].body)) {
@@ -11994,11 +12338,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         draw() {
             this.link = new LineOP(this.stars[vessel.star].body, this.stars[this.to].body, "red", 2)
-            if(mode == 1){
+            if (mode == 1) {
 
                 if (this.link.hypotenuse() < 420) {
                     this.link.color = "#00FF00"
-                    this.flag = 1
+                    if (stars.collapsed == 1) {
+                        if (this.link.hypotenuse() < 7) {
+                            this.link.color = "#00FF00"
+                            this.flag = 1
+                        } else {
+                            this.link.color = "#ff0000"
+                            this.flag = 0
+                        }
+                    } else {
+                        this.flag = 1
+                    }
                     if (this.to == vessel.star) {
                         this.flag = 0
                         this.link.color = "#FF0000"
@@ -12007,39 +12361,49 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.flag = 0
                     this.link.color = "#FF0000"
                 }
-                if(mode == 1){
-                if (this.link.object.x < this.link.target.x) {
-                    this.link.draw()
-                }
-                }else{
+                if (mode == 1) {
+                    if (this.link.object.x < this.link.target.x) {
+                        this.link.draw()
+                    }
+                } else {
                     this.link.draw()
                 }
                 for (let t = 0; t < this.stars.length; t++) {
                     this.stars[t].draw()
                 }
-            }else{
+            } else {
 
-            if (this.link.hypotenuse() < 700) {
-                this.link.color = "#00FF00"
-                this.flag = 1
-                if (this.to == vessel.star) {
+                if (this.link.hypotenuse() < 700) {
+                    this.link.color = "#00FF00"
+                    if (stars.collapsed == 1) {
+                        if (this.link.hypotenuse() < 35) {
+                            this.link.color = "#00FF00"
+                            this.flag = 1
+                        } else {
+                            this.link.color = "#ff0000"
+                            this.flag = 0
+                        }
+                    } else {
+                        this.flag = 1
+                    }
+                    if (this.to == vessel.star) {
+                        this.flag = 0
+                        this.link.color = "#FF0000"
+                    }
+                } else {
                     this.flag = 0
                     this.link.color = "#FF0000"
                 }
-            } else {
-                this.flag = 0
-                this.link.color = "#FF0000"
-            }
-            if(mode == 1){
-            if (this.link.object.x < this.link.target.x) {
-                this.link.draw()
-            }
-            }else{
-                this.link.draw()
-            }
-            for (let t = 0; t < this.stars.length; t++) {
-                this.stars[t].draw()
-            }
+                if (mode == 1) {
+                    if (this.link.object.x < this.link.target.x) {
+                        this.link.draw()
+                    }
+                } else {
+                    this.link.draw()
+                }
+                for (let t = 0; t < this.stars.length; t++) {
+                    this.stars[t].draw()
+                }
             }
         }
         check(point) {
@@ -12068,7 +12432,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let enemy = new EnemyShip(Math.floor(Math.random() * 40), 1)
 
     vessel.draw()
-    let stars = new Stars()
+    stars  = new Stars()
     let starFirst = 0
 
     class Labels {
@@ -13313,6 +13677,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let shieldButton = new RectangleR(900, 550, 200, 50, "#FF000044")
     let fireButton = new RectangleR(900, 500, 200, 50, "#FF000044")
     let fishButton = new RectangleR(900, 450, 150, 50, "#FF000044")
+    let combButton = new RectangleR(1050, 450, 150, 50, "#FF000044")
     let normButton = new RectangleR(900, 400, 200, 50, "#FF000044")
     let numButton = new RectangleR(900, 650, 200, 50, "#FF000044")
     let plantButton = new RectangleR(1100, 650, 150, 50, "#FF000044")
@@ -13430,11 +13795,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 modeButton.draw()
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
-                if(mode == 1){
+                if (mode == 1) {
                     canvas_context.fillText(`Mode: Run!`, modeButton.x + 10, modeButton.y + 30)
                 }
-                if(mode == -1){
+                if (mode == -1) {
                     canvas_context.fillText(`Mode: Explore`, modeButton.x + 10, modeButton.y + 30)
+                    canvas_context.fillText(`In explore mode, use c+click and e+click to collapse and expand the starmap`, modeButton.x + 30, modeButton.y - 180)
                 }
 
                 crabButton.draw()
@@ -13479,6 +13845,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Fish", fishButton.x + 10, fishButton.y + 30)
 
+
+
+
+                combButton.draw()
+                canvas_context.font = "18px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("Play As Hops", combButton.x + 10, combButton.y + 30)
+
                 normButton.draw()
                 canvas_context.font = "18px comic sans ms"
                 canvas_context.fillStyle = "white"
@@ -13492,7 +13866,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
 
 
-            if(starFirst == 0){
+            if (starFirst == 0) {
                 starFirst = 1
 
                 vessel.web = [stars.stars[0].body]
@@ -13504,7 +13878,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // grd.addColorStop(.5, "#88888888");
             grd.addColorStop(1, "#00000000");
             canvas_context.fillStyle = grd;
-            if(mode == 1){
+            if (mode == 1) {
                 canvas_context.fillRect(0, 0, stars.stars[vessel.star].body.x, 720);
             }
 
