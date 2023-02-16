@@ -1253,7 +1253,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
 
         window.addEventListener('contextmenu', e => {
-            e.preventDefault()
+            // e.preventDefault()
             right += 20
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
@@ -1324,9 +1324,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (keysPressed['2']) {
                 //console.log(vessel.doors.length)
                 let door = new Door(TIP_engine.x, TIP_engine.y)
-                enemy.doors.push(door)
-                console.log(JSON.stringify(enemy.doors))
-                return
+                vessel.doors.push(door)
+                console.log(JSON.stringify(vessel.doors))
+                // return
+            }
+            if (keysPressed['3']) {
+                //console.log(vessel.doors.length)
+                let door = new Airlock(TIP_engine.x, TIP_engine.y)
+                vessel.doors.push(door)
+                console.log(JSON.stringify(vessel.doors))
+                // return
             }
 
             for (let t = 0; t < enemy.blocks.length; t++) {
@@ -1389,8 +1396,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            console.log(JSON.stringify(enemy.doors))
-            console.log(JSON.stringify(enemy.blocks))
             // return
             // wad.launch(TIP_engine)
             for (let t = 0; t < vessel.weapons.length; t++) {
@@ -1401,14 +1406,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < vessel.doors.length; t++) {
                 if (right <= 0) {
                     if (vessel.doors[t].check(TIP_engine)) {
-                        return
+                        // return
                     }
                 }
             }
             for (let t = 0; t < enemy.doors.length; t++) {
                 if (right <= 0) {
                     if (enemy.doors[t].check(TIP_engine)) {
-                        return
+                        // return
                     }
                 }
             }
@@ -1423,42 +1428,46 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             // vessel.blocks[t][k].onFire = 1
                         }
                         // //////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
-                        // if (keysPressed['m']) {
-                        //     vessel.blocks[t][k].medbay = 1
-                        //     vessel.blocks[t][k].color = "#00ff0044"
-                        // }
-                        // if (keysPressed['w']) {
-                        //     vessel.blocks[t][k].weapon = 1
-                        //     vessel.blocks[t][k].color = "#ff00FF44"
-                        // }
-                        // if (keysPressed['s']) {
-                        //     vessel.blocks[t][k].shield = 1
-                        //     vessel.blocks[t][k].color = "#00ffff44"
-                        // }
-                        // if (keysPressed['h']) {
-                        //     vessel.blocks[t][k].helm = 1
-                        //     vessel.blocks[t][k].color = "#FFFF0044"
-                        // }
-                        // if (keysPressed['e']) {
-                        //     vessel.blocks[t][k].engine = 1
-                        //     vessel.blocks[t][k].color = "#FFFF0044"
-                        // }
-                        // if (keysPressed['x']) {
-                        //     vessel.blocks[t][k].security = 1
-                        //     vessel.blocks[t][k].color = "#88888844"
-                        // }
-                        // if (keysPressed['o']) {
-                        //     vessel.blocks[t][k].oxygen = 1
-                        //     vessel.blocks[t][k].color = "#0000ff44"
-                        // }
-                        // if (keysPressed['l']) {
-                        //     vessel.blocks[t][k].special = 1
-                        //     vessel.blocks[t][k].color = "#ffffff44"
-                        // }
-                        // if (keysPressed['y']) {
-                        //     vessel.blocks[t][k].empty = 1
-                        //     vessel.blocks[t][k].color = "#00000044"
-                        // }
+                        if (keysPressed['m']) {
+                            vessel.blocks[t][k].medbay = 1
+                            vessel.blocks[t][k].color = "#00ff0044"
+                        }
+                        if (keysPressed['w']) {
+                            vessel.blocks[t][k].weapon = 1
+                            vessel.blocks[t][k].color = "#ff00FF44"
+                        }
+                        if (keysPressed['s']) {
+                            vessel.blocks[t][k].shield = 1
+                            vessel.blocks[t][k].color = "#00ffff44"
+                        }
+                        if (keysPressed['h']) {
+                            vessel.blocks[t][k].helm = 1
+                            vessel.blocks[t][k].color = "#FFFF0044"
+                        }
+                        if (keysPressed['e']) {
+                            vessel.blocks[t][k].engine = 1
+                            vessel.blocks[t][k].color = "#FF880044"
+                        }
+                        if (keysPressed['x']) {
+                            vessel.blocks[t][k].security = 1
+                            vessel.blocks[t][k].color = "#88888844"
+                        }
+                        if (keysPressed['o']) {
+                            vessel.blocks[t][k].oxygen = 1
+                            vessel.blocks[t][k].color = "#0000ff44"
+                        }
+                        if (keysPressed['l']) {
+                            vessel.blocks[t][k].special = 1
+                            vessel.blocks[t][k].color = "#ffffff44"
+                        }
+                        if (keysPressed['y']) {
+                            vessel.blocks[t][k].empty = 1
+                            vessel.blocks[t][k].color = "#00000044"
+                        }
+                        if (keysPressed['k']) {
+                            vessel.blocks[t][k].doorway = 1
+                            vessel.blocks[t][k].color = "#00000088"
+                        }
                         tile = vessel.blocks[t][k]
                         // tile.integrity *= .5
                         let whet = 0
@@ -1474,50 +1483,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 // vessel.guys[g].flagpath = [vessel.guys[g].tile]
                             }
                         }
-                        vessel.guys.sort((a, b) => a.selected > b.selected ? -1 : 1)
-                        if (vessel.guys[0].selected == 1) {
-                            whet = 1
-                        }
-                        if (vessel.guys[0].tile.t != tile.t || vessel.guys[0].tile.k != tile.k) {
-                            if (vessel.guys[0].selected == 1) {
-                                if (vessel.guys[0].cound > 0) {
-                                    vessel.guys[0].turning = 1
-                                    vessel.guys[0].flagpath = astar.search(vessel, vessel.guys[0].tile, tile)
-                                    vessel.guys[0].stogo = tile
-                                    if (vessel.guys[0].flagpath.length > 1) {
-                                        vessel.guys[0].selected = 0
-                                    }
-                                } else {
-                                    vessel.guys[0].path = astar.search(vessel, vessel.guys[0].tile, tile)
-                                    vessel.guys[0].stogo = tile
-                                    if (vessel.guys[0].path.length > 1) {
-                                        vessel.guys[0].selected = 0
-                                    }
-                                }
-                                whet = 1
-                            }
-                        }
-
-                        // if (whet == 0) {
-                        //     if (tile.marked == 1) {
-                        //         if (tile.holed != 1) {
-                        //             tile.holed = 1
-                        //             vessel.hull -= 2
-                        //         } else {
-                        //             tile.holed = 0
-                        //         }
-                        //     }
-                        // }
-
-                        // for (let g = 0; g < vessel.guys.length; g++) {
-                        //     // vessel.guys[g].selected = 0
-                        // }
-                        break
                     }
                 }
                 stars.check(TIP_engine)
             }
 
+            console.log(JSON.stringify(vessel.doors))
+            console.log(JSON.stringify(vessel.blocks))
+
+            canvas_context.clearRect(0, 0, canvas.width, canvas.height)
+
+            for(let t = 0;t<vessel.blocks.length;t++){
+                for(let k = 0;k<vessel.blocks[t].length;k++){
+                    vessel.blocks[t][k].draw()
+                }
+            }
+                for(let k = 0;k<vessel.doors.length;k++){
+                    vessel.doors[k].draw()
+                }
             //////////////////console.log(JSON.stringify(enemy.blocks))
             // example usage: if(object.isPointInside(TIP_engine)){ take action }
         });
@@ -4033,7 +4016,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.open = -1
         }
         draw() {
-            // this.body.draw()
+            this.body.draw()
+            return
             this.count = 0
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
@@ -4136,7 +4120,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.count = 0
         }
         draw() {
-            // this.body.draw()
+            this.body.draw()
+            return
             this.count = 0
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
@@ -4261,13 +4246,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < 16; t++) {
                 let subtiles = []
                 for (let k = 0; k < 16; k++) {
-                    let tile = new Tile((t * 32 * rat), (k * 32 * rat), 32 * rat, 32 * rat, getRandomColor() + '41')
+                    let tile = new Tile((t * 32 * rat), (k * 32 * rat), 32 * rat, 32 * rat, "#ffffff" + '41')
                     tile.t = t
                     tile.k = k
                     // ////////////////////console.log(baseShipTiles)
-                    let keys = Object.keys(baseShipTiles[t][k])
+                    let keys = Object.keys(ship2[t][k])
                     for (let f = 0; f < keys.length; f++) {
-                        tile[keys[f]] = baseShipTiles[t][k][keys[f]]
+                        tile[keys[f]] = ship2[t][k][keys[f]]
                     }
                     ////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {
@@ -4284,7 +4269,49 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (tile.marked == 1) {
                         ////////////////////console.log("w")
+                        
                         tile.walkable = true
+                    }
+
+                    if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
+                        tile.marked = 1
+                        tile.walkable = true
+
+                        if (tile.empty > 0) {
+                            tile.color = "#FFFFFF44"
+                        }
+                        if (tile.medbay > 0) {
+                            tile.color = "#00ff0044"
+                        }
+                        if (tile.oxygen > 0) {
+                            tile.color = "#0000ff44"
+                        }
+                        if (tile.shield > 0) {
+                            tile.color = "#00ffff44"
+                        }
+                        if (tile.weapon > 0) {
+                            tile.color = "#ff00FF44"
+                            // if (this.type == 7) {
+                            //     tile.shield = 1
+                            //     tile.color = "#AA88FF44"
+                            // }
+                        }
+                        if (tile.helm > 0) {
+                            tile.color = "#ffff0044"
+                        }
+                        if (tile.security > 0) {
+                            tile.color = "#88888844"
+                            // if (this.type == 3 || this.type == 6 || this.type == 10) {
+                            //     tile.medbay = 1
+                            //     tile.color = "#88FF8844"
+                            // }
+                        }
+                        if (tile.engine > 0) {
+                            tile.color = "#FFAA0044"
+                        }
+                        if (tile.special > 0) {
+                            tile.color = "#aa00ff44"
+                        }
                     }
                     tile.holed = 0
                     // tile.color = "#00000041"
@@ -4320,14 +4347,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             this.weapons = []
             this.doors = []
-            for (let t = 0; t < doors.length; t++) {
-                if (t < 12) {
-                    this.doors.push(new Door(doors[t].body.x, doors[t].body.y))
-                } else {
-                    this.doors.push(new Airlock(doors[t].body.x, doors[t].body.y))
+            // for (let t = 0; t < doors.length; t++) {
+            //     if (t < 12) {
+            //         this.doors.push(new Door(doors[t].body.x, doors[t].body.y))
+            //     } else {
+            //         this.doors.push(new Airlock(doors[t].body.x, doors[t].body.y))
 
-                }
-            }
+            //     }
+            // }
             this.upgradeMenu = new UpgradeMenu()
             this.menuBattery = new BatteryMenu(9, this.upgradeMenu.levels)
         }
@@ -4472,9 +4499,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
+                    // this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
                     // this.guys = [new Guy(tiles[10]), new Guy(tiles[12]), new Guy(tiles[14]), new Guy(tiles[16]), new Guy(tiles[20]), new Guy(tiles[11]), new Guy(tiles[13]), new Guy(tiles[15]), new Guy(tiles[17]), new Guy(tiles[15]), new Guy(tiles[17])]
                     // this.guys = [new Guy(tiles[0])]
+                    this.guys = []
                     this.first = 1
 
 
@@ -7182,6 +7210,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             canvas_context.drawImage(title, 0, 0)
             return
         } else if (start == 1) {
+            return
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
             var grd = canvas_context.createLinearGradient(0, 0, stars.stars[vessel.star].body.x, 0);
             grd.addColorStop(0, "#888888");
