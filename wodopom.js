@@ -2,6 +2,7 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 
+    let globalRat = 1.5
     let stars
     let right = 0
     // let pomaoimg = new Image()
@@ -16,89 +17,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    function CanvasCaptureToWEBM(canvas, bitrate) {
-        // it uses the same canvas as the rest of the file.
-        // to start a recording call .record() on video_recorder
-        /*
-        for example, 
-        */
-        this.record = Record
-        this.stop = Stop
-        this.download = saveToDownloads
-        let blobCaptures = []
-        let outputFormat = {}
-        let recorder = {}
-        let canvasInput = canvas.captureStream()
-        if (typeof canvasInput == undefined || !canvasInput) {
-            return
-        }
-        const video = document.createElement('video')
-        video.style.display = 'none'
+    // function CanvasCaptureToWEBM(canvas, bitrate) {
+    //     // it uses the same canvas as the rest of the file.
+    //     // to start a recording call .record() on video_recorder
+    //     /*
+    //     for example, 
+    //     */
+    //     this.record = Record
+    //     this.stop = Stop
+    //     this.download = saveToDownloads
+    //     let blobCaptures = []
+    //     let outputFormat = {}
+    //     let recorder = {}
+    //     let canvasInput = canvas.captureStream()
+    //     if (typeof canvasInput == undefined || !canvasInput) {
+    //         return
+    //     }
+    //     const video = document.createElement('video')
+    //     video.style.display = 'none'
 
-        function Record() {
-            let formats = [
-                "video/webm\;codecs=h264",
-                "video/webm\;codecs=vp8",
-                'video/vp8',
-                "video/webm",
-                'video/webm,codecs=vp9',
-                "video/webm\;codecs=daala",
-                "video/mpeg"
-            ];
+    //     function Record() {
+    //         let formats = [
+    //             "video/webm\;codecs=h264",
+    //             "video/webm\;codecs=vp8",
+    //             'video/vp8',
+    //             "video/webm",
+    //             'video/webm,codecs=vp9',
+    //             "video/webm\;codecs=daala",
+    //             "video/mpeg"
+    //         ];
 
-            for (let t = 0; t < formats.length; t++) {
-                if (MediaRecorder.isTypeSupported(formats[t])) {
-                    outputFormat = formats[t]
-                    break
-                }
-            }
-            if (typeof outputFormat != "string") {
-                return
-            } else {
-                let videoSettings = {
-                    mimeType: outputFormat,
-                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-                };
-                blobCaptures = []
-                try {
-                    recorder = new MediaRecorder(canvasInput, videoSettings)
-                } catch (error) {
-                    return;
-                }
-                recorder.onstop = handleStop
-                recorder.ondataavailable = handleAvailableData
-                recorder.start(100)
-            }
-        }
-        function handleAvailableData(event) {
-            if (event.data && event.data.size > 0) {
-                blobCaptures.push(event.data)
-            }
-        }
-        function handleStop() {
-            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-            video.src = window.URL.createObjectURL(superBuffer)
-        }
-        function Stop() {
-            recorder.stop()
-            video.controls = true
-        }
-        function saveToDownloads(input) { // specifying a file name for the output
-            const name = input || 'video_out.webm'
-            const blob = new Blob(blobCaptures, { type: outputFormat })
-            const url = window.URL.createObjectURL(blob)
-            const storageElement = document.createElement('a')
-            storageElement.style.display = 'none'
-            storageElement.href = url
-            storageElement.download = name
-            document.body.appendChild(storageElement)
-            storageElement.click()
-            setTimeout(() => {
-                document.body.removeChild(storageElement)
-                window.URL.revokeObjectURL(url)
-            }, 100)
-        }
-    }
+    //         for (let t = 0; t < formats.length; t++) {
+    //             if (MediaRecorder.isTypeSupported(formats[t])) {
+    //                 outputFormat = formats[t]
+    //                 break
+    //             }
+    //         }
+    //         if (typeof outputFormat != "string") {
+    //             return
+    //         } else {
+    //             let videoSettings = {
+    //                 mimeType: outputFormat,
+    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+    //             };
+    //             blobCaptures = []
+    //             try {
+    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
+    //             } catch (error) {
+    //                 return;
+    //             }
+    //             recorder.onstop = handleStop
+    //             recorder.ondataavailable = handleAvailableData
+    //             recorder.start(100)
+    //         }
+    //     }
+    //     function handleAvailableData(event) {
+    //         if (event.data && event.data.size > 0) {
+    //             blobCaptures.push(event.data)
+    //         }
+    //     }
+    //     function handleStop() {
+    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+    //         video.src = window.URL.createObjectURL(superBuffer)
+    //     }
+    //     function Stop() {
+    //         recorder.stop()
+    //         video.controls = true
+    //     }
+    //     function saveToDownloads(input) { // specifying a file name for the output
+    //         const name = input || 'video_out.webm'
+    //         const blob = new Blob(blobCaptures, { type: outputFormat })
+    //         const url = window.URL.createObjectURL(blob)
+    //         const storageElement = document.createElement('a')
+    //         storageElement.style.display = 'none'
+    //         storageElement.href = url
+    //         storageElement.download = name
+    //         document.body.appendChild(storageElement)
+    //         storageElement.click()
+    //         setTimeout(() => {
+    //             document.body.removeChild(storageElement)
+    //             window.URL.revokeObjectURL(url)
+    //         }, 100)
+    //     }
+    // }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -182,6 +183,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let canvas
     let canvas_context
     let starcanvas_context
+    let shipcanvas_context
     let shake_context
     let keysPressed = {}
     let FLEX_engine
@@ -1296,13 +1298,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         starcanvas_context = starcanvas.getContext('2d');
+        shipcanvas_context = shipcanvas.getContext('2d');
         shake_context = shake.getContext('2d');
 
         canvas.style.background = style
         starcanvas.style.background = style
+        shipcanvas.style.background = style
         window.setInterval(function () {
             main()
         }, 40)
@@ -1319,8 +1323,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine
-            TIP_engine.y = YS_engine
+            TIP_engine.x = XS_engine *.75
+            TIP_engine.y = YS_engine *.75
             TIP_engine.body = TIP_engine
             // wad.launch(TIP_engine)
             for (let t = 0; t < vessel.weapons.length; t++) {
@@ -1423,6 +1427,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
 
+                    if (beanButton.isPointInside(TIP_engine)) {
+                        vessel = new Ship(10)
+                        start = 1
+                        return
+                    } else {
+                    }
+
+
                     if (modeButton.isPointInside(TIP_engine)) {
                         mode *= -1
                         stars = new Stars()
@@ -1448,8 +1460,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine
-            TIP_engine.y = YS_engine
+            TIP_engine.x = XS_engine*.75
+            TIP_engine.y = YS_engine*.75
             TIP_engine.body = TIP_engine
             //////////////////////////////////console.log(TIP_engine)
 
@@ -2011,8 +2023,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine
-            TIP_engine.y = YS_engine
+            TIP_engine.x = XS_engine*.75
+            TIP_engine.y = YS_engine*.75
             TIP_engine.body = TIP_engine
             stars.hover(TIP_engine)
         }
@@ -2216,6 +2228,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
     let starcanvas = document.getElementById('starcanvas') //getting canvas from document
+    let shipcanvas = document.getElementById('shipcanvas') //getting canvas from document
     let shake = document.getElementById('shake') //getting canvas from document
 
 
@@ -3187,6 +3200,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     crabship.src = "crabship.png"
     let crabshipsmall = new Image()
     crabshipsmall.src = "crabshipsmall.png"
+    let beanshipsmall = new Image()
+    beanshipsmall.src = "beanshipsmall.png"
 
     let ximage = new Image()
     ximage.src = "yship.png"
@@ -3431,6 +3446,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.gear.push(new Gear(-1, this))
                     }
 
+                } else  if (vessel.type == 10) {
+                    this.gear = []
+                    for (let t = 0; t < 1; t++) {
+                        this.gear.push(new Gear(0, this))
+                    }
+                    for (let t = 0; t < 5; t++) {
+                        this.gear.push(new Gear(-1, this))
+                    }
+
                 } else {
 
                     this.gear = []
@@ -3480,6 +3504,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 9) {
+                while (this.type == 11) {
+                    this.type = Math.floor(Math.random() * 20)
+                }
+            }
+            if (vessel.type == 10) {
                 while (this.type == 11) {
                     this.type = Math.floor(Math.random() * 20)
                 }
@@ -3823,7 +3852,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (enemy.guys.includes(this)) {
 
                         let hrat = this.health / this.maxhealth
-                        this.healthbox = new Rectangle(1202, ((enemy.guys.indexOf(this)) * 33), 66, 32, "#555555")
+                        this.healthbox = new Rectangle(1850, 5+((enemy.guys.indexOf(this)) * 33), 66, 32, "#555555")
                         if (this.hostile == 1) {
                             this.healthbox.color = "#5555FF"
                         }
@@ -3832,7 +3861,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
 
                         this.healthbox.draw()
-                        this.healthbar = new Rectangle(1234, ((enemy.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
+                        this.healthbar = new Rectangle(1882, 5+((enemy.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
                         this.healthbar.draw()
                         canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
 
@@ -4795,7 +4824,52 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.sto = 0
             this.bars = []
 
-            if (v == 8) {
+            if(v == 10){
+
+
+                if (this.type == 0) {
+                    this.max = 0
+                    this.sto = 0
+                    this.demand = 0
+                }
+                if (this.type == 1) {
+                    this.demand = 2
+                    this.sto = 2
+                    this.max = 3
+                }
+                if (this.type == 2) {
+                    this.demand = 1
+                    this.sto = 1
+                    this.max = 1
+                }
+                if (this.type == 3) {
+                    this.demand = 2
+                    this.sto = 2
+                    this.max = 2
+                }
+                if (this.type == 4) {
+                    this.demand = 1
+                    this.sto = 1
+                    this.max = 1
+                }
+                if (this.type == 5) {
+                    this.demand = 1
+                    this.sto = 1
+                    this.max = 1
+                }
+                if (this.type == 6) {
+                    this.demand = 1
+                    this.sto = 1
+                    this.max = 1
+                }
+                if (this.type == 7) {
+                    this.max = 0
+                }
+                if (this.type == 8) {
+                    this.max = 0
+                }
+
+            }else if (v == 8) {
 
                 if (this.type == 0) {
                     this.max = 0
@@ -5772,7 +5846,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         enemy.guys[t].hit = 0
                                         if (this.mind > 0) {
                                             enemy.guys[t].hostile = 1
-                                            enemy.guys[t].hostileTimer = this.mind * 400
+                                            enemy.guys[t].hostileTimer = this.mind * 250 //400
                                             enemy.guys[t].mindControlled = 1
                                         }
                                     }
@@ -5782,7 +5856,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 enemy.guys[t].hostile = 1
-                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].hostileTimer = this.mind * 250 //400
                                                 enemy.guys[t].mindControlled = 1
                                             }
                                         }
@@ -5886,7 +5960,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         vessel.guys[t].hit = 0
                                         if (this.mind > 0) {
                                             vessel.guys[t].hostile = 1
-                                            vessel.guys[t].hostileTimer = this.mind * 400
+                                            vessel.guys[t].hostileTimer = this.mind * 250 //400
                                             vessel.guys[t].mindControlled = 1
                                         }
                                     }
@@ -5896,7 +5970,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 vessel.guys[t].hostile = 1
-                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].hostileTimer = this.mind * 250 //400
                                                 vessel.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6485,7 +6559,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 vessel.guys[t].hostile = 1
-                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].hostileTimer = this.mind * 250 //400
                                                 vessel.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6515,7 +6589,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 enemy.guys[t].hostile = 1
-                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].hostileTimer = this.mind * 250 //400
                                                 enemy.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6556,7 +6630,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 vessel.guys[t].hostile = 1
-                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].hostileTimer = this.mind * 250 //400
                                                 vessel.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6586,7 +6660,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 enemy.guys[t].hostile = 1
-                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].hostileTimer = this.mind * 250 //400
                                                 enemy.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6626,7 +6700,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 vessel.guys[t].hostile = 1
-                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].hostileTimer = this.mind * 250 //400
                                                 vessel.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6656,7 +6730,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.guys[t].hit = 0
                                             if (this.mind > 0) {
                                                 enemy.guys[t].hostile = 1
-                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].hostileTimer = this.mind * 250 //400
                                                 enemy.guys[t].mindControlled = 1
                                             }
                                         }
@@ -6918,12 +6992,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.beingchecked--
             if (vessel.weapons.includes(this)) {
                 this.body.x = 270 + (100 * vessel.weapons.indexOf(this))
+                this.body.y = 650+360
             } else if (vessel.upgradeMenu.wepsto.includes(this)) {
                 this.body.x = (vessel.upgradeMenu.window.x + 400) + ((100 * vessel.upgradeMenu.wepsto.indexOf(this)) % 500)
-                this.body.y = (vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(vessel.upgradeMenu.wepsto.indexOf(this) / 5))
+                this.body.y =( (vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(vessel.upgradeMenu.wepsto.indexOf(this) / 5)))
             } else {
                 this.body.x = (vessel.upgradeMenu.window.x + 400) + ((100 * stars.stars[vessel.star].weapons.indexOf(this)) % 500)
-                this.body.y = (vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(stars.stars[vessel.star].weapons.indexOf(this) / 5))
+                this.body.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(stars.stars[vessel.star].weapons.indexOf(this) / 5)))
             }
             if (this.selected == 1) {
                 this.body.color = "#666666"
@@ -7351,6 +7426,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.box = box
                 }
             }
+            this.body.y+=360
         }
         draw() {
             this.body.draw()
@@ -7362,7 +7438,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else {
                     this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
                 }
-                let box = new Rectangle(this.body.x + 5 + (t * 25), (this.body.y + this.body.height) - 135, 20, 135, "#999999")
+                let box = new Rectangle((this.body.x + 5 + (t * 25)), ((this.body.y + this.body.height) - 135), 20, 135, "#999999")
                 box.draw()
                 this.slap++
                 if (this.slap > 15) {
@@ -7600,7 +7676,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            this.button = new RectangleR(1, 540, 40, 40, "#444444")
+            this.button = new RectangleR(1, 900, 40, 40, "#444444")
             this.open = -1
             this.window = new RectangleR(200, 200, 910, 250, "#444444")
             this.levels = new MenuUI(this.window)
@@ -7619,7 +7695,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (enemy.hull <= 0) {
                 for (let t = 0; t < enemy.guys.length; t++) {
-                    if (enemy.guys[t].hostile == 1) {
+                    if (enemy.guys[t].hostile == 1 && enemy.guys[t].mindControlled != 1) {
                         // let w = {}
                         // for (let f = 0; f < vessel.blocks.length; f++) {
                         //     for (let k = 0; k < vessel.blocks[f].length; k++) {
@@ -8215,14 +8291,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < this.systems.length; t++) {
                     // this.power += this.systems[t].fed
                 }
-                this.box = new RectangleR(1, 580, 40, 140, "#555555")
+                this.box = new RectangleR(1, 580+360, 40, 140, "#555555")
                 this.box.draw()
                 for (let t = 0; t < this.powersto; t++) {
-                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10))+360, 10, 10, "#dd0000")
                     block.draw()
                 }
                 for (let t = 0; t < this.power; t++) {
-                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#00dd00")
+                    let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10))+360, 10, 10, "#00dd00")
                     block.draw()
                 }
             } else {
@@ -8322,6 +8398,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             this.body.radius = Math.min(this.count * 7, 18)
             let vverts = [12, 13]
+            if (vessel.type == 0) {
+
+                //  vverts = [7,8,9]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = doors[vessel.doors.indexOf(this)].body.y 
+                    // ////console.log("s")
+                }
+            }
             if (vessel.type == 1) {
 
                 //  vverts = [7,8,9]
@@ -8396,6 +8481,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // ////console.log("s")
                 }
             }
+            if (vessel.type == 10) {
+                vverts = [8,9]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = ship11doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship11doors[vessel.doors.indexOf(this)].body.y
+                    // ////console.log("s")
+                }
+            }
+            this.body.x += 200
+            this.body.y += 150
             if (vverts.includes(vessel.doors.indexOf(this))) {
                 if (this.body.color == "#00ff00") {
                     let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8), 4, 4, this.body.color)
@@ -8508,6 +8603,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body.radius = Math.min(this.count * 7, 18)
 
             let vverts = [7, 9, 0, 11, 4, 2]
+            if (vessel.type == 0) {
+
+                //  vverts = [7,8,9]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = doors[vessel.doors.indexOf(this)].body.x 
+                    this.body.y = doors[vessel.doors.indexOf(this)].body.y 
+                    // ////console.log("s")
+                }
+            }
             if (vessel.type == 1) {
 
                 vverts = [0, 1, 2, 3, 4, 5]
@@ -8631,6 +8735,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.body.y = ship10doors[vessel.doors.indexOf(this)].body.y
                 }
             }
+            if (vessel.type == 10) {
+                vverts = [6, 7]
+                let drop = [1, 2]
+                let up = [0, 3]
+                if (vessel.doors.includes(this)) {
+                    this.body.x = ship11doors[vessel.doors.indexOf(this)].body.x
+                    this.body.y = ship11doors[vessel.doors.indexOf(this)].body.y
+                }
+            }
+            this.body.x += 200
+            this.body.y += 150
             if (vverts.includes(vessel.doors.indexOf(this))) {
                 if (this.body.color == "#00ff00") {
                     let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8.5), 4, 4, this.body.color)
@@ -8750,7 +8865,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.wepDrawCount = 0
             this.engineCharge = 0
             this.angle = 0
-            this.teleButton = new RectangleR(1, 500, 40, 40, "purple")
+            this.teleButton = new RectangleR(1*globalRat, 860, 40, 40, "purple")
             this.shake = 0
             this.copies = []
             this.star = 0
@@ -8855,6 +8970,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             tile[keys[f]] = ship10[t][k][keys[f]]
                         }
                     }
+                    if (this.type == 10) {
+                        let keys = Object.keys(ship11[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = ship11[t][k][keys[f]]
+                        }
+                    }
                     ////////////////////////////////////////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {
                         ////////////////////////////////////////////////////////console.log("h")
@@ -8890,6 +9011,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         tile.x += 40
                         tile.y += 40
                     }
+                    // tile.x*=globalRat
+                    // tile.y*=globalRat
+                    tile.x += 200
+                    tile.y += 150
+                    // tile.x-=(tile.width*.5*t)
+                    // tile.y-=(tile.height*.5*k)
 
                     if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                         tile.marked = 1
@@ -8950,7 +9077,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.roadtiles = []
             this.guests = []
 
-            this.body = new Circle(256 * rat, 256 * rat, (256 * rat), "white")
+            this.body = new Circle((256 * rat)+200, (256 * rat)+150, (256 * rat), "white")
             this.count = 0
             let tiles = []
             for (let t = 0; t < this.blocks.length; t++) {
@@ -9035,11 +9162,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.supratiles[8].left = 1
                 this.supratiles[1].left = 1
             }
+            if (this.type == 10) {
+                this.supratiles[0].left = 1
+                this.supratiles[2].left = 1
+                this.supratiles[3].left = 1
+                this.supratiles[8].left = 1
+                // this.supratiles[5].left = 1
+                // this.supratiles[6].left = 1
+                // this.supratiles[7].left = 1
+                // this.supratiles[8].left = 1
+                this.supratiles[1].left = 1
+                this.supratiles[9].left = 1
+            }
             this.first = 0
 
             this.wepmax = 0
             this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
-            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9) {
+            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9 || this.type == 10) {
                 this.supratiles.sort((a, b) => a.y > b.y ? 1 : -1)
                 this.supratiles.sort((a, b) => a.x > b.x ? -1 : 1)
 
@@ -9219,6 +9358,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
+            if (this.type == 10) {
+                for (let t = 0; t < ship11doors.length; t++) {
+                    if (t <= 7) {
+                        this.doors.push(new Door(ship11doors[t].body.x - 40, ship11doors[t].body.y + 10))
+                    } else {
+                        this.doors.push(new Airlock(ship11doors[t].body.x - 40, ship11doors[t].body.y + 10))
+                    }
+                }
+            }
             ////console.log(ship2doors)
             ////console.log(this.doors)
             this.upgradeMenu = new UpgradeMenu(this.type)
@@ -9347,7 +9495,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.type == 1) {
                 if (start == 2) {
-                    canvas_context.drawImage(crabship, -40, 10)
+                    canvas_context.drawImage(crabship, -40+200, 10+150)
 
                 }
             }
@@ -9447,8 +9595,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 9) {
                     canvas_context.drawImage(shipimage10, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
 
-                }
+                } else if (this.type == 10) {
+                    canvas_context.drawImage(beanshipsmall, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
 
+                }
+                
                 // ////////////////console.log("hif")
             } else {
 
@@ -9540,6 +9691,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.guys = [new Guy(tiles[13], 2), new Guy(tiles[26], 2), new Guy(tiles[32], 2)]
                     } else if (this.type == 9) {
                         this.guys = [new Guy(tiles[0], 7), new Guy(tiles[1], 7), new Guy(tiles[3], 7)]
+                    } else if (this.type == 10) {
+                        this.guys = [new Guy(tiles[12], 1), new Guy(tiles[14], 1), new Guy(tiles[23], 1)]
                     } else {
                         this.guys = [new Guy(tiles[0]), new Guy(tiles[34]), new Guy(tiles[91])]
                     }
@@ -9661,8 +9814,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
                         this.weapons.push(wep3)
-                        this.scrap = 55
-                        this.bombs = 32
+                        this.scrap = 50
+                        this.bombs = 20
+                        this.weapons.push(wep4)
+                        // this.weapons.push(wep5)
+                    }
+                    if (this.type == 10) {
+                        let wep1 = new Weapon(0)
+                        let wep2 = new Weapon(27)
+                        let wep3 = new Weapon(-1)
+                        let wep4 = new Weapon(-1)
+                        // let wep5 = new Weapon(-1)
+                        this.weapons.push(wep1)
+                        this.weapons.push(wep2)
+                        this.weapons.push(wep3)
+                        this.scrap = 50
+                        this.bombs = 20
                         this.weapons.push(wep4)
                         // this.weapons.push(wep5)
                     }
@@ -9770,7 +9937,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 vessel.guys[w].skillslist[1] += .000003
                             }
                         }
-                    } else if (this.guys[t].tile.shield == 1) {
+                    } 
+                     if (this.guys[t].tile.shield == 1) {
                         this.boosts[2] += (this.guys[t].stats[2] * this.guys[t].skillslist[2] * Math.min(this.guys[t].shieldPower + (this.UI.systems[2].sto + this.UI.systems[2].fed), this.guys[t].shieldPower + this.UI.systems[2].max))
                         this.UI.systems[2].fed += 0 //this.guys[t].energy
                         for (let w = 0; w < vessel.guys.length; w++) {
@@ -10503,7 +10671,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.shield.state = this.UI.systems[2].max
             this.hull = 25 + (this.level * 6) //7
             this.maxhull = this.hull
-            this.body = new Circle(1000, 360, 100, "red")
+            this.body = new Circle(1000+400, 360+150, 100, "red")
             this.deathbox = new RectangleR(this.body.x - this.body.radius, this.body.y - (this.body.radius * .2), this.body.radius * 2, this.body.radius * .4, "#FF000044")
             this.weapons = []
             this.first = 0
@@ -10717,6 +10885,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             tile[keys[f]] = enemyship40[t][k][keys[f]]
                         }
                     }
+                    tile.x+= 400
+                    tile.y+= 150
                     tile.air = 100
                     tile.fire = 100
                     tile.newfire = 100
@@ -10813,163 +10983,163 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             if (this.type == 0) {
                 for (let t = 0; t < enemyship1doors.length; t++) {
-                    this.doors.push(new Door(enemyship1doors[t].body.x, enemyship1doors[t].body.y))
+                    this.doors.push(new Door(enemyship1doors[t].body.x+400, enemyship1doors[t].body.y+150))
                 }
             } else if (this.type == 1) {
                 for (let t = 0; t < enemyship2doors.length; t++) {
-                    this.doors.push(new Door(enemyship2doors[t].body.x, enemyship2doors[t].body.y))
+                    this.doors.push(new Door(enemyship2doors[t].body.x+400, enemyship2doors[t].body.y+150))
                 }
             } else if (this.type == 2) {
                 for (let t = 0; t < enemyship3doors.length; t++) {
-                    this.doors.push(new Door(enemyship3doors[t].body.x, enemyship3doors[t].body.y))
+                    this.doors.push(new Door(enemyship3doors[t].body.x+400, enemyship3doors[t].body.y+150))
                 }
             } else if (this.type == 3) {
                 for (let t = 0; t < enemyship4doors.length; t++) {
-                    this.doors.push(new Door(enemyship4doors[t].body.x, enemyship4doors[t].body.y))
+                    this.doors.push(new Door(enemyship4doors[t].body.x+400, enemyship4doors[t].body.y+150))
                 }
             } else if (this.type == 4) {
                 for (let t = 0; t < enemyship5doors.length; t++) {
-                    this.doors.push(new Door(enemyship5doors[t].body.x, enemyship5doors[t].body.y))
+                    this.doors.push(new Door(enemyship5doors[t].body.x+400, enemyship5doors[t].body.y+150))
                 }
             } else if (this.type == 5) {
                 for (let t = 0; t < enemyship6doors.length; t++) {
-                    this.doors.push(new Door(enemyship6doors[t].body.x, enemyship6doors[t].body.y))
+                    this.doors.push(new Door(enemyship6doors[t].body.x+400, enemyship6doors[t].body.y+150))
                 }
             } else if (this.type == 6) {
                 for (let t = 0; t < enemyship7doors.length; t++) {
-                    this.doors.push(new Door(enemyship7doors[t].body.x, enemyship7doors[t].body.y))
+                    this.doors.push(new Door(enemyship7doors[t].body.x+400, enemyship7doors[t].body.y+150))
                 }
             } else if (this.type == 7) {
                 for (let t = 0; t < enemyship8doors.length; t++) {
-                    this.doors.push(new Door(enemyship8doors[t].body.x, enemyship8doors[t].body.y))
+                    this.doors.push(new Door(enemyship8doors[t].body.x+400, enemyship8doors[t].body.y+150))
                 }
             } else if (this.type == 8) {
                 for (let t = 0; t < enemyship9doors.length; t++) {
-                    this.doors.push(new Door(enemyship9doors[t].body.x, enemyship9doors[t].body.y))
+                    this.doors.push(new Door(enemyship9doors[t].body.x+400, enemyship9doors[t].body.y+150))
                 }
             } else if (this.type == 9) {
                 for (let t = 0; t < enemyship10doors.length; t++) {
-                    this.doors.push(new Door(enemyship10doors[t].body.x, enemyship10doors[t].body.y))
+                    this.doors.push(new Door(enemyship10doors[t].body.x+400, enemyship10doors[t].body.y+150))
                 }
             } else if (this.type == 10) {
                 for (let t = 0; t < enemyship11doors.length; t++) {
-                    this.doors.push(new Door(enemyship11doors[t].body.x, enemyship11doors[t].body.y))
+                    this.doors.push(new Door(enemyship11doors[t].body.x+400, enemyship11doors[t].body.y+150))
                 }
             } else if (this.type == 11) {
                 for (let t = 0; t < enemyship12doors.length; t++) {
-                    this.doors.push(new Door(enemyship12doors[t].body.x, enemyship12doors[t].body.y))
+                    this.doors.push(new Door(enemyship12doors[t].body.x+400, enemyship12doors[t].body.y+150))
                 }
             } else if (this.type == 12) {
                 for (let t = 0; t < enemyship13doors.length; t++) {
-                    this.doors.push(new Door(enemyship13doors[t].body.x, enemyship13doors[t].body.y))
+                    this.doors.push(new Door(enemyship13doors[t].body.x+400, enemyship13doors[t].body.y+150))
                 }
             } else if (this.type == 13) {
                 for (let t = 0; t < enemyship14doors.length; t++) {
-                    this.doors.push(new Door(enemyship14doors[t].body.x, enemyship14doors[t].body.y))
+                    this.doors.push(new Door(enemyship14doors[t].body.x+400, enemyship14doors[t].body.y+150))
                 }
             } else if (this.type == 14) {
                 for (let t = 0; t < enemyship15doors.length; t++) {
-                    this.doors.push(new Door(enemyship15doors[t].body.x, enemyship15doors[t].body.y))
+                    this.doors.push(new Door(enemyship15doors[t].body.x+400, enemyship15doors[t].body.y+150))
                 }
             } else if (this.type == 15) {
                 for (let t = 0; t < enemyship16doors.length; t++) {
-                    this.doors.push(new Door(enemyship16doors[t].body.x, enemyship16doors[t].body.y))
+                    this.doors.push(new Door(enemyship16doors[t].body.x+400, enemyship16doors[t].body.y+150))
                 }
             } else if (this.type == 16) {
                 for (let t = 0; t < enemyship17doors.length; t++) {
-                    this.doors.push(new Door(enemyship17doors[t].body.x, enemyship17doors[t].body.y))
+                    this.doors.push(new Door(enemyship17doors[t].body.x+400, enemyship17doors[t].body.y+150))
                 }
             } else if (this.type == 17) {
                 for (let t = 0; t < enemyship18doors.length; t++) {
-                    this.doors.push(new Door(enemyship18doors[t].body.x, enemyship18doors[t].body.y))
+                    this.doors.push(new Door(enemyship18doors[t].body.x+400, enemyship18doors[t].body.y+150))
                 }
             } else if (this.type == 18) {
                 for (let t = 0; t < enemyship19doors.length; t++) {
-                    this.doors.push(new Door(enemyship19doors[t].body.x, enemyship19doors[t].body.y))
+                    this.doors.push(new Door(enemyship19doors[t].body.x+400, enemyship19doors[t].body.y+150))
                 }
             } else if (this.type == 19) {
                 for (let t = 0; t < enemyship20doors.length; t++) {
-                    this.doors.push(new Door(enemyship20doors[t].body.x, enemyship20doors[t].body.y))
+                    this.doors.push(new Door(enemyship20doors[t].body.x+400, enemyship20doors[t].body.y+150))
                 }
             } else if (this.type == 20) {
                 for (let t = 0; t < enemyship21doors.length; t++) {
-                    this.doors.push(new Door(enemyship21doors[t].body.x, enemyship21doors[t].body.y))
+                    this.doors.push(new Door(enemyship21doors[t].body.x+400, enemyship21doors[t].body.y+150))
                 }
             } else if (this.type == 21) {
                 for (let t = 0; t < enemyship22doors.length; t++) {
-                    this.doors.push(new Door(enemyship22doors[t].body.x, enemyship22doors[t].body.y))
+                    this.doors.push(new Door(enemyship22doors[t].body.x+400, enemyship22doors[t].body.y+150))
                 }
             } else if (this.type == 22) {
                 for (let t = 0; t < enemyship23doors.length; t++) {
-                    this.doors.push(new Door(enemyship23doors[t].body.x, enemyship23doors[t].body.y))
+                    this.doors.push(new Door(enemyship23doors[t].body.x+400, enemyship23doors[t].body.y+150))
                 }
             } else if (this.type == 23) {
                 for (let t = 0; t < enemyship24doors.length; t++) {
-                    this.doors.push(new Door(enemyship24doors[t].body.x, enemyship24doors[t].body.y))
+                    this.doors.push(new Door(enemyship24doors[t].body.x+400, enemyship24doors[t].body.y+150))
                 }
             } else if (this.type == 24) {
                 for (let t = 0; t < enemyship25doors.length; t++) {
-                    this.doors.push(new Door(enemyship25doors[t].body.x, enemyship25doors[t].body.y))
+                    this.doors.push(new Door(enemyship25doors[t].body.x+400, enemyship25doors[t].body.y+150))
                 }
             } else if (this.type == 25) {
                 for (let t = 0; t < enemyship26doors.length; t++) {
-                    this.doors.push(new Door(enemyship26doors[t].body.x, enemyship26doors[t].body.y))
+                    this.doors.push(new Door(enemyship26doors[t].body.x+400, enemyship26doors[t].body.y+150))
                 }
             } else if (this.type == 26) {
                 for (let t = 0; t < enemyship27doors.length; t++) {
-                    this.doors.push(new Door(enemyship27doors[t].body.x, enemyship27doors[t].body.y))
+                    this.doors.push(new Door(enemyship27doors[t].body.x+400, enemyship27doors[t].body.y+150))
                 }
             } else if (this.type == 27) {
                 for (let t = 0; t < enemyship28doors.length; t++) {
-                    this.doors.push(new Door(enemyship28doors[t].body.x, enemyship28doors[t].body.y))
+                    this.doors.push(new Door(enemyship28doors[t].body.x+400, enemyship28doors[t].body.y+150))
                 }
             } else if (this.type == 28) {
                 for (let t = 0; t < enemyship29doors.length; t++) {
-                    this.doors.push(new Door(enemyship29doors[t].body.x, enemyship29doors[t].body.y))
+                    this.doors.push(new Door(enemyship29doors[t].body.x+400, enemyship29doors[t].body.y+150))
                 }
             } else if (this.type == 29) {
                 for (let t = 0; t < enemyship30doors.length; t++) {
-                    this.doors.push(new Door(enemyship30doors[t].body.x, enemyship30doors[t].body.y))
+                    this.doors.push(new Door(enemyship30doors[t].body.x+400, enemyship30doors[t].body.y+150))
                 }
             } else if (this.type == 30) {
                 for (let t = 0; t < enemyship31doors.length; t++) {
-                    this.doors.push(new Door(enemyship31doors[t].body.x, enemyship31doors[t].body.y))
+                    this.doors.push(new Door(enemyship31doors[t].body.x+400, enemyship31doors[t].body.y+150))
                 }
             } else if (this.type == 31) {
                 for (let t = 0; t < enemyship32doors.length; t++) {
-                    this.doors.push(new Door(enemyship32doors[t].body.x, enemyship32doors[t].body.y))
+                    this.doors.push(new Door(enemyship32doors[t].body.x+400, enemyship32doors[t].body.y+150))
                 }
             } else if (this.type == 32) {
                 for (let t = 0; t < enemyship33doors.length; t++) {
-                    this.doors.push(new Door(enemyship33doors[t].body.x, enemyship33doors[t].body.y))
+                    this.doors.push(new Door(enemyship33doors[t].body.x+400, enemyship33doors[t].body.y+150))
                 }
             } else if (this.type == 33) {
                 for (let t = 0; t < enemyship34doors.length; t++) {
-                    this.doors.push(new Door(enemyship34doors[t].body.x, enemyship34doors[t].body.y))
+                    this.doors.push(new Door(enemyship34doors[t].body.x+400, enemyship34doors[t].body.y+150))
                 }
             } else if (this.type == 34) {
                 for (let t = 0; t < enemyship35doors.length; t++) {
-                    this.doors.push(new Door(enemyship35doors[t].body.x, enemyship35doors[t].body.y))
+                    this.doors.push(new Door(enemyship35doors[t].body.x+400, enemyship35doors[t].body.y+150))
                 }
             } else if (this.type == 35) {
                 for (let t = 0; t < enemyship36doors.length; t++) {
-                    this.doors.push(new Door(enemyship36doors[t].body.x, enemyship36doors[t].body.y))
+                    this.doors.push(new Door(enemyship36doors[t].body.x+400, enemyship36doors[t].body.y+150))
                 }
             } else if (this.type == 36) {
                 for (let t = 0; t < enemyship37doors.length; t++) {
-                    this.doors.push(new Door(enemyship37doors[t].body.x, enemyship37doors[t].body.y))
+                    this.doors.push(new Door(enemyship37doors[t].body.x+400, enemyship37doors[t].body.y+150))
                 }
             } else if (this.type == 37) {
                 for (let t = 0; t < enemyship38doors.length; t++) {
-                    this.doors.push(new Door(enemyship38doors[t].body.x, enemyship38doors[t].body.y))
+                    this.doors.push(new Door(enemyship38doors[t].body.x+400, enemyship38doors[t].body.y+150))
                 }
             } else if (this.type == 38) {
                 for (let t = 0; t < enemyship39doors.length; t++) {
-                    this.doors.push(new Door(enemyship39doors[t].body.x, enemyship39doors[t].body.y))
+                    this.doors.push(new Door(enemyship39doors[t].body.x+400, enemyship39doors[t].body.y+150))
                 }
             } else if (this.type == 39) {
                 for (let t = 0; t < enemyship40doors.length; t++) {
-                    this.doors.push(new Door(enemyship40doors[t].body.x, enemyship40doors[t].body.y))
+                    this.doors.push(new Door(enemyship40doors[t].body.x+400, enemyship40doors[t].body.y+150))
                 }
             }
             this.weapons = []
@@ -11131,10 +11301,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys) {
                     if (enemy.guys.length > 0 && enemy.hull > 0) {
                         if (mode == 1) {
-                            canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 800, 50)
+                            canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000), 1450, 50)
 
                         } else {
-                            canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000) + ` Ship Level: ${this.level}`, 800, 50)
+                            canvas_context.fillText("Powering leap: " + Math.floor(((1000 * 3 * 60 + (this.level * 1000)) - Math.floor(Date.now() - this.now)) / 1000) + ` Ship Level: ${this.level}`, 1450, 50)
 
                         }
                     }
@@ -11144,7 +11314,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             this.hrat = this.hull / this.maxhull
-            this.healthbar = new RectangleR(800, 10, 250, 10, "transparent")
+            this.healthbar = new RectangleR(1440, 10, 250, 10, "transparent")
             if (vessel.UI.systems[5].sto > 0) {
                 this.healthbar.draw()
                 canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
@@ -12806,37 +12976,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         }
         expand() {
-            this.body.x -= 640
-            this.body.y -= 360
+            this.body.x -= 640*globalRat
+            this.body.y -= 360*globalRat
             this.body.x *= 25
             this.body.y *= 25
-            this.body.x += 640
-            this.body.y += 360
+            this.body.x += 640*globalRat
+            this.body.y += 360*globalRat
 
 
-            this.spot.body.x -= 640
-            this.spot.body.y -= 360
+            this.spot.body.x -= 640*globalRat
+            this.spot.body.y -= 360*globalRat
             this.spot.body.x *= 25
             this.spot.body.y *= 25
-            this.spot.body.x += 640
-            this.spot.body.y += 360
+            this.spot.body.x += 640*globalRat
+            this.spot.body.y += 360*globalRat
             this.spot.size *= 5
 
         }
         collapse() {
-            this.body.x -= 640
-            this.body.y -= 360
+            this.body.x -= 640*globalRat
+            this.body.y -= 360*globalRat
             this.body.x *= .05
             this.body.y *= .05
-            this.body.x += 640
-            this.body.y += 360
+            this.body.x += 640*globalRat
+            this.body.y += 360*globalRat
 
-            this.spot.body.x -= 640
-            this.spot.body.y -= 360
+            this.spot.body.x -= 640*globalRat
+            this.spot.body.y -= 360*globalRat
             this.spot.body.x *= .05
             this.spot.body.y *= .05
-            this.spot.body.x += 640
-            this.spot.body.y += 360
+            this.spot.body.x += 640*globalRat
+            this.spot.body.y += 360*globalRat
             this.spot.size *= .2
         }
         draw() {
@@ -12922,12 +13092,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 starfirst = 0
                 for (let t = 0; t < stars.stars.length; t++) {
-                    stars.stars[t].body.x -= subx - 640
-                    stars.stars[t].spot.body.x -= subx - 640
+                    stars.stars[t].body.x -= subx -  (640*globalRat)
+                    stars.stars[t].spot.body.x -= subx - (640*globalRat)
                     if (mode == 1) {
                     } else {
-                        stars.stars[t].body.y -= suby - 360
-                        stars.stars[t].spot.body.y -= suby - 360
+                        stars.stars[t].body.y -= suby -  (360*globalRat)
+                        stars.stars[t].spot.body.y -= suby - (360*globalRat)
 
                     }
                 }
@@ -12951,7 +13121,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (mode == 1) {
 
 
-                this.stars = [new Star(130 / 4, 360, 1)]
+                this.stars = [new Star((130 / 4)*globalRat, (360*globalRat), 1)]
                 if (mode == 1) {
 
                 } else {
@@ -12975,7 +13145,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             } else {
-                this.stars = [new Star(130 / 4, 378, 1)]
+                this.stars = [new Star((190 / 4), 385.5, 1)]
 
                 if (mode == 1) {
 
@@ -12984,7 +13154,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 for (let t = 0; this.stars.length < 1380; t++) {
 
-                    let star = new Star(((130 / 4) + (Math.random() * (canvas.width))) * (Math.random() - .5), ((Math.random() * (1280)) * (Math.random() - .5)) + 360)
+                    let star = new Star((((140 / 4)*globalRat) + (Math.random() * (canvas.width))) * (Math.random() - .5), ((Math.random() * (1280)) * (Math.random() - .5)) + 360)
                     let wet = 1
                     for (let k = 0; k < this.stars.length; k++) {
                         if (star.body.doesPerimeterTouch(this.stars[k].body)) {
@@ -14202,6 +14372,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 if (vessel.blocks[t][k].medbay == 1) {
                                     this.text1 += "-Medbay"
                                 }
+                                if (vessel.blocks[t][k].shield == 1) {
+                                    this.text1 += "-Shields"
+                                }
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
@@ -14220,6 +14393,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].engine == 1) {
                                 this.text1 += "Engines"
+                                if (vessel.blocks[t][k].helm == 1) {
+                                    this.text1 += "-Helm"
+                                }
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
@@ -14375,21 +14551,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let starss = []
     let worldroot = new Point(0, 0)
     let tut = -1
-    let tutButton = new RectangleR(100, 600, 100, 50, "#FF000044")
-    let modeButton = new RectangleR(100, 650, 150, 50, "#FF000044")
-    let crabButton = new RectangleR(900, 600, 150, 50, "#FF000044")
-    let shieldButton = new RectangleR(900, 550, 200, 50, "#FF000044")
-    let fireButton = new RectangleR(900, 500, 200, 50, "#FF000044")
-    let fishButton = new RectangleR(900, 450, 150, 50, "#FF000044")
-    let combButton = new RectangleR(1050, 450, 150, 50, "#FF000044")
-    let normButton = new RectangleR(900, 400, 200, 50, "#FF000044")
-    let numButton = new RectangleR(900, 650, 200, 50, "#FF000044")
-    let plantButton = new RectangleR(1100, 650, 150, 50, "#FF000044")
-    let gumButton = new RectangleR(1050, 600, 160, 50, "#FF000044")
-    let blobButton = new RectangleR(1100, 550, 140, 50, "#FF000044")
+    let tutButton = new RectangleR(100*globalRat, 600*globalRat, 100*globalRat, 50*globalRat, "#FF000044")
+    let modeButton = new RectangleR(100*globalRat, 650*globalRat, 150*globalRat, 50*globalRat, "#FF000044")
+    let crabButton = new RectangleR(900*globalRat, 600*globalRat, 150*globalRat, 50*globalRat, "#FF000044")
+    let shieldButton = new RectangleR(900*globalRat, 550*globalRat, 200*globalRat, 50*globalRat, "#FF000044")
+    let fireButton = new RectangleR(900*globalRat, 500*globalRat, 200*globalRat, 50*globalRat, "#FF000044")
+    let beanButton = new RectangleR(1100*globalRat, 500*globalRat, 120*globalRat, 50*globalRat, "#FF000044")
+    let fishButton = new RectangleR(900*globalRat, 450*globalRat, 150*globalRat, 50*globalRat, "#FF000044")
+    let combButton = new RectangleR(1050*globalRat, 450*globalRat, 150*globalRat, 50*globalRat, "#FF000044")
+    let normButton = new RectangleR(900*globalRat, 400*globalRat, 200*globalRat, 50*globalRat, "#FF000044")
+    let numButton = new RectangleR(900*globalRat, 650*globalRat, 200*globalRat, 50*globalRat, "#FF000044")
+    let plantButton = new RectangleR(1100*globalRat, 650*globalRat, 150*globalRat, 50*globalRat, "#FF000044")
+    let gumButton = new RectangleR(1050*globalRat, 600*globalRat, 160*globalRat, 50*globalRat, "#FF000044")
+    let blobButton = new RectangleR(1100*globalRat, 550*globalRat, 140*globalRat, 50*globalRat, "#FF000044")
     let stframe = 0
     let starfirst = 0
-    canvas_context.clearRect(0, 0, 1280, 720)
+    canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
     function main() {
         wodopomsong.play()
         if (starfirst == 0) {
@@ -14417,25 +14594,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 starss[t].draw()
             }
         }
-        // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
+        // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
         if (vessel.hull <= 0) {
             vessel = new Ship(0)
             start = 0
         }
         // CanvasC
-        if (keysPressed['-'] && recording == 0) {
-            recording = 1
-            video_recorder.record()
-        }
-        if (keysPressed['='] && recording == 1) {
-            recording = 0
-            video_recorder.stop()
-            video_recorder.download('File Name As A String.webm')
-        }
+        // if (keysPressed['-'] && recording == 0) {
+        //     recording = 1
+        //     video_recorder.record()
+        // }
+        // if (keysPressed['='] && recording == 1) {
+        //     recording = 0
+        //     video_recorder.stop()
+        //     video_recorder.download('File Name As A String.webm')
+        // }
         if (start == 0) {
             if (tut == 1) {
                 stframe += 1
-                canvas_context.clearRect(0, 0, 1280, 720)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
                 canvas_context.drawImage(tut1, (tut1.width / 116) * (stframe % 116), 0, tut1.width / 116, tut1.height, 50, 0, tut1.width / 116, tut1.height)
                 canvas_context.drawImage(tut2, (tut2.width / 88) * (stframe % 88), 0, tut2.width / 88, tut2.height, 50, tut1.height + 20, tut2.width / 88, tut2.height)
                 canvas_context.drawImage(tut3, (tut3.width / 83) * (stframe % 83), 0, tut3.width / 83, tut3.height, 50, tut1.height + tut2.height + 40, tut3.width / 83, tut3.height)
@@ -14452,7 +14629,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("Click to advance.", 1100, 680)
             } else if (tut == 2) {
                 stframe += 1
-                canvas_context.clearRect(0, 0, 1280, 720)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
                 canvas_context.drawImage(tut4, (tut4.width / 55) * (stframe % 55), 0, tut4.width / 55, tut4.height, 50, 0, tut4.width / 55, tut4.height)
                 canvas_context.drawImage(tut5, (tut5.width / 53) * (stframe % 53), 0, tut5.width / 53, tut5.height, 100, tut4.height + 10, tut5.width / 53, tut5.height)
                 canvas_context.drawImage(tut6, (tut6.width / 105) * (stframe % 105), 0, tut6.width / 105, tut6.height, -50, tut4.height + 10 + tut5.height + 10, tut6.width / 105, tut6.height)
@@ -14467,7 +14644,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 canvas_context.fillText("Click to advance.", 1100, 680)
             } else if (tut == 3) {
-                canvas_context.clearRect(0, 0, 1280, 720)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("General tips:", 50, 50)
@@ -14492,7 +14669,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("Click to advance.", 1100, 680)
 
             } else {
-                canvas_context.drawImage(title, 0, 0)
+                canvas_context.drawImage(title, 0, 0, 1280,720,0,0,1920,1080)
                 tutButton.draw()
                 canvas_context.font = "20px comic sans ms"
                 canvas_context.fillStyle = "white"
@@ -14544,6 +14721,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.font = "18px comic sans ms"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Fireknives", fireButton.x + 10, fireButton.y + 30)
+                beanButton.draw()
+                canvas_context.font = "17px comic sans ms"
+                canvas_context.fillStyle = "white"
+                canvas_context.fillText("Play As Beans", beanButton.x + 8, beanButton.y + 30)
 
                 fishButton.draw()
                 canvas_context.font = "18px comic sans ms"
@@ -14565,7 +14746,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
 
-            // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
+            // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             return
         } else if (start == 1) {
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
@@ -14576,15 +14761,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 vessel.web = [stars.stars[0].body]
             }
-            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
-            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
+            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
+            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
             var grd = canvas_context.createLinearGradient(0, 0, stars.stars[vessel.star].body.x, 0);
             grd.addColorStop(0, "#888888");
             // grd.addColorStop(.5, "#88888888");
             grd.addColorStop(1, "#00000000");
             canvas_context.fillStyle = grd;
             if (mode == 1) {
-                canvas_context.fillRect(0, 0, stars.stars[vessel.star].body.x, 720);
+                canvas_context.fillRect(0, 0, stars.stars[vessel.star].body.x, 1080);
             }
 
             stars.draw()
@@ -14601,14 +14786,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
             }
             // }
+            shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+            canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+            canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+            shipcanvas_context.clearRect(0,0,1920,1080)
         } else {
 
             // enemy = new EnemyShip(Math.floor(Math.random()*2))
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
             if (vessel.shake > 0) {
                 vessel.shake--
-                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
-                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
                 enemy.draw()
                 vessel.draw()
 
@@ -14623,7 +14812,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
                 }
 
-                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
                 if (enemy.supratiles) {
                     if (enemy.hull > 0) {
 
@@ -14646,9 +14835,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 vessel.shaker()
                 vessel.UIdraw()
                 labels.draw()
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             } else {
-                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1280, 720)
-                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
                 enemy.draw()
                 vessel.draw()
 
@@ -14692,6 +14885,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 vessel.UIdraw()
                 labels.draw()
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             }
         }
 
