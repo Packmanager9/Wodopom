@@ -1323,8 +1323,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine //*.666666
-            TIP_engine.y = YS_engine //*.666666
+            TIP_engine.x = XS_engine *.75
+            TIP_engine.y = YS_engine *.75
             TIP_engine.body = TIP_engine
             // wad.launch(TIP_engine)
             for (let t = 0; t < vessel.weapons.length; t++) {
@@ -1460,8 +1460,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine//*.666666
-            TIP_engine.y = YS_engine//*.666666
+            TIP_engine.x = XS_engine*.75
+            TIP_engine.y = YS_engine*.75
             TIP_engine.body = TIP_engine
             //////////////////////////////////console.log(TIP_engine)
 
@@ -2023,8 +2023,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             FLEX_engine = canvas.getBoundingClientRect();
             XS_engine = e.clientX - FLEX_engine.left;
             YS_engine = e.clientY - FLEX_engine.top;
-            TIP_engine.x = XS_engine//*.666666
-            TIP_engine.y = YS_engine//*.666666
+            TIP_engine.x = XS_engine*.75
+            TIP_engine.y = YS_engine*.75
             TIP_engine.body = TIP_engine
             stars.hover(TIP_engine)
         }
@@ -14747,10 +14747,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
             // canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
-                // shipcanvas_context.drawImage(canvas, 0,0,1280,720,0,0,1280,720)
-                // canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-                // canvas_context.drawImage(shipcanvas, 0,0,1280,720,0,0,1920,1080)
-                // shipcanvas_context.clearRect(0,0,1280,720)
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             return
         } else if (start == 1) {
             canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
@@ -14786,10 +14786,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
             }
             // }
-            // shipcanvas_context.drawImage(canvas, 0,0,1280,720,0,0,1280,720)
-            // canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-            // canvas_context.drawImage(shipcanvas, 0,0,1280,720,0,0,1920,1080)
-            // shipcanvas_context.clearRect(0,0,1280,720)
+            shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+            canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+            canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+            shipcanvas_context.clearRect(0,0,1920,1080)
         } else {
 
             // enemy = new EnemyShip(Math.floor(Math.random()*2))
@@ -14835,10 +14835,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 vessel.shaker()
                 vessel.UIdraw()
                 labels.draw()
-                // shipcanvas_context.drawImage(canvas, 0,0,1280,720,0,0,1280,720)
-                // canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-                // canvas_context.drawImage(shipcanvas, 0,0,1280,720,0,0,1920,1080)
-                // shipcanvas_context.clearRect(0,0,1280,720)
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             } else {
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
@@ -14885,10 +14885,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 vessel.UIdraw()
                 labels.draw()
-                // shipcanvas_context.drawImage(canvas, 0,0,1280,720,0,0,1280,720)
-                // canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-                // canvas_context.drawImage(shipcanvas, 0,0,1280,720,0,0,1920,1080)
-                // shipcanvas_context.clearRect(0,0,1280,720)
+                shipcanvas_context.drawImage(canvas, 0,0,1920,1080,0,0,1920,1080)
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
+                canvas_context.drawImage(shipcanvas, 0,0,1920,1080,0,0,2560,1440)
+                shipcanvas_context.clearRect(0,0,1920,1080)
             }
         }
 
