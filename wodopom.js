@@ -1692,8 +1692,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let g = 0; g < vessel.guys.length; g++) {
                         if (vessel.guys[g].tile.special == 1) {
                             if (vessel.UI.systems[7].sto > 0) {
-                                vessel.guys[g].teleflag = 1
-                                return
+                                if(vessel.guys[g].hostile != 1){
+                                    vessel.guys[g].teleflag = 1
+                                    return
+                                }
                             }
                         }
                     }
