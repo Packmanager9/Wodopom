@@ -1712,9 +1712,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
+    
+            let chet = 1
+            if (vessel.guys) {
+                for (let g = 0; g < vessel.guys.length; g++) {
+                    if (vessel.guys[g].healthbox.isPointInside(TIP_engine)) {
+                        chet = 0
+                        break
+                    }
+                }
+            }
+
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
-                    if (vessel.blocks[t][k].isPointInside(TIP_engine)) {
+                    if (vessel.blocks[t][k].isPointInside(TIP_engine) || chet == 0) {
                         // if (keysPressed['p']) {
                         //     vessel.blocks[t][k].fire = -100
                         //     // vessel.blocks[t][k].onFire = 1
@@ -3210,11 +3221,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
         constructor(type, guy) {
             this.guy = guy
             this.type = type
-            this.body = new RectangleR(270, 650, 100, 32, "#444444")
+            this.body = new RectangleR(270, 650, 150, 32, "#444444")
             this.armor = 0
             this.damage = 1 / 6
             this.speed = 0
             this.name1 = ''
+            this.regen = 0
             this.name2 = ''
             if (this.type == 0) {
                 this.name1 = 'Basic Body '
@@ -3243,6 +3255,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.armor = .05
                 this.damage = 1/6
                 this.speed = -3
+            }
+            if (this.type == 4) {
+                this.name1 = 'Personal '
+                this.name2 = 'Synthesizer'
+                this.armor = 0
+                this.damage = 1/6
+                this.speed = -1
+                this.regen = .1
             }
         }
         check(point) {
@@ -3273,6 +3293,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.guy.gearSpeed += this.speed
             this.guy.gearArmor += this.armor
             this.guy.gearDamage += this.damage
+            this.guy.gearRegen += this.regen
             // //console.log(this.guy.gearArmor)
         }
         draw() {
@@ -3286,7 +3307,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.x = this.guy.healthbox.x + this.guy.healthbox.width
                 this.body.y = this.guy.healthbox.y + this.guy.healthbox.height + (Math.floor(this.guy.gear.indexOf(this) / 2) * 32)
             } else {
-                this.body.x = this.guy.healthbox.x + this.guy.healthbox.width + 100
+                this.body.x = this.guy.healthbox.x + this.guy.healthbox.width + 150
                 this.body.y = this.guy.healthbox.y + this.guy.healthbox.height + (Math.floor(this.guy.gear.indexOf(this) / 2) * 32)
             }
             this.body.draw()
@@ -3302,6 +3323,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.gearSpeed = 0
             this.gearArmor = 0
             this.gearDamage = 0
+            this.gearRegen = 0
             this.meleeKills = 0
             // //////////////////console.log(type)
             this.bullets = []
@@ -3332,6 +3354,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let t = 0; t < 1; t++) {
                         this.gear.push(new Gear(2, this))
                     }
+                    // for (let t = 0; t < 1; t++) {
+                    //     this.gear.push(new Gear(4, this))
+                    // }
                     for (let t = 0; t < 4; t++) {
                         this.gear.push(new Gear(-1, this))
                     }
@@ -3376,10 +3401,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             } else {
+                if(vessel.type == 7){
+
+                    this.gear = []
+                    for (let t = 0; t < 1; t++) {
+                        this.gear.push(new Gear(4, this))
+                    }
+                    for (let t = 0; t < 5; t++) {
+                        this.gear.push(new Gear(-1, this))
+                    }
+
+                } else{
+                    
                 this.gear = []
                 for (let t = 0; t < 6; t++) {
                     this.gear.push(new Gear(-1, this))
                 }
+                }//plantship
             }
             if (vessel.type == 1) {
                 while (this.type == 11) {
@@ -3719,6 +3757,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     }
             // }
             this.rateSto = this.rate
+            this.regenSto = this.regen
         }
         bodydraw() {
 
@@ -3898,11 +3937,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.gearSpeed = 0
             this.gearArmor = 0
             this.gearDamage = 0
+            this.gearRegen = 0
 
             for (let t = 0; t < this.gear.length; t++) {
                 this.gear[t].balance()
             }
             this.rate = Math.max(2,this.rateSto - (-this.gearSpeed))
+
+            this.regen = this.regenSto + this.gearRegen
+
             if (this.teleflag == 1) {
                 if (vessel.guys.includes(this)) {
                     if (this.tile.special == 1) {
@@ -6862,6 +6905,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if(this.gearType == 3){
                     canvas_context.drawImage(shoes3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
+                if(this.gearType == 4){
+                    canvas_context.drawImage(synth1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                }
 
             } else {
                 canvas_context.drawImage(rs[this.crewType], 64 * (Math.floor(Math.random() * 1) % (rs[this.crewType].width / 64)), 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
@@ -6889,6 +6935,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let shoes3 = new Image()
     shoes3.src = "shoes3.png"
 
+    let synth1 = new Image()
+    synth1.src = "synth1.png"
+    
 
 
 
@@ -12532,9 +12581,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.link = new LineOP(this.body, this.body)
             }
             this.weapons = []
-            if(Math.random()< .1){
+            if(Math.random()< .12){
                 for (let t = 0; t < 2; t++) {
-                    this.weapons.push(new Weapon(-1,-1, Math.floor(Math.random()*4)))
+                    this.weapons.push(new Weapon(-1,-1, Math.floor(Math.random()*5)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
@@ -12962,24 +13011,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         if (vessel.guys[t].gear[k].body.isPointInside(TIP_engine)) {
 
-                            this.text1 = `Armor Plus ${vessel.guys[t].gear[k].armor}x`
-                            this.text2 = `Damage Plus ${vessel.guys[t].gear[k].damage}x`
-                            this.text3 = `Speed Plus ${Math.abs(vessel.guys[t].gear[k].speed)}`
+                            this.text1 = `Armor ${vessel.guys[t].gear[k].armor+1}x`
+                            this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].damage-(1/6))*100)}%`
+                            this.text3 = `Speed + ${Math.abs(vessel.guys[t].gear[k].speed)}`
+                            this.text4 = `Regen ${Math.abs(vessel.guys[t].gear[k].regen)}`
                             let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
 
-                            this.text4 = "System: "
-                            for (let s = 0; s < sys.length; s++) {
-                                if (vessel.guys[t].tile[sys[s]] == 1) {
-                                    let sys2 = sys[s].charAt(0).toUpperCase() + sys[s].slice(1);
-                                    this.text4 += ' ' + sys2
-                                }
-                            }
+                            // this.text4 = "System: "
+                            // for (let s = 0; s < sys.length; s++) {
+                            //     if (vessel.guys[t].tile[sys[s]] == 1) {
+                            //         let sys2 = sys[s].charAt(0).toUpperCase() + sys[s].slice(1);
+                            //         this.text4 += ' ' + sys2
+                            //     }
+                            // }
 
 
                             let dim = {}
                             canvas_context.font = "12px comic sans ms"
                             dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width))
-                            dim.h = 34
+                            dim.h = 44
                             ////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
@@ -12991,7 +13041,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             py += 12
                             canvas_context.fillText(this.text3, rect.x + 10, py)
                             py += 12
-                            // canvas_context.fillText(this.text4, rect.x + 10, py)
+                            canvas_context.fillText(this.text4, rect.x + 10, py)
                         }
                     }
                 }
