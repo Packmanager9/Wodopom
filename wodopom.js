@@ -16,89 +16,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    // function CanvasCaptureToWEBM(canvas, bitrate) {
-    //     // it uses the same canvas as the rest of the file.
-    //     // to start a recording call .record() on video_recorder
-    //     /*
-    //     for example, 
-    //     */
-    //     this.record = Record
-    //     this.stop = Stop
-    //     this.download = saveToDownloads
-    //     let blobCaptures = []
-    //     let outputFormat = {}
-    //     let recorder = {}
-    //     let canvasInput = canvas.captureStream()
-    //     if (typeof canvasInput == undefined || !canvasInput) {
-    //         return
-    //     }
-    //     const video = document.createElement('video')
-    //     video.style.display = 'none'
+    function CanvasCaptureToWEBM(canvas, bitrate) {
+        // it uses the same canvas as the rest of the file.
+        // to start a recording call .record() on video_recorder
+        /*
+        for example, 
+        */
+        this.record = Record
+        this.stop = Stop
+        this.download = saveToDownloads
+        let blobCaptures = []
+        let outputFormat = {}
+        let recorder = {}
+        let canvasInput = canvas.captureStream()
+        if (typeof canvasInput == undefined || !canvasInput) {
+            return
+        }
+        const video = document.createElement('video')
+        video.style.display = 'none'
 
-    //     function Record() {
-    //         let formats = [
-    //             "video/webm\;codecs=h264",
-    //             "video/webm\;codecs=vp8",
-    //             'video/vp8',
-    //             "video/webm",
-    //             'video/webm,codecs=vp9',
-    //             "video/webm\;codecs=daala",
-    //             "video/mpeg"
-    //         ];
+        function Record() {
+            let formats = [
+                "video/webm\;codecs=h264",
+                "video/webm\;codecs=vp8",
+                'video/vp8',
+                "video/webm",
+                'video/webm,codecs=vp9',
+                "video/webm\;codecs=daala",
+                "video/mpeg"
+            ];
 
-    //         for (let t = 0; t < formats.length; t++) {
-    //             if (MediaRecorder.isTypeSupported(formats[t])) {
-    //                 outputFormat = formats[t]
-    //                 break
-    //             }
-    //         }
-    //         if (typeof outputFormat != "string") {
-    //             return
-    //         } else {
-    //             let videoSettings = {
-    //                 mimeType: outputFormat,
-    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-    //             };
-    //             blobCaptures = []
-    //             try {
-    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
-    //             } catch (error) {
-    //                 return;
-    //             }
-    //             recorder.onstop = handleStop
-    //             recorder.ondataavailable = handleAvailableData
-    //             recorder.start(100)
-    //         }
-    //     }
-    //     function handleAvailableData(event) {
-    //         if (event.data && event.data.size > 0) {
-    //             blobCaptures.push(event.data)
-    //         }
-    //     }
-    //     function handleStop() {
-    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-    //         video.src = window.URL.createObjectURL(superBuffer)
-    //     }
-    //     function Stop() {
-    //         recorder.stop()
-    //         video.controls = true
-    //     }
-    //     function saveToDownloads(input) { // specifying a file name for the output
-    //         const name = input || 'video_out.webm'
-    //         const blob = new Blob(blobCaptures, { type: outputFormat })
-    //         const url = window.URL.createObjectURL(blob)
-    //         const storageElement = document.createElement('a')
-    //         storageElement.style.display = 'none'
-    //         storageElement.href = url
-    //         storageElement.download = name
-    //         document.body.appendChild(storageElement)
-    //         storageElement.click()
-    //         setTimeout(() => {
-    //             document.body.removeChild(storageElement)
-    //             window.URL.revokeObjectURL(url)
-    //         }, 100)
-    //     }
-    // }
+            for (let t = 0; t < formats.length; t++) {
+                if (MediaRecorder.isTypeSupported(formats[t])) {
+                    outputFormat = formats[t]
+                    break
+                }
+            }
+            if (typeof outputFormat != "string") {
+                return
+            } else {
+                let videoSettings = {
+                    mimeType: outputFormat,
+                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+                };
+                blobCaptures = []
+                try {
+                    recorder = new MediaRecorder(canvasInput, videoSettings)
+                } catch (error) {
+                    return;
+                }
+                recorder.onstop = handleStop
+                recorder.ondataavailable = handleAvailableData
+                recorder.start(100)
+            }
+        }
+        function handleAvailableData(event) {
+            if (event.data && event.data.size > 0) {
+                blobCaptures.push(event.data)
+            }
+        }
+        function handleStop() {
+            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+            video.src = window.URL.createObjectURL(superBuffer)
+        }
+        function Stop() {
+            recorder.stop()
+            video.controls = true
+        }
+        function saveToDownloads(input) { // specifying a file name for the output
+            const name = input || 'video_out.webm'
+            const blob = new Blob(blobCaptures, { type: outputFormat })
+            const url = window.URL.createObjectURL(blob)
+            const storageElement = document.createElement('a')
+            storageElement.style.display = 'none'
+            storageElement.href = url
+            storageElement.download = name
+            document.body.appendChild(storageElement)
+            storageElement.click()
+            setTimeout(() => {
+                document.body.removeChild(storageElement)
+                window.URL.revokeObjectURL(url)
+            }, 100)
+        }
+    }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -1296,7 +1296,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
         canvas_context = canvas.getContext('2d');
         starcanvas_context = starcanvas.getContext('2d');
         shake_context = shake.getContext('2d');
@@ -1483,7 +1483,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.guys) {
                     let c = 0
                     for (let t = 0; t < enemy.guys.length; t++) {
-                        if (enemy.guys[t].hostile == 1) {
+                        if (enemy.guys[t].hostile == 1 && enemy.guys[t].hostileTimer < -1) {
                             c++
                         }
                     }
@@ -1548,7 +1548,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 if (enemy.guys) {
                                     let c = 0
                                     for (let t = 0; t < enemy.guys.length; t++) {
-                                        if (enemy.guys[t].hostile == 1) {
+                                        if (enemy.guys[t].hostile == 1 && enemy.guys[t].hostileTimer < -1) {
                                             c++
                                         }
                                     }
@@ -1562,8 +1562,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                         }
+                        return
                     }
-                    return
                 } else {
                     if (vessel.star == 0) {
                         if (vessel.upgradeMenu.repairButton.isPointInside(TIP_engine)) {
@@ -1572,7 +1572,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     if (enemy.guys) {
                                         let c = 0
                                         for (let t = 0; t < enemy.guys.length; t++) {
-                                            if (enemy.guys[t].hostile == 1) {
+                                            if (enemy.guys[t].hostile == 1 && enemy.guys[t].hostileTimer < -1) {
                                                 c++
                                             }
                                         }
@@ -1692,7 +1692,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let g = 0; g < vessel.guys.length; g++) {
                         if (vessel.guys[g].tile.special == 1) {
                             if (vessel.UI.systems[7].sto > 0) {
-                                if(vessel.guys[g].hostile != 1){
+                                if (vessel.guys[g].hostile != 1) {
                                     vessel.guys[g].teleflag = 1
                                     return
                                 }
@@ -2785,6 +2785,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
                                         canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
+                                        canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
+                                        canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
                                     }
 
 
@@ -2849,6 +2853,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
                                             canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
+                                            canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
+                                            canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
 
                                     }
@@ -2925,6 +2933,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
                                     } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
                                         canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
+                                        canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
+                                        canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
                                     }
 
                                 }
@@ -2988,6 +3000,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
                                             canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
+                                            canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
+                                            canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
 
                                     }
@@ -3171,7 +3187,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     crabship.src = "crabship.png"
     let crabshipsmall = new Image()
     crabshipsmall.src = "crabshipsmall.png"
-    
+
     let ximage = new Image()
     ximage.src = "yship.png"
     let shipimage = new Image()
@@ -3322,6 +3338,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     class Guy {
         constructor(tile, type = -1) {
+            this.hostileTimer = 1
             this.zSelected = 0
             this.gearSpeed = 0
             this.gearArmor = 0
@@ -3935,7 +3952,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.type == 100) {
                 return
             }
-
+            if(this.mindControlled == 1){
+                this.hostileTimer--
+            }
+            if(this.hostileTimer <= 0){
+                this.hostile = 0
+                this.mindControlled = 0
+            }
 
             this.gearSpeed = 0
             this.gearArmor = 0
@@ -5456,6 +5479,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.buy = 45
                     this.sell = 20
                     this.mini = 1
+                } else if (this.type == 27) {
+                    this.name1 = "Mind"
+                    this.name2 = "Control I"
+                    this.max = 1000
+                    this.damage = 0
+                    // this.bomb = 1
+                    this.beam = 0
+                    this.real = 1
+                    this.crew = 0
+                    // this.puncture = 1
+                    this.fireChance = 0
+                    this.double = 0
+                    this.buy = 80
+                    this.sell = 45
+                    this.mind = 1
+                } else if (this.type == 28) {
+                    this.name1 = "Mind"
+                    this.name2 = "Control II"
+                    this.max = 1400
+                    this.damage = 0
+                    // this.bomb = 1
+                    this.beam = 0
+                    this.real = 1
+                    this.crew = 0
+                    // this.puncture = 1
+                    this.fireChance = 0
+                    this.double = 0
+                    this.buy = 125
+                    this.sell = 65
+                    this.mind = 2
                 } else if (this.type == 100) {
                     this.name1 = "Wodopom"
                     this.name2 = ""
@@ -5717,11 +5770,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     if (enemy.guys[t].tile == tile) {
                                         enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
                                         enemy.guys[t].hit = 0
+                                        if (this.mind > 0) {
+                                            enemy.guys[t].hostile = 1
+                                            enemy.guys[t].hostileTimer = this.mind * 400
+                                            enemy.guys[t].mindControlled = 1
+                                        }
                                     }
                                     if (enemy.guys[t].tiles) {
                                         if (enemy.guys[t].tiles.includes(tile)) {
                                             enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
                                             enemy.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                enemy.guys[t].hostile = 1
+                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -5821,11 +5884,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     if (vessel.guys[t].tile == tile) {
                                         vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
                                         vessel.guys[t].hit = 0
+                                        if (this.mind > 0) {
+                                            vessel.guys[t].hostile = 1
+                                            vessel.guys[t].hostileTimer = this.mind * 400
+                                            vessel.guys[t].mindControlled = 1
+                                        }
                                     }
                                     if (vessel.guys[t].tiles) {
                                         if (vessel.guys[t].tiles.includes(tile)) {
                                             vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
                                             vessel.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                vessel.guys[t].hostile = 1
+                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6410,6 +6483,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 enemy.energy.powersto += 1
                                             }
                                             vessel.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                vessel.guys[t].hostile = 1
+                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6435,6 +6513,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 }
                                             }
                                             enemy.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                enemy.guys[t].hostile = 1
+                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6471,6 +6554,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 enemy.energy.powersto += 1
                                             }
                                             vessel.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                vessel.guys[t].hostile = 1
+                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6496,6 +6584,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 }
                                             }
                                             enemy.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                enemy.guys[t].hostile = 1
+                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6531,6 +6624,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 enemy.energy.powersto += 1
                                             }
                                             vessel.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                vessel.guys[t].hostile = 1
+                                                vessel.guys[t].hostileTimer = this.mind * 400
+                                                vessel.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6556,6 +6654,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 }
                                             }
                                             enemy.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                enemy.guys[t].hostile = 1
+                                                enemy.guys[t].hostileTimer = this.mind * 400
+                                                enemy.guys[t].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
@@ -6728,6 +6831,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let site3 = new RedX(this.target.x + (Math.cos(this.angle) * (10 - this.firing) * 2), this.target.y + (Math.sin(this.angle) * (10 - this.firing) * 2))
                     site3.draw()
                     this.firing -= 2
+                }  else if (this.type == 27) {
+                    if (this.firing == 10) {
+                        sap1aud.play()
+                    }
+                    let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
+                    ring.draw()
+                    let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
+                    ring2.draw()
+                    this.firing -= .5
+                }  else if (this.type == 28) {
+                    if (this.firing == 10) {
+                        sap1aud.play()
+                    }
+                    let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
+                    ring.draw()
+                    let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
+                    ring2.draw()
+                    this.firing -= .5
                 } else if (this.type == 100) {
 
 
@@ -6888,6 +7009,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     canvas_context.drawImage(scrapcannon3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 } else if (this.type == 26) {
                     canvas_context.drawImage(heatbeam2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                } else if (this.type == 27) {
+                    canvas_context.drawImage(mindcontrol1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                } else if (this.type == 28) {
+                    canvas_context.drawImage(mindcontrol2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 } else if (this.type == 100) {
                     this.frame++
                     canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -6986,6 +7111,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
     specialimage.src = "special.png"
     let emptyimage = new Image()
     emptyimage.src = "empty.png"
+
+
+    let mindcontrol1 = new Image()
+    mindcontrol1.src = "mindcontrol1.png"
+    let mindcontrol2 = new Image()
+    mindcontrol2.src = "mindcontrol2.png"
+    let mindcontrolr1 = new Image()
+    mindcontrolr1.src = "mindcontrolr1.png"
+    let mindcontrolr2 = new Image()
+    mindcontrolr2.src = "mindcontrolr2.png"
+
+
 
 
     let basiclaserr = new Image()
@@ -7475,7 +7612,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             let c = 0
             if (enemy.guys) {
                 for (let t = 0; t < enemy.guys.length; t++) {
-                    if (enemy.guys[t].hostile == 1) {
+                    if (enemy.guys[t].hostile == 1 && enemy.guys[t].hostileTimer < -1) {
                         c++
                     }
                 }
@@ -9586,7 +9723,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 let c = 0
                 for (let t = 0; t < this.guys.length; t++) {
-                    if (this.guys[t].hostile == 1) {
+                    if (this.guys[t].hostile == 1 && this.guys[t].hostileTimer < -1) {
                         c++
                     }
                     this.guys[t].bodydraw()
@@ -10318,7 +10455,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.copies = []
             this.angle = 0
             this.now = Date.now()
-            this.type = type
+            this.type = zz//type
             // zz++
             if (mode == 1) {
                 this.level = level
@@ -11150,7 +11287,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .05) {
-                        // let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 29))
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
@@ -11165,7 +11302,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 29))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 21) {
@@ -11179,7 +11316,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 29))
                         this.weapons.push(wep5)
                     }
                 } else if (this.level < 29) {
@@ -11194,19 +11331,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
@@ -11221,37 +11358,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 27))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 29))
                             this.weapons.push(wep5)
                         }
                     }
@@ -11678,7 +11815,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 for (let t = 0; t < this.guys.length; t++) {
 
-                    if (this.guys[t].hostile == 1) {
+                    if (this.guys[t].hostile == 1 && this.guys[t].hostileTimer < -1) {
                         c++
                     }
                     if (this.guys[t].path.length > 1 || this.guys[t].hostile == 1) {
@@ -12469,7 +12606,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (index > -1) {
-                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 29)))
                             } else {
                                 // this.wegflag = 1
 
@@ -12482,7 +12619,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 if (index > -1) {
-                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 29)))
                                 } else {
                                     this.wegflag = 1
                                 }
@@ -12500,7 +12637,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (index > -1) {
-                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 29)))
                             } else {
                                 // this.wegflag = 1
 
@@ -12513,7 +12650,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 if (index > -1) {
-                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 27)))
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 29)))
                                 } else {
                                     this.wegflag = 1
                                 }
@@ -12615,7 +12752,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 5)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 29)))
                 }
                 for (let t = 0; t < 12; t++) {
                     this.weapons.push(new Weapon(-1))
@@ -12626,7 +12763,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (Math.random() < .5) {
 
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 29)))
                     }
                     for (let t = 0; t < 12; t++) {
                         this.weapons.push(new Weapon(-1))
@@ -12643,7 +12780,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (Math.random() < .8) {
 
                             for (let t = 0; t < 2; t++) {
-                                this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 29)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
@@ -12654,7 +12791,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         } else {
 
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 29)))
                             }
                             for (let t = 0; t < 2; t++) {
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
@@ -14286,15 +14423,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             start = 0
         }
         // CanvasC
-        // if (keysPressed['-'] && recording == 0) {
-        //     recording = 1
-        //     video_recorder.record()
-        // }
-        // if (keysPressed['='] && recording == 1) {
-        //     recording = 0
-        //     video_recorder.stop()
-        //     video_recorder.download('File Name As A String.webm')
-        // }
+        if (keysPressed['-'] && recording == 0) {
+            recording = 1
+            video_recorder.record()
+        }
+        if (keysPressed['='] && recording == 1) {
+            recording = 0
+            video_recorder.stop()
+            video_recorder.download('File Name As A String.webm')
+        }
         if (start == 0) {
             if (tut == 1) {
                 stframe += 1
