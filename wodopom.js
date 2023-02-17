@@ -10455,7 +10455,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.copies = []
             this.angle = 0
             this.now = Date.now()
-            this.type = zz//type
+            this.type = type
             // zz++
             if (mode == 1) {
                 this.level = level
