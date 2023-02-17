@@ -1457,12 +1457,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 let i1 = -1
                 let i2 = -1
                 for (let t = 0; t < vessel.guys.length; t++) {
-                    if(vessel.guys[t].zSelected == 1){
+                    if (vessel.guys[t].zSelected == 1) {
                         i1 = t
                         break
                     }
                 }
-                if(i1 != -1){
+                if (i1 != -1) {
                     for (let t = 0; t < vessel.guys[i1].gear.length; t++) {
                         vessel.guys[i1].gear[t].check(TIP_engine)
                     }
@@ -1712,7 +1712,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-    
+
             let chet = 1
             if (vessel.guys) {
                 for (let g = 0; g < vessel.guys.length; g++) {
@@ -1773,11 +1773,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                         if (vessel.guys) {
                             let vet = 0
-                            if(vessel.upgradeMenu.button.isPointInside(TIP_engine)){
+                            if (vessel.upgradeMenu.button.isPointInside(TIP_engine)) {
                                 vet = 1
                             }
-                            if(vessel.upgradeMenu.open == 1){
-                                if(vessel.upgradeMenu.window.isPointInside(TIP_engine)){
+                            if (vessel.upgradeMenu.open == 1) {
+                                if (vessel.upgradeMenu.window.isPointInside(TIP_engine)) {
                                     vet = 1
                                 }
                             }
@@ -1787,9 +1787,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     for (let r = 0; r < vessel.guys.length; r++) {
                                         vessel.guys[r].selected = 0
                                         // if(keysPressed['z']){
-                                            if(vet == 0){
-                                                vessel.guys[r].zSelected = 0
-                                            }
+                                        if (vet == 0) {
+                                            vessel.guys[r].zSelected = 0
+                                        }
                                         // }
                                     }
                                     vet = 1
@@ -1804,31 +1804,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     // vessel.guys[g].path = [vessel.guys[g].tile]
                                     // vessel.guys[g].flagpath = [vessel.guys[g].tile]
                                 }
-                                if(vessel.guys[g].zSelected == 1){
-                                    for(let d = 0;d<vessel.guys[g].gear.length;d++){
-                                        if(vessel.guys[g].gear[d].body.isPointInside(TIP_engine)){
+                                if (vessel.guys[g].zSelected == 1) {
+                                    for (let d = 0; d < vessel.guys[g].gear.length; d++) {
+                                        if (vessel.guys[g].gear[d].body.isPointInside(TIP_engine)) {
                                             vet = 1
                                         }
                                     }
                                 }
                             }
 
-                            if(vet == 0){
+                            if (vet == 0) {
 
                             }
 
-                            if(vet == 0){
-                                if(vessel.upgradeMenu.open == 1){
-                                    if(vessel.upgradeMenu.window.isPointInside(TIP_engine)){
-                                    for (let r = 0; r < vessel.guys.length; r++) {
-                                        vessel.guys[r].zSelected = 0
+                            if (vet == 0) {
+                                if (vessel.upgradeMenu.open == 1) {
+                                    if (vessel.upgradeMenu.window.isPointInside(TIP_engine)) {
+                                        for (let r = 0; r < vessel.guys.length; r++) {
+                                            vessel.guys[r].zSelected = 0
+                                        }
+                                    } else {
+                                        for (let r = 0; r < vessel.guys.length; r++) {
+                                            vessel.guys[r].zSelected = 0
+                                        }
                                     }
-                                }else{
-                                    for (let r = 0; r < vessel.guys.length; r++) {
-                                        vessel.guys[r].zSelected = 0
-                                    }
-                                }
-                                }else{
+                                } else {
                                     for (let r = 0; r < vessel.guys.length; r++) {
                                         vessel.guys[r].zSelected = 0
                                     }
@@ -2609,6 +2609,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(fire, this.tag * (fire.width / 18), 0, fire.width / 18, fire.height, this.x + ((1 - frat) * this.width * .5), this.y + ((1 - frat) * this.height * .5), this.width * (frat), this.height * (frat))
             }
         }
+        subdraw() {
+            if (this.left == 1) {
+                if (vessel.hash) {
+                    if (vessel.hash['engine'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[6].max)))) {
+                        if (vessel.UI.systems[6].sto + vessel.UI.systems[6].fed > 0) {
+                            canvas_context.drawImage(engineblast, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                        } else {
+                            canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                        }
+                    } else {
+                        canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+
+                    }
+                }
+            }
+            if (this.right == 1) {
+                if (enemy.hash) {
+                    if (enemy.hash['engine'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[6].max)))) {
+                        if (enemy.UI.systems[6].sto + enemy.UI.systems[6].fed > 0) {
+                            canvas_context.drawImage(engineblastr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                        } else {
+                            canvas_context.drawImage(engineblastr, 0, 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                        }
+                    } else {
+                        canvas_context.drawImage(engineblastr, 0, 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                    }
+                }
+            }
+        }
         draw() {
 
             let subx = (this.width - 16)
@@ -2969,36 +2998,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
 
             }
-            if (this.left == 1) {
-                if (vessel.hash) {
-
-                    if (vessel.hash['engine'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[6].max)))) {
-                        if (vessel.UI.systems[6].sto + vessel.UI.systems[6].fed > 0) {
-                            canvas_context.drawImage(engineblast, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
-                        } else {
-                            canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
-                        }
-                    } else {
-                        canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
-
-                    }
-                }
-            }
-            if (this.right == 1) {
-
-                if (enemy.hash) {
-                    if (enemy.hash['engine'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[6].max)))) {
-                        if (enemy.UI.systems[6].sto + enemy.UI.systems[6].fed > 0) {
-                            canvas_context.drawImage(engineblastr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
-                        } else {
-                            canvas_context.drawImage(engineblastr, 0, 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
-                        }
-                    } else {
-                        canvas_context.drawImage(engineblastr, 0, 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
-
-                    }
-                }
-            }
             // this.counterset++
             // if (this.counterset % 3 == 0) {
             //     this.counter++
@@ -3168,7 +3167,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let crabship = new Image()
     crabship.src = "crabship.png"
-
+    let crabshipsmall = new Image()
+    crabshipsmall.src = "crabshipsmall.png"
+    
     let ximage = new Image()
     ximage.src = "yship.png"
     let shipimage = new Image()
@@ -3239,35 +3240,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.name1 = 'Cool Shoes'
                 this.name2 = ''
                 this.armor = .05
-                this.damage = 1/6
+                this.damage = 1 / 6
                 this.speed = -1
             }
             if (this.type == 2) {
                 this.name2 = ''
                 this.name1 = 'Nice Shoes'
                 this.armor = .05
-                this.damage = 1/6
+                this.damage = 1 / 6
                 this.speed = -2
             }
             if (this.type == 3) {
                 this.name1 = 'Slick Shoes'
                 this.name2 = ''
                 this.armor = .05
-                this.damage = 1/6
+                this.damage = 1 / 6
                 this.speed = -3
             }
             if (this.type == 4) {
                 this.name1 = 'Personal '
                 this.name2 = 'Synthesizer'
                 this.armor = 0
-                this.damage = 1/6
+                this.damage = 1 / 6
                 this.speed = -1
                 this.regen = .1
             }
         }
         check(point) {
             if (this.guy.zSelected == 1) {
-                if(this.selected == 1){
+                if (this.selected == 1) {
                     let wet = 0
                     let dry = 0
                     let index = -1
@@ -3279,7 +3280,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (index != -1) {
                         //console.log(index)
-                        let g =  vessel.upgradeMenu.wepsto[index].gearType
+                        let g = vessel.upgradeMenu.wepsto[index].gearType
                         vessel.upgradeMenu.wepsto[index] = new Weapon(-1, -1, this.type)
                         this.guy.gear[this.guy.gear.indexOf(this)] = new Gear(g, this.guy)
                     }
@@ -3297,9 +3298,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // //console.log(this.guy.gearArmor)
         }
         draw() {
-            if(this.selected == 1){
+            if (this.selected == 1) {
                 this.body.color = "#AA5555"
-            }else{
+            } else {
 
                 this.body.color = "#555555"
             }
@@ -3313,7 +3314,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body.draw()
             canvas_context.font = "11px comic sans ms"
             canvas_context.fillStyle = "white"
-            canvas_context.fillText(this.name1+this.name2, this.body.x + 5, this.body.y + 20)
+            canvas_context.fillText(this.name1 + this.name2, this.body.x + 5, this.body.y + 20)
         }
     }
 
@@ -3401,7 +3402,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             } else {
-                if(vessel.type == 7){
+                if (vessel.type == 7) {
 
                     this.gear = []
                     for (let t = 0; t < 1; t++) {
@@ -3411,12 +3412,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.gear.push(new Gear(-1, this))
                     }
 
-                } else{
-                    
-                this.gear = []
-                for (let t = 0; t < 6; t++) {
-                    this.gear.push(new Gear(-1, this))
-                }
+                } else {
+
+                    this.gear = []
+                    for (let t = 0; t < 6; t++) {
+                        this.gear.push(new Gear(-1, this))
+                    }
                 }//plantship
             }
             if (vessel.type == 1) {
@@ -3766,13 +3767,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
 
-                if(this.zSelected == 1){
+                if (this.zSelected == 1) {
 
-                }else{
+                } else {
 
-                for (let t = 0; t < this.gear.length; t++) {
-                    this.gear[t].selected = 0
-                }
+                    for (let t = 0; t < this.gear.length; t++) {
+                        this.gear[t].selected = 0
+                    }
                 }
 
 
@@ -3942,7 +3943,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             for (let t = 0; t < this.gear.length; t++) {
                 this.gear[t].balance()
             }
-            this.rate = Math.max(2,this.rateSto - (-this.gearSpeed))
+            this.rate = Math.max(2, this.rateSto - (-this.gearSpeed))
 
             this.regen = this.regenSto + this.gearRegen
 
@@ -3957,12 +3958,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         enemy.guys.push(clone2)
                         vessel.guys.splice(vessel.guys.indexOf(this), 1)
 
-                        if(this.stretch == 1){
-                            for(let k = 0;k<this.tiles.length;k++){
+                        if (this.stretch == 1) {
+                            for (let k = 0; k < this.tiles.length; k++) {
                                 this.tiles[k].walkable = true
                             }
                         }
-                        
+
                     }
                     this.teleflag = 0
                     return
@@ -3975,8 +3976,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         //////////////////console.log(enemy, enemy.guys)
                         vessel.guys.push(clone2)
                         enemy.guys.splice(enemy.guys.indexOf(this), 1)
-                        if(this.stretch == 1){
-                            for(let k = 0;k<this.tiles.length;k++){
+                        if (this.stretch == 1) {
+                            for (let k = 0; k < this.tiles.length; k++) {
                                 this.tiles[k].walkable = true
                             }
                         }
@@ -5034,7 +5035,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.firing = -1
                 this.gearType = gear
                 this.crewType = -1
-                this.crewType  = -1
+                this.crewType = -1
                 this.name1 = gearcheck.name1
                 this.name2 = gearcheck.name2
                 this.metatarget = {}
@@ -5537,7 +5538,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     break
                 }
             }
-            if(stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)].gearType > -1){
+            if (stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)].gearType > -1) {
                 f = 0
             }
             if (f == 0) {
@@ -6892,20 +6893,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // this.frame++
                     canvas_context.drawImage(iou, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
-            }else if(this.gearType >= 0){
-                if(this.gearType == 0){
+            } else if (this.gearType >= 0) {
+                if (this.gearType == 0) {
                     canvas_context.drawImage(armor1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
-                if(this.gearType == 1){
+                if (this.gearType == 1) {
                     canvas_context.drawImage(shoes1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
-                if(this.gearType == 2){
+                if (this.gearType == 2) {
                     canvas_context.drawImage(shoes2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
-                if(this.gearType == 3){
+                if (this.gearType == 3) {
                     canvas_context.drawImage(shoes3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
-                if(this.gearType == 4){
+                if (this.gearType == 4) {
                     canvas_context.drawImage(synth1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
                 }
 
@@ -6937,7 +6938,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let synth1 = new Image()
     synth1.src = "synth1.png"
-    
+
 
 
 
@@ -7670,14 +7671,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
 
                     } else {
-                        if(mode == 1){
-                        this.repairButton.color = "#ff000044"
-                        this.repairButton.draw()
-                        canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
-                        canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                        canvas_context.font = "12px comic sans ms"
-                        canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40)
+                        if (mode == 1) {
+                            this.repairButton.color = "#ff000044"
+                            this.repairButton.draw()
+                            canvas_context.fillStyle = "white"
+                            canvas_context.font = "20px comic sans ms"
+                            canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
+                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40)
                         }
                     }
                 } else if (enemy.hull <= 0) {
@@ -7706,7 +7707,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                 } else {
-                    if(mode == 1){
+                    if (mode == 1) {
                         this.repairButton.color = "#ff000044"
                         this.repairButton.draw()
                         canvas_context.fillStyle = "white"
@@ -7835,12 +7836,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 //monsters
                 for (let t = 0; t < this.wepsto.length; t++) {
-                    if(this.wepsto[t].selected == 1){
-                        for(let g = 0;g<vessel.guys.length;g++){
-                            if(vessel.guys[g].zSelected == 1){
-                                for(let k = 0;k<vessel.guys[g].gear.length;k++){
-                                    if(vessel.guys[g].gear[k].body.isPointInside(TIP_engine)){    
-                                        if(vessel.upgradeMenu.wepsto[t].gearType >=0){
+                    if (this.wepsto[t].selected == 1) {
+                        for (let g = 0; g < vessel.guys.length; g++) {
+                            if (vessel.guys[g].zSelected == 1) {
+                                for (let k = 0; k < vessel.guys[g].gear.length; k++) {
+                                    if (vessel.guys[g].gear[k].body.isPointInside(TIP_engine)) {
+                                        if (vessel.upgradeMenu.wepsto[t].gearType >= 0) {
                                             let f = vessel.guys[g].gear[k].type
                                             vessel.guys[g].gear[k] = new Gear(vessel.upgradeMenu.wepsto[t].gearType, vessel.guys[g])
                                             vessel.upgradeMenu.wepsto[t] = new Weapon(-1, -1, f)
@@ -7851,7 +7852,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
 
-                            for(let k = 0;k<vessel.guys[g].gear.length;k++){
+                            for (let k = 0; k < vessel.guys[g].gear.length; k++) {
                                 // vessel.guys[g].zSelected = 0
                             }
                         }
@@ -7939,7 +7940,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (this.wepsto[t].body.isPointInside(point)) {
                             for (let k = 0; k < vessel.weapons.length; k++) {
                                 if (vessel.weapons[k].selected == 1) {
-                                    if(this.wepsto[t].gearType < 0){
+                                    if (this.wepsto[t].gearType < 0) {
                                         let swap = new Weapon(this.wepsto[t].type)
                                         this.wepsto[t] = new Weapon(vessel.weapons[k].type)
                                         vessel.weapons[k] = swap
@@ -7954,10 +7955,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.weapons[k].body.isPointInside(point)) {
                             for (let t = 0; t < this.wepsto.length; t++) {
                                 if (this.wepsto[t].selected == 1) {
-                                    if(this.wepsto[t].gearType < 0){
-                                    let swap = new Weapon(this.wepsto[t].type)
-                                    this.wepsto[t] = new Weapon(vessel.weapons[k].type)
-                                    vessel.weapons[k] = swap
+                                    if (this.wepsto[t].gearType < 0) {
+                                        let swap = new Weapon(this.wepsto[t].type)
+                                        this.wepsto[t] = new Weapon(vessel.weapons[k].type)
+                                        vessel.weapons[k] = swap
                                     }
                                 }
                             }
@@ -8290,7 +8291,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 return
 
             }
-            if(vessel.upgradeMenu.open == 1){
+            if (vessel.upgradeMenu.open == 1) {
                 return
             }
             if (start == 1) {
@@ -9191,9 +9192,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            if(this.type == 1){
-                if(start == 2){
-                    canvas_context.drawImage(crabship, -40,10)
+
+            if (start == 2) {
+                this.shield.draw()
+                for (let t = 0; t < this.blocks.length; t++) {
+                    for (let k = 0; k < this.blocks[t].length; k++) {
+                        // let hrat = this.blocks[t][k].integrity / 100
+                        if (this.blocks[t][k].marked == 1) {
+                            // this.blocks[t][k].color = `rgba(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80}, .3)`
+                            this.blocks[t][k].subdraw()
+                            // this.blocks[t][k].hole()
+                        }
+                    }
+                }
+            }
+            if (this.type == 1) {
+                if (start == 2) {
+                    canvas_context.drawImage(crabship, -40, 10)
+
                 }
             }
 
@@ -9263,7 +9279,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (start == 1) {
                 vessel.angle += .01
                 if (this.type == 1) {
-                    canvas_context.drawImage(shipimage2, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
+                    canvas_context.drawImage(crabshipsmall, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
 
                 } else if (this.type == 0) {
                     canvas_context.drawImage(shipimage, 0, 0, 256, 256, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
@@ -9328,7 +9344,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                this.shield.draw()
 
                 //ui was here check UIdraw
                 enemy.energy.balance()
@@ -9547,14 +9562,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                
+
 
 
                 for (let t = 0; t < this.guys.length; t++) {
                     if (this.guys[t].health <= 0 && this.guys[t].energydeathtag <= 0) {
                         this.guys[t].tile.walkable = true
-                        if(this.guys[t].stretch == 1){
-                            for(let k = 0;k<this.guys[t].tiles.length;k++){
+                        if (this.guys[t].stretch == 1) {
+                            for (let k = 0; k < this.guys[t].tiles.length; k++) {
                                 this.guys[t].tiles[k].walkable = true
                             }
                         }
@@ -10307,10 +10322,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.level = level
             } else {
                 let link = new LineOP(stars.stars[0].body, stars.stars[stars.to].body)
-                if(stars.collapsed == 1){
+                if (stars.collapsed == 1) {
                     this.level = Math.floor(link.hypotenuse() / 7.5)
-                }else{
-                this.level = Math.floor(link.hypotenuse() / 150)
+                } else {
+                    this.level = Math.floor(link.hypotenuse() / 150)
                 }
             }
             if (mode == 1) {
@@ -11287,8 +11302,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // }
                 if (this.guys[t].health <= 0 && this.guys[t].energydeathtag <= 0) {
                     this.guys[t].tile.walkable = true
-                    if(this.guys[t].stretch == 1){
-                        for(let k = 0;k<this.guys[t].tiles.length;k++){
+                    if (this.guys[t].stretch == 1) {
+                        for (let k = 0; k < this.guys[t].tiles.length; k++) {
                             this.guys[t].tiles[k].walkable = true
                         }
                     }
@@ -12381,7 +12396,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     } else {
                         // let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
                         // this.loot = Math.floor(link.hypotenuse() / 120) + 1
-                this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+                        this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
 
                     }
                     // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
@@ -12593,9 +12608,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.link = new LineOP(this.body, this.body)
             }
             this.weapons = []
-            if(Math.random()< .12){
+            if (Math.random() < .12) {
                 for (let t = 0; t < 2; t++) {
-                    this.weapons.push(new Weapon(-1,-1, Math.floor(Math.random()*5)))
+                    this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 5)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
@@ -12604,50 +12619,50 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(new Weapon(-1))
                 }
 
-            }else{
-
-            if (Math.random() < .5) {
-
-                for (let t = 0; t < 3; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
-                }
-                for (let t = 0; t < 12; t++) {
-                    this.weapons.push(new Weapon(-1))
-                }
             } else {
-                if (Math.random() < .2) {
+
+                if (Math.random() < .5) {
+
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
                     }
                     for (let t = 0; t < 12; t++) {
                         this.weapons.push(new Weapon(-1))
                     }
                 } else {
-                    if (Math.random() < .8) {
-
-                        for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
-                        }
-                        for (let t = 0; t < 1; t++) {
+                    if (Math.random() < .2) {
+                        for (let t = 0; t < 3; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
                         }
                         for (let t = 0; t < 12; t++) {
                             this.weapons.push(new Weapon(-1))
                         }
                     } else {
+                        if (Math.random() < .8) {
 
-                        for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
-                        }
-                        for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
-                        }
-                        for (let t = 0; t < 12; t++) {
-                            this.weapons.push(new Weapon(-1))
+                            for (let t = 0; t < 2; t++) {
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                            }
+                            for (let t = 0; t < 1; t++) {
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
+                            }
+                            for (let t = 0; t < 12; t++) {
+                                this.weapons.push(new Weapon(-1))
+                            }
+                        } else {
+
+                            for (let t = 0; t < 1; t++) {
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 27)))
+                            }
+                            for (let t = 0; t < 2; t++) {
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
+                            }
+                            for (let t = 0; t < 12; t++) {
+                                this.weapons.push(new Weapon(-1))
+                            }
                         }
                     }
                 }
-            }
             }
 
         }
@@ -13023,8 +13038,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         if (vessel.guys[t].gear[k].body.isPointInside(TIP_engine)) {
 
-                            this.text1 = `Armor ${vessel.guys[t].gear[k].armor+1}x`
-                            this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].damage-(1/6))*100)}%`
+                            this.text1 = `Armor ${vessel.guys[t].gear[k].armor + 1}x`
+                            this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].damage - (1 / 6)) * 100)}%`
                             this.text3 = `Speed + ${Math.abs(vessel.guys[t].gear[k].speed)}`
                             this.text4 = `Regen ${Math.abs(vessel.guys[t].gear[k].regen)}`
                             let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
