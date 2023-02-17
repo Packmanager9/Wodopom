@@ -10307,13 +10307,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.level = level
             } else {
                 let link = new LineOP(stars.stars[0].body, stars.stars[stars.to].body)
+                if(stars.collapsed == 1){
+                    this.level = Math.floor(link.hypotenuse() / 7.5)
+                }else{
                 this.level = Math.floor(link.hypotenuse() / 150)
+                }
             }
             if (mode == 1) {
                 this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
             } else {
-                let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
-                this.loot = Math.floor(link.hypotenuse() / 120) + 1
+                // let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
+                // if(stars.collapsed == 1){
+                //     this.loot = Math.floor(link.hypotenuse() / 6) + 1
+                // }else{
+                //     this.loot = Math.floor(link.hypotenuse() / 120) + 1
+                // }
+                this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+
             }
             this.ondeath = 0
             this.pulse = 0
@@ -12369,8 +12379,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (mode == 1) {
                         this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
                     } else {
-                        let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
-                        this.loot = Math.floor(link.hypotenuse() / 120) + 1
+                        // let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
+                        // this.loot = Math.floor(link.hypotenuse() / 120) + 1
+                this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+
                     }
                     // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                     vessel.scrap += this.loot
@@ -12870,10 +12882,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             } else {
 
-                if (this.link.hypotenuse() < 1000) {
+                if (this.link.hypotenuse() < 1200) {
                     this.link.color = "#00FF00"
                     if (stars.collapsed == 1) {
-                        if (this.link.hypotenuse() < 50) {
+                        if (this.link.hypotenuse() < 60) {
                             this.link.color = "#00FF00"
                             this.flag = 1
                         } else {
@@ -14432,7 +14444,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (wet == 1) {
 
-                canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
+                // canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
             }
             // }
         } else {
@@ -14454,7 +14466,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 if (wet == 1) {
 
-                    canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
+                    // canvas_context.drawImage(intruderimg, 0, 0, intruderimg.width, intruderimg.height, 0, 0, 700, 250)
                 }
 
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1279, 719)
