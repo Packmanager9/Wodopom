@@ -5882,7 +5882,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 29) {
                     this.name1 = "Ship"
                     this.name2 = "Tether I"
-                    this.max = 100
+                    this.max = 200
                     this.damage = 0
                     // this.bomb = 1
                     this.tether = 1
@@ -5898,7 +5898,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 30) {
                     this.name1 = "Ship"
                     this.name2 = "Tether II"
-                    this.max = 120
+                    this.max = 240
                     this.damage = 0
                     // this.bomb = 1
                     this.tether = 2
@@ -5914,7 +5914,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 31) {
                     this.name1 = "Ship"
                     this.name2 = "Tether III"
-                    this.max = 140
+                    this.max = 280
                     this.damage = 0
                     this.tether = 3
                     this.beam = 0
@@ -6548,6 +6548,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         work() {
             if (vessel.weapons.includes(this)) {
                 if (enemy.hull <= 0) {
+                    this.bullets = []
+                }
+                if (enemy.guys.length <= 0) {
                     this.bullets = []
                 }
             }
