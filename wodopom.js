@@ -3895,9 +3895,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.healthbar = new Rectangle(34, ((vessel.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
                     this.healthbar.draw()
                     canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
-                    if(this.type == 20){
-                        if(Math.random()< .2){
-                        this.count++
+                    if (this.type == 20) {
+                        if (Math.random() < .2) {
+                            this.count++
                         }
                     }
 
@@ -3919,8 +3919,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.healthbar.draw()
                         canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
 
-                        if(this.type == 20){
-                            if(Math.random()< .2){
+                        if (this.type == 20) {
+                            if (Math.random() < .2) {
                                 this.count++
                             }
                         }
@@ -6512,7 +6512,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             for (let t = 0; t < this.bullets.length; t++) {
-                if(!(this.bullets[t].goTo)){
+                if (!(this.bullets[t].goTo)) {
                     this.bullets[t].goTo = this.target
                 }
                 this.bullets[t].life--
@@ -6612,6 +6612,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     if (vessel.weapons.includes(this)) {
                         if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                            this.bullets[t].life = -100
                             // console.log("proof")
                             this.bullets[t].goTo.integrity -= this.damage
 
@@ -6659,6 +6660,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     } else {
 
                         if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                            this.bullets[t].life = -100
                             // console.log("proof")
                             this.bullets[t].goTo.integrity -= this.damage
 
@@ -6846,6 +6848,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
+                if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                    this.bullets[t].life = -100
+                }
+                // this.bullets[t].move()
+                // if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                //     this.bullets[t].life = -100
+                // }
+                // this.bullets[t].unmove()
             }
 
             if (this.auto == 1) {
@@ -10742,7 +10752,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.type == 1) {
                         let wep1 = new Weapon(10)
                         let wep2 = new Weapon(20)
-                        let wep3 = new Weapon(-11)
+                        let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -11682,7 +11692,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (stars.collapsed == 1) {
                     this.level = Math.floor(link.hypotenuse() / 7.5)
                 } else {
-                    this.level = Math.floor(link.hypotenuse() / 150) 
+                    this.level = Math.floor(link.hypotenuse() / 150)
                 }
             }
             if (mode == 1) {
