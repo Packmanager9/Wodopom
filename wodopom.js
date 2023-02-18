@@ -3699,7 +3699,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.energy = 1
                 // this.tiles = [this.tile, this.tile, this.tile, this.tile, this.tile, this.tile]
                 this.fireproof = 1
-                this.skills += 'Non-Extinguishing---, Repair--, Fight+++, Fireproof+, Energetic++, '
+                this.skills += 'Non-Extinguishing---, Repair--, Fight++++, Fireproof+, Energetic++, '
                 this.names = ["Fireknife", "Sparky", "Ignus", "Slifier"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
@@ -3719,7 +3719,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.health*=3
                 // this.maxhealth = this.health
                 this.stats[0] *= 6
-                this.damage *= 2
+                this.damage = 12
                 this.stats[5] += 1
                 this.extinguish = 10
                 this.repair = 10
@@ -3762,7 +3762,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.type == 3) {
                 this.stats[1] += .5
-                this.damage = 7
+                this.damage = 9
                 this.skills += 'Weapons+, Fight++, '
 
                 this.names = ["Bobbin", "Tentaslip", "Moom", "Bandagal", "Wrab", "Tenbanwra", "Wontombah", "Vieslib", "Banra"]
@@ -3782,7 +3782,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.stats[3] += .7
                 this.health *= 1.2
                 this.maxhealth = this.health
-                this.damage = 6
+                this.damage = 9
                 this.barter = 1.05
                 this.skills += 'Thrifty++, Helm+, Fight++, '
                 this.names = ["Clak", "Pinck", "Grak", "Clyk", "Clok", "Colk", "Colek", "Klack", "Brak"]
@@ -3840,7 +3840,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.stats[2] -= .25
                 this.stats[1] += .25
                 this.maxhealth = this.health
-                this.skills += 'Fight++, Helm-, Engine++, Weapons+'
+                this.skills += 'Fight+, Helm-, Engine++, Weapons+'
                 this.names = ["Pote", "Potte", "Poat", "Pohat", "Pewt", "Plote", "Ploat", "Polte", "Plotle", "Lotle"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
