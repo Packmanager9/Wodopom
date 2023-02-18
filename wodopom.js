@@ -5271,6 +5271,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             const angle = Math.PI / 4
             this.xmom = xmom
             this.ymom = ymom
+            this.x = x
+            this.y = y
             this.point1 = new Point(x + (Math.cos(angle) * size), y + (Math.sin(angle) * size))
             this.point2 = new Point(x + (Math.cos(angle) * -size), y + (Math.sin(angle) * -size))
             this.point3 = new Point(x + (Math.cos(angle + Math.PI * .5) * size), y + (Math.sin(angle + Math.PI * .5) * size))
@@ -5284,6 +5286,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.link2 = new LineOP(this.point3, this.point4, color, 5)
             this.link3 = new LineOP(this.point5, this.point6, color, 5)
             this.link4 = new LineOP(this.point7, this.point8, color, 5)
+            this.radius = size
+        }
+        doesPerimeterTouch(point) {
+            this.areaY = point.y - this.y
+            this.areaX = point.x - this.x
+            if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+                return true
+            }
+            return false
+        }
+        isPointInside(point) {
+            this.areaY = point.y - this.y
+            this.areaX = point.x - this.x
+            if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+                return true
+            }
+            return false
         }
         draw() {
             this.link1.draw()
@@ -6061,7 +6080,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         if (enemy.shield.state > 0 && this.bomb != 1) {
-                            if(this.shooter != 1){
+                            if (this.shooter != 1) {
 
                                 enemy.shield.state -= this.double
                                 enemy.shield.charge = 0
@@ -6079,13 +6098,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     bullet.rope = 1
                                     bullet.subfly = 10
                                     ropesound.play()
+                                    bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     this.bullets.push(bullet)
                                     this.firing = 0
                                     return
                                 }
-                            }else{
-                                    //handle in bullet?
+                            } else {
+                                //handle in bullet?
                             }
                         } else {
                             if (this.tether > 0) {
@@ -6096,6 +6116,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     bullet.rope = 1
                                     bullet.subfly = 10
                                     ropesound.play()
+                                    bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6114,6 +6135,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     bullet.rope = 1
                                     bullet.subfly = 10
                                     ropesound.play()
+                                    bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6201,6 +6223,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             bullet.rope = 1
                             bullet.subfly = 10
                             ropesound.play()
+                            bullet.goTo = this.target
                             bullet.life = 10
                             this.bullets.push(bullet)
                             this.firing = 0
@@ -6247,32 +6270,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         if (vessel.shield.state > 0 && this.bomb != 1) {
-                            if(this.shooter != 1){
-                            vessel.shield.state -= this.double
-                            vessel.shield.charge = 0
-                            if (vessel.shield.state < 0) {
-                                vessel.shield.state = 0
-                            }
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].tile.shield == 1) {
-                                    vessel.guys[t].skillslist[2] += .01
+                            if (this.shooter != 1) {
+                                vessel.shield.state -= this.double
+                                vessel.shield.charge = 0
+                                if (vessel.shield.state < 0) {
+                                    vessel.shield.state = 0
                                 }
-                            }
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].tile.shield == 1) {
+                                        vessel.guys[t].skillslist[2] += .01
+                                    }
+                                }
 
-                            if (this.tether > 0) {
-                                let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
-                                let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", (dxit.x - this.center.x) / 1.6, (dxit.y - this.center.y) / 1.6)
-                                bullet.rope = 1
-                                bullet.subfly = 10
-                                ropesound.play()
-                                bullet.life = 100 * this.tether
-                                this.bullets.push(bullet)
-                                this.firing = 0
-                                return
+                                if (this.tether > 0) {
+                                    let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
+                                    let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", (dxit.x - this.center.x), (dxit.y - this.center.y))
+                                    bullet.rope = 1
+                                    bullet.subfly = 10
+                                    ropesound.play()
+                                    bullet.goTo = this.target
+                                    bullet.life = 100 * this.tether
+                                    this.bullets.push(bullet)
+                                    this.firing = 0
+                                    return
+                                }
+                            } else {
+                                //handle in bullet
                             }
-                        }else{
-                            //handle in bullet
-                        }
                         } else {
                             if (this.tether > 0) {
                                 if (tile.weaponized == 1) {
@@ -6282,6 +6306,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     bullet.rope = 1
                                     bullet.subfly = 10
                                     ropesound.play()
+                                    bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6300,6 +6325,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     bullet.rope = 1
                                     bullet.subfly = 10
                                     ropesound.play()
+                                    bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6394,6 +6420,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             bullet.rope = 1
                             bullet.subfly = 10
                             ropesound.play()
+                            bullet.goTo = this.target
                             bullet.life = 10
                             this.bullets.push(bullet)
                             this.firing = 0
@@ -6461,6 +6488,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             for (let t = 0; t < this.bullets.length; t++) {
+                if(!(this.bullets[t].goTo)){
+                    this.bullets[t].goTo = this.target
+                }
                 this.bullets[t].life--
             }
             for (let t = 0; t < this.bullets.length; t++) {
@@ -6480,10 +6510,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             for (let t = 0; t < this.bullets.length; t++) {
                 if (this.bullets[t].stopshort == 1) {
-                    if(this.bullets[t].x > canvas.width){
+                    if (this.bullets[t].x > canvas.width) {
                         this.bullets[t].life -= 100
                     }
-                    if(this.bullets[t].x < 0){
+                    if (this.bullets[t].x < 0) {
                         this.bullets[t].life -= 100
                     }
                     this.bullets[t].life++
@@ -6498,12 +6528,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 if (enemy.shield.rings.length > 0) {
                                     if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
                                         this.bullets[t].life -= 150
-                                            enemy.shield.state -= this.double
-                                            enemy.shield.charge = 0
-                                            if (enemy.shield.state < 0) {
-                                                enemy.shield.state = 0
-                                            }
-
+                                        enemy.shield.state -= this.double
+                                        enemy.shield.charge = 0
+                                        enemy.shield.rings.splice(enemy.shield.rings.length - this.double, this.double)
+                                        if (enemy.shield.state < 0) {
+                                            enemy.shield.state = 0
+                                        }
+                                        break
                                     }
                                 }
                             }
@@ -6513,9 +6544,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         this.bullets[t].life -= 150
                                         vessel.shield.state -= this.double
                                         vessel.shield.charge = 0
+                                        vessel.shield.rings.splice(vessel.shield.rings.length - this.double, this.double)
                                         if (vessel.shield.state < 0) {
                                             vessel.shield.state = 0
                                         }
+                                        break
                                     }
                                 }
                             }
@@ -6528,9 +6561,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         this.bullets[t].life -= 150
                                         enemy.shield.state -= this.double
                                         enemy.shield.charge = 0
+                                        enemy.shield.rings.splice(enemy.shield.rings.length - this.double, this.double)
                                         if (enemy.shield.state < 0) {
                                             enemy.shield.state = 0
                                         }
+                                        break
                                     }
                                 }
                             }
@@ -6540,12 +6575,109 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         this.bullets[t].life -= 150
                                         vessel.shield.state -= this.double
                                         vessel.shield.charge = 0
+                                        vessel.shield.rings.splice(vessel.shield.rings.length - this.double, this.double)
                                         if (vessel.shield.state < 0) {
                                             vessel.shield.state = 0
+                                        }
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (vessel.weapons.includes(this)) {
+                        if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                            // console.log("proof")
+                            this.bullets[t].goTo.integrity -= this.damage
+
+                            this.bullets[t].goTo.fire -= this.fireChance
+                            if (Math.random() < (this.fireChance / 300)) {
+                                this.bullets[t].goTo.onFire = 1
+                                this.bullets[t].goTo.fire = 0
+                            }
+                            if (this.railgun == 1) {
+                                this.bullets[t].goTo.integrity -= this.damage * 3//5
+                            }
+                            if (this.puncture == 1) {
+                                let n = enemy.neighbors(this.bullets[t].goTo)
+                                for (let r = 0; r < n.length; r++) {
+                                    n[r].integrity -= this.damage
+                                }
+                            }
+                            enemy.hull -= this.damage * .1
+                            if (this.sap <= 0) {
+                                for (let k = 0; k < enemy.guys.length; k++) {
+                                    if (enemy.guys[k].tile == this.bullets[t].goTo) {
+                                        enemy.guys[k].health -= (this.damage * this.crew) / (1 + enemy.guys[k].gearArmor)
+                                        enemy.guys[k].hit = 0
+                                        if (this.mind > 0) {
+                                            enemy.guys[k].hostile = 1
+                                            enemy.guys[k].hostileTimer = this.mind * 250 //400
+                                            enemy.guys[k].mindControlled = 1
+                                        }
+                                    }
+                                    if (enemy.guys[k].tiles) {
+                                        if (enemy.guys[k].tiles.includes(this.bullets[t].goTo)) {
+                                            enemy.guys[k].health -= (this.damage * this.crew) / (1 + enemy.guys[k].gearArmor)
+                                            enemy.guys[k].hit = 0
+                                            if (this.mind > 0) {
+                                                enemy.guys[k].hostile = 1
+                                                enemy.guys[k].hostileTimer = this.mind * 250 //400
+                                                enemy.guys[k].mindControlled = 1
+                                            }
                                         }
                                     }
                                 }
                             }
+                            this.bullets[t].life -= 100
+                        }
+                    } else {
+
+                        if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                            // console.log("proof")
+                            this.bullets[t].goTo.integrity -= this.damage
+
+                            this.bullets[t].goTo.fire -= this.fireChance
+                            if (Math.random() < (this.fireChance / 300)) {
+                                this.bullets[t].goTo.onFire = 1
+                                this.bullets[t].goTo.fire = 0
+                            }
+                            if (this.railgun == 1) {
+                                this.bullets[t].goTo.integrity -= this.damage * 3//5
+                            }
+                            if (this.puncture == 1) {
+                                let n = vessel.neighbors(this.bullets[t].goTo)
+                                for (let r = 0; r < n.length; r++) {
+                                    n[r].integrity -= this.damage
+                                }
+                            }
+                            vessel.hull -= this.damage * .1
+                            if (this.sap <= 0) {
+                                for (let k = 0; k < vessel.guys.length; k++) {
+                                    if (vessel.guys[k].tile == this.bullets[t].goTo) {
+                                        vessel.guys[k].health -= (this.damage * this.crew) / (1 + vessel.guys[k].gearArmor)
+                                        vessel.guys[k].hit = 0
+                                        if (this.mind > 0) {
+                                            vessel.guys[k].hostile = 1
+                                            vessel.guys[k].hostileTimer = this.mind * 250 //400
+                                            vessel.guys[k].mindControlled = 1
+                                        }
+                                    }
+                                    if (vessel.guys[k].tiles) {
+                                        if (vessel.guys[k].tiles.includes(this.bullets[t].goTo)) {
+                                            vessel.guys[k].health -= (this.damage * this.crew) / (1 + vessel.guys[k].gearArmor)
+                                            vessel.guys[k].hit = 0
+                                            if (this.mind > 0) {
+                                                vessel.guys[k].hostile = 1
+                                                vessel.guys[k].hostileTimer = this.mind * 250 //400
+                                                vessel.guys[k].mindControlled = 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            this.bullets[t].life -= 100
                         }
                     }
                     let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
@@ -6586,6 +6718,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (enemy.shield.rings.length > 0) {
                             if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
                                 this.bullets[t].life -= 150
+                                break
+                                // enemy.shield.rings.splice(enemy.shield.rings.length-this.double,this.double)
                                 // this.bullets[t].xmom = 0
                                 // this.bullets[t].ymom = 0
                             }
@@ -6595,6 +6729,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (vessel.shield.rings.length > 0) {
                             if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                                 this.bullets[t].life -= 150
+                                break
+                                // vessel.shield.rings.splice(vessel.shield.rings.length-this.double,this.double)
                                 // this.bullets[t].xmom = 0
                                 // this.bullets[t].ymom = 0
                             }
@@ -6643,8 +6779,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (enemy.shield.rings.length > 0) {
                                 if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
                                     this.bullets[t].life -= 150
-                                    this.bullets[t].xmom = 0
-                                    this.bullets[t].ymom = 0
+                                    // this.bullets[t].xmom = 0
+                                    // this.bullets[t].ymom = 0
+                                    enemy.shield.rings.splice(enemy.shield.rings.length - this.double, this.double)
+                                    break
                                 }
                             }
                         }
@@ -6652,8 +6790,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (vessel.shield.rings.length > 0) {
                                 if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                                     this.bullets[t].life -= 150
-                                    this.bullets[t].xmom = 0
-                                    this.bullets[t].ymom = 0
+                                    // this.bullets[t].xmom = 0
+                                    // this.bullets[t].ymom = 0
+                                    vessel.shield.rings.splice(vessel.shield.rings.length - this.double, this.double)
+                                    break
                                 }
                             }
                         }
@@ -6666,6 +6806,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (enemy.shield.rings.length > 0) {
                                 if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
                                     this.bullets[t].life -= 150
+                                    enemy.shield.rings.splice(enemy.shield.rings.length - this.double, this.double)
+                                    break
                                 }
                             }
                         }
@@ -6673,6 +6815,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (vessel.shield.rings.length > 0) {
                                 if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                                     this.bullets[t].life -= 150
+                                    vessel.shield.rings.splice(vessel.shield.rings.length - this.double, this.double)
+                                    break
                                 }
                             }
                         }
@@ -6914,18 +7058,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                         let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
                         //////////////////////////////console.log(bullet)
+                        bullet.goTo = this.target
                         bullet.life = 6
                         this.bullets.push(bullet)
                         //////////////////////////////console.log(this.bullets)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -6958,17 +7105,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 5
 
                         let bullet = new Circle(link.object.x, link.object.y, 6, "teal", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 6
                         this.bullets.push(bullet)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7000,17 +7150,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 5
 
                         let bullet = new Circle(link.object.x, link.object.y, 7, "#aaff00", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 6
                         this.bullets.push(bullet)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             bullet.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7040,6 +7193,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 5
 
                         let bullet = new Circle(link.object.x, link.object.y, 7, "red", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 6
                         this.bullets.push(bullet)
 
@@ -7047,18 +7201,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         bullet2.life = 7
                         this.bullets.push(bullet2)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             // bullet2.life = 6
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 5
+                            // bullet.goTo = this.target
+                            bullet.life = 5
                             // bullet2.life = 6
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7091,6 +7247,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 3
 
                         let bullet = new Circle(link.object.x, link.object.y, 3, "white", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 4
                         this.bullets.push(bullet)
 
@@ -7098,19 +7255,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         bullet2.life = 4
                         this.bullets.push(bullet2)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
 
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7142,6 +7301,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 3
 
                         let bullet = new Circle(link.object.x, link.object.y, 3, "#FFAA88", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 4
                         this.bullets.push(bullet)
 
@@ -7149,18 +7309,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         bullet2.life = 4
                         this.bullets.push(bullet2)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7192,6 +7354,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 3
 
                         let bullet = new Circle(link.object.x, link.object.y, 3, "red", -xmom, -ymom)
+                        bullet.goTo = this.target
                         bullet.life = 4
                         this.bullets.push(bullet)
 
@@ -7199,18 +7362,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         bullet2.life = 4
                         this.bullets.push(bullet2)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
                         if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
-                            // bullet.life = 3
+                            // bullet.goTo = this.target
+                            bullet.life = 3
                             // bullet2.life = 3
                             bullet.stopshort = 1
                             bullet2.stopshort = 1
                         }
-                        if(this.target.walkable != 1){
+                        if (this.target.walkable != 1) {
                             bullet.life += 100
                         }
                     }
@@ -7488,8 +7653,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
@@ -7499,8 +7672,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         }
                     }
@@ -7523,8 +7704,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
@@ -7534,8 +7723,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         }
                     }
@@ -7558,8 +7755,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         } else {
                             link.target = ring
@@ -7569,8 +7774,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             xmom *= link.hypotenuse() / 3
                             ymom *= link.hypotenuse() / 3
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
+
+                            ast.goTo = this.target
                             ast.life = 4
                             ast.noline = 1
+                            if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
+                            if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                                ast.stopshort = 1
+                            }
                             this.bullets.push(ast)
                         }
                     }
@@ -11440,7 +11653,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (stars.collapsed == 1) {
                     this.level = Math.floor(link.hypotenuse() / 7.5)
                 } else {
-                    this.level = Math.floor(link.hypotenuse() / 150)
+                    this.level = Math.floor(link.hypotenuse() / 150) 
                 }
             }
             if (mode == 1) {
