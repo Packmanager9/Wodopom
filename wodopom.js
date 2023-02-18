@@ -3257,7 +3257,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let holeimg = new Image()
     holeimg.src = "hole.png"
 
-    for (let t = 1; t < 21; t++) {
+    for (let t = 1; t < 22; t++) {
         let ing = new Image()
         ing.src = `r${t}.png`
         rs.push(ing)
@@ -3398,7 +3398,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
             this.count = 0
             if (type == -1) {
-                this.type = Math.floor(Math.random() * 20)
+                this.type = Math.floor(Math.random() * 21)
             } else {
                 // //////////////////console.log("dd")
                 this.type = type
@@ -3459,7 +3459,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (type == -1 && this.type == 11) {
                         while (this.type == 11) {
-                            this.type = Math.floor(Math.random() * 20)
+                            this.type = Math.floor(Math.random() * 21)
                         }
                     }
                 }
@@ -3495,57 +3495,57 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             } else {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 1) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 2) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 3) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 4) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 5) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 6) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 7) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 8) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 9) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             if (vessel.type == 10) {
                 while (this.type == 11) {
-                    this.type = Math.floor(Math.random() * 20)
+                    this.type = Math.floor(Math.random() * 21)
                 }
             }
             // while (this.type == 18) {
@@ -3685,6 +3685,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.fireproof = 1
                 this.skills += 'Non-Extinguishing---, Repair--, Fight++++, Fireproof+, Energetic++, '
                 this.names = ["Fireknife", "Sparky", "Ignus", "Slifier"]
+                this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            }
+
+            if (this.type == 20) {
+                this.repair *= 2
+                // this.extinguish = 0
+                this.stats[6] = 5
+                this.damage = 6
+                // this.stretch = 1
+                this.energy = 1
+                // this.tiles = [this.tile, this.tile, this.tile, this.tile, this.tile, this.tile]
+                this.flammable = 1
+                this.skills += 'Engineer++++, Repair++, Energetic+, Flammable-'
+                this.names = ["Kachort"]
                 this.name = this.names[Math.floor(Math.random() * this.names.length)]
             }
 
@@ -3881,6 +3895,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.healthbar = new Rectangle(34, ((vessel.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
                     this.healthbar.draw()
                     canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
+                    if(this.type == 20){
+                        if(Math.random()< .2){
+                        this.count++
+                        }
+                    }
 
                 } else if (enemy.guys && vessel.UI.systems[5].sto > 0) {
 
@@ -3900,6 +3919,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.healthbar.draw()
                         canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
 
+                        if(this.type == 20){
+                            if(Math.random()< .2){
+                                this.count++
+                            }
+                        }
 
                     }
 
@@ -4800,7 +4824,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.tile.fire < 50) {
                 if (this.fireproof == 0) {
                     this.health -= (((50 - this.tile.fire) / 50) * 1.5) + (this.regen * .9)
-                    if (this.type == 6 || this.type == 17) {
+                    if (this.type == 6 || this.type == 17 || this.type == 20) { //gulpod runnybabbit kachort
                         this.health -= (((50 - this.tile.fire) / 50) * 1.5)
                     }
                 }
@@ -5686,7 +5710,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     this.railgun = 0
                     this.max = 900
-                    this.damage = 55 * 2
+                    this.damage = 65 * 2
                     this.real = 1
                     this.crew = .5
                     this.fireChance = 10
@@ -5701,7 +5725,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     this.railgun = 0
                     this.max = 1140
-                    this.damage = 95 * 2
+                    this.damage = 105 * 2
                     this.real = 1
                     this.crew = .5
                     this.fireChance = 20
@@ -5716,7 +5740,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.sap = 0
                     this.railgun = 0
                     this.max = 1700
-                    this.damage = 145 * 2
+                    this.damage = 155 * 2
                     this.real = 1
                     this.crew = .5
                     this.fireChance = 30
@@ -7854,6 +7878,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     link.draw()
             // }
 
+            if (vessel.weapons.includes(this)) {
+                if (enemy.hull <= 0) {
+                    this.bullets = []
+                }
+            }
 
             if (vessel.weapons.includes(this)) {
                 if (this.crewType != -1) {
@@ -10713,7 +10742,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.type == 1) {
                         let wep1 = new Weapon(10)
                         let wep2 = new Weapon(20)
-                        let wep3 = new Weapon(-1)
+                        let wep3 = new Weapon(-11)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
