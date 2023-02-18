@@ -699,6 +699,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.strokeWidth = strokeWidth
             this.strokeColor = strokeColor
         }
+        movex(zise) {
+            this.x += this.xmom / zise
+            this.y += this.ymom / zise
+        }
         draw() {
             canvas_context.lineWidth = 2
             canvas_context.strokeStyle = this.color
@@ -5312,6 +5316,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.link4 = new LineOP(this.point7, this.point8, color, 5)
             this.radius = size
         }
+
+        movex(zise) {
+            this.x -= this.xmom / zise
+            this.y -= this.ymom / zise
+
+            this.point1.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point1.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+            this.point2.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point2.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+
+            this.point3.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point3.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+            this.point4.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point4.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+
+            this.point5.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point5.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+            this.point6.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point6.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+
+            this.point7.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point7.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+            this.point8.x -= (this.xmom * ((Math.random() / 10) + .95)) / zise
+            this.point8.y -= (this.ymom * ((Math.random() / 10) + .95)) / zise
+        }
         doesPerimeterTouch(point) {
             this.areaY = point.y - this.y
             this.areaX = point.x - this.x
@@ -5336,6 +5365,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.move()
         }
         move() {
+            this.x -= this.xmom
+            this.y -= this.ymom
             this.point1.x -= this.xmom * ((Math.random() / 10) + .95)
             this.point1.y -= this.ymom * ((Math.random() / 10) + .95)
             this.point2.x -= this.xmom * ((Math.random() / 10) + .95)
@@ -5449,7 +5480,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.crewType = -1
                 this.metatarget = {}
                 this.bullets = []
-                this.center = new Circle(452, 95)
+                this.center = new Circle(452 + 200, 95 + 150) //by god what
                 this.frame = 0
                 this.max = 50000000000000000000000
                 this.beingchecked = 0
@@ -5647,7 +5678,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.real = 1
                     this.crew = 2
                     this.fireChance = 10
-                    this.double = 2
+                    this.secretDouble = 2
+                    this.double = 1
                     this.buy = 50
                     this.sell = 24
                     this.shooter = 1
@@ -5759,14 +5791,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 22
-                    this.double = 2
+                    this.double = 1
+                    this.secretDouble = 2
                     this.scrap = 1
                     this.buy = 55
                     this.sell = 26
+                    this.shooter = 1
                     // this.hard = 1
                 } else if (this.type == 24) {
                     this.name1 = "Scrap"
                     this.name2 = "Cannon II"
+                    this.shooter = 1
                     // this.beam = 1
                     this.sap = 0
                     // this.railgun = 0
@@ -5775,7 +5810,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 33
-                    this.double = 4
+                    this.double = 1
+                    this.secretDouble = 4
                     this.scrap = 2
                     this.buy = 65
                     this.sell = 34
@@ -5783,6 +5819,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 25) {
                     this.name1 = "Scrap"
                     this.name2 = "Cannon III"
+                    this.shooter = 1
                     // this.beam = 1
                     this.sap = 0
                     // this.railgun = 0
@@ -5791,7 +5828,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.real = 1
                     this.crew = 1
                     this.fireChance = 44
-                    this.double = 6
+                    this.double = 1
+                    this.secretDouble = 6
                     this.buy = 77
                     this.sell = 42
                     this.scrap = 3
@@ -6095,7 +6133,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     if (Math.random() - (enododge / 10) < enemy.dodgeRate()) {
-
+                        this.missed = 0
                         for (let t = 0; t < vessel.guys.length; t++) {
                             if (vessel.guys[t].tile.weapon == 1) {
                                 vessel.guys[t].skillslist[1] += .01
@@ -6232,6 +6270,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     } else {
+                        this.missed = 1
                         let j = 0
                         while (this.target.marked == 1) {
                             j++
@@ -6283,7 +6322,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     if (Math.random() - (vnododge / 10) < vessel.dodgeRate()) {
-
+                        this.missed = 0
                         for (let t = 0; t < enemy.guys.length; t++) {
                             if (enemy.guys[t].tile.weapon == 1) {
                                 enemy.guys[t].skillslist[1] += .001
@@ -6419,6 +6458,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     } else {
 
+                        this.missed = 1
                         for (let t = 0; t < vessel.guys.length; t++) {
                             if (vessel.guys[t].tile.engine == 1) {
                                 vessel.guys[t].skillslist[6] += .01
@@ -6533,7 +6573,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             for (let t = 0; t < this.bullets.length; t++) {
-                if (this.bullets[t].stopshort == 1) {
+                if (this.missed == 1) {
+                    this.bullets[t].life += 10
+                    if (this.bullets[t].x > canvas.width) {
+                        this.bullets[t].life -= 100
+                    }
+                    if (this.bullets[t].x < 0) {
+                        this.bullets[t].life -= 100
+                    }
+                    if (this.bullets[t].noline != 1) {
+                        let o = new Point(this.bullets[t].x, this.bullets[t].y)
+                        this.bullets[t].draw()
+                        this.bullets[t].move()
+                        this.bullets[t].draw()
+                        let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
+                        link.draw()
+                    } else {
+                        this.bullets[t].move()
+                        this.bullets[t].draw()
+                    }
+                } else if (this.bullets[t].stopshort == 1) {
                     if (this.bullets[t].x > canvas.width) {
                         this.bullets[t].life -= 100
                     }
@@ -6577,11 +6636,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                         } else {
-                            this.bullets[t].move()
+                            // this.bullets[t].move()
                             this.bullets[t].draw()
+                            this.bullets[t].movex(10)
                             if (vessel.weapons.includes(this)) {
                                 if (enemy.shield.rings.length > 0) {
-                                    if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
+                                    if (enemy.shield.rings[enemy.shield.rings.length - 1].doesPerimeterTouch(this.bullets[t])) {
                                         this.bullets[t].life -= 150
                                         enemy.shield.state -= this.double
                                         enemy.shield.charge = 0
@@ -6595,7 +6655,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                             if (enemy.weapons.includes(this)) {
                                 if (vessel.shield.rings.length > 0) {
-                                    if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
+                                    if (vessel.shield.rings[vessel.shield.rings.length - 1].doesPerimeterTouch(this.bullets[t])) {
                                         this.bullets[t].life -= 150
                                         vessel.shield.state -= this.double
                                         vessel.shield.charge = 0
@@ -6706,8 +6766,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.bullets[t].life -= 100
                         }
                     }
-                    let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
-                    link.draw()
+                    if (this.bullets[t].noline != 1) {
+                        let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
+                        link.draw()
+                    }
                     this.bullets[t].draw()
 
                 } else if (this.bullets[t].subfly > 0) {
@@ -6738,8 +6800,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         // for(let k = 0;k<)
                     }
-                    let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
-                    link.draw()
+                    if (this.bullets[t].noline != 1) {
+                        let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
+                        link.draw()
+                    }
                     if (vessel.weapons.includes(this)) {
                         if (enemy.shield.rings.length > 0) {
                             if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
@@ -6788,8 +6852,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         // for(let k = 0;k<)
                     }
-                    let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
-                    link.draw()
+                    if (this.bullets[t].noline != 1) {
+                        let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
+                        link.draw()
+                    }
                     this.bullets[t].unmove()
                 } else {
 
@@ -6798,9 +6864,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.bullets[t].draw()
                         this.bullets[t].move()
                         this.bullets[t].draw()
-                        let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
-                        //////////////////////////////console.log(link)
-                        link.draw()
+                        if (this.bullets[t].noline != 1) {
+                            let link = new LineOP(this.bullets[t], o, this.bullets[t].color, this.bullets[t].radius * 2)
+                            link.draw()
+                        }
                         if (vessel.weapons.includes(this)) {
                             if (enemy.shield.rings.length > 0) {
                                 if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
@@ -6848,8 +6915,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-                if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
-                    this.bullets[t].life = -100
+                if (this.missed == 1) {
+
+                } else {
+                    if(this.bullets[t].noline != 1){
+                        if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+                            this.bullets[t].life = -100
+                        }
+                    }
                 }
                 // this.bullets[t].move()
                 // if (this.bullets[t].goTo.isPointInside(this.bullets[t])) {
@@ -7684,12 +7757,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -7703,12 +7776,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 10, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -7735,12 +7808,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -7754,12 +7827,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 15, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -7776,7 +7849,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         scrap.play()
                     }
                     let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max((this.firing * 3.6) - 25, 1), "#AA0000")
-                    if (this.firing % 2 == 1) { // || this.firing == 5
+                    if (this.firing % 2 == 0) { // || this.firing == 5
                         if (this.firing == 10) {
                             rail3aud.play()
                         }
@@ -7786,12 +7859,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6 //3
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7 //4
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -7805,12 +7878,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.object = this.center
                             let xmom = Math.cos(link.angle())
                             let ymom = Math.sin(link.angle())
-                            xmom *= link.hypotenuse() / 3
-                            ymom *= link.hypotenuse() / 3
+                            xmom *= link.hypotenuse() / 6
+                            ymom *= link.hypotenuse() / 6
                             let ast = new Asterisk(this.center.x, this.center.y, "gray", 20, xmom * .5, ymom * .5)
 
                             ast.goTo = this.target
-                            ast.life = 4
+                            ast.life = 7
                             ast.noline = 1
                             if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                                 ast.stopshort = 1
@@ -10750,6 +10823,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     this.weapons = []
                     if (this.type == 1) {
+                        // for(let t= 0;t<31;t++){
+                        //     this.weapons.push(new Weapon(t))
+                        // }
                         let wep1 = new Weapon(10)
                         let wep2 = new Weapon(20)
                         let wep3 = new Weapon(-1)
@@ -14698,7 +14774,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                     }
                     py += 13
-                    canvas_context.fillText("Breaks " + Math.floor((vessel.weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                    if (vessel.weapons[t].secretDouble > 0) {
+                        canvas_context.fillText("Breaks " + Math.floor((vessel.weapons[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                    } else {
+                        canvas_context.fillText("Breaks " + Math.floor((vessel.weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                    }
                     // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                     // py += 12
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
@@ -14802,7 +14884,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                                 }
                                 py += 13
-                                canvas_context.fillText("Breaks " + Math.floor((stars.stars[vessel.star].weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                                if (stars.stars[vessel.star].weapons[t].secretDouble > 0) {
+                                    canvas_context.fillText("Breaks " + Math.floor((stars.stars[vessel.star].weapons[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                                } else {
+                                    canvas_context.fillText("Breaks " + Math.floor((stars.stars[vessel.star].weapons[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                                }
                                 // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                                 // py += 12
                                 // canvas_context.fillText(this.text4, rect.x + 10, py)
@@ -14903,7 +14992,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                                 }
                                 py += 13
-                                canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                                if (vessel.upgradeMenu.wepsto[t].secretDouble > 0) {
+                                    canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                                } else {
+                                    canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                                }
                                 // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                                 // py += 12
                                 // canvas_context.fillText(this.text4, rect.x + 10, py)
@@ -15006,7 +15101,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                             }
                             py += 13
-                            canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+                            if (vessel.upgradeMenu.wepsto[t].secretDouble > 0) {
+                                canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                            } else {
+                                canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
+
+                            }
                             // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
                             // py += 12
                             // canvas_context.fillText(this.text4, rect.x + 10, py)
