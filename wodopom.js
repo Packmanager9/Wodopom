@@ -10973,8 +10973,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         // for(let t= 0;t<31;t++){
                         //     this.weapons.push(new Weapon(t))
                         // }
-                        let wep1 = new Weapon(0)
-                        let wep2 = new Weapon(1)
+                        let wep1 = new Weapon(10)
+                        let wep2 = new Weapon(20)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -10990,8 +10990,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         // this.weapons.push(new Weapon(9))
                     }
                     if (this.type == 0) {
-                        let wep1 = new Weapon(32)
-                        let wep2 = new Weapon(11)
+                        let wep1 = new Weapon(0)
+                        let wep2 = new Weapon(1)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -12731,9 +12731,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // for(let  k = 0;k<this.wepmax;k++){
                     // this.weapons.push(new Weapon(k))
                     // }
-                    let wep1 = new Weapon(0)
-                    let wep2 = new Weapon(-1)
-                    let wep3 = new Weapon(-1)
+                    let wep1 = new Weapon(14)
+                    let wep2 = new Weapon(15)
+                    let wep3 = new Weapon(16)
                     let wep4 = new Weapon(-1)
                     this.weapons.push(wep1)
                     this.weapons.push(wep2)
