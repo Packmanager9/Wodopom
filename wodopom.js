@@ -6194,8 +6194,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.shield.rings.length > 0) {
                     if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
                         this.bullets[t].life -= 150
-                        this.bullets[t].x = -1000
-                        this.bullets[t].y = -1000
+                        // this.bullets[t].x = -1000
+                        // this.bullets[t].y = -1000
                         // enemy.shield.state -= 1
                         enemy.shield.charge = 0
                         enemy.shield.rings.splice(enemy.shield.rings.length - this.double, this.double)
@@ -6208,8 +6208,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.shield.rings.length > 0) {
                     if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                         this.bullets[t].life -= 150
-                        this.bullets[t].x = -1000
-                        this.bullets[t].y = -1000
+                        // this.bullets[t].x = -1000
+                        // this.bullets[t].y = -1000
                         // vessel.shield.state -= 1
                         vessel.shield.charge = 0
                         vessel.shield.rings.splice(vessel.shield.rings.length - this.double, this.double)
@@ -6233,9 +6233,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (vessel.weapons.includes(this)) {
-                if (this.bullets[t].life <= 1) {
+                if (this.bullets[t].life <= 1 || this.bullets[t].goTo.isPointInside(this.bullets[t])) {
+
+                    for(let g = 0;g<enemy.guys.length;g++){
+                        console.log(this.bullets[t].goTo.t, this.bullets[t].goTo.k, enemy.guys[g].tile.t, enemy.guys[g].tile.k)
+                        if(this.bullets[t].goTo.t == enemy.guys[g].tile.t && this.bullets[t].goTo.k == enemy.guys[g].tile.k){
+                            enemy.guys[g].health -= ((this.damage/this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
+                        }
+                    }
+
+
                     this.bullets[t].life = -100
-                    console.log("proof")
                     this.bullets[t].goTo.integrity -= this.damage / this.shotCount
 
                     this.bullets[t].goTo.fire -= this.fireChance
@@ -6253,38 +6261,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     enemy.hull -= (this.damage * .1) / this.shotCount
-                    if (this.sap <= 0) {
-                        for (let k = 0; k < enemy.guys.length; k++) {
-                            if (enemy.guys[k].tile == this.bullets[t].goTo) {
-                                enemy.guys[k].health -= (this.damage * this.crew) / (1 + enemy.guys[k].gearArmor)
-                                enemy.guys[k].hit = 0
-                                if (this.mind > 0) {
-                                    enemy.guys[k].hostile = 1
-                                    enemy.guys[k].hostileTimer = this.mind * 250 //400
-                                    enemy.guys[k].mindControlled = 1
-                                }
-                            }
-                            if (enemy.guys[k].tiles) {
-                                if (enemy.guys[k].tiles.includes(this.bullets[t].goTo)) {
-                                    enemy.guys[k].health -= (this.damage * this.crew) / (1 + enemy.guys[k].gearArmor)
-                                    enemy.guys[k].hit = 0
-                                    if (this.mind > 0) {
-                                        enemy.guys[k].hostile = 1
-                                        enemy.guys[k].hostileTimer = this.mind * 250 //400
-                                        enemy.guys[k].mindControlled = 1
-                                    }
-                                }
-                            }
-                        }
-                    }
                     this.bullets[t].life -= 100
                 }
             } else {
 
-                if (this.bullets[t].life <= 1) {
+                if (this.bullets[t].life <= 1 || this.bullets[t].goTo.isPointInside(this.bullets[t])) {
                     this.bullets[t].life = -100
-                    console.log("proof")
+                    for(let g = 0;g<vessel.guys.length;g++){
+                        if(this.bullets[t].goTo.t == enemy.guys[g].tile.t && this.bullets[t].goTo.k == enemy.guys[g].tile.k){
+                            vessel.guys[g].health -= (this.damage * this.crew) / (1 + vessel.guys[g].gearArmor)
+                        }
+                    }
+
                     this.bullets[t].goTo.integrity -= this.damage / this.shotCount
+                    
 
                     this.bullets[t].goTo.fire -= this.fireChance
                     if (Math.random() < (this.fireChance / 300)) {
@@ -6301,30 +6291,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     vessel.hull -= (this.damage * .1) / this.shotCount
-                    if (this.sap <= 0) {
-                        for (let k = 0; k < vessel.guys.length; k++) {
-                            if (vessel.guys[k].tile == this.bullets[t].goTo) {
-                                vessel.guys[k].health -= (this.damage * this.crew) / (1 + vessel.guys[k].gearArmor)
-                                vessel.guys[k].hit = 0
-                                if (this.mind > 0) {
-                                    vessel.guys[k].hostile = 1
-                                    vessel.guys[k].hostileTimer = this.mind * 250 //400
-                                    vessel.guys[k].mindControlled = 1
-                                }
-                            }
-                            if (vessel.guys[k].tiles) {
-                                if (vessel.guys[k].tiles.includes(this.bullets[t].goTo)) {
-                                    vessel.guys[k].health -= (this.damage * this.crew) / (1 + vessel.guys[k].gearArmor)
-                                    vessel.guys[k].hit = 0
-                                    if (this.mind > 0) {
-                                        vessel.guys[k].hostile = 1
-                                        vessel.guys[k].hostileTimer = this.mind * 250 //400
-                                        vessel.guys[k].mindControlled = 1
-                                    }
-                                }
-                            }
-                        }
-                    }
                     this.bullets[t].life -= 100
                 }
             }
