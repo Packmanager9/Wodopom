@@ -5943,7 +5943,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if (this.type == 32) {
                     this.name1 = "Tractor"
                     this.name2 = "Beam I"
-                    this.max = 50
+                    this.max = 205
                     this.damage = 0
                     this.tractor = 1
                     this.beam = 0
@@ -11105,7 +11105,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.type == 11) {
                         let wep1 = new Weapon(2)
                         let wep2 = new Weapon(29)
-                        let wep3 = new Weapon(-1)
+                        let wep3 = new Weapon(32)
                         let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -14841,6 +14841,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + `% Costs ${vessel.weapons[t].scrap} Scrap`
                     } else if (vessel.weapons[t].bomb == 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass"
+                    }else if (vessel.weapons[t].mind > 0 ) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Command Enemy Crew"
                     } else if (vessel.weapons[t].beam == 1 || vessel.weapons[t].type == 101) {
                         if (vessel.weapons[t].hard != 1) {
                             lsrt = "Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
@@ -14852,6 +14854,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     } else if (vessel.weapons[t].sap >= 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Steals Shields"
+                    } else if (vessel.weapons[t].tractor >= 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Stops Projectiles"
                     } else if (vessel.weapons[t].tether >= 1) {
                         lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Reduces Dodge"
                     } else if (vessel.weapons[t].crew > 1) {
@@ -14906,7 +14910,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                     } else if (vessel.weapons[t].scrap > 0) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + `% Costs ${vessel.weapons[t].scrap} Scrap`, rect.x + 10, py - (dim.h + 10))
-
+                        // "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Stops Projectiles"
+                    } else if (vessel.weapons[t].tractor > 0) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Stops Projectiles", rect.x + 10, py - (dim.h + 10))
+                        
+                    } else if (vessel.weapons[t].mind > 0) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Command Enemy Crew", rect.x + 10, py - (dim.h + 10))
+                        
                     } else if (vessel.weapons[t].bomb == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Shield Bypass", rect.x + 10, py - (dim.h + 10))
                     } else if (vessel.weapons[t].beam == 1) {
