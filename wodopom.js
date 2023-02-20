@@ -522,6 +522,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             canvas_context.fillStyle = this.color
             canvas_context.fillRect(this.x, this.y, this.width, this.height)
             canvas_context.strokeStyle = "white"
+            canvas_context.lineWidth = 2
             canvas_context.strokeRect(this.x, this.y, this.width, this.height)
         }
         move() {
@@ -2818,81 +2819,81 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         vessel.weapons[vessel.wepDrawCount].center.x = this.x + (this.width * 1.45)
                                         vessel.weapons[vessel.wepDrawCount].center.y = this.y + (this.width * .25)
                                         if (vessel.weapons[vessel.wepDrawCount].type == 0) {
-                                            canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 1) {
-                                            canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 2) {
-                                            canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 3) {
-                                            canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 4) {
-                                            canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 5) {
-                                            canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 6) {
-                                            canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 7) {
-                                            canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 8) {
-                                            canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 9) {
-                                            canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 10) {
-                                            canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 11) {
-                                            canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 12) {
-                                            canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 13) {
-                                            canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 14) {
-                                            canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 15) {
-                                            canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 16) {
-                                            canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 17) {
-                                            canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 18) {
-                                            canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 19) {
-                                            canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 20) {
-                                            canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 21) {
-                                            canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 22) {
-                                            canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 23) {
-                                            canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 24) {
-                                            canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
-                                            canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
-                                            canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
-                                            canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
-                                            canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 29) {
-                                            canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 30) {
-                                            canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 31) {
-                                            canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 32) {
-                                            canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 33) {
-                                            canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 34) {
-                                            canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 35) {
-                                            canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         }else if (vessel.weapons[vessel.wepDrawCount].type == 36) {
-                                            canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         }else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
-                                            canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
 
@@ -2905,81 +2906,81 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.weapons[vessel.wepDrawCount].center.x = this.x + (this.width * 1.45)
                                             vessel.weapons[vessel.wepDrawCount].center.y = this.y + (this.width * .75)
                                             if (vessel.weapons[vessel.wepDrawCount].type == 0) {
-                                                canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 1) {
-                                                canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 2) {
-                                                canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 3) {
-                                                canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 4) {
-                                                canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 5) {
-                                                canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 6) {
-                                                canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 7) {
-                                                canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 8) {
-                                                canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 9) {
-                                                canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 10) {
-                                                canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 11) {
-                                                canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 12) {
-                                                canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 13) {
-                                                canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 14) {
-                                                canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 15) {
-                                                canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 16) {
-                                                canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 17) {
-                                                canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 18) {
-                                                canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 19) {
-                                                canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 20) {
-                                                canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 21) {
-                                                canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 22) {
-                                                canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 23) {
-                                                canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 24) {
-                                                canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
-                                                canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
-                                                canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
-                                                canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
-                                                canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 29) {
-                                                canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 30) {
-                                                canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 31) {
-                                                canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 32) {
-                                                canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 33) {
-                                                canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 34) {
-                                                canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 35) {
-                                                canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 36) {
-                                                canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
-                                                canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, this.x + (this.width * 1), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -3004,81 +3005,81 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
                                         enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .25)
                                         if (enemy.weapons[enemy.wepDrawCount].type == 0) {
-                                            canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
-                                            canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
-                                            canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
-                                            canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
-                                            canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
-                                            canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
-                                            canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
-                                            canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
-                                            canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
-                                            canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
-                                            canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
-                                            canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
-                                            canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
-                                            canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
-                                            canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
-                                            canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
-                                            canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
-                                            canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
-                                            canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
-                                            canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
-                                            canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
-                                            canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
-                                            canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
-                                            canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
-                                            canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
-                                            canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
-                                            canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
-                                            canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
-                                            canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 29) {
-                                            canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 30) {
-                                            canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 31) {
-                                            canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 32) {
-                                            canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 33) {
-                                            canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 34) {
-                                            canvas_context.drawImage(mirrorr, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirrorr, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 35) {
-                                            canvas_context.drawImage(mirrorr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirrorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 36) {
-                                            canvas_context.drawImage(capacitorr1, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
-                                            canvas_context.drawImage(capacitorr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
                                 }
@@ -3090,81 +3091,81 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
                                             enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .75)
                                             if (enemy.weapons[enemy.wepDrawCount].type == 0) {
-                                                canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
-                                                canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
-                                                canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
-                                                canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
-                                                canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
-                                                canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
-                                                canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
-                                                canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
-                                                canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
-                                                canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
-                                                canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
-                                                canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
-                                                canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
-                                                canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
-                                                canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
-                                                canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
-                                                canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
-                                                canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
-                                                canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
-                                                canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
-                                                canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
-                                                canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
-                                                canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
-                                                canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
-                                                canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
-                                                canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
-                                                canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
-                                                canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
-                                                canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 29) {
-                                                canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 30) {
-                                                canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 31) {
-                                                canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 32) {
-                                                canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 33) {
-                                                canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 34) {
-                                                canvas_context.drawImage(mirrorr, 0, 0, mirrorr.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirrorr, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 35) {
-                                                canvas_context.drawImage(mirrorr2, 0, 0, mirrorr.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirrorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 36) {
-                                                canvas_context.drawImage(capacitor2, 0, 0, mirrorr.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
-                                                canvas_context.drawImage(capacitorr2, 0, 0, mirrorr.width, hookr3.height, this.x - (this.width * .5), this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -3193,9 +3194,58 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //     if (typeof this.wallcolor != "undefined") {
             // ////////////////////////////////////////////////////////////////////console.log("s")
             canvas_context.fillStyle = this.color
-            canvas_context.strokeStyle = this.color
+            // canvas_context.strokeStyle = this.color
             canvas_context.fillRect(this.x, this.y, this.width, this.height)
-            canvas_context.strokeRect(this.x, this.y, this.width, this.height)
+
+            let n 
+            let eet = 0
+            if(vessel.supratiles.includes(this)){
+                n = vessel.neighbors(this)
+            }else{
+                eet = 1
+                n = enemy.neighbors(this)
+            }
+            let links = [true,true,true,true]
+            for(let t=  0;t<n.length;t++){
+                if(n[t].x == this.x){
+                    if(n[t].y > this.y){
+                        links[0] = false
+                    }else{
+                        links[1] = false
+                    }
+                }else{
+                    if(n[t].x > this.x){
+                        links[2] = false
+                    }else{
+                        links[3] = false
+                    }
+                }
+            }
+
+            canvas_context.strokeStyle = "#88888888"
+            canvas_context.lineWidth = 5
+
+            if(eet == 1 && enemy.hull<=0){
+
+            }else{
+                if(links[1]){
+                    canvas_context.strokeRect(this.x, this.y-1, this.width, 2)
+                }
+                if(links[0]){
+                    canvas_context.strokeRect(this.x, this.y+this.height-1, this.width, 2)
+                }
+                if(links[3]){
+                    canvas_context.strokeRect(this.x-1, this.y, 2, this.height)
+                }
+                if(links[2]){
+                    canvas_context.strokeRect(this.x+this.width-1, this.y, 2, this.height)
+                }
+            }
+
+
+
+
+
             // map_context.strokeStyle = 'black' //this.wallcolor
             // map_context.lineWidth = 1
             // map_context.strokeRect(this.x, this.y, this.width, this.height)
@@ -3692,6 +3742,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 12) {
+                while (this.type == 11) {
+                    this.type = Math.floor(Math.random() * 22)
+                }
+            }
+            if (vessel.type >= 13) { //enough
                 while (this.type == 11) {
                     this.type = Math.floor(Math.random() * 22)
                 }
@@ -10959,24 +11014,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.body.y += 150
             if (vverts.includes(vessel.doors.indexOf(this))) {
                 if (this.body.color == "#00ff00") {
-                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8.5), 4, 4, this.body.color)
+                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 10), 4, 4, this.body.color)
                     rect.draw()
-                    let rect2 = new RectangleR(this.body.x - 2, this.body.y + ((this.count * 8.5) - 4), 4, 4, this.body.color)
+                    let rect2 = new RectangleR(this.body.x - 2, this.body.y + ((this.count * 10) - 4), 4, 4, this.body.color)
                     rect2.draw()
                     this.link = new LineOP(rect, rect2)
                 } else {
-                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 8.5), 4, 16 * this.count, this.body.color)
+                    let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 10), 4, 20 * this.count, this.body.color)
                     rect.draw()
                 }
             } else {
                 if (this.body.color == "#00ff00") {
-                    let rect = new RectangleR(this.body.x - (this.count * 8.5), this.body.y - 2, 4, 4, this.body.color)
+                    let rect = new RectangleR(this.body.x - (this.count * 10), this.body.y - 2, 4, 4, this.body.color)
                     rect.draw()
-                    let rect2 = new RectangleR(this.body.x + ((this.count * 8.5) - 4), this.body.y - 2, 4, 4, this.body.color)
+                    let rect2 = new RectangleR(this.body.x + ((this.count * 10) - 4), this.body.y - 2, 4, 4, this.body.color)
                     rect2.draw()
                     this.link = new LineOP(rect, rect2)
                 } else {
-                    let rect = new RectangleR(this.body.x - (this.count * 8.5), this.body.y - 2, 16 * this.count, 4, this.body.color)
+                    let rect = new RectangleR(this.body.x - (this.count * 10), this.body.y - 2, 20 * this.count, 4, this.body.color)
                     rect.draw()
                 }
 
