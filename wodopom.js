@@ -2393,6 +2393,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let engineblast = new Image()
     engineblast.src = "engineblast.png"
+    let engineblastsuper = new Image()
+    engineblastsuper.src = "engineblastsuper.png"
+    let engineblastsuperr = new Image()
+    engineblastsuperr.src = "engineblastsuperr.png"
     let engineblastr = new Image()
     engineblastr.src = "engineblastr.png"
 
@@ -2678,7 +2682,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.hash) {
                     if (vessel.hash['engine'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[6].max)))) {
                         if (vessel.UI.systems[6].sto + vessel.UI.systems[6].fed > 0) {
+                            if(vessel.superdodge > 0){
+                            canvas_context.drawImage(engineblastsuper, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                            }else{
                             canvas_context.drawImage(engineblast, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                            }
                         } else {
                             canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
                         }
@@ -2692,7 +2700,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.hash) {
                     if (enemy.hash['engine'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[6].max)))) {
                         if (enemy.UI.systems[6].sto + enemy.UI.systems[6].fed > 0) {
+                            if(enemy.superdodge > 0){
+
+                            canvas_context.drawImage(engineblastsuperr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                            }else{
                             canvas_context.drawImage(engineblastr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+
+                            }
                         } else {
                             canvas_context.drawImage(engineblastr, 0, 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
                         }
@@ -2894,6 +2908,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         }else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
                                             canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 38) {
+                                            canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
 
@@ -2981,6 +2997,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
                                                 canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                            } else if (vessel.weapons[vessel.wepDrawCount].type == 38) {
+                                                canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -3080,6 +3098,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             canvas_context.drawImage(capacitorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
                                             canvas_context.drawImage(capacitorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 38) {
+                                            canvas_context.drawImage(dodgemodr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
                                 }
@@ -3166,6 +3186,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 canvas_context.drawImage(capacitor2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
                                                 canvas_context.drawImage(capacitorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                            } else if (enemy.weapons[enemy.wepDrawCount].type == 38) {
+                                                canvas_context.drawImage(dodgemodr1, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -6343,6 +6365,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.buy = 50
                     this.sell = 28
                     // this.mind = 2
+                }  else if (this.type == 38) {
+                    this.name1 = "Evasion"
+                    this.name2 = "Module I"
+                    this.max = 250
+                    // this.baseCharge = .15
+                    this.damage = 0
+                    this.dodgeMod = 1
+                    this.dodgeMax = 4
+                    // this.shineMax = 350
+                    // this.fling = 1
+                    // this.capacitor = 1
+                    this.beam = 0
+                    this.real = 1
+                    this.crew = 0
+                    // this.puncture = 1
+                    this.fireChance = 0
+                    this.double = 0
+                    this.buy = 50
+                    this.sell = 28
+                    // this.mind = 2
                 } else if (this.type == 100) {
                     this.name1 = "Wodopom"
                     this.name2 = ""
@@ -8992,6 +9034,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
                     ring2.draw()
                     this.firing -= .5
+                } else if (this.type == 38) {
+                    this.firing -= 1/this.dodgeMax
                 } else if (this.type == 100) {
 
 
@@ -9226,6 +9270,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.drawImage(capacitor1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
                     } else if (this.type == 37) {
                         canvas_context.drawImage(capacitor2, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                    } else if (this.type == 38) {
+                        canvas_context.drawImage(dodgemod1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
                     } else if (this.type == 100) {
                         this.frame++
                         canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
@@ -9262,6 +9308,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let fire = new Image()
     fire.src = "fire.png"
+
+    let dodgemod1 = new Image()
+    dodgemod1.src = "dodgemod1.png"
+    let dodgemodr1 = new Image()
+    dodgemodr1.src = "dodgemodr1.png"
 
     let mirror = new Image()
     mirror.src = "mirror.png"
@@ -11037,17 +11088,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             }
         }
-        check(point) {
-            if (vessel.hash) {
-                if (vessel.hash['security'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[5].max)))) {
-                    return
-
+        check(point, overrride = 0) {
+            if(overrride == 0){
+                if (vessel.hash) {
+                    if (vessel.hash['security'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[5].max)))) {
+                        return
+                    }
                 }
-            }
-
-            if (vessel.UI.systems[5].sto + vessel.UI.systems[5].fed <= 0) {
-                return
-
+                if (vessel.UI.systems[5].sto + vessel.UI.systems[5].fed <= 0) {
+                    return
+                }
             }
             this.t = 0
             let worm = 0
@@ -11101,6 +11151,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     return true
                 }
             } else {
+                if (vessel.UI.systems[5].sto <= 0) {
+                    return
+                }
                 let wet = 0
                 if (this.body.isPointInside(point)) {
                     for (let t = 0; t < enemy.blocks.length; t++) {
@@ -11110,8 +11163,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 wet = 1
                                 if (enemy.blocks[t][k].doorway == 1) {
                                     this.body.color = "#00ff00"
+                                    dooropen.play()
                                 } else {
                                     this.body.color = "#FF0000"
+                                    doorclose.play()
                                 }
                             }
                         }
@@ -11752,8 +11807,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
 
+            this.superdodge = 0
             for (let t = 0; t < this.weapons.length; t++) {
                 this.weapons[t].draw()
+                if(this.weapons[t].firing > 0){
+                    if(this.weapons[t].dodgeMod > 0){
+                        this.superdodge = 1
+                    }
+                }
             }
             for (let t = 0; t < this.guys.length; t++) {
                 this.guys[t].bodydraw()
@@ -11799,9 +11860,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 dodgerate *= 0
             }
             if (dodgerate == 0) {
+                if(this.superdodge > 0){
+                    return .1
+                }else{
                 return 1
+                }
             } else {
-                return Math.max(.90 - (dodgerate / 80), .1)
+                if(this.superdodge > 0){
+                    return .1
+                }else{
+                    return Math.max(.90 - (dodgerate / 80), .1)
+                }
             }
         }
         draw() {
@@ -12144,7 +12213,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.type == 4) {
                         let wep1 = new Weapon(17)
                         let wep2 = new Weapon(2)
-                        let wep3 = new Weapon(-1)
+                        let wep3 = new Weapon(38)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -13600,9 +13669,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (dodgerate == 0) {
+                if(this.superdodge > 0){
+                    return .1
+                }else{
                 return 1
+                }
             } else {
-                return Math.max(.90 - (dodgerate / 80), .1)
+                if(this.superdodge > 0){
+                    return .1
+                }else{
+                    return Math.max(.90 - (dodgerate / 80), .1)
+                }
             }
         }
         cleanDirty() {
@@ -13697,6 +13774,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
 
         draw() {
+
+            this.superdodge = 0
+            for (let t = 0; t < this.weapons.length; t++) {
+                // this.weapons[t].draw()
+                if(this.weapons[t].firing > 0){
+                    if(this.weapons[t].dodgeMod > 0){
+                        this.superdodge = 1
+                    }
+                }
+            }
+
+            
             if (this.first == 0) {
                 this.now = Date.now()
             }
@@ -13907,7 +13996,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // this.weapons.push(wep4)
                     // this.weapons.push(wep5)
                     if (Math.random() < .05) {
-                        // let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                        // let wep5 = new Weapon(Math.floor(Math.random() * 39))
                         let wep5 = new Weapon(0)
                         this.weapons.push(wep5)
                     }
@@ -13926,7 +14015,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .1) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 39))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < .05) {
@@ -13944,7 +14033,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep3)
                     this.weapons.push(wep4)
                     if (Math.random() < .5) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 39))
                         this.weapons.push(wep5)
                     }
                     if (Math.random() < .05) {
@@ -13963,19 +14052,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
@@ -13996,37 +14085,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(wep4)
                     if (Math.random() < .9) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 100) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
                     if (Math.random() < this.level / 500) {
                         if (this.wepmax > this.weapons.length) {
-                            let wep5 = new Weapon(Math.floor(Math.random() * 38))
+                            let wep5 = new Weapon(Math.floor(Math.random() * 39))
                             this.weapons.push(wep5)
                         }
                     }
@@ -15294,7 +15383,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (index > -1) {
-                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 38)))
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 39)))
                             } else {
                                 // this.wegflag = 1
 
@@ -15307,7 +15396,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 if (index > -1) {
-                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 38)))
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 39)))
                                 } else {
                                     this.wegflag = 1
                                 }
@@ -15325,7 +15414,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                             if (index > -1) {
-                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 38)))
+                                vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 39)))
                             } else {
                                 // this.wegflag = 1
 
@@ -15338,7 +15427,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 if (index > -1) {
-                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 38)))
+                                    vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 39)))
                                 } else {
                                     this.wegflag = 1
                                 }
@@ -15441,7 +15530,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 5)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 38)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 39)))
                 }
                 for (let t = 0; t < 12; t++) {
                     this.weapons.push(new Weapon(-1))
@@ -15452,7 +15541,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (Math.random() < .5) {
 
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 38)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 39)))
                     }
                     for (let t = 0; t < 12; t++) {
                         this.weapons.push(new Weapon(-1))
@@ -15469,7 +15558,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (Math.random() < .8) {
 
                             for (let t = 0; t < 2; t++) {
-                                this.weapons.push(new Weapon(Math.floor(Math.random() * 38)))
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 39)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
@@ -15480,7 +15569,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         } else {
 
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(Math.floor(Math.random() * 38)))
+                                this.weapons.push(new Weapon(Math.floor(Math.random() * 39)))
                             }
                             for (let t = 0; t < 2; t++) {
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 23), (new Guy({}, Math.floor(Math.random() * 20)).type)))
@@ -15497,16 +15586,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
         expand() {
             this.body.x -= 640 * globalRat
             this.body.y -= 360 * globalRat
-            this.body.x *= 25
-            this.body.y *= 25
+            this.body.x *= 20
+            this.body.y *= 20
             this.body.x += 640 * globalRat
             this.body.y += 360 * globalRat
 
 
             this.spot.body.x -= 640 * globalRat
             this.spot.body.y -= 360 * globalRat
-            this.spot.body.x *= 25
-            this.spot.body.y *= 25
+            this.spot.body.x *= 20
+            this.spot.body.y *= 20
             this.spot.body.x += 640 * globalRat
             this.spot.body.y += 360 * globalRat
             this.spot.size *= 5
@@ -17150,6 +17239,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let starfirst = 0
     canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
     function main() {
+        // if(keysPressed['g']){
+        //     enemy = new EnemyShip(Math.floor(Math.random() * 40), 1)
+        // }
+        // if(keysPressed['y']){
+        //     for(let t = 0;t<enemy.doors.length;t++){
+        //         enemy.doors[t].check(enemy.doors[t], 1)
+        //     }
+        // }
         wodopomsong.play()
         if (starfirst == 0) {
             starss = []
@@ -17361,8 +17458,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 vessel.web = [stars.stars[0].body]
             }
-            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
-            canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
+            if (stars.collapsed == 1) {
+            }else{
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
+                canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
+
+            }
             var grd = canvas_context.createLinearGradient(0, 0, stars.stars[vessel.star].body.x, 0);
             grd.addColorStop(0, "#888888");
             // grd.addColorStop(.5, "#88888888");
