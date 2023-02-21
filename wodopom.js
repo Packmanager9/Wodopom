@@ -17,89 +17,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     let video_recorder
     let recording = 0
-    // function CanvasCaptureToWEBM(canvas, bitrate) {
-    //     // it uses the same canvas as the rest of the file.
-    //     // to start a recording call .record() on video_recorder
-    //     /*
-    //     for example, 
-    //     */
-    //     this.record = Record
-    //     this.stop = Stop
-    //     this.download = saveToDownloads
-    //     let blobCaptures = []
-    //     let outputFormat = {}
-    //     let recorder = {}
-    //     let canvasInput = canvas.captureStream()
-    //     if (typeof canvasInput == undefined || !canvasInput) {
-    //         return
-    //     }
-    //     const video = document.createElement('video')
-    //     video.style.display = 'none'
+    function CanvasCaptureToWEBM(canvas, bitrate) {
+        // it uses the same canvas as the rest of the file.
+        // to start a recording call .record() on video_recorder
+        /*
+        for example, 
+        */
+        this.record = Record
+        this.stop = Stop
+        this.download = saveToDownloads
+        let blobCaptures = []
+        let outputFormat = {}
+        let recorder = {}
+        let canvasInput = canvas.captureStream()
+        if (typeof canvasInput == undefined || !canvasInput) {
+            return
+        }
+        const video = document.createElement('video')
+        video.style.display = 'none'
 
-    //     function Record() {
-    //         let formats = [
-    //             "video/webm\;codecs=h264",
-    //             "video/webm\;codecs=vp8",
-    //             'video/vp8',
-    //             "video/webm",
-    //             'video/webm,codecs=vp9',
-    //             "video/webm\;codecs=daala",
-    //             "video/mpeg"
-    //         ];
+        function Record() {
+            let formats = [
+                "video/webm\;codecs=h264",
+                "video/webm\;codecs=vp8",
+                'video/vp8',
+                "video/webm",
+                'video/webm,codecs=vp9',
+                "video/webm\;codecs=daala",
+                "video/mpeg"
+            ];
 
-    //         for (let t = 0; t < formats.length; t++) {
-    //             if (MediaRecorder.isTypeSupported(formats[t])) {
-    //                 outputFormat = formats[t]
-    //                 break
-    //             }
-    //         }
-    //         if (typeof outputFormat != "string") {
-    //             return
-    //         } else {
-    //             let videoSettings = {
-    //                 mimeType: outputFormat,
-    //                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-    //             };
-    //             blobCaptures = []
-    //             try {
-    //                 recorder = new MediaRecorder(canvasInput, videoSettings)
-    //             } catch (error) {
-    //                 return;
-    //             }
-    //             recorder.onstop = handleStop
-    //             recorder.ondataavailable = handleAvailableData
-    //             recorder.start(100)
-    //         }
-    //     }
-    //     function handleAvailableData(event) {
-    //         if (event.data && event.data.size > 0) {
-    //             blobCaptures.push(event.data)
-    //         }
-    //     }
-    //     function handleStop() {
-    //         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-    //         video.src = window.URL.createObjectURL(superBuffer)
-    //     }
-    //     function Stop() {
-    //         recorder.stop()
-    //         video.controls = true
-    //     }
-    //     function saveToDownloads(input) { // specifying a file name for the output
-    //         const name = input || 'video_out.webm'
-    //         const blob = new Blob(blobCaptures, { type: outputFormat })
-    //         const url = window.URL.createObjectURL(blob)
-    //         const storageElement = document.createElement('a')
-    //         storageElement.style.display = 'none'
-    //         storageElement.href = url
-    //         storageElement.download = name
-    //         document.body.appendChild(storageElement)
-    //         storageElement.click()
-    //         setTimeout(() => {
-    //             document.body.removeChild(storageElement)
-    //             window.URL.revokeObjectURL(url)
-    //         }, 100)
-    //     }
-    // }
+            for (let t = 0; t < formats.length; t++) {
+                if (MediaRecorder.isTypeSupported(formats[t])) {
+                    outputFormat = formats[t]
+                    break
+                }
+            }
+            if (typeof outputFormat != "string") {
+                return
+            } else {
+                let videoSettings = {
+                    mimeType: outputFormat,
+                    videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+                };
+                blobCaptures = []
+                try {
+                    recorder = new MediaRecorder(canvasInput, videoSettings)
+                } catch (error) {
+                    return;
+                }
+                recorder.onstop = handleStop
+                recorder.ondataavailable = handleAvailableData
+                recorder.start(100)
+            }
+        }
+        function handleAvailableData(event) {
+            if (event.data && event.data.size > 0) {
+                blobCaptures.push(event.data)
+            }
+        }
+        function handleStop() {
+            const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+            video.src = window.URL.createObjectURL(superBuffer)
+        }
+        function Stop() {
+            recorder.stop()
+            video.controls = true
+        }
+        function saveToDownloads(input) { // specifying a file name for the output
+            const name = input || 'video_out.webm'
+            const blob = new Blob(blobCaptures, { type: outputFormat })
+            const url = window.URL.createObjectURL(blob)
+            const storageElement = document.createElement('a')
+            storageElement.style.display = 'none'
+            storageElement.href = url
+            storageElement.download = name
+            document.body.appendChild(storageElement)
+            storageElement.click()
+            setTimeout(() => {
+                document.body.removeChild(storageElement)
+                window.URL.revokeObjectURL(url)
+            }, 100)
+        }
+    }
     // const gamepadAPI = {
     //     controller: {},
     //     turbo: true,
@@ -154,7 +154,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     //         }
     //         gamepadAPI.axesStatus = axes;// assign received values
     //         gamepadAPI.buttonsStatus = pressed;
-    //         // //////////////////////////////////////////////////////////////console.log(pressed); // return buttons for debugging purposes
+    //         // ////////////////////////////////////////////////////////////////console.log(pressed); // return buttons for debugging purposes
     //         return pressed;
     //     },
     //     buttonPressed: function (button, hold) {
@@ -401,7 +401,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             starcanvas_context.moveTo(this.object.x, this.object.y)
             starcanvas_context.lineTo(this.target.x, this.target.y)
             starcanvas_context.stroke()
-            ////////////////////////////console.log(this)
+            //////////////////////////////console.log(this)
             // starcanvas_context.lineWidth = linewidthstorage
         }
     }
@@ -581,7 +581,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fill()
                 canvas_context.stroke();
             } else {
-                //////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+                ////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
             }
         }
         move() {
@@ -714,7 +714,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // canvas_context.fill()
             canvas_context.stroke();
             // } else {
-            //     //////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+            //     ////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
             // }
         }
         move() {
@@ -1285,7 +1285,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     function setUp(canvas_pass, style = "#000000") {
         canvas = canvas_pass
-        // video_recorder = new CanvasCaptureToWEBM(canvas, 2500000);
+        video_recorder = new CanvasCaptureToWEBM(canvas, 3000000);
         canvas_context = canvas.getContext('2d');
         starcanvas_context = starcanvas.getContext('2d');
         shipcanvas_context = shipcanvas.getContext('2d');
@@ -1395,8 +1395,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         return
                     } else {
                     }
-                    
-                    
+
+
                     if (energyButton.isPointInside(TIP_engine)) {
                         vessel = new Ship(13)
                         start = 1
@@ -1480,7 +1480,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             TIP_engine.x = XS_engine//*.666666
             TIP_engine.y = YS_engine//*.666666
             TIP_engine.body = TIP_engine
-            ////////////////////////////////////////console.log(TIP_engine)
+            //////////////////////////////////////////console.log(TIP_engine)
 
             if (vessel.guys) {
                 let i1 = -1
@@ -1656,13 +1656,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 return
             }
-            // ////////////////////////////////////////////////////////////console.log(vessel.energy.upgradeMenu)
+            // //////////////////////////////////////////////////////////////console.log(vessel.energy.upgradeMenu)
 
             // if (keysPressed['2']) {
-            //     ////////////////////////////////////////////console.log(vessel.doors.length)
+            //     //////////////////////////////////////////////console.log(vessel.doors.length)
             //     let door = new Airlock(TIP_engine.x, TIP_engine.y)
             //     vessel.doors.push(door)
-            //     ////////////////////////////////////////////console.log(JSON.stringify(vessel.doors))
+            //     //////////////////////////////////////////////console.log(JSON.stringify(vessel.doors))
             //     return
             // }
 
@@ -1678,7 +1678,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // }
 
             //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
-            //             // ////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
+            //             // //////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
 
             //             enemy.blocks[t][k].marked = 1
             //             if (keysPressed['k']) {
@@ -1726,8 +1726,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //         }
             //     }
             // }
-            // ////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.doors))
-            // ////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
+            // //////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.doors))
+            // //////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
             // return
             // wad.launch(TIP_engine)
             for (let t = 0; t < vessel.doors.length; t++) {
@@ -1791,7 +1791,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         //     vessel.blocks[t][k].fire = -100
                         //     // vessel.blocks[t][k].onFire = 1
                         // }
-                        // ////////////////////////////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
+                        // //////////////////////////////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
                         // if (keysPressed['m']) {
                         //     vessel.blocks[t][k].medbay = 1
                         //     vessel.blocks[t][k].color = "#00ff0044"
@@ -1953,7 +1953,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         //     enemy.blocks[t][k].fire = -100
                         //     // enemy.blocks[t][k].onFire = 1
                         // }
-                        // ////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
+                        // //////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
                         // if (keysPressed['m']) {
                         //     enemy.blocks[t][k].medbay = 1
                         //     enemy.blocks[t][k].color = "#00ff0044"
@@ -2061,7 +2061,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
 
-            ////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
+            //////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
             // example usage: if(object.isPointInside(TIP_engine)){ take action }
         });
         window.addEventListener('pointermove', continued_stimuli);
@@ -2079,7 +2079,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     }
     // function gamepad_control(object, speed = 1) { // basic control for objects using the controler
-    //     //         //////////////////////////////////////////////////////////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
+    //     //         ////////////////////////////////////////////////////////////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
     //     if (typeof object.body != 'undefined') {
     //         if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
     //             if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
@@ -2574,8 +2574,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             // let link = new Line(this.posx, this.posy, bottle.crew[bottle.selectedcrew].body.x-100, bottle.crew[bottle.selectedcrew].body.y-300, "red", 1)
             // if (link.hypotenuse() < 108) {
-            // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
-            // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
             // }
             // let roundedx = (Math.round((startPoint.x) / 10))
             // let roundedy = (Math.round((startPoint.y) / 10))
@@ -2588,13 +2588,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // if (this.inPath === true) {
             //     // this.drawPath();
             // } else if (this.walkable === false) {
-            //     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
+            //     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
 
             //     // this.createWall();
             //     return;
             //     // }else if (link.hypotenuse() < 11) {
             // } else if (this.posx == roundedx && this.posy == roundedy) {
-            //     //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
+            //     //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
             //     //   this.createStartNode();
             //     return;
             // } else if (this.posx == endPoint.x && this.posy == endPoint.y) {
@@ -2682,10 +2682,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.hash) {
                     if (vessel.hash['engine'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[6].max)))) {
                         if (vessel.UI.systems[6].sto + vessel.UI.systems[6].fed > 0) {
-                            if(vessel.superdodge > 0){
-                            canvas_context.drawImage(engineblastsuper, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
-                            }else{
-                            canvas_context.drawImage(engineblast, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                            if (vessel.superdodge > 0) {
+                                canvas_context.drawImage(engineblastsuper, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
+                            } else {
+                                canvas_context.drawImage(engineblast, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
                             }
                         } else {
                             canvas_context.drawImage(engineblast, 0, 0, engineblast.width / 5, engineblast.height, this.x - (this.width * 2), this.y, this.width * 2, this.height)
@@ -2700,11 +2700,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (enemy.hash) {
                     if (enemy.hash['engine'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[6].max)))) {
                         if (enemy.UI.systems[6].sto + enemy.UI.systems[6].fed > 0) {
-                            if(enemy.superdodge > 0){
+                            if (enemy.superdodge > 0) {
 
-                            canvas_context.drawImage(engineblastsuperr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
-                            }else{
-                            canvas_context.drawImage(engineblastr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                                canvas_context.drawImage(engineblastsuperr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
+                            } else {
+                                canvas_context.drawImage(engineblastr, (1 + Math.floor(Math.random() * 4)) * (32), 0, engineblastr.width / 5, engineblastr.height, this.x + (this.width), this.y, this.width * 2, this.height)
 
                             }
                         } else {
@@ -2728,7 +2728,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.helm == 1) {
                     canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz, this.width - subx, this.height - subx)
                 }
-            }else{
+            } else {
 
                 if (this.oxygen == 1 && this.medbay == 1) {
                     this.color = "#00FFAA44"
@@ -2739,7 +2739,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.drawImage(oxysysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz, this.width - subx, this.height - subx)
                     }
                 } else {
-    
+
                     if (this.weapon == 1 && this.medbay == 1) {
                         if (this.medbay == 1) {
                             canvas_context.drawImage(medsysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
@@ -2766,7 +2766,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 canvas_context.drawImage(shieldsysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
                             }
                         }
-    
+
                         if (this.security == 1 && this.medbay == 1) {
                             if (this.security == 1) {
                                 canvas_context.drawImage(securitysysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
@@ -2783,18 +2783,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-    
+
                     if (this.oxygen == 1) {
                         canvas_context.drawImage(oxysysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
                     }
-    
-    
-    
+
+
+
                     if (this.special == 1) {
                         canvas_context.drawImage(teleportersysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
                     }
                     if (this.helm == 1 && this.engine == 1) {
-    
+
                         if (this.engine == 1) {
                             canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
                         }
@@ -2802,7 +2802,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
                         }
                     } else {
-    
+
                         if (this.engine == 1) {
                             canvas_context.drawImage(enginesysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
                         }
@@ -2810,8 +2810,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             canvas_context.drawImage(helmsysicon, 0, 0, 16, 16, this.x + subz, this.y + subz, this.width - subx, this.height - subx)
                         }
                     }
-    
-    
+
+
                 }
             }
 
@@ -2833,83 +2833,83 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         vessel.weapons[vessel.wepDrawCount].center.x = this.x + (this.width * 1.45)
                                         vessel.weapons[vessel.wepDrawCount].center.y = this.y + (this.width * .25)
                                         if (vessel.weapons[vessel.wepDrawCount].type == 0) {
-                                            canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 1) {
-                                            canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 2) {
-                                            canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 3) {
-                                            canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 4) {
-                                            canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 5) {
-                                            canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 6) {
-                                            canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 7) {
-                                            canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 8) {
-                                            canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 9) {
-                                            canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 10) {
-                                            canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 11) {
-                                            canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 12) {
-                                            canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 13) {
-                                            canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 14) {
-                                            canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 15) {
-                                            canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 16) {
-                                            canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 17) {
-                                            canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 18) {
-                                            canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 19) {
-                                            canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 20) {
-                                            canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 21) {
-                                            canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 22) {
-                                            canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 23) {
-                                            canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 24) {
-                                            canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
-                                            canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
-                                            canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
-                                            canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
-                                            canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 29) {
-                                            canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 30) {
-                                            canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 31) {
-                                            canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 32) {
-                                            canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 33) {
-                                            canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 34) {
-                                            canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 35) {
-                                            canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
-                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 36) {
-                                            canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
-                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
-                                            canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
-                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 38) {
-                                            canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 36) {
+                                            canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
+                                            canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 38) {
+                                            canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
 
@@ -2922,83 +2922,83 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             vessel.weapons[vessel.wepDrawCount].center.x = this.x + (this.width * 1.45)
                                             vessel.weapons[vessel.wepDrawCount].center.y = this.y + (this.width * .75)
                                             if (vessel.weapons[vessel.wepDrawCount].type == 0) {
-                                                canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basiclaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 1) {
-                                                canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basicmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 2) {
-                                                canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(doublelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 3) {
-                                                canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(triplelaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 4) {
-                                                canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(crewlaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 5) {
-                                                canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megalaser, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 6) {
-                                                canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mediummmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 7) {
-                                                canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(bigmissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 8) {
-                                                canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megamissle, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 9) {
-                                                canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeam, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 10) {
-                                                canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 11) {
-                                                canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 12) {
-                                                canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 13) {
-                                                canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion4, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 14) {
-                                                canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 15) {
-                                                canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 16) {
-                                                canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(rail3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 17) {
-                                                canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 18) {
-                                                canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 19) {
-                                                canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsap3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 20) {
-                                                canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 21) {
-                                                canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 22) {
-                                                canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeam3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 23) {
-                                                canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 24) {
-                                                canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 25) {
-                                                canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannon3, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 26) {
-                                                canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeam2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 27) {
-                                                canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrol1, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 28) {
-                                                canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrol2, 0, 0, engineblast.width / 5, engineblast.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 29) {
-                                                canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 30) {
-                                                canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 31) {
-                                                canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hook3, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 32) {
-                                                canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 33) {
-                                                canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 34) {
-                                                canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirror, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 35) {
-                                                canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirror2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 36) {
-                                                canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 37) {
-                                                canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor2, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (vessel.weapons[vessel.wepDrawCount].type == 38) {
-                                                canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1))+2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(dodgemod1, 0, 0, hook1.width, hook1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -3023,83 +3023,83 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
                                         enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .25)
                                         if (enemy.weapons[enemy.wepDrawCount].type == 0) {
-                                            canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
-                                            canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
-                                            canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
-                                            canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
-                                            canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
-                                            canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
-                                            canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
-                                            canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
-                                            canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
-                                            canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
-                                            canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
-                                            canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
-                                            canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
-                                            canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
-                                            canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
-                                            canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
-                                            canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
-                                            canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
-                                            canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
-                                            canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
-                                            canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
-                                            canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
-                                            canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
-                                            canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
-                                            canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
-                                            canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
-                                            canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
-                                            canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
-                                            canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 29) {
-                                            canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 30) {
-                                            canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 31) {
-                                            canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 32) {
-                                            canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 33) {
-                                            canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 34) {
-                                            canvas_context.drawImage(mirrorr, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirrorr, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 35) {
-                                            canvas_context.drawImage(mirrorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(mirrorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 36) {
-                                            canvas_context.drawImage(capacitorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
-                                            canvas_context.drawImage(capacitorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(capacitorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 38) {
-                                            canvas_context.drawImage(dodgemodr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y, this.width * .5, this.height * .5)
+                                            canvas_context.drawImage(dodgemodr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                         }
                                     }
                                 }
@@ -3111,83 +3111,83 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             enemy.weapons[enemy.wepDrawCount].center.x = this.x - (this.width * .45)
                                             enemy.weapons[enemy.wepDrawCount].center.y = this.y + (this.width * .75)
                                             if (enemy.weapons[enemy.wepDrawCount].type == 0) {
-                                                canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basiclaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 1) {
-                                                canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(basicbombr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 2) {
-                                                canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(doublelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 3) {
-                                                canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(triplelaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 4) {
-                                                canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(crewlaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 5) {
-                                                canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megalaserr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 6) {
-                                                canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mediummissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 7) {
-                                                canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(bigmissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 8) {
-                                                canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(megamissler, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 9) {
-                                                canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeamr, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 10) {
-                                                canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion1r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 11) {
-                                                canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion2r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 12) {
-                                                canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion3r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 13) {
-                                                canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(ion4r, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 14) {
-                                                canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 15) {
-                                                canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 16) {
-                                                canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(railgunr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 17) {
-                                                canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 18) {
-                                                canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 19) {
-                                                canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(shieldsapr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 20) {
-                                                canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 21) {
-                                                canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 22) {
-                                                canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hardbeamr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 23) {
-                                                canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 24) {
-                                                canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 25) {
-                                                canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(scrapcannonr3, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 26) {
-                                                canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(heatbeamr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 27) {
-                                                canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrolr1, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 28) {
-                                                canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mindcontrolr2, 0, 0, engineblast.width / 5, engineblast.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 29) {
-                                                canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 30) {
-                                                canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 31) {
-                                                canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(hookr3, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 32) {
-                                                canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractorr1, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 33) {
-                                                canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(tractorr2, 0, 0, hookr3.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 34) {
-                                                canvas_context.drawImage(mirrorr, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirrorr, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 35) {
-                                                canvas_context.drawImage(mirrorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(mirrorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 36) {
-                                                canvas_context.drawImage(capacitor2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitor2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 37) {
-                                                canvas_context.drawImage(capacitorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(capacitorr2, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             } else if (enemy.weapons[enemy.wepDrawCount].type == 38) {
-                                                canvas_context.drawImage(dodgemodr1, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5))-2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                                canvas_context.drawImage(dodgemodr1, 0, 0, mirrorr.width, hookr3.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                             }
                                         }
                                     }
@@ -3214,31 +3214,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
             //         this.color = "transparent"
             //     }
             //     if (typeof this.wallcolor != "undefined") {
-            // ////////////////////////////////////////////////////////////////////console.log("s")
+            // //////////////////////////////////////////////////////////////////////console.log("s")
             canvas_context.fillStyle = this.color
             // canvas_context.strokeStyle = this.color
             canvas_context.fillRect(this.x, this.y, this.width, this.height)
 
-            let n 
+            let n
             let eet = 0
-            if(vessel.supratiles.includes(this)){
+            if (vessel.supratiles.includes(this)) {
                 n = vessel.neighbors(this)
-            }else{
+            } else {
                 eet = 1
                 n = enemy.neighbors(this)
             }
-            let links = [true,true,true,true]
-            for(let t=  0;t<n.length;t++){
-                if(n[t].x == this.x){
-                    if(n[t].y > this.y){
+            let links = [true, true, true, true]
+            for (let t = 0; t < n.length; t++) {
+                if (n[t].x == this.x) {
+                    if (n[t].y > this.y) {
                         links[0] = false
-                    }else{
+                    } else {
                         links[1] = false
                     }
-                }else{
-                    if(n[t].x > this.x){
+                } else {
+                    if (n[t].x > this.x) {
                         links[2] = false
-                    }else{
+                    } else {
                         links[3] = false
                     }
                 }
@@ -3247,20 +3247,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
             canvas_context.strokeStyle = "#88888888"
             canvas_context.lineWidth = 5
 
-            if(eet == 1 && enemy.hull<=0){
+            if (eet == 1 && enemy.hull <= 0) {
 
-            }else{
-                if(links[1]){
-                    canvas_context.strokeRect(this.x, this.y-1, this.width, 2)
+            } else {
+                if (links[1]) {
+                    canvas_context.strokeRect(this.x, this.y - 1, this.width, 2)
                 }
-                if(links[0]){
-                    canvas_context.strokeRect(this.x, this.y+this.height-1, this.width, 2)
+                if (links[0]) {
+                    canvas_context.strokeRect(this.x, this.y + this.height - 1, this.width, 2)
                 }
-                if(links[3]){
-                    canvas_context.strokeRect(this.x-1, this.y, 2, this.height)
+                if (links[3]) {
+                    canvas_context.strokeRect(this.x - 1, this.y, 2, this.height)
                 }
-                if(links[2]){
-                    canvas_context.strokeRect(this.x+this.width-1, this.y, 2, this.height)
+                if (links[2]) {
+                    canvas_context.strokeRect(this.x + this.width - 1, this.y, 2, this.height)
                 }
             }
 
@@ -3292,7 +3292,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.y += this.ymom
         }
         isPointInside(point) {
-            ////////////////////////////////////////////////////////////////////console.log(point, this)
+            //////////////////////////////////////////////////////////////////////console.log(point, this)
             if (point.x >= this.x) {
                 if (point.y >= this.y) {
                     if (point.x <= this.x + this.width) {
@@ -3547,7 +3547,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                     if (index != -1) {
-                        ////////console.log(index)
+                        //////////console.log(index)
                         let g = vessel.upgradeMenu.wepsto[index].gearType
                         vessel.upgradeMenu.wepsto[index] = new Weapon(-1, -1, this.type)
                         this.guy.gear[this.guy.gear.indexOf(this)] = new Gear(g, this.guy)
@@ -3563,7 +3563,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.guy.gearArmor += this.armor
             this.guy.gearDamage += this.damage
             this.guy.gearRegen += this.regen
-            // ////////console.log(this.guy.gearArmor)
+            // //////////console.log(this.guy.gearArmor)
         }
         draw() {
             if (this.selected == 1) {
@@ -3580,7 +3580,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.y = this.guy.healthbox.y + this.guy.healthbox.height + (Math.floor(this.guy.gear.indexOf(this) / 2) * 32)
             }
             this.body.draw()
-            canvas_context.font = "11px comic sans ms"
+            canvas_context.font = "11px helvetica"
             canvas_context.fillStyle = "white"
             canvas_context.fillText(this.name1 + this.name2, this.body.x + 5, this.body.y + 20)
         }
@@ -3597,7 +3597,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.gearDamage = 0
             this.gearRegen = 0
             this.meleeKills = 0
-            // ////////////////////////console.log(type)
+            // //////////////////////////console.log(type)
             this.bullets = []
             this.teleflag = 0
             this.energydeathtag = 0
@@ -3609,7 +3609,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (type == -1) {
                 this.type = Math.floor(Math.random() * 22)
             } else {
-                // ////////////////////////console.log("dd")
+                // //////////////////////////console.log("dd")
                 this.type = type
             }
 
@@ -4119,7 +4119,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 if (vessel.guys.includes(this)) {
                     let hrat = this.health / this.maxhealth
-                    this.healthbox = new Rectangle(0, ((vessel.guys.indexOf(this)) * 33), 66, 32, "#555555")
+                    this.healthbox = new Rectangle(0,200+((vessel.guys.indexOf(this)) * 33), 66, 32, "#555555")
                     // if(this.gear){
                     if (this.zSelected == 1) {
                         for (let t = 0; t < this.gear.length; t++) {
@@ -4135,7 +4135,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
 
                     this.healthbox.draw()
-                    this.healthbar = new Rectangle(34, ((vessel.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
+                    this.healthbar = new Rectangle(34, 200+((vessel.guys.indexOf(this)) * 33) + 22, 30 * hrat, 5, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${80})`)
                     this.healthbar.draw()
                     if (this.hostile != 1) {
                         canvas_context.drawImage(rs[this.type], 64 * (this.count % (rs[this.type].width / 64)), 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
@@ -4451,7 +4451,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         let clone2 = this.clone(dummytile)
                         clone2.hostile = 1
-                        ////////////////////////console.log(enemy, enemy.guys)
+                        //////////////////////////console.log(enemy, enemy.guys)
                         enemy.guys.push(clone2)
                         vessel.guys.splice(vessel.guys.indexOf(this), 1)
 
@@ -4479,7 +4479,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         let clone2 = this.clone(dummytile)
                         clone2.hostile = 1
-                        ////////////////////////console.log(enemy, enemy.guys)
+                        //////////////////////////console.log(enemy, enemy.guys)
                         vessel.guys.push(clone2)
                         enemy.guys.splice(enemy.guys.indexOf(this), 1)
                         if (this.stretch == 1) {
@@ -4524,7 +4524,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     //     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * Math.max(1,this.cound-this.gearSpeed)
                     //     this.body.x *= 1 / this.rate
                     //     this.body.y *= 1 / this.rate
-                    //     // //////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                    //     // ////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                     //     this.tiles[t].draw = (new Tile()).draw
                     //     // this.tiles[t].color = "green"
                     //     // this.tiles[t].draw()
@@ -4536,7 +4536,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.body.y += (this.tiles[t + 1].y + (this.tiles[t + 1].height * .5)) * this.cound
                         this.body.x *= 1 / this.rate
                         this.body.y *= 1 / this.rate
-                        // //////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                        // ////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                         this.tiles[t].draw = (new Tile()).draw
                         // this.tiles[t].color = "green"
                         // this.tiles[t].draw()
@@ -4549,7 +4549,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                             this.body.x *= 1 / this.rate
                             this.body.y *= 1 / this.rate
-                            // //////////////////////////////////////////////////////////////console.log(this.tile)
+                            // ////////////////////////////////////////////////////////////////console.log(this.tile)
                             this.tile.draw = (new Tile()).draw
                             // this.tile.color = "green"
                             // this.tile.draw()
@@ -4645,7 +4645,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let linkw = new LineOP(d1, d2, this.c1, this.bodies[b].radius + 5)
                             linkw.draw()
                             this.lines[b - 1] = link
-                            //////////////////////////////console.log(this.bodies.length)
+                            ////////////////////////////////console.log(this.bodies.length)
                         }
                     }
                 }
@@ -4663,7 +4663,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         k--
                         this.skillslist[Math.floor(Math.random() * this.skillslist.length)] += Math.min((enemy.level / 100), .15)
                     }
-                    //////////////////////////////////////////////console.log(this.skillslist)
+                    ////////////////////////////////////////////////console.log(this.skillslist)
                 }
 
             }
@@ -4770,7 +4770,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                     if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
                                                         this.path = astar.search(vessel, this.tile, n[d])
                                                         this.stogo = n[d]
-                                                        //////////////////////////////console.log(n)
+                                                        ////////////////////////////////console.log(n)
                                                         break
                                                     }
                                                 }
@@ -4830,7 +4830,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                     if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
                                                         vessel.guys[t].path = astar.search(vessel, vessel.guys[t].tile, n[d])
                                                         vessel.guys[t].stogo = n[d]
-                                                        //////////////////////////////console.log(n)
+                                                        ////////////////////////////////console.log(n)
                                                         break
                                                     }
                                                 }
@@ -4864,7 +4864,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                         if (this.fighting < 0) {
                                                             this.path = astar.search(enemy, this.tile, n[d])
                                                             this.stogo = n[d]
-                                                            //////////////////////////////console.log(n)
+                                                            ////////////////////////////////console.log(n)
                                                             break
                                                         }
                                                     }
@@ -4928,7 +4928,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                         if (enemy.guys[t].fighting < 0) {
                                                             enemy.guys[t].path = astar.search(enemy, enemy.guys[t].tile, n[d])
                                                             enemy.guys[t].stogo = n[d]
-                                                            //////////////////////////////console.log(n)
+                                                            ////////////////////////////////console.log(n)
                                                             break
                                                         }
                                                     }
@@ -4966,7 +4966,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.count++
                     }
                     // if (this.path.length > 1) {
-                    // //////////////////////////////////////////////////////////////console.log(this.path)
+                    // ////////////////////////////////////////////////////////////////console.log(this.path)
                     if (this.hostile == 1) {
                         if (this.path[this.step + 1].walkable == true) {
                             this.cound++
@@ -5014,7 +5014,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     this.tile = this.path[this.step]
                 }
-                // //////////////////////////////////////////////////////////////console.log(this.tile)
+                // ////////////////////////////////////////////////////////////////console.log(this.tile)
                 this.tile.walkable = false
                 this.tile.guyIn = false
                 if (this.stretch == 1) {
@@ -5064,13 +5064,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.selected == 1) {
                 // control(this.body)
                 // this.tile.color = '#00ff0022'
-                ////////////////////console.log(this.tile)
+                //////////////////////console.log(this.tile)
                 this.tile.draw()
             }
             if (Math.random() < .1 || this.type == 15) {
                 this.count++
             }
-            // //////////////////////////////////////////////////////////////console.log(this.path)
+            // ////////////////////////////////////////////////////////////////console.log(this.path)
             l = this.rate - this.cound
             if (this.path.length > 1) {
                 this.body.x = (this.tile.x + (this.tile.width * .5)) * l
@@ -5079,7 +5079,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                 this.body.x *= 1 / this.rate
                 this.body.y *= 1 / this.rate
-                // //////////////////////////////////////////////////////////////console.log(this.tile)
+                // ////////////////////////////////////////////////////////////////console.log(this.tile)
                 this.tile.draw = (new Tile()).draw
                 // this.tile.color = "green"
                 // this.tile.draw()
@@ -5141,7 +5141,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                     this.body.x *= 1 / this.rate
                     this.body.y *= 1 / this.rate
-                    // //////////////////////////////////////////////////////////////console.log(this.tile)
+                    // ////////////////////////////////////////////////////////////////console.log(this.tile)
                     this.tile.draw = (new Tile()).draw
                     // this.tile.color = "green"
                     // this.tile.draw()
@@ -5217,16 +5217,66 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (this.charge > this.maxout) {
                 hrat = 1
             }
-            this.healthbar = new Rectangle(68, 0, 104 * 1, 30, "#ffffff")
+            // this.healthbar = new Rectangle(68, 0, 104 * 1, 30, "#ffffff")
+            // this.healthbar.draw()
+
+            // this.healthbar = new Rectangle(69, 10, 100 * 1, 10, `rgb(${0}, ${0 + (0)}, ${0 + (0)})`)
+            // this.healthbar.draw()
+
+            this.healthbar = new Rectangle(263, 47, 92 * hrat, 12, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${0 + (255 * hrat)})`)
             this.healthbar.draw()
 
-            this.healthbar = new Rectangle(69, 10, 100 * 1, 10, `rgb(${0}, ${0 + (0)}, ${0 + (0)})`)
-            this.healthbar.draw()
+            // this.healthbar = new Rectangle(68, 0, 104 * 1, 30, "#ffffff")
+            let coords = [362, 386, 407,428,447, 466, 484, 504, 524, 544]
+            if(this == vessel.shield){
+                if(vessel.UI.systems[2].max == 1){
+                    //coords = [362]
+                    canvas_context.drawImage(onePips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 2){
+                    //coords = [362, 386]
+                    canvas_context.drawImage(twoPips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 3){
+                    //coords =[362, 386]
+                    canvas_context.drawImage(threePips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 4){
+                    //coords = [362]
+                    canvas_context.drawImage(fourPips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 5){
+                    //coords = [362]
+                    canvas_context.drawImage(fivePips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 6){
+                    //coords = [362]
+                    canvas_context.drawImage(sixPips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 7){
+                    //coords = [362]
+                    canvas_context.drawImage(sevenPips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 8){
+                    //coords = [362]
+                    canvas_context.drawImage(eightPips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 9){
+                    //coords = [362]
+                    canvas_context.drawImage(ninePips, 0,0)
+                }
+                if(vessel.UI.systems[2].max == 10){
+                    //coords = [362]
+                    canvas_context.drawImage(tenPips, 0,0)
+                }
+                for(let t = 0;t<this.state;t++){
 
-            this.healthbar = new Rectangle(69, 10, 100 * hrat, 10, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${0 + (255 * hrat)})`)
-            this.healthbar.draw()
+                    canvas_context.drawImage(pip, 0,0,24,24, coords[t],41, 24,24)
+                }
+            }
 
-            this.healthbar = new Rectangle(68, 0, 104 * 1, 30, "#ffffff")
+            this.healthbar = new Rectangle(263, 47, 92 * hrat, 12, `rgb(${255 - (255 * hrat)}, ${0 + (255 * hrat)}, ${0 + (255 * hrat)})`)
+            this.healthbar.draw()
         }
         draw() {
 
@@ -5754,7 +5804,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.beingchecked = 0
                 this.auto = 1
                 this.type = 200
-                this.body = new RectangleR(270, 650, 100, 70, "#444444")
+                this.body = new RectangleR(270, 650, 118, 87, "#444444")
                 this.charge = 0
                 this.double = 1
                 this.crew = 1
@@ -5786,7 +5836,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.beingchecked = 0
                 this.auto = 1
                 this.type = type
-                this.body = new RectangleR(270, 650, 100, 70, "#444444")
+                this.body = new RectangleR(270, 650, 118, 87, "#444444")
                 this.charge = 0
                 this.double = 1
                 this.crew = 1
@@ -5813,7 +5863,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.beingchecked = 0
                 this.auto = 1
                 this.type = type
-                this.body = new RectangleR(270, 650, 100, 70, "#444444")
+                this.body = new RectangleR(270, 650, 118, 87, "#444444")
                 this.charge = 0
                 this.double = 1
                 this.crew = 1
@@ -6327,7 +6377,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.buy = 50
                     this.sell = 28
                     // this.mind = 2
-                }  else if (this.type == 36) {
+                } else if (this.type == 36) {
                     this.name1 = "Capacitor"
                     this.name2 = "I"
                     this.max = 100
@@ -6346,7 +6396,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.baseCharge = .05
                     this.capacitor = 1
                     // this.mind = 2
-                }  else if (this.type == 37) {
+                } else if (this.type == 37) {
                     this.name1 = "Capacitor"
                     this.name2 = "II"
                     this.max = 250
@@ -6365,7 +6415,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.buy = 50
                     this.sell = 28
                     // this.mind = 2
-                }  else if (this.type == 38) {
+                } else if (this.type == 38) {
                     this.name1 = "Evasion"
                     this.name2 = "Module I"
                     this.max = 250
@@ -6698,41 +6748,41 @@ window.addEventListener('DOMContentLoaded', (event) => {
         fire(tile) {
             if (this.charge >= this.max) {
                 if (vessel.weapons.includes(this)) {
-                    if(this.capacitor == 1){
+                    if (this.capacitor == 1) {
                         this.charge = this.max
                         let ixs = []
-                        for(let t = 0;t<vessel.weapons.length;t++){
-                            if(vessel.weapons[t].real == 1){
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            if (vessel.weapons[t].real == 1) {
                                 ixs.push(t)
                             }
                         }
                         let c = this.charge
-                        for(let t = 0;t<ixs.length;t++){
-                            vessel.weapons[ixs[t]].charge += c/ixs.length
-                            this.charge-=c/ixs.length
-                            if(vessel.weapons[ixs[t]].charge > vessel.weapons[ixs[t]].max){
+                        for (let t = 0; t < ixs.length; t++) {
+                            vessel.weapons[ixs[t]].charge += c / ixs.length
+                            this.charge -= c / ixs.length
+                            if (vessel.weapons[ixs[t]].charge > vessel.weapons[ixs[t]].max) {
                                 this.charge += vessel.weapons[ixs[t]].charge - vessel.weapons[ixs[t]].max
-                            } 
+                            }
                         }
                         return
                     }
                 }
                 if (enemy.weapons.includes(this)) {
-                    if(this.capacitor == 1){
+                    if (this.capacitor == 1) {
                         this.charge = this.max
                         let ixs = []
-                        for(let t = 0;t<enemy.weapons.length;t++){
-                            if(enemy.weapons[t].real == 1){
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            if (enemy.weapons[t].real == 1) {
                                 ixs.push(t)
                             }
                         }
                         let c = this.charge
-                        for(let t = 0;t<ixs.length;t++){
-                            enemy.weapons[ixs[t]].charge += c/ixs.length
-                            this.charge-=c/ixs.length
-                            if(enemy.weapons[ixs[t]].charge > enemy.weapons[ixs[t]].max){
+                        for (let t = 0; t < ixs.length; t++) {
+                            enemy.weapons[ixs[t]].charge += c / ixs.length
+                            this.charge -= c / ixs.length
+                            if (enemy.weapons[ixs[t]].charge > enemy.weapons[ixs[t]].max) {
                                 this.charge += enemy.weapons[ixs[t]].charge - enemy.weapons[ixs[t]].max
-                            } 
+                            }
                         }
                         return
                     }
@@ -6896,8 +6946,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         if (enemy.shield.state > 0 && this.bomb != 1) {
+                            let shwet = 0
                             if (this.shooter != 1) {
-
+                                if (this.double > enemy.shield.state && this.laser == 1) {
+                                    shwet = this.double - enemy.shield.state
+                                }
                                 enemy.shield.state -= this.double
                                 enemy.shield.charge = 0
                                 if (enemy.shield.state < 0) {
@@ -6912,15 +6965,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", (dxit.x - this.center.x), (dxit.y - this.center.y))
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6929,6 +6983,48 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             } else {
                                 //handle in bullet?
                             }
+                            if (shwet >= 0) {
+                                let srat = shwet / this.double
+
+                                tile.integrity -= this.damage * srat
+                                tile.fire -= this.fireChance * srat
+                                if (Math.random() < ((this.fireChance * srat) / 300)) {
+                                    tile.onFire = 1
+                                    tile.fire = 0
+                                }
+                                enemy.hull -= this.damage * .1 * srat
+                                if (this.sap <= 0) {
+                                    for (let t = 0; t < enemy.guys.length; t++) {
+                                        if (enemy.guys[t].tile == tile) {
+                                            enemy.guys[t].health -= (this.damage * srat * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                            enemy.guys[t].hit = 0
+                                            if (this.mind > 0) {
+                                                if (enemy.guys[t].type != 1 && enemy.guys[t].type != 8) { //psychic resistance
+                                                    enemy.guys[t].hostile = 1
+                                                    enemy.guys[t].hostileTimer = this.mind * 250 //400
+                                                    enemy.guys[t].mindControlled = 1
+                                                }
+                                            }
+                                        }
+                                        if (enemy.guys[t].tiles) {
+                                            if (enemy.guys[t].tiles.includes(tile)) {
+                                                enemy.guys[t].health -= (this.damage * srat * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                                enemy.guys[t].hit = 0
+                                                if (this.mind > 0) {
+                                                    if (enemy.guys[t].type != 1 && enemy.guys[t].type != 8) { //psychic resistance
+                                                        enemy.guys[t].hostile = 1
+                                                        enemy.guys[t].hostileTimer = this.mind * 250 //400
+                                                        enemy.guys[t].mindControlled = 1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+
 
                         } else {
                             if (this.tether > 0) {
@@ -6937,15 +7033,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -6962,15 +7059,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -7065,8 +7163,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let dxit = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
                             let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                             bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                            bullet.phase = Math.sign(Math.random() - .5)
+                            bullet.cx = (Math.random() - .5) * 1
+                            bullet.cy = (Math.random() - .5) * 1
                             bullet.subfly = 10
                             ropesound.play()
                             bullet.goTo = this.target
@@ -7086,7 +7185,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         enemy.bombs--
                         vessel.shake = 10
-                        ////////////////////////console.log(vessel.shake)
+                        //////////////////////////console.log(vessel.shake)
                     }
                     // if (this.scrap >= 1) {
                     //     if (enemy.scrap <= this.scrap) {
@@ -7146,7 +7245,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         if (vessel.shield.state > 0 && this.bomb != 1) {
+                            let shwet = 0
                             if (this.shooter != 1) {
+
+                                if (this.double > vessel.shield.state && this.laser == 1) {
+                                    shwet = this.double - vessel.shield.state
+                                }
                                 vessel.shield.state -= this.double
                                 vessel.shield.charge = 0
                                 if (vessel.shield.state < 0) {
@@ -7162,19 +7266,60 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", (dxit.x - this.center.x), (dxit.y - this.center.y))
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
                                     return
+                                }
+                                if (shwet >= 0) {
+                                    let srat = shwet / this.double
+
+                                    tile.integrity -= this.damage * srat
+                                    tile.fire -= this.fireChance * srat
+                                    if (Math.random() < ((this.fireChance * srat) / 300)) {
+                                        tile.onFire = 1
+                                        tile.fire = 0
+                                    }
+                                    vessel.hull -= this.damage * .1 * srat
+                                    if (this.sap <= 0) {
+                                        for (let t = 0; t < vessel.guys.length; t++) {
+                                            if (vessel.guys[t].tile == tile) {
+                                                vessel.guys[t].health -= (this.damage * srat * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                                vessel.guys[t].hit = 0
+                                                if (this.mind > 0) {
+                                                    if (vessel.guys[t].type != 1 && vessel.guys[t].type != 8) { //psychic resistance
+                                                        vessel.guys[t].hostile = 1
+                                                        vessel.guys[t].hostileTimer = this.mind * 250 //400
+                                                        vessel.guys[t].mindControlled = 1
+                                                    }
+                                                }
+                                            }
+                                            if (vessel.guys[t].tiles) {
+                                                if (vessel.guys[t].tiles.includes(tile)) {
+                                                    vessel.guys[t].health -= (this.damage * srat * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                                    vessel.guys[t].hit = 0
+                                                    if (this.mind > 0) {
+                                                        if (vessel.guys[t].type != 1 && vessel.guys[t].type != 8) { //psychic resistance
+                                                            vessel.guys[t].hostile = 1
+                                                            vessel.guys[t].hostileTimer = this.mind * 250 //400
+                                                            vessel.guys[t].mindControlled = 1
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
                             } else {
                                 //handle in bullet
@@ -7187,15 +7332,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -7212,15 +7358,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     let dxit = new Point(tile.x + (tile.width * .5), tile.y + (tile.height * .5))
                                     let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                                     bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                                    bullet.phase = Math.sign(Math.random() - .5)
+                                    bullet.cx = (Math.random() - .5) * 1
+                                    bullet.cy = (Math.random() - .5) * 1
                                     bullet.subfly = 10
                                     ropesound.play()
                                     bullet.goTo = this.target
                                     bullet.life = 100 * this.tether
                                     if (this.temp != -2) {
                                         this.temp += 100 * this.tether
-                                        //////console.log(this.temp)
+                                        ////////console.log(this.temp)
                                     }
                                     this.bullets.push(bullet)
                                     this.firing = 0
@@ -7325,8 +7472,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             let dxit = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
                             let bullet = new CircleR(this.center.x, this.center.y, 2, "#8D511899", dxit.x - this.center.x, dxit.y - this.center.y)
                             bullet.rope = 1
-                                    bullet.cx = (Math.random()-.5)*1
-                                    bullet.cy = (Math.random()-.5)*1
+                            bullet.phase = Math.sign(Math.random() - .5)
+                            bullet.cx = (Math.random() - .5) * 1
+                            bullet.cy = (Math.random() - .5) * 1
                             bullet.subfly = 10
                             ropesound.play()
                             bullet.goTo = this.target
@@ -7391,8 +7539,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         work() {
-            if(this.baseCharge > 0){
-                this.charge+=this.baseCharge
+            if (this.baseCharge > 0) {
+                this.charge += this.baseCharge
             }
 
             if (this.temp > 0) {
@@ -7658,17 +7806,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     canvas_context.beginPath()
                     this.median = new Point((o.x + this.bullets[t].x) * .5, (o.y + this.bullets[t].y) * .5)
-                    canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.bullets[t].cx,  this.median.y + (this.bullets[t].cy*100), this.bullets[t].x, this.bullets[t].y)
+                    canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.bullets[t].cx, this.median.y + (this.bullets[t].cy * 100), this.bullets[t].x, this.bullets[t].y)
                     canvas_context.fillStyle = this.bullets[t].color
-                    canvas_context.strokeStyle =  this.bullets[t].color
+                    canvas_context.strokeStyle = this.bullets[t].color
                     canvas_context.lineWidth = 3
                     canvas_context.stroke()
-                    
-                    this.bullets[t].cx+=(Math.random()-.5)*5
-                    this.bullets[t].cy*=.99
-                    if(Math.abs(this.bullets[t].cy )< .001){
-                        this.bullets[t].cy=.001
+
+                    this.bullets[t].cx += (Math.random() - .5) * 5
+                    this.bullets[t].cy *= .99
+                    if (Math.abs(this.bullets[t].cy) < .001) {
+                        this.bullets[t].cy = .001
                     }
+                    this.bullets[t].cy = Math.cos(this.bullets[t].life * .5) * .50 * this.bullets[t].phase
+                    this.bullets[t].cx = Math.cos(this.bullets[t].life * .5) * 50 * this.bullets[t].phase
 
                     if (enemy.weapons.includes(this)) {
 
@@ -7723,7 +7873,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    
+
                     this.bullets[t].unmove()
 
 
@@ -7745,17 +7895,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.median = new Point((o.x + this.bullets[t].x) * .5, (o.y + this.bullets[t].y) * .5)
 
                     canvas_context.beginPath()
-                    canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.bullets[t].cx,  this.median.y + this.bullets[t].cy, this.bullets[t].x, this.bullets[t].y)
+                    canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.bullets[t].cx, this.median.y + this.bullets[t].cy, this.bullets[t].x, this.bullets[t].y)
                     canvas_context.fillStyle = this.bullets[t].color
-                    canvas_context.strokeStyle =  this.bullets[t].color
+                    canvas_context.strokeStyle = this.bullets[t].color
                     canvas_context.lineWidth = 3
                     canvas_context.stroke()
-                    
-                    this.bullets[t].cx+=(Math.random()-.5)*5
-                    this.bullets[t].cy*=1.01
-                    if(Math.abs(this.bullets[t].cy) > 300){
-                        this.bullets[t].cy=300
+
+                    this.bullets[t].cx += (Math.random() - .5) * 5
+                    this.bullets[t].cy *= 1.01
+                    if (Math.abs(this.bullets[t].cy) > 300) {
+                        this.bullets[t].cy = 300
                     }
+                    this.bullets[t].cy = Math.cos(this.bullets[t].life) * (this.bullets[t].life / 15)* this.bullets[t].phase
+                    this.bullets[t].cx = Math.cos(this.bullets[t].life) * (this.bullets[t].life / 15)* this.bullets[t].phase
 
                     if (enemy.weapons.includes(this)) {
 
@@ -7822,9 +7974,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
                             }
                         }
-                        // //////////////////console.log(this.bullets[t])
+                        // ////////////////////console.log(this.bullets[t])
                     } else {
-                        // //////////////////console.log(this.bullets[t])
+                        // ////////////////////console.log(this.bullets[t])
                         this.bullets[t].move()
                         this.bullets[t].draw()
                         if (vessel.weapons.includes(this)) {
@@ -8242,7 +8394,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             link.target = ring
                             link.object = this.center
                         } else {
-                            ////////////////////////////////////console.log("d")
+                            //////////////////////////////////////console.log("d")
                             link.target = ring
                             link.object = this.center
                         }
@@ -8254,11 +8406,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         ymom *= link.hypotenuse() / 5
 
                         let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
-                        ////////////////////////////////////console.log(bullet)
+                        //////////////////////////////////////console.log(bullet)
                         bullet.goTo = this.target
                         bullet.life = 6
                         this.bullets.push(bullet)
-                        ////////////////////////////////////console.log(this.bullets)
+                        //////////////////////////////////////console.log(this.bullets)
                         if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                             // bullet.goTo = this.target
                             bullet.life = 5
@@ -8633,7 +8785,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                if (vessel.menuBattery.powersto < 56) {
+                                                if (vessel.menuBattery.powersto < 52) {
                                                     vessel.menuBattery.power += 1
                                                     vessel.menuBattery.powersto += 1
                                                 }
@@ -8709,7 +8861,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                if (vessel.menuBattery.powersto < 56) {
+                                                if (vessel.menuBattery.powersto < 52) {
                                                     vessel.menuBattery.power += 1
                                                     vessel.menuBattery.powersto += 1
                                                 }
@@ -8735,7 +8887,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.firing == 10) {
                         sap3aud.play()
                     }
-                    //////////////////////////console.log(this)
+                    ////////////////////////////console.log(this)
                     let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
                     ring.draw()
                     let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
@@ -8783,7 +8935,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             if (enemy.guys[t].energy > 0) {
                                                 enemy.guys[t].health -= enemy.guys[t].health * 2
                                                 enemy.guys[t].energydeathtag = 15
-                                                if (vessel.menuBattery.powersto < 56) {
+                                                if (vessel.menuBattery.powersto < 52) {
                                                     vessel.menuBattery.power += 1
                                                     vessel.menuBattery.powersto += 1
                                                 }
@@ -9035,7 +9187,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     ring2.draw()
                     this.firing -= .5
                 } else if (this.type == 38) {
-                    this.firing -= 1/this.dodgeMax
+                    this.firing -= 1 / this.dodgeMax
                 } else if (this.type == 100) {
 
 
@@ -9114,6 +9266,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     //     }
                     // }
                 }
+
+                let c = 0
+                if (enemy.guys) {
+                    for (let t = 0; t < enemy.guys.length; t++) {
+                        if (enemy.guys[t].hostile == 1 && enemy.guys[t].mindControlled != 1) {
+                            c++
+                        }
+                    }
+                    if (enemy.guys.length == c) {
+                        for (let w = 0; w < this.bullets.length; w++) {
+                            // if(enemy.blocks[t][k].isPointInside(this.bullets[w])){
+                            this.bullets[w].sxmom = -this.bullets[w].xmom / 20
+                            this.bullets[w].symom = -this.bullets[w].ymom / 20
+                            // }
+                        }
+                    }
+                }
             }
 
             if (vessel.weapons.includes(this)) {
@@ -9149,8 +9318,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.work()
             this.beingchecked--
             if (vessel.weapons.includes(this)) {
-                this.body.x = 270 + (100 * vessel.weapons.indexOf(this))
-                this.body.y = 650 + 360
+                this.body.x = 436 + (125 * vessel.weapons.indexOf(this))
+                this.body.y = (1080 - this.body.height) - 7
             } else if (vessel.upgradeMenu.wepsto.includes(this)) {
                 this.body.x = (vessel.upgradeMenu.window.x + 400) + ((100 * vessel.upgradeMenu.wepsto.indexOf(this)) % 500)
                 this.body.y = ((vessel.upgradeMenu.window.y + 10) + (70 * Math.floor(vessel.upgradeMenu.wepsto.indexOf(this) / 5)))
@@ -9164,28 +9333,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.body.color = "#444444"
             }
             if (this.temp == -2) {
-                this.body.draw()
+
+
+                // this.body.draw()
+                canvas_context.drawImage(weaponSlot, this.body.x, this.body.y)
+
             }
             if (this.type == -1) {
                 return
             }
             if (this.temp == -2) {
 
-                canvas_context.fillStyle = "white"
-                canvas_context.font = "9px comic sans ms"
-                canvas_context.fillText(this.name1, this.body.x + 48, this.body.y + 10)
+                canvas_context.fillStyle = "black"
+                canvas_context.font = "13px helvetica"
+                canvas_context.fillText(this.name1, this.body.x + 51, this.body.y + 35)
                 canvas_context.fillText(vessel.weapons.indexOf(this) + 1, this.body.x + 5, this.body.y + this.body.height - 2)
-                canvas_context.fillText(this.name2, this.body.x + 48, this.body.y + 25)
+                canvas_context.fillText(this.name2, this.body.x + 51, this.body.y + 55)
                 if (this.auto == 1) {
                     canvas_context.fillStyle = "#00ff00"
-                    canvas_context.font = "12px comic sans ms"
-                    canvas_context.fillText("Auto", this.body.x + 48, this.body.y + 38)
+                    canvas_context.font = "12px helvetica"
+                    canvas_context.fillText("Auto", this.body.x + 48, this.body.y + 75)
                 }
                 if (this.charge >= this.max) {
                     this.charge = this.max
                 }
                 let crat = this.charge / this.max
-                this.bar = new RectangleR(this.body.x + 48, this.body.y + this.body.height - 8, (this.body.width - 50) * crat, 6, `rgb(${255 - (255 * crat)}, ${0 + (255 * crat)}, ${128})`)
+                this.bar = new Rectangle(this.body.x + 11, this.body.y + 8.5, (this.body.width - 19) * crat, 6, `rgb(${255 - (255 * crat)}, ${0 + (255 * crat)}, ${128})`)
                 this.bar.draw()
             }
 
@@ -9195,109 +9368,109 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.crewType == -1 && (this.gearType < 0)) {
 
                     if (this.type == 0) {
-                        canvas_context.drawImage(basiclaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(basiclaser, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 1) {
-                        canvas_context.drawImage(basicmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(basicmissle, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 2) {
-                        canvas_context.drawImage(doublelaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(doublelaser, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 3) {
-                        canvas_context.drawImage(triplelaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(triplelaser, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 4) {
-                        canvas_context.drawImage(crewlaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(crewlaser, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 5) {
-                        canvas_context.drawImage(megalaser, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(megalaser, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 6) {
-                        canvas_context.drawImage(mediummmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(mediummmissle, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 7) {
-                        canvas_context.drawImage(bigmissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(bigmissle, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 8) {
-                        canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(megamissle, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 9) {
-                        canvas_context.drawImage(heatbeam, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(heatbeam, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 10) {
-                        canvas_context.drawImage(ion1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(ion1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 11) {
-                        canvas_context.drawImage(ion2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(ion2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 12) {
-                        canvas_context.drawImage(ion3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(ion3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 13) {
-                        canvas_context.drawImage(ion4, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(ion4, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 14) {
-                        canvas_context.drawImage(rail1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(rail1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 15) {
-                        canvas_context.drawImage(rail2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(rail2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 16) {
-                        canvas_context.drawImage(rail3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(rail3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 17) {
-                        canvas_context.drawImage(shieldsap1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shieldsap1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 18) {
-                        canvas_context.drawImage(shieldsap2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shieldsap2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 19) {
-                        canvas_context.drawImage(shieldsap3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shieldsap3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 20) {
-                        canvas_context.drawImage(hardbeam1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hardbeam1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 21) {
-                        canvas_context.drawImage(hardbeam2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hardbeam2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 22) {
-                        canvas_context.drawImage(hardbeam3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hardbeam3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 23) {
-                        canvas_context.drawImage(scrapcannon1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(scrapcannon1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 24) {
-                        canvas_context.drawImage(scrapcannon2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(scrapcannon2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 25) {
-                        canvas_context.drawImage(scrapcannon3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(scrapcannon3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 26) {
-                        canvas_context.drawImage(heatbeam2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(heatbeam2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 27) {
-                        canvas_context.drawImage(mindcontrol1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(mindcontrol1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 28) {
-                        canvas_context.drawImage(mindcontrol2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(mindcontrol2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 29) {
-                        canvas_context.drawImage(hook1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hook1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 30) {
-                        canvas_context.drawImage(hook2, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hook2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 31) {
-                        canvas_context.drawImage(hook3, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(hook3, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 32) {
-                        canvas_context.drawImage(tractor1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(tractor1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 33) {
-                        canvas_context.drawImage(tractor2, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(tractor2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 34) {
-                        canvas_context.drawImage(mirror, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(mirror, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 35) {
-                        canvas_context.drawImage(mirror2, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(mirror2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 36) {
-                        canvas_context.drawImage(capacitor1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(capacitor1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 37) {
-                        canvas_context.drawImage(capacitor2, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(capacitor2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 38) {
-                        canvas_context.drawImage(dodgemod1, 0, 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(dodgemod1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 100) {
                         this.frame++
-                        canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     } else if (this.type == 101) {
                         // this.frame++
-                        canvas_context.drawImage(iou, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(iou, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
                 } else if (this.gearType >= 0) {
                     if (this.gearType == 0) {
-                        canvas_context.drawImage(armor1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(armor1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
                     if (this.gearType == 1) {
-                        canvas_context.drawImage(shoes1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shoes1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
                     if (this.gearType == 2) {
-                        canvas_context.drawImage(shoes2, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shoes2, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
                     if (this.gearType == 3) {
-                        canvas_context.drawImage(shoes3, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(shoes3, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
                     if (this.gearType == 4) {
-                        canvas_context.drawImage(synth1, 0, 0, 32, 32, this.body.x, this.body.y + 10, 44, 44)
+                        canvas_context.drawImage(synth1, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
 
                 } else {
-                    canvas_context.drawImage(rs[this.crewType], 64 * (Math.floor(Math.random() * 1) % (rs[this.crewType].width / 64)), 0, 64, 64, this.body.x, this.body.y + 10, 44, 44)
+                    canvas_context.drawImage(rs[this.crewType], 64 * (Math.floor(Math.random() * 1) % (rs[this.crewType].width / 64)), 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
 
                 }
 
@@ -9603,7 +9776,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     class ShipUI {
         constructor(level, v = 0) {
             if (level == -1) {
-                this.body = new Rectangle(40, 580, 230, 140, "#444444")
+                this.body = new Rectangle(79, 903, 370, 177, "#444444")
                 this.systems = []
                 for (let t = 0; t < 9; t++) {
                     this.systems.push(new System(t, v))
@@ -9632,7 +9805,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             } else {
 
-                this.body = new Rectangle(40, 580, 230, 140, "#444444")
+                this.body = new Rectangle(79, 903, 370, 177, "#444444")
                 this.systems = []
                 for (let t = 0; t < 9; t++) {
                     this.systems.push(new System(t))
@@ -9643,7 +9816,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 let j = 0
                 while (j < (level * .5)) {
-                    // ////////////////////////////////////////////////////console.log("hit")
+                    // //////////////////////////////////////////////////////console.log("hit")
                     this.systems[j % this.systems.length].max += 1
                     if (this.systems[j % this.systems.length].max >= 10) {
                         this.systems[j % this.systems.length].max = 10
@@ -9654,10 +9827,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.slap = 2
                 this.bars = []
                 for (let t = 0; t < this.systems.length; t++) {
-                    let box = new Rectangle(this.body.x + 5 + (t * 25), (this.body.y + this.body.height) - 135, 20, 135, "#999999")
+                    let box = new Rectangle(this.body.x + (t * 37), this.body.y, 37, 1080 - 903, "#999999")
                     box.draw()
                     for (let k = 0; k < 12; k++) {
-                        this.systems[t].bars[k] = new Rectangle(box.x + 2, (((box.y + 135) - (k * 12)) - 12), 16, 10, "#00ff00")
+                        this.systems[t].bars[k] = new Rectangle(box.x - 1, (((box.y + 135) - (k * 12)) - 12), 16, 10, "#00ff00")
                         if (this.systems[t].demand + this.systems[t].fed > k) {
                             this.systems[t].bars[k].color = "#00ff00"
                         }
@@ -9668,77 +9841,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.box = box
                 }
             }
-            this.body.y += 360
+            // this.body.y += 360
         }
         draw() {
-            this.body.draw()
-            for (let t = 0; t < this.systems.length; t++) {
+            // this.body.draw()
+            for (let t = 0; t < this.systems.length - 1; t++) {
 
-                //////////////////////////console.log(this.systems[t].fed)
+                ////////////////////////////console.log(this.systems[t].fed)
                 if ((this.systems[t].demand + this.systems[t].fed) > this.systems[t].sto) {
                     this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
                 } else {
                     this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
                 }
-                let box = new Rectangle((this.body.x + 5 + (t * 25)), ((this.body.y + this.body.height) - 135), 20, 135, "#999999")
-                box.draw()
+                let box = new Rectangle(this.body.x + (t * 36), this.body.y, 35, 1080 - 903, "#999999")
+                this.systems[t].box = box
+                // box.draw()
                 this.slap++
                 if (this.slap > 15) {
                     this.slap = 0
                     this.count++
                 }
                 for (let k = 0; k < this.systems[t].max; k++) {
-                    this.systems[t].bars[k] = new Rectangle(box.x + 2, (((box.y + 135) - (k * 12)) - 12), 16, 10, "#ff0000")
+                    this.systems[t].bars[k] = new Rectangle(box.x + 6, (1080 - 18) - (17 * k), 25, 10, "#ff0000")
 
 
                     let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
-                    if (this.systems[t].demand + this.systems[t].fed > k) {
-                        this.systems[t].bars[k].color = "#00ff00"
-                    }
+
                     if (this.systems[t].fed > k) {
                         this.systems[t].bars[k].color = "orange"
+                        canvas_context.drawImage(fedcell, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
+                    } else {
+                        if (this.systems[t].demand + this.systems[t].fed > k) {
+                            this.systems[t].bars[k].color = "#00ff00"
+                            canvas_context.drawImage(activeCell, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
+                        } else {
+                            canvas_context.drawImage(inactiveCell, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
+                        }
                     }
                     if (typeof vessel.hash != 'undefined') {
                         if (vessel.hash[rooms[t]].integrity < 100 * (1 - (1 / (11 - this.systems[t].max)))) {
                             this.systems[t].bars[k].color = "black"
+                            canvas_context.drawImage(deadCell, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
                         }
                     }
 
-                    this.systems[t].bars[k].draw()
-                    canvas_context.drawImage(bat, this.systems[t].bars[k].x, this.systems[t].bars[k].y)
+                    // this.systems[t].bars[k].draw()
+
+                    // inactiveCell
+
+
+
                 }
                 // box.y+=135
-                if (t == 0) {
-                    canvas_context.drawImage(medbayimage, 16 * (this.count % 4), 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 1) {
-                    canvas_context.drawImage(weaponimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 2) {
-                    canvas_context.drawImage(shieldimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 3) {
-                    canvas_context.drawImage(helmimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 4) {
-                    canvas_context.drawImage(oxygenimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 5) {
-                    canvas_context.drawImage(securityimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 6) {
-                    canvas_context.drawImage(engineimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 7) {
-                    canvas_context.drawImage(specialimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                } else if (t == 8) {
-                    canvas_context.drawImage(emptyimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
-                }
+                // if (t == 0) {
+                //     canvas_context.drawImage(medbayimage, 16 * (this.count % 4), 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 1) {
+                //     canvas_context.drawImage(weaponimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 2) {
+                //     canvas_context.drawImage(shieldimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 3) {
+                //     canvas_context.drawImage(helmimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 4) {
+                //     canvas_context.drawImage(oxygenimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 5) {
+                //     canvas_context.drawImage(securityimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 6) {
+                //     canvas_context.drawImage(engineimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 7) {
+                //     canvas_context.drawImage(specialimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // } else if (t == 8) {
+                //     canvas_context.drawImage(emptyimage, 0, 0, 16, 16, box.x, box.y - 20, 16, 16)
+                // }
                 // this.systems[t].fed = 0
             }
         }
         check(point) {
-            for (let t = 0; t < this.systems.length; t++) {
+            for (let t = 0; t < this.systems.length - 1; t++) {
                 // let box = new Rectangle(this.body.x + 5 + (t * 25), (this.body.y + this.body.height) - 135, 20, 135, "#999999")
                 for (let k = 0; k < this.systems[t].max; k++) {
                     // let bar = new Rectangle(box.x + 2, ((box.y + 135) - (k * 12)) - 12, 16, 10, "#00ff00")
                     this.systems[t].bars[k].y -= 1
                     this.systems[t].bars[k].height += 2
                     if (this.systems[t].bars[k].isPointInside(point)) {
-                        //////////////////////////////////////////////console.log(this.systems[t].demand, this.systems[t].fed, k)
+                        ////////////////////////////////////////////////console.log(this.systems[t].demand, this.systems[t].fed, k)
                         if (this.systems[t].sto > k) {
                             // this.systems[t].demand--
                             this.systems[t].sto--
@@ -9841,12 +10026,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (15 + (this.systems[t].demand * 5) <= vessel.scrap) {
 
                         canvas_context.fillStyle = "#00ff00"
-                        canvas_context.font = "10px comic sans ms"
+                        canvas_context.font = "10px helvetica"
                         canvas_context.fillText(15 + (this.systems[t].demand * 5), box.x, box.y - 25)
                     } else {
 
                         canvas_context.fillStyle = "#FF0000"
-                        canvas_context.font = "10px comic sans ms"
+                        canvas_context.font = "10px helvetica"
                         canvas_context.fillText(15 + (this.systems[t].demand * 5), box.x, box.y - 25)
                     }
                 }
@@ -9919,7 +10104,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
 
-            this.button = new RectangleR(1, 900, 40, 40, "#444444")
+            this.button = new RectangleR(0, 823, 80, 80, "#444444")
             this.open = -1
             this.window = new RectangleR(280 * globalRat, 280 * globalRat, 910, 250, "#444444")
             this.levels = new MenuUI(this.window)
@@ -9978,7 +10163,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 vessel.copies = []
                 enemy.guys = []
             } else if (enemy.guys) {
-                // ////////////////////////console.log(c, enemy.guys.length)
+                // //////////////////////////console.log(c, enemy.guys.length)
                 if (enemy.guys.length == 0 || c == enemy.guys.length) {
 
                     for (let t = 0; t < enemy.guys.length; t++) {
@@ -10021,14 +10206,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     enemy.guys = []
                 }
             }
-            this.button.draw()
-            canvas_context.drawImage(system, this.button.x, this.button.y)
+            // this.button.draw()
+            // canvas_context.drawImage(system, this.button.x, this.button.y)
             if (this.open == 1) {
                 this.window.draw()
                 this.levels.draw()
                 vessel.menuBattery.draw()
                 canvas_context.fillStyle = "white"
-                canvas_context.font = "10px comic sans ms"
+                canvas_context.font = "10px helvetica"
                 // canvas_context.fillText("Money: " + vessel.money, this.window.x + 270, this.window.y + 20)
                 canvas_context.fillText("Scrap: " + vessel.scrap, this.window.x + 270, this.window.y + 20)
                 canvas_context.fillText("Hull: " + Math.ceil(vessel.hull), this.window.x + 270, this.window.y + 40)
@@ -10059,7 +10244,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.buySlot.draw()
                     }
                     canvas_context.fillStyle = "white"
-                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.font = "12px helvetica"
                     canvas_context.fillText("5 Scrap", this.buyBombs.x + 30, this.buyBombs.y + 24)
                     canvas_context.fillText("Buy Bomb", this.buyBombs.x + 25, this.buyBombs.y + 12)
                     canvas_context.fillText("Sell Bomb", this.sellBombs.x + 25, this.sellBombs.y + 12)
@@ -10071,12 +10256,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     this.cargo.draw()
                     canvas_context.fillStyle = "white"
-                    canvas_context.font = "15px comic sans ms"
+                    canvas_context.font = "15px helvetica"
                     canvas_context.fillText("Cargo", this.cargo.x + 5, this.cargo.y + 15,)
 
                     this.shopsquare.draw()
                     canvas_context.fillStyle = "white"
-                    canvas_context.font = "15px comic sans ms"
+                    canvas_context.font = "15px helvetica"
                     canvas_context.fillText("Shop", this.shopsquare.x + 5, this.shopsquare.y + 15,)
                 } else {
                     this.tab = -1
@@ -10105,9 +10290,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.repairButton.color = "#00FF0044"
                             this.repairButton.draw()
                             canvas_context.fillStyle = "white"
-                            canvas_context.font = "20px comic sans ms"
+                            canvas_context.font = "20px helvetica"
                             canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "12px helvetica"
                             canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
 
                         } else {
@@ -10117,9 +10302,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.repairButton.color = "#00FF0044"
                                 this.repairButton.draw()
                                 canvas_context.fillStyle = "white"
-                                canvas_context.font = "20px comic sans ms"
+                                canvas_context.font = "20px helvetica"
                                 canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "12px helvetica"
                                 canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
                             }
                         }
@@ -10129,9 +10314,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.repairButton.color = "#00FF0044"
                             this.repairButton.draw()
                             canvas_context.fillStyle = "white"
-                            canvas_context.font = "20px comic sans ms"
+                            canvas_context.font = "20px helvetica"
                             canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "12px helvetica"
                             canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
 
                         } else {
@@ -10141,9 +10326,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.repairButton.color = "#00FF0044"
                                 this.repairButton.draw()
                                 canvas_context.fillStyle = "white"
-                                canvas_context.font = "20px comic sans ms"
+                                canvas_context.font = "20px helvetica"
                                 canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "12px helvetica"
                                 canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
                             }
                         }
@@ -10153,9 +10338,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.repairButton.color = "#ff000044"
                             this.repairButton.draw()
                             canvas_context.fillStyle = "white"
-                            canvas_context.font = "20px comic sans ms"
+                            canvas_context.font = "20px helvetica"
                             canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "12px helvetica"
                             canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40)
                         }
                     }
@@ -10165,9 +10350,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.repairButton.color = "#00FF0044"
                         this.repairButton.draw()
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.font = "12px helvetica"
                         canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
 
                     } else {
@@ -10177,9 +10362,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.repairButton.color = "#00FF0044"
                             this.repairButton.draw()
                             canvas_context.fillStyle = "white"
-                            canvas_context.font = "20px comic sans ms"
+                            canvas_context.font = "20px helvetica"
                             canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "12px helvetica"
                             canvas_context.fillText("5 scrap = 5 hull", this.repairButton.x + 10, this.repairButton.y + 40)
                         }
                     }
@@ -10189,9 +10374,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.repairButton.color = "#ff000044"
                         this.repairButton.draw()
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         canvas_context.fillText("Repair", this.repairButton.x + 10, this.repairButton.y + 25)
-                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.font = "12px helvetica"
                         canvas_context.fillText("in combat", this.repairButton.x + 10, this.repairButton.y + 40)
                     }
                 }
@@ -10222,7 +10407,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         // this.buyButton.draw()
                         this.sellButton.draw()
                         canvas_context.fillStyle = "black"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         this.index = -1
                         for (let t = 0; t < this.wepsto.length; t++) {
                             if (this.wepsto[t].selected == 1) {
@@ -10230,7 +10415,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         let price = this.wepsto[this.index].sell
                         for (let t = 0; t < vessel.guys.length; t++) {
                             price *= vessel.guys[t].barter
@@ -10239,7 +10424,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         canvas_context.fillText(`${price} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
                         // canvas_context.fillText(`${this.wepsto[this.index].buy} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
                         canvas_context.fillStyle = "black"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         // canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
                         canvas_context.fillText("Sell", this.sellButton.x + 20, this.sellButton.y + 30)
                     } else if (this.shopdraw == 2 && this.ket == 1) {
@@ -10249,7 +10434,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.buyButton.draw()
                         // this.sellButton.draw()
                         canvas_context.fillStyle = "black"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         this.index = -1
                         for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
                             if (stars.stars[vessel.star].weapons[t].selected == 1) {
@@ -10257,7 +10442,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         // canvas_context.fillText(`${stars.stars[vessel.star].weapons[this.index].sell} Scrap`, this.sellButton.x + 90, this.sellButton.y + 30)
                         let price = stars.stars[vessel.star].weapons[this.index].buy
                         for (let t = 0; t < vessel.guys.length; t++) {
@@ -10266,7 +10451,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         price = Math.floor(price)
                         canvas_context.fillText(`${price} Scrap`, this.buyButton.x + 90, this.buyButton.y + 30)
                         canvas_context.fillStyle = "black"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         canvas_context.fillText("Buy", this.buyButton.x + 23, this.buyButton.y + 30)
                     }
 
@@ -10487,7 +10672,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         constructor(power, systems) {
             this.power = power
             this.powersto = power
-            //////////////////////////////////////console.log(this.powersto)
+            ////////////////////////////////////////console.log(this.powersto)
             this.expenditure = 0
             this.systems = systems
         }
@@ -10554,15 +10739,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (let t = 0; t < this.systems.length; t++) {
                     // this.power += this.systems[t].fed
                 }
-                this.box = new RectangleR(1, 580 + 360, 40, 140, "#555555")
-                this.box.draw()
+                this.box = new RectangleR(0, 903, 76, 1080 - 903, "#555555")
+                // this.box.draw()
                 for (let t = 0; t < this.powersto; t++) {
                     let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)) + 360, 10, 10, "#dd0000")
-                    block.draw()
+                    // block.draw()
                 }
                 for (let t = 0; t < this.power; t++) {
                     let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)) + 360, 10, 10, "#00dd00")
-                    block.draw()
+                    // block.draw()
                 }
             } else {
                 // this.powersto = vessel.menuBattery.power
@@ -10571,14 +10756,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.power -= this.systems[t].demand
                 }
                 this.box = new RectangleR(1, 580, 40, 140, "#555555")
-                this.box.draw()
+                // this.box.draw()
                 for (let t = 0; t < this.powersto; t++) {
                     let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#dd0000")
-                    block.draw()
+                    // block.draw()
                 }
                 for (let t = 0; t < this.power; t++) {
                     let block = new RectangleR(2 + ((t % 4) * 10), 720 - (10 + (Math.floor(t / 4) * 10)), 10, 10, "#00dd00")
-                    block.draw()
+                    // block.draw()
                 }
             }
         }
@@ -10600,7 +10785,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             if (this.box.isPointInside(point)) {
                 if (vessel.scrap >= vessel.energy.powersto) {
-                    if (this.power < 56) {
+                    if (this.power < 52) {
                         vessel.scrap -= vessel.energy.powersto
                         this.power++
                     }
@@ -10622,12 +10807,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (vessel.energy.powersto <= vessel.scrap) {
 
                 canvas_context.fillStyle = "#00ff00"
-                canvas_context.font = "15px comic sans ms"
+                canvas_context.font = "15px helvetica"
                 canvas_context.fillText((vessel.energy.powersto), this.box.x + 8, this.box.y - 15)
             } else {
 
                 canvas_context.fillStyle = "#FF0000"
-                canvas_context.font = "15px comic sans ms"
+                canvas_context.font = "15px helvetica"
                 canvas_context.fillText((vessel.energy.powersto), this.box.x + 8, this.box.y - 15)
             }
 
@@ -10667,7 +10852,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 1) {
@@ -10676,7 +10861,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x - 40
                     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y + 10
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 2) {
@@ -10685,7 +10870,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 3) {
@@ -10693,7 +10878,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship4doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship4doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 4) {
@@ -10701,7 +10886,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship5doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship5doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 5) {
@@ -10709,7 +10894,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship6doors[vessel.doors.indexOf(this)].body.x + 50
                     this.body.y = ship6doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 6) {
@@ -10717,7 +10902,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship7doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship7doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 7) {
@@ -10725,7 +10910,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship8doors[vessel.doors.indexOf(this)].body.x + 40
                     this.body.y = ship8doors[vessel.doors.indexOf(this)].body.y + 40
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 8) {
@@ -10733,7 +10918,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 9) {
@@ -10741,7 +10926,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship10doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship10doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 10) {
@@ -10749,7 +10934,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = ship11doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = ship11doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 11) {
@@ -10771,7 +10956,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 13) {
-                vverts = [11,12,13,14]
+                vverts = [11, 12, 13, 14]
                 let drop = [1, 2]
                 let up = [0, 3]
                 if (vessel.doors.includes(this)) {
@@ -10837,7 +11022,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         doorclose.play()
                     }
                     wet = 1
-                    // //////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                    // ////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
                     // for (let t = 0; t < vessel.blocks.length; t++) {
                     //     for (let k = 0; k < vessel.blocks[t].length; k++) {
                     //         if (vessel.blocks[t][k].doesPerimeterTouch(this.body)) {
@@ -10899,7 +11084,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (vessel.doors.includes(this)) {
                     this.body.x = doors[vessel.doors.indexOf(this)].body.x
                     this.body.y = doors[vessel.doors.indexOf(this)].body.y
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 1) {
@@ -10920,7 +11105,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y + 10 + (16 * rat)
 
                     }
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 2) {
@@ -10941,7 +11126,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     //     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y+10+(16*rat)
 
                     // }
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 3) {
@@ -10962,7 +11147,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     //     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y+10+(16*rat)
 
                     // }
-                    // //////////console.log("s")
+                    // ////////////console.log("s")
                 }
             }
             if (vessel.type == 4) {
@@ -11053,7 +11238,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (vessel.type == 13) {
-                vverts = [0, 1, 2, 3,4,5,6,7,8]
+                vverts = [0, 1, 2, 3, 4, 5, 6, 7, 8]
                 let drop = [1, 2]
                 let up = [0, 3]
                 if (vessel.doors.includes(this)) {
@@ -11089,7 +11274,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
         check(point, overrride = 0) {
-            if(overrride == 0){
+            if (overrride == 0) {
                 if (vessel.hash) {
                     if (vessel.hash['security'].integrity < 100 * (1 - (1 / (11 - vessel.UI.systems[5].max)))) {
                         return
@@ -11104,11 +11289,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if (vessel.guys) {
                 for (let t = 0; t < vessel.guys.length; t++) {
                     if (vessel.guys[t].stretch == 1) {
-                        //////////////////////////////console.log("33")
+                        ////////////////////////////////console.log("33")
                         for (let l = 0; l < vessel.guys[t].lines.length; l++) {
-                            ////////////////////////////////console.log(vessel.guys[t].lines)
+                            //////////////////////////////////console.log(vessel.guys[t].lines)
                             if (vessel.guys[t].lines[l].intersects(this.link)) {
-                                ////////////////////////////////console.log("dd")
+                                //////////////////////////////////console.log("dd")
                                 worm = 1
                             }
                         }
@@ -11116,9 +11301,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             if (this.body.color == "#00ff00") {
-                ////////////////////////////////console.log("gg")
+                //////////////////////////////////console.log("gg")
                 if (worm == 1) {
-                    ////////////////////////////////console.log("ee")
+                    //////////////////////////////////console.log("ee")
                     return
                 }
             }
@@ -11128,12 +11313,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 let wet = 0
                 if (this.body.isPointInside(point)) {
-                    //////console.log(vessel.doors.indexOf(this))
-                    // //////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                    ////////console.log(vessel.doors.indexOf(this))
+                    // ////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
                     for (let t = 0; t < vessel.blocks.length; t++) {
                         for (let k = 0; k < vessel.blocks[t].length; k++) {
                             if (vessel.blocks[t][k].doesPerimeterTouch(this.body)) {
-                                // //////console.log(vessel.doors.indexOf(this))
+                                // ////////console.log(vessel.doors.indexOf(this))
                                 vessel.blocks[t][k].doorway *= -1
                                 wet = 1
                                 if (vessel.blocks[t][k].doorway == 1) {
@@ -11187,7 +11372,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.wepDrawCount = 0
             this.engineCharge = 0
             this.angle = 0
-            this.teleButton = new RectangleR(1 * globalRat, 860, 40, 40, "purple")
+            this.teleButton = new Circle(38, 783, 40, "purple")
             this.shake = 0
             this.copies = []
             this.star = 0
@@ -11230,7 +11415,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     let tile = new Tile((t * 32 * rat), (k * 32 * rat), 32 * rat, 32 * rat, getRandomColor() + '41')
                     tile.t = t
                     tile.k = k
-                    // //////////////////////////////////////////////////////////////console.log(baseShipTiles)
+                    // ////////////////////////////////////////////////////////////////console.log(baseShipTiles)
 
                     if (this.type == 0) {
                         let keys = Object.keys(baseShipTiles[t][k])
@@ -11316,25 +11501,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             tile[keys[f]] = ship14[t][k][keys[f]]
                         }
                     }
-                    //////////////////////////////////////////////////////////////console.log(tile)
+                    ////////////////////////////////////////////////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {
-                        //////////////////////////////////////////////////////////////console.log("h")
+                        ////////////////////////////////////////////////////////////////console.log("h")
                         tile.medbay = 1
                     }
                     if (tile.empty == 1) {
-                        //////////////////////////////////////////////////////////////console.log("h")
+                        ////////////////////////////////////////////////////////////////console.log("h")
                         tile.color = "#FFFFFF44"
                     }
                     if (tile.special == 1) {
-                        //////////////////////////////////////////////////////////////console.log("h")
+                        ////////////////////////////////////////////////////////////////console.log("h")
                         tile.color = "#AA00FF44"
                     }
                     if (tile.engine == 1) {
-                        //////////////////////////////////////////////////////////////console.log("h")
+                        ////////////////////////////////////////////////////////////////console.log("h")
                         tile.color = "#ffaa0044"
                     }
                     if (tile.marked == 1) {
-                        //////////////////////////////////////////////////////////////console.log("w")
+                        ////////////////////////////////////////////////////////////////console.log("w")
                         tile.walkable = true
                     }
 
@@ -11539,7 +11724,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             this.wepmax = 0
             this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
-            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9 || this.type == 10 || this.type == 11 || this.type == 12|| this.type == 13) {
+            if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9 || this.type == 10 || this.type == 11 || this.type == 12 || this.type == 13) {
                 this.supratiles.sort((a, b) => a.y > b.y ? 1 : -1)
                 this.supratiles.sort((a, b) => a.x > b.x ? -1 : 1)
 
@@ -11608,7 +11793,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            ////////////////console.log(this.wepmax, this.supratiles)
+            //////////////////console.log(this.wepmax, this.supratiles)
             this.weapons = []
             this.doors = []
             if (this.type == 0) {
@@ -11755,31 +11940,111 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            //////////console.log(ship2doors)
-            //////////console.log(this.doors)
+            ////////////console.log(ship2doors)
+            ////////////console.log(this.doors)
             this.upgradeMenu = new UpgradeMenu(this.type)
             this.menuBattery = new BatteryMenu(9, this.upgradeMenu.levels)
         }
         UIdraw() {
-            this.teleButton.draw()
-            canvas_context.drawImage(energydeathimg, 64 * (12 % (energydeathimg.width / 64)), 0, 64, 64, this.teleButton.x, this.teleButton.y, 40, 40)
+            // this.teleButton.draw()
+            canvas_context.drawImage(teleportButton, 0, 0)
+            canvas_context.drawImage(upgradeButton, 0, 0)
+            canvas_context.drawImage(shipBattery, 0, 0)
+            canvas_context.drawImage(batteryUI, 0, 0)
+            canvas_context.drawImage(batteryUI2, 0, 0)
+            canvas_context.drawImage(iconsSys, 0, 0)
+            canvas_context.drawImage(miscPanels, 0, 0)
+            
+            for (let t = 0; t < this.energy.powersto; t++) {
+                canvas_context.drawImage(cellWorth2, 17, 1080 - 16 - (3 * t))
+            }
+            for (let t = 0; t < this.energy.power; t++) {
+                canvas_context.drawImage(cellWorth, 17, 1080 - 16 - (3 * t))
+            }
+
+
+            canvas_context.drawImage(capacitorFluff, 0, 0)
+            canvas_context.drawImage(jumpPanel, 0, 0)
+
+            let width = ((vessel.engineCharge/10000)*150)
+            for(let t = 781;t<781+width;t+=3){
+                canvas_context.drawImage(jumpPip, 0,0,3,48,t,10, 3,48)
+            }
+
+
+
+            if (this.warn > 0) {
+                canvas_context.drawImage(warning, 0, 0, 40, 40, this.energy.box.x + 2, this.energy.box.y + this.energy.box.height - 100, 80, 80)
+                this.warn--
+            }
+
+            if(vessel.weapons.length == 1){
+                canvas_context.drawImage(oneSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 2){
+                canvas_context.drawImage(twoSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 3){
+                canvas_context.drawImage(threeSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 4){
+                canvas_context.drawImage(fourSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 5){
+                canvas_context.drawImage(fiveSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 6){
+                canvas_context.drawImage(sixSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 7){
+                canvas_context.drawImage(sevenSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 8){
+                canvas_context.drawImage(eightSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 9){
+                canvas_context.drawImage(nineSlot, 0, 0)
+            }
+            if(vessel.weapons.length == 10){
+                canvas_context.drawImage(tenSlot, 0, 0)
+            }
+            if(vessel.weapons.length > 10){
+                canvas_context.drawImage(tenSlot, 0, 0)
+            }
 
             this.hrat = this.hull / this.maxhull
-            this.healthbar = new RectangleR(180, 10, 250, 10, "transparent")
-            this.healthbar.draw()
-            canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
+            this.healthbar = new RectangleR(259, 12, 264, 18, "transparent")
+            // this.healthbar.draw()
+            // canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
+
+    canvas_context.drawImage(healthPanel, 0,0)
+    
+
+let widteh = ((vessel.hull/300)*260)
+for(let t = 261;t<261+widteh;t+=13){
+    if(vessel.hull < 100){
+
+        canvas_context.drawImage(healthPip3, 0,0,13,19,t,12, 13,19)
+    }else if(vessel.hull < 200){
+
+        canvas_context.drawImage(healthPip2, 0,0,13,19,t,12, 13,19)
+    }else{
+
+    canvas_context.drawImage(healthPip, 0,0,13,19,t,12, 13,19)
+    }
+}
 
             if (this.boosts) {
                 vessel.engineCharge += Math.sqrt(1 - this.dodgeRate()) * 10
-                this.jumper = new RectangleR(this.healthbar.x + (this.healthbar.width) + 100, this.healthbar.y, 200 * (vessel.engineCharge / 10000), 40, "#FFFFFF44")
-                this.jumper2 = new RectangleR(this.healthbar.x + (this.healthbar.width) + 100, this.healthbar.y, 200, 40, "#FFFFFF44")
-                this.jumper.draw()
-                this.jumper2.draw()
+                this.jumper = new RectangleR(781, 10, 200 * (vessel.engineCharge / 10000), 40, "#FFFFFF44")
+                this.jumper2 = new RectangleR(781, 10, this.healthbar.y, 200, 40, "#FFFFFF44")
+                // this.jumper.draw()
+                // this.jumper2.draw()
                 if (vessel.engineCharge >= 10000) {
                     vessel.engineCharge = 10000
                     canvas_context.fillStyle = "#00FF00"
-                    canvas_context.font = "20px comic sans ms"
-                    canvas_context.fillText("Jump", this.jumper.x + (65), this.jumper.y + 22)
+                    canvas_context.font = "20px helvetica"
+                    canvas_context.fillText("Jump", this.jumper.x + (45), this.jumper.y + 22)
                 } else {
                     let wet = 0
                     if (this.hash['engine'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[6].max)))) {
@@ -11790,16 +12055,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (wet == 1) {
                         canvas_context.fillStyle = "#FF0000"
-                        canvas_context.font = "20px comic sans ms"
-                        canvas_context.fillText("Broken System", this.jumper.x + (25), this.jumper.y + 22)
+                        canvas_context.font = "20px helvetica"
+                        canvas_context.fillText("Broken System", this.jumper.x + (5), this.jumper.y + 29)
                     } else if ((1 - this.dodgeRate()) > 0) {
                         canvas_context.fillStyle = "#FFFF00"
-                        canvas_context.font = "20px comic sans ms"
-                        canvas_context.fillText("Charging Jump", this.jumper.x + (25), this.jumper.y + 22)
+                        canvas_context.font = "20px helvetica"
+                        canvas_context.fillText("Charging Jump", this.jumper.x + (5), this.jumper.y + 29)
                     } else {
                         canvas_context.fillStyle = "#FFAA00"
-                        canvas_context.font = "20px comic sans ms"
-                        canvas_context.fillText("Stalled", this.jumper.x + (55), this.jumper.y + 22)
+                        canvas_context.font = "20px helvetica"
+                        canvas_context.fillText("Stalled", this.jumper.x + (35), this.jumper.y + 29)
                     }
                 }
             }
@@ -11810,9 +12075,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.superdodge = 0
             for (let t = 0; t < this.weapons.length; t++) {
                 this.weapons[t].draw()
-                if(this.weapons[t].firing > 0){
-                    if(this.weapons[t].dodgeMod > 0){
-                        this.superdodge = 1
+                if (this.weapons[t]) {
+                    if (this.weapons[t].firing > 0) {
+                        if (this.weapons[t].dodgeMod > 0) {
+                            this.superdodge = 1
+                        }
                     }
                 }
             }
@@ -11841,7 +12108,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 return 0
             }
             let dodgerate = (Math.sqrt(this.boosts[3]) + Math.sqrt(this.boosts[6])) * 4
-            // //////////////////////////////////////////////////console.log( 1-(1/(11-this.UI.systems[6].max)))
+            // ////////////////////////////////////////////////////console.log( 1-(1/(11-this.UI.systems[6].max)))
             if (this.hash['engine'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[6].max)))) {
                 dodgerate = 0
                 this.boosts[3] = 0
@@ -11860,15 +12127,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 dodgerate *= 0
             }
             if (dodgerate == 0) {
-                if(this.superdodge > 0){
+                if (this.superdodge > 0) {
                     return .1
-                }else{
-                return 1
+                } else {
+                    return 1
                 }
             } else {
-                if(this.superdodge > 0){
+                if (this.superdodge > 0) {
                     return .1
-                }else{
+                } else {
                     return Math.max(.90 - (dodgerate / 80), .1)
                 }
             }
@@ -12011,7 +12278,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     //newship
                 }
 
-                // //////////////////////console.log("hif")
+                // ////////////////////////console.log("hif")
             } else {
 
                 for (let t = 0; t < this.blocks.length; t++) {
@@ -12061,11 +12328,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 ac /= bc
                 this.ac = ac
-                canvas_context.fillStyle = "white"
-                canvas_context.font = "15px comic sans ms"
-                canvas_context.fillText(Math.round(ac) + '% ship air', 75, 55)
-                canvas_context.fillText(this.bombs + ' Bombs', 75, 75)
-                canvas_context.fillText(this.scrap + ' Scrap', 75, 95)
+                canvas_context.fillStyle = "#589ee3"
+                canvas_context.font = "22px helvetica"
+                canvas_context.fillText(Math.round(ac) + '%', 5, 70)
+                canvas_context.fillText(this.bombs, 80, 70)
+                canvas_context.fillText(this.scrap, 195, 70)
+                
                 let vnododge = 0
                 if (enemy) {
                     if (enemy.weapons) {
@@ -12084,19 +12352,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 }
 
-                canvas_context.fillText(Math.round((1 - (this.dodgeRate() + (vnododge / 10))) * 100) + '% dodge', 75, 115)
+                canvas_context.fillText(Math.round((1 - (this.dodgeRate() + (vnododge / 10))) * 100) + '%', 130, 70)
 
-                if (this.warn > 0) {
-                    canvas_context.drawImage(warning, 0, 0, 40, 40, this.energy.box.x - 20, this.energy.box.y + this.energy.box.height - 80, 80, 80)
-                    this.warn--
+                if(ac > 50){
+                    canvas_context.drawImage(airGlow, 0, 0)
+                }else{
+                    canvas_context.drawImage(airGlow2, 0, 0)
                 }
+                if(this.dodgeRate()  != 1){
+                    canvas_context.drawImage(dodgeGlow, 0, 0)
+                }else{
+                    canvas_context.drawImage(dodgeGlow2, 0, 0)
+                }
+                if(this.scrap == 0){
+                    canvas_context.drawImage(scrapGlow2, 0, 0)
+                }else{
+                    canvas_context.drawImage(scrapGlow, 0, 0)
+                }
+                if(this.bombs == 0){
+                    canvas_context.drawImage(bombGlow2, 0, 0)
+                }else{
+                    canvas_context.drawImage(bombGlow, 0, 0)
+                }
+
+
                 if (this.first == 0) {
                     let tiles = []
                     for (let t = 0; t < this.blocks.length; t++) {
                         for (let k = 0; k < this.blocks[t].length; k++) {
                             if (this.blocks[t][k].marked == 1) {
                                 this.blocks[t][k].walkable = true
-                                //////////////////////////////////////////////////////////////console.log("r")
+                                ////////////////////////////////////////////////////////////////console.log("r")
                                 tiles.push(this.blocks[t][k])
                             }
                         }
@@ -12167,7 +12453,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.weapons.push(wep3)
                         this.weapons.push(wep4)
                         // this.weapons.push(wep5)
-                        // this.weapons.push(new Weapon(16))
+                        // this.weapons.push(new Weapon(29))
+                        // this.weapons.push(new Weapon(30))
+                        // this.weapons.push(new Weapon(31))
+                        // this.weapons.push(new Weapon(29))
+                        // this.weapons.push(new Weapon(30))
+                        // this.weapons.push(new Weapon(31))
+                        // this.weapons.push(new Weapon(11))
                         // this.weapons.push(new Weapon(19))
                         // this.weapons.push(new Weapon(33))
                         // this.weapons.push(new Weapon(0))
@@ -12412,7 +12704,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.guys[t].tile.integrity > 100) {
                         this.guys[t].tile.integrity = 100
                     }
-                    // //////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                    // ////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                     if (this.guys[t].tile.medbay == 1) {
                         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                             this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -12518,7 +12810,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             if (this.guys[t].tiles[q].integrity > 100) {
                                 this.guys[t].tiles[q].integrity = 100
                             }
-                            // //////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+                            // ////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
                             if (this.guys[t].tiles[q].medbay == 1) {
                                 if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                                     this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -12670,7 +12962,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 for (let w = 0; w < this.weapons.length; w++) {
                     if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-                        //////////////////////////////////////////////////////////////console.log( this.boosts[1])////////////////console.log( this.boosts[1])
+                        ////////////////////////////////////////////////////////////////console.log( this.boosts[1])//////////////////console.log( this.boosts[1])
                         if (this.weapons[w].temp == -2) {
 
                             this.weapons[w].charge += Math.sqrt(this.boosts[1])
@@ -13069,7 +13361,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 for (var j = 0; j < this.height; j += NODESIZE) {
                     gridPointsByPos[i][j] = countNodes;
                     //here's the problem , need to set the walkability of the node without always being true...
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(countNodes)
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(countNodes)
                     tempNode = new Tile(i, j, 10, 10, "tan", countNodes, NODESIZE, i, j, true);
 
                     // let cutOut = [0,1 ,2, 3, 10, 5,6,7, 8, 9, 10, 11, 12,13, 18, 19,20, 32,33,  26, 31, 39, 410, 45, 46, 52, 57,58,59,99, 112, 108, 95, 197, 198, 199, 205, 203, 2010, 236, 237, 238, 242, 243,2410, 216, 212, 229, 225, 210, 211, 223, 2210, 217, 218, 230, 231]
@@ -13101,7 +13393,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     // }
                     // if (wallSet.has(countNodes)) {
-                    // //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
+                    // //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
                     //   tempNode.walkable = false;
                     // }
 
@@ -13398,7 +13690,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     tile.color = "#8888FF44"
                     if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                         tile.marked = 1
-                        //////////////////////////////////////////////////////////////console.log("w")
+                        ////////////////////////////////////////////////////////////////console.log("w")
                         tile.walkable = true
                         if (tile.empty > 0) {
                             tile.color = "#FFFFFF44"
@@ -13437,7 +13729,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     } else {
                         tile.marked = -1
-                        //////////////////////////////////////////////////////////////console.log("w")
+                        ////////////////////////////////////////////////////////////////console.log("w")
                         tile.walkable = false
 
                     }
@@ -13669,15 +13961,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (dodgerate == 0) {
-                if(this.superdodge > 0){
+                if (this.superdodge > 0) {
                     return .1
-                }else{
-                return 1
+                } else {
+                    return 1
                 }
             } else {
-                if(this.superdodge > 0){
+                if (this.superdodge > 0) {
                     return .1
-                }else{
+                } else {
                     return Math.max(.90 - (dodgerate / 80), .1)
                 }
             }
@@ -13755,7 +14047,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
 
-            //////////////////////////////////////////////////////////console.log(ret.length)
+            ////////////////////////////////////////////////////////////console.log(ret.length)
             return ret;
         }
         createGrid() {
@@ -13778,14 +14070,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.superdodge = 0
             for (let t = 0; t < this.weapons.length; t++) {
                 // this.weapons[t].draw()
-                if(this.weapons[t].firing > 0){
-                    if(this.weapons[t].dodgeMod > 0){
+                if (this.weapons[t].firing > 0) {
+                    if (this.weapons[t].dodgeMod > 0) {
                         this.superdodge = 1
                     }
                 }
             }
 
-            
+
             if (this.first == 0) {
                 this.now = Date.now()
             }
@@ -13819,7 +14111,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             } else {
                 canvas_context.fillStyle = "white"
-                canvas_context.font = "10px comic sans ms"
+                canvas_context.font = "10px helvetica"
                 if (enemy.guys) {
                     if (enemy.guys.length > 0 && enemy.hull > 0) {
                         if (mode == 1) {
@@ -13838,9 +14130,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.hrat = this.hull / this.maxhull
             this.healthbar = new RectangleR(1440, 10, 250, 10, "transparent")
             if (vessel.UI.systems[5].sto > 0) {
-                this.healthbar.draw()
-                canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
+                // this.healthbar.draw()
+                // canvas_context.drawImage(shiphealth, 0, 0, 250 * this.hrat, 10, this.healthbar.x, 10, 250 * this.hrat, 10)
+                // // canvas_context.drawImage(healthPanel, 0,0)
 
+                canvas_context.drawImage(ehealthPanel, 0,0)
+                canvas_context.drawImage(ejumpBar, 0,0)
+
+
+            let kex = Date.now() - this.now 
+            let tex = (1000 * 3 * 60) + (this.level * 1000)
+            let ketrat = (kex/tex)*139
+
+
+               
+                for(let t = 1440;t<1440+ketrat;t+=3){
+                        canvas_context.drawImage(ejumpPip, 0,0,3,21,t,36, 3,21)
+                }
+                
+
+                let widteh = ((enemy.hull/enemy.maxhull)*260)
+                for(let t = 1438;t<1438+widteh;t+=13){
+                    if(enemy.hull < enemy.maxhull*.33){
+                        canvas_context.drawImage(healthPip3, 0,0,13,19,t,11, 13,19)
+                    }else if(enemy.hull < enemy.maxhull*.66){
+                        canvas_context.drawImage(healthPip2, 0,0,13,19,t,11, 13,19)
+                    }else{
+                        canvas_context.drawImage(healthPip, 0,0,13,19,t,11, 13,19)
+                    }
+                }
             }
 
 
@@ -13884,7 +14202,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].marked == 1) {
                             this.blocks[t][k].walkable = true
-                            //////////////////////////////////////////////////////////////console.log("r")
+                            ////////////////////////////////////////////////////////////////console.log("r")
                             tiles.push(this.blocks[t][k])
                             this.supratiles.push(this.blocks[t][k])
                         }
@@ -13968,7 +14286,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if (this.level < 7) {
 
                     //enemjump
-                    // //////////////console.log(this.wepmax)
+                    // ////////////////console.log(this.wepmax)
                     // for(let  k = 0;k<this.wepmax;k++){
                     // this.weapons.push(new Weapon(k))
                     // }
@@ -14142,7 +14460,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                     if (this.hull <= 0) {
                         this.shield.state = 0
-                        // ////////////////////////////////////////////////////////console.log(this.blocks)
+                        // //////////////////////////////////////////////////////////console.log(this.blocks)
                         // return
 
                         if (this.crewless != 1) {
@@ -14194,7 +14512,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // if (this.guys[t].tile.integrity > 100) {
                     //     this.guys[t].tile.integrity = 100
                     // }
-                    // //////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                    // ////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                     if (this.guys[t].tile.medbay == 1) {
                         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                             this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -14211,7 +14529,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (this.guys[t].tile.integrity > 100) {
                         this.guys[t].tile.integrity = 100
                     }
-                    // //////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                    // ////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                     if (this.guys[t].tile.medbay == 1) {
                         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                             this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -14272,7 +14590,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if (this.guys[t].tiles[q].integrity > 100) {
                             this.guys[t].tiles[q].integrity = 100
                         }
-                        // //////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+                        // ////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
                         if (this.guys[t].tiles[q].medbay == 1) {
                             if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                                 this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -14370,7 +14688,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 //worm king code ^^^
             }
-            ////////////////////////////////////////////////////////////console.log(this.boosts[2])
+            //////////////////////////////////////////////////////////////console.log(this.boosts[2])
 
             this.hash = {}
             for (let r = 0; r < rooms.length; r++) {
@@ -14418,7 +14736,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // this.energy.balance()
             for (let r = 0; r < rooms.length; r++) {
                 if (this.hash[rooms[r]].occupied == 0) {
-                    // ////////////////////////////////////////////////////console.log("hit")
+                    // //////////////////////////////////////////////////////console.log("hit")
                     if (rooms[r] == "shield") {
                         if (this.shield.state >= this.UI.systems[r].demand + this.UI.systems[r].fed) {
                             continue
@@ -14452,12 +14770,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     if (rooms[r] == "medbay") {
                         if (this.energy.power > 0 && this.UI.systems[0].sto < this.UI.systems[0].max) {
                             this.UI.systems[r].sto++
-                            // //////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
-                            // //////////////////////////////////////console.log("med")
+                            // ////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                            // ////////////////////////////////////////console.log("med")
                             continue
                         }
                         if (this.UI.systems[r].sto == 1) {
-                            // //////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                            // ////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
                             continue
                         }
                     }
@@ -14561,7 +14879,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         intruder.play()
                     }
                     if (this.guys[t].cound > 0) { //.14 connect
-                        // ////////////////////////////////////////////////console.log(t)
+                        // //////////////////////////////////////////////////console.log(t)
                         continue
                     }
                     this.wet = 0
@@ -14594,7 +14912,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     ac /= bc
                     this.ac = ac
 
-                    // ////////////////////////////////////////////////////////console.log(ac)
+                    // //////////////////////////////////////////////////////////console.log(ac)
                     for (let b = 0; b < this.blocks.length; b++) {
                         for (let k = 0; k < this.blocks[b].length; k++) {
                             if (this.wet == 1) {
@@ -14679,7 +14997,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         //         this.UI.systems[0].demand--
                         //     }
                         // }
-                        // //////////////////////////////console.log(this.guys)
+                        // ////////////////////////////////console.log(this.guys)
                         if (fire == 1) {
                             if (this.state == 0) {
                                 let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
@@ -14689,7 +15007,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
                                     priorities[this.guys.length - 1] = 'medbay'
                                 }
-                                // ////////////////////////////////////////////////console.log(priorities, t)
+                                // //////////////////////////////////////////////////console.log(priorities, t)
 
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                                 let j = 0
@@ -14721,7 +15039,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(priorities[t])
+                                                    //////////////////////////////////////////////////////console.log(priorities[t])
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -14771,7 +15089,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(priorities[t])
+                                                    //////////////////////////////////////////////////////console.log(priorities[t])
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -14821,7 +15139,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(priorities[t])
+                                                    //////////////////////////////////////////////////////console.log(priorities[t])
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -14871,7 +15189,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(priorities[t])
+                                                    //////////////////////////////////////////////////////console.log(priorities[t])
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -14919,7 +15237,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                     }
                                     tile = tiles[Math.floor(Math.random() * tiles.length)]
                                 }
-                                ////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
+                                //////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
                                 if (this.guys[t].tile[priorities[t - c]] == 1) {
                                     tile = this.guys[t].tile
                                     if (priorities[t - c] != "holed") {
@@ -14927,7 +15245,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
+                                                    //////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -14975,7 +15293,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         if (index >= 0) {
                                             if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                                 if (this.energy.power > 0) {
-                                                    ////////////////////////////////////////////////////console.log(priorities[t])
+                                                    //////////////////////////////////////////////////////console.log(priorities[t])
                                                     this.UI.systems[index].demand++
                                                     this.UI.systems[index].sto = this.UI.systems[index].demand
                                                 }
@@ -15023,7 +15341,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             for (let w = 0; w < this.weapons.length; w++) {
                 if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-                    //////////////////////////////////////////////////////////////console.log( this.boosts[1])
+                    ////////////////////////////////////////////////////////////////console.log( this.boosts[1])
                     if (this.weapons[w].temp == -2) {
 
                         this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
@@ -15292,6 +15610,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                         this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
+
+                        let c = 0
+                        if (enemy.guys) {
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].hostile == 1 && enemy.guys[t].mindControlled != 1) {
+                                    c++
+                                }
+                            }
+                        }
+                        if (c == 0) {
+                            this.loot = Math.floor(this.loot * 1.1)
+                        }
                     } else {
                         // let link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
                         // this.loot = Math.floor(link.hypotenuse() / 120) + 1
@@ -15300,6 +15630,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                         this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))       //Math.floor((this.level * 1.11) + (Math.random() * (Math.sqrt(this.level) * 3.33)) + 1.4) //2 //1  //sqrt on cap is new //1.11 -> 3.33 because past level 10 you will get less but before 10 you get more
 
+                        let c = 0
+                        if (enemy.guys) {
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].hostile == 1 && enemy.guys[t].mindControlled != 1) {
+                                    c++
+                                }
+                            }
+                        }
+                        if (c == 0) {
+                            this.loot = Math.floor(this.loot * 1.1)
+                        }
                     }
 
                     let enododge = 0
@@ -15312,7 +15653,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             }
                         }
                     }
-                    ////console.log(enododge)
+                    //////console.log(enododge)
                     this.loot += enododge
                     // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                     this.wegflag = Math.random()
@@ -15440,9 +15781,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 }
                 canvas_context.fillStyle = "white"
-                canvas_context.font = "30px comic sans ms"
+                canvas_context.font = "30px helvetica"
                 if (this.shop == 2) {
-                    canvas_context.font = "20px comic sans ms"
+                    canvas_context.font = "20px helvetica"
                     canvas_context.fillText("Welcome to my emporium!", 1280, 70)
                     canvas_context.fillText("Check your inventory to shop.", 1280, 100)
                     canvas_context.fillText("Double click items to open buy/sell menu.", 1280, 130)
@@ -15481,7 +15822,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 // this.body.draw()
                 this.deathbox.draw()
                 canvas_context.fillStyle = "white"
-                canvas_context.font = "30px comic sans ms"
+                canvas_context.font = "30px helvetica"
                 canvas_context.fillText("Jump", this.body.x - (this.body.radius * .45), this.body.y + 8)
 
 
@@ -15666,7 +16007,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let rect = new RectangleR(this.body.x - 80, this.body.y - 20, 60, 40, "#FFFF8844")
                         rect.draw()
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "20px comic sans ms"
+                        canvas_context.font = "20px helvetica"
                         canvas_context.fillText("Shop", rect.x + 5, rect.y + 20)
                     } else {
                         let link = new LineOP(this.body, new Point(this.body.x - 20, this.body.y), "white", 1)
@@ -15674,7 +16015,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let rect = new RectangleR(this.body.x - 60, this.body.y - 12, 40, 24, "#FF888844")
                         rect.draw()
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "10px comic sans ms"
+                        canvas_context.font = "10px helvetica"
                         canvas_context.fillText("Fight", rect.x + 10, rect.y + 16)
                     }
                 }
@@ -15869,6 +16210,125 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let start = 0
     let title = new Image()
     title.src = "title.png"
+
+
+
+    //UI images
+    let teleportButton = new Image()
+    teleportButton.src = "teleportButton.PNG"
+    let miscPanels = new Image()
+    miscPanels.src = "miscPanels.png"
+    let jumpPanel = new Image()
+    jumpPanel.src = "jumpPanel.png"
+    let healthPanel = new Image()
+    healthPanel.src = "hullPanel.png"
+    let ehealthPanel = new Image()
+    ehealthPanel.src = "ehullPanel.png"
+    let healthPip = new Image()
+    healthPip.src = "healthPip.png"
+    let healthPip2 = new Image()
+    healthPip2.src = "healthPip2.png"
+    let healthPip3 = new Image()
+    healthPip3.src = "healthPip3.png"
+
+
+    let airGlow = new Image()
+    airGlow.src = "airGlow.png"
+    let dodgeGlow = new Image()
+    dodgeGlow.src = "dodgeGlow.png"
+    let scrapGlow = new Image()
+    scrapGlow.src = "scrapGlow.png"
+    let bombGlow = new Image()
+    bombGlow.src = "bombsGlow.png"
+
+
+    let airGlow2 = new Image()
+    airGlow2.src = "airGlow2.png"
+    let dodgeGlow2 = new Image()
+    dodgeGlow2.src = "dodgeGlow2.png"
+    let scrapGlow2 = new Image()
+    scrapGlow2.src = "scrapGlow2.png"
+    let bombGlow2 = new Image()
+    bombGlow2.src = "bombGlow2.png"
+
+    let capacitorFluff = new Image()
+    capacitorFluff.src = "capacitorFluff.PNG"
+    let upgradeButton = new Image()
+    upgradeButton.src = "upgradeButton.PNG"
+    let shipBattery = new Image()
+    shipBattery.src = "shipBattery.PNG"
+    let activeCell = new Image()
+    activeCell.src = "activeCell.PNG"
+    let inactiveCell = new Image()
+    inactiveCell.src = "inactiveCell.PNG"
+    let fedcell = new Image()
+    fedcell.src = "fedCell.PNG"
+    let deadCell = new Image()
+    deadCell.src = "deadCell.PNG"
+    let batteryUI = new Image()
+    batteryUI.src = "batteryUI.PNG"
+    let batteryUI2 = new Image()
+    batteryUI2.src = "batteryUI2.PNG"
+    let iconsSys = new Image()
+    iconsSys.src = "iconsSys.png"
+    let weaponSlot = new Image()
+    weaponSlot.src = "weaponSlot.png"
+    let cellWorth = new Image()
+    cellWorth.src = "cellWorth.png"
+    let cellWorth2 = new Image()
+    cellWorth2.src = "cellWorth2.png"
+    let oneSlot = new Image()
+    oneSlot.src = "oneSlot.png"
+    let twoSlot = new Image()
+    twoSlot.src  = "twoSlot.png"
+    let threeSlot = new Image()
+    threeSlot.src = "threeSlot.png"
+    let fourSlot = new Image()
+    fourSlot.src = "fourSlot.png"
+    let fiveSlot = new Image()
+    fiveSlot.src  = "fiveSlot.png"
+
+    let sixSlot = new Image()
+    sixSlot.src = "sixSlot.png"
+    let sevenSlot = new Image()
+    sevenSlot.src  = "sevenSlot.png"
+    let eightSlot = new Image()
+    eightSlot.src = "eightSlot.png"
+    let nineSlot = new Image()
+    nineSlot.src = "nineSlot.png"
+    let tenSlot = new Image()
+    tenSlot.src  = "tenSlot.png"
+    let pip = new Image()
+    pip.src  = "pip.png"
+    let jumpPip = new Image()
+    jumpPip.src  = "jumpPip.png"
+    let ejumpPip = new Image()
+    ejumpPip.src  = "ejumpPip.png"
+    let ejumpBar = new Image()
+    ejumpBar.src  = "ejumpBar.png"
+    let onePips = new Image()
+    onePips.src  = "onePips.png"
+    let twoPips = new Image()
+    twoPips.src  = "twoPips.png"
+    let threePips = new Image()
+    threePips.src  = "threePips.png"
+    let fourPips = new Image()
+    fourPips.src  = "fourPips.png"
+    let fivePips = new Image()
+    fivePips.src  = "fivePips.png"
+    let sixPips = new Image()
+    sixPips.src  = "sixPips.png"
+    let sevenPips = new Image()
+    sevenPips.src  = "sevenPips.png"
+    let eightPips = new Image()
+    eightPips.src  = "eightPips.png"
+    let ninePips = new Image()
+    ninePips.src  = "ninePips.png"
+    let tenPips = new Image()
+    tenPips.src  = "tenPips.png"
+
+    
+
     let vessel = new Ship(0)
     let enemy = new EnemyShip(Math.floor(Math.random() * 40), 1)
 
@@ -15894,20 +16354,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.text3 = ''
                         this.text4 = ''
                         let dim = {}
-                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.font = "18px helvetica"
                         dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                        dim.h = 12
-                        //////////////////////////////////////////////////////console.log(dim)
+                        dim.h = 1.6 * 12
+                        ////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                         rect.draw()
                         canvas_context.fillStyle = "white"
-                        let py = TIP_engine.y + 5
+                        let py = TIP_engine.y + 10
                         canvas_context.fillText(this.text1, rect.x + 10, py)
-                        // py += 12
+                        // py += 19
                         // canvas_context.fillText(this.text2, rect.x + 10, py)
-                        // py += 12
+                        // py += 19
                         // canvas_context.fillText(this.text3, rect.x + 10, py)
-                        // py += 12
+                        // py += 19
                         // canvas_context.fillText(this.text4, rect.x + 10, py)
                     }
                 }
@@ -15915,30 +16375,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
 
             let rooms = ['Medbay', 'Weapons', 'Shield', 'Helm', 'Oxygen', 'Security', 'Engine', 'Teleporter', 'Empty']
-            for (let t = 0; t < vessel.UI.systems.length; t++) {
+            for (let t = 0; t < vessel.UI.systems.length - 1; t++) {
                 for (let k = 0; k < vessel.UI.systems[t].bars.length; k++) {
-                    vessel.UI.systems[t].bars[k].y -= 2
-                    vessel.UI.systems[t].bars[k].height += 4
-                    if (vessel.UI.systems[t].bars[k].isPointInside(TIP_engine)) {
+                    // vessel.UI.systems[t].bars[k].y -= 2
+                    // vessel.UI.systems[t].bars[k].height += 4
+                    if (vessel.UI.systems[t].box.isPointInside(TIP_engine)) {
                         this.text1 = rooms[t]
                         this.text2 = "Demand: " + vessel.UI.systems[t].demand
                         this.text3 = "Capacity: " + vessel.UI.systems[t].max
                         this.text4 = "Target: " + vessel.UI.systems[t].sto
                         let dim = {}
-                        canvas_context.font = "12px comic sans ms"
+                        canvas_context.font = "18px helvetica"
                         dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                        dim.h = 44
-                        //////////////////////////////////////////////////////console.log(dim)
+                        dim.h = 1.6 * 44
+                        ////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
                         rect.draw()
                         canvas_context.fillStyle = "white"
-                        let py = TIP_engine.y + 5
+                        let py = TIP_engine.y + 10
                         canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text4, rect.x + 10, py - (dim.h + 10))
                     }
                     vessel.UI.systems[t].bars[k].y += 2
@@ -15971,20 +16431,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                             let dim = {}
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "18px helvetica"
                             dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width))
-                            dim.h = 44
-                            //////////////////////////////////////////////////////console.log(dim)
+                            dim.h = 1.6 * 44
+                            ////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "white"
-                            let py = TIP_engine.y + 5
+                            let py = TIP_engine.y + 10
                             canvas_context.fillText(this.text1, rect.x + 10, py)
-                            py += 12
+                            py += 19
                             canvas_context.fillText(this.text2, rect.x + 10, py)
-                            py += 12
+                            py += 19
                             canvas_context.fillText(this.text3, rect.x + 10, py)
-                            py += 12
+                            py += 19
                             canvas_context.fillText(this.text4, rect.x + 10, py)
                         }
                     }
@@ -16005,25 +16465,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                     let dim = {}
-                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.font = "18px helvetica"
                     dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width))
-                    dim.h = 154
-                    //////////////////////////////////////////////////////console.log(dim)
+                    dim.h = 1.6 * 154
+                    ////////////////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                     rect.draw()
                     canvas_context.fillStyle = "white"
-                    let py = TIP_engine.y + 5
+                    let py = TIP_engine.y + 10
                     canvas_context.fillText(this.text1, rect.x + 10, py)
-                    py += 12
+                    py += 19
                     canvas_context.fillText(this.text2, rect.x + 10, py)
-                    py += 12
+                    py += 19
                     canvas_context.fillText(this.text3, rect.x + 10, py)
-                    py += 12
+                    py += 19
                     canvas_context.fillText(this.text4, rect.x + 10, py)
                     for (let r = 0; r < vessel.guys[t].skillslist.length; r++) {
                         let box1 = new RectangleR(TIP_engine.x + 5, py + 10, 130, 5, "#88888844")
                         canvas_context.fillStyle = "white"
-                        canvas_context.font = "9px comic sans ms"
+                        canvas_context.font = "9px helvetica"
                         canvas_context.fillText(sys[r], box1.x + box1.width + 10, py + 15)
                         box1.draw()
                         let box4 = new RectangleR(TIP_engine.x + 5, py + 10, ((vessel.guys[t].skillslist[r] - 1.5) / .25) * (130), 5, "#FF0000")
@@ -16047,7 +16507,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         box2.draw()
                         box3.draw()
                         box4.draw()
-                        py += 12
+                        py += 19
                     }
                 }
             }
@@ -16069,10 +16529,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                     let dim = {}
-                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.font = "18px helvetica"
                     dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width))
-                    dim.h = 154
-                    //////////////////////////////////////////////////////console.log(dim)
+                    dim.h = 1.6 * 154
+                    ////////////////////////////////////////////////////////console.log(dim)
                     if (vessel.UI.systems[5].sto >= 3) {
 
 
@@ -16084,19 +16544,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                         rect.draw()
                         canvas_context.fillStyle = "white"
-                        let py = TIP_engine.y + 5
+                        let py = TIP_engine.y + 10
                         canvas_context.fillText(this.text1, rect.x + 10, py)
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text2, rect.x + 10, py)
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text3, rect.x + 10, py)
-                        py += 12
+                        py += 19
                         canvas_context.fillText(this.text4, rect.x + 10, py)
                         for (let r = 0; r < enemy.guys[t].skillslist.length; r++) {
                             if (vessel.UI.systems[5].sto >= 6) {
                                 let box1 = new RectangleR(TIP_engine.x + 5 - (dim.w + 20), py + 10, 130, 5, "#88888844")
                                 canvas_context.fillStyle = "white"
-                                canvas_context.font = "9px comic sans ms"
+                                canvas_context.font = "9px helvetica"
                                 canvas_context.fillText(sys[r], box1.x + box1.width + 10, py + 15)
                                 box1.draw()
                                 let box4 = new RectangleR(TIP_engine.x + 5 - (dim.w + 20), py + 10, ((enemy.guys[t].skillslist[r] - 1.5) / .25) * (130), 5, "#FF0000")
@@ -16120,7 +16580,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 box2.draw()
                                 box3.draw()
                                 box4.draw()
-                                py += 12
+                                py += 19
                             }
                         }
                     }
@@ -16190,23 +16650,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.text3 = "State: " + str
                     // this.text4 = "Max: " + vessel.shield.level
                     let dim = {}
-                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.font = "18px helvetica"
                     dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
-                    dim.h = 68
-                    //////////////////////////////////////////////////////console.log(dim)
+                    dim.h = 1.6 * 68
+                    ////////////////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                     if (rect.width + rect.x > 1280) {
                         rect.x += 1280 - (rect.width + rect.x)
                     }
                     rect.draw()
                     canvas_context.fillStyle = "white"
-                    let py = TIP_engine.y + 5
+                    let py = TIP_engine.y + 10
                     canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
-                    py += 13
+                    py += 20
                     canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
-                    py += 13
+                    py += 20
                     canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
-                    py += 13
+                    py += 20
                     if (vessel.weapons[t].hard != 1) {
                         canvas_context.fillText("Tile harm: " + vessel.weapons[t].damage + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
 
@@ -16215,7 +16675,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     }
 
-                    py += 13
+                    py += 20
                     if (vessel.weapons[t].railgun == 1) {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                     } else if (vessel.weapons[t].scrap > 0) {
@@ -16245,7 +16705,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     } else {
                         canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                     }
-                    py += 13
+                    py += 20
                     if (vessel.weapons[t].secretDouble > 0) {
                         canvas_context.fillText("Breaks " + Math.floor((vessel.weapons[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
 
@@ -16254,9 +16714,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     }
 
-                    
+
                     // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
-                    // py += 12
+                    // py += 19
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
                 }
             }
@@ -16318,20 +16778,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text3 = "State: " + str
                                 // this.text4 = "Max: " + vessel.shield.level
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
-                                dim.h = 68
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 68
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 if (stars.stars[vessel.star].weapons[t].hard != 1) {
                                     canvas_context.fillText("Tile harm: " + stars.stars[vessel.star].weapons[t].damage + ', ' + "Ship harm: " + (stars.stars[vessel.star].weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
 
@@ -16340,7 +16800,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                                 }
 
-                                py += 13
+                                py += 20
                                 if (stars.stars[vessel.star].weapons[t].railgun == 1) {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                                 } else if (stars.stars[vessel.star].weapons[t].scrap > 0) {
@@ -16357,7 +16817,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 } else {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((stars.stars[vessel.star].weapons[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                                 }
-                                py += 13
+                                py += 20
 
                                 if (stars.stars[vessel.star].weapons[t].secretDouble > 0) {
                                     canvas_context.fillText("Breaks " + Math.floor((stars.stars[vessel.star].weapons[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
@@ -16367,7 +16827,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                                 }
                                 // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
-                                // py += 12
+                                // py += 19
                                 // canvas_context.fillText(this.text4, rect.x + 10, py)
                             }
                         }
@@ -16426,20 +16886,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text3 = "State: " + str
                                 // this.text4 = "Max: " + vessel.shield.level
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
-                                dim.h = 68
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 68
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
-                                py += 13
+                                py += 20
                                 if (vessel.upgradeMenu.wepsto[t].hard != 1) {
                                     canvas_context.fillText("Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
 
@@ -16448,7 +16908,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                                 }
 
-                                py += 13
+                                py += 20
                                 if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                                 } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
@@ -16465,7 +16925,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 } else {
                                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                                 }
-                                py += 13
+                                py += 20
                                 if (vessel.upgradeMenu.wepsto[t].secretDouble > 0) {
                                     canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
 
@@ -16474,7 +16934,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                                 }
                                 // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
-                                // py += 12
+                                // py += 19
                                 // canvas_context.fillText(this.text4, rect.x + 10, py)
                             }
                         }
@@ -16535,20 +16995,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             this.text3 = "State: " + str
                             // this.text4 = "Max: " + vessel.shield.level
                             let dim = {}
-                            canvas_context.font = "12px comic sans ms"
+                            canvas_context.font = "18px helvetica"
                             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
-                            dim.h = 68
-                            //////////////////////////////////////////////////////console.log(dim)
+                            dim.h = 1.6 * 68
+                            ////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "white"
-                            let py = TIP_engine.y + 5
+                            let py = TIP_engine.y + 10
                             canvas_context.fillText(this.text1, rect.x + 10, py - (dim.h + 10))
-                            py += 13
+                            py += 20
                             canvas_context.fillText(this.text2, rect.x + 10, py - (dim.h + 10))
-                            py += 13
+                            py += 20
                             canvas_context.fillText(this.text3, rect.x + 10, py - (dim.h + 10))
-                            py += 13
+                            py += 20
                             if (vessel.upgradeMenu.wepsto[t].hard != 1) {
                                 canvas_context.fillText("Tile harm: " + vessel.upgradeMenu.wepsto[t].damage + ', ' + "Ship harm: " + (vessel.upgradeMenu.wepsto[t].damage / 10), rect.x + 10, py - (dim.h + 10))
 
@@ -16557,7 +17017,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                             }
 
-                            py += 13
+                            py += 20
                             if (vessel.upgradeMenu.wepsto[t].railgun == 1) {
                                 canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                             } else if (vessel.upgradeMenu.wepsto[t].scrap > 0) {
@@ -16574,7 +17034,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             } else {
                                 canvas_context.fillText("Fire Chance: " + Math.floor((vessel.upgradeMenu.wepsto[t].fireChance / 300) * 100) + "%", rect.x + 10, py - (dim.h + 10))
                             }
-                            py += 13
+                            py += 20
                             if (vessel.upgradeMenu.wepsto[t].secretDouble > 0) {
                                 canvas_context.fillText("Breaks " + Math.floor((vessel.upgradeMenu.wepsto[t].secretDouble / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
 
@@ -16583,7 +17043,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                             }
                             // canvas_context.fillText(, rect.x + 10, py-  (dim.h + 10))
-                            // py += 12
+                            // py += 19
                             // canvas_context.fillText(this.text4, rect.x + 10, py)
                         }
                     }
@@ -16596,58 +17056,58 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.text3 = "Used: " + (vessel.energy.powersto - vessel.energy.power)
                 this.text4 = "Remain: " + vessel.energy.power
                 let dim = {}
-                canvas_context.font = "12px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 44
-                //////////////////////////////////////////////////////console.log(dim)
+                dim.h = 1.6 * 44
+                ////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
                 let py = TIP_engine.y - (dim.h + 5)
                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text3, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text4, rect.x + 10, py)
             }
             if (vessel.upgradeMenu.button.isPointInside(TIP_engine)) {
                 this.text1 = "Upgrade Menu"
                 let dim = {}
-                canvas_context.font = "12px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 10
-                //////////////////////////////////////////////////////console.log(dim)
+                dim.h = 1.6 * 10
+                ////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
-                let py = TIP_engine.y + 5
+                let py = TIP_engine.y + 10
                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text2, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text3, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text4, rect.x + 10, py)
             }
             if (vessel.teleButton.isPointInside(TIP_engine)) {
                 this.text1 = "Teleport Crew"
                 let dim = {}
-                canvas_context.font = "12px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 10
-                //////////////////////////////////////////////////////console.log(dim)
+                dim.h = 1.6 * 10
+                ////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
-                let py = TIP_engine.y + 5
+                let py = TIP_engine.y + 10
                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text2, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text3, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text4, rect.x + 10, py)
             }
             if (vessel.shield.healthbar.isPointInside(TIP_engine)) {
@@ -16656,20 +17116,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.text3 = "Current: " + vessel.shield.state
                 this.text4 = "Max: " + vessel.shield.level
                 let dim = {}
-                canvas_context.font = "12px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 44
-                //////////////////////////////////////////////////////console.log(dim)
+                dim.h = 1.6 * 44
+                ////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
-                let py = TIP_engine.y + 5
+                let py = TIP_engine.y + 10
                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text3, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text4, rect.x + 10, py)
             }
 
@@ -16682,20 +17142,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     this.text3 = "Current Shield: " + enemy.shield.state
                     this.text4 = "Max: " + enemy.shield.level
                     let dim = {}
-                    canvas_context.font = "12px comic sans ms"
+                    canvas_context.font = "18px helvetica"
                     dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                    dim.h = 36
-                    //////////////////////////////////////////////////////console.log(dim)
+                    dim.h = 1.6 * 36
+                    ////////////////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                     rect.draw()
                     canvas_context.fillStyle = "white"
-                    let py = TIP_engine.y + 5
+                    let py = TIP_engine.y + 10
                     canvas_context.fillText(this.text1, rect.x + 10, py)
-                    py += 12
+                    py += 19
                     canvas_context.fillText(this.text2, rect.x + 10, py)
-                    py += 12
+                    py += 19
                     canvas_context.fillText(this.text3, rect.x + 10, py)
-                    // py += 12
+                    // py += 19
                     // canvas_context.fillText(this.text4, rect.x + 10, py)
                 }
             }
@@ -16706,20 +17166,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 this.text3 = "Current: " + vessel.shield.state
                 this.text4 = "Max: " + vessel.shield.level
                 let dim = {}
-                canvas_context.font = "12px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                dim.h = 24
-                //////////////////////////////////////////////////////console.log(dim)
+                dim.h = 1.6 * 24
+                ////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "white"
-                let py = TIP_engine.y + 5
+                let py = TIP_engine.y + 10
                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                py += 12
+                py += 19
                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text3, rect.x + 10, py)
-                // py += 12
+                // py += 19
                 // canvas_context.fillText(this.text4, rect.x + 10, py)
             }
 
@@ -16751,16 +17211,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16780,16 +17240,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16809,16 +17269,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                // //////////////////////////////////////////////////////console.log(dim)
+                                // ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16838,16 +17298,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16871,16 +17331,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16900,16 +17360,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16929,16 +17389,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16958,16 +17418,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 }
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
@@ -16992,26 +17452,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
+                                dim.h = 1.6 * 24
                                 if (vessel.UI.systems[5].sto > 4) {
-                                    dim.h = 24 + 12
+                                    dim.h = 1.6 * 24 + 12
                                 }
                                 if (vessel.UI.systems[5].sto < 2) {
-                                    dim.h = 24 - 12
+                                    dim.h = 1.6 * 24 - 12
                                 }
-                                //////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                             }
 
                             canvas_context.fillStyle = "white"
-                            let py = TIP_engine.y + 5
+                            let py = TIP_engine.y + 10
                             canvas_context.fillText(this.text1, TIP_engine.x + 10, py)
-                            py += 12
+                            py += 19
                             canvas_context.fillText(this.text2, TIP_engine.x + 10, py)
-                            py += 12
+                            py += 19
                             canvas_context.fillText(this.text3, TIP_engine.x + 10, py)
 
 
@@ -17036,18 +17496,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].engine == 1) {
                                 this.text1 += "Engines"
@@ -17057,18 +17517,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].medbay == 1) {
                                 this.text1 = "Medbay"
@@ -17081,18 +17541,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].helm == 1) {
                                 this.text1 = "Helm"
@@ -17103,108 +17563,108 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].shield == 1) {
                                 this.text1 = "Shield"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].empty == 1) {
                                 this.text1 = "Empty"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].special == 1) {
                                 this.text1 = "Teleporter"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].oxygen == 1) {
                                 this.text1 = "Oxygen Systems"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             } else if (vessel.blocks[t][k].security == 1) {
                                 this.text1 = "Security"
                                 this.text2 = `Hull: ${Math.floor(vessel.blocks[t][k].integrity)}, Air: ${Math.round(vessel.blocks[t][k].air)}`
                                 this.text3 = '1'
                                 let dim = {}
-                                canvas_context.font = "12px comic sans ms"
+                                canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
-                                dim.h = 24
-                                //////////////////////////////////////////////////////console.log(dim)
+                                dim.h = 1.6 * 24
+                                ////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "white"
-                                let py = TIP_engine.y + 5
+                                let py = TIP_engine.y + 10
                                 canvas_context.fillText(this.text1, rect.x + 10, py)
-                                py += 12
+                                py += 19
                                 canvas_context.fillText(this.text2, rect.x + 10, py)
-                                //py += 12
+                                //py += 19
                                 //canvas_context.fillText(this.text3, rect.x + 10, py)
                             }
                         }
@@ -17222,7 +17682,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let tutButton = new RectangleR(100 * globalRat, 600 * globalRat, 100 * globalRat, 50 * globalRat, "#FF000044")
     let modeButton = new RectangleR(100 * globalRat, 650 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
     let crabButton = new RectangleR(900 * globalRat, 600 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
-    let energyButton = new RectangleR((900 * globalRat)-(150 * globalRat), 600 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
+    let energyButton = new RectangleR((900 * globalRat) - (150 * globalRat), 600 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
     let shieldButton = new RectangleR(900 * globalRat, 550 * globalRat, 200 * globalRat, 50 * globalRat, "#FF000044")
     let fireButton = new RectangleR(900 * globalRat, 500 * globalRat, 200 * globalRat, 50 * globalRat, "#FF000044")
     let beanButton = new RectangleR(1100 * globalRat, 500 * globalRat, 120 * globalRat, 50 * globalRat, "#FF000044")
@@ -17279,15 +17739,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             start = 0
         }
         // CanvasC
-        // if (keysPressed['-'] && recording == 0) {
-        //     recording = 1
-        //     video_recorder.record()
-        // }
-        // if (keysPressed['='] && recording == 1) {
-        //     recording = 0
-        //     video_recorder.stop()
-        //     video_recorder.download('File Name As A String.webm')
-        // }
+        if (keysPressed['-'] && recording == 0) {
+            recording = 1
+            video_recorder.record()
+        }
+        if (keysPressed['='] && recording == 1) {
+            recording = 0
+            video_recorder.stop()
+            video_recorder.download('File Name As A String.webm')
+        }
         if (start == 0) {
             if (tut == 1) {
                 stframe += 1
@@ -17297,7 +17757,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(tut3, (tut3.width / 83) * (stframe % 83), 0, tut3.width / 83, tut3.height, 50, tut1.height + tut2.height + 40, tut3.width / 83, tut3.height)
                 // canvas_context.drawImage(tut4, (tut4.width/55)*(stframe%55), 0, tut4.width/55, tut4.height,50, tut1.height+tut2.height+40, tut4.width/55, tut4.height)
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Control the power levels of your ship systems with the ship power menu.", 350, 150)
                 canvas_context.fillText("The button with a wrench on it is your inventory and upgrade menu.", 350, 180)
@@ -17313,7 +17773,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.drawImage(tut5, (tut5.width / 53) * (stframe % 53), 0, tut5.width / 53, tut5.height, 100, tut4.height + 10, tut5.width / 53, tut5.height)
                 canvas_context.drawImage(tut6, (tut6.width / 105) * (stframe % 105), 0, tut6.width / 105, tut6.height, -50, tut4.height + 10 + tut5.height + 10, tut6.width / 105, tut6.height)
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Put crew in the weapons room (Magenta) to charge weapons to fire.", 350, 150)
                 canvas_context.fillText("Put crew in the shield room (Cyan) to charge shields for protection.", 350, 350)
@@ -17324,7 +17784,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 canvas_context.fillText("Click to advance.", 1100, 680)
             } else if (tut == 3) {
                 canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("General tips:", 50, 50)
                 canvas_context.fillText("Holding shift (or z) and mousing over almost anything in the game will give you more information.", 100, 100)
@@ -17350,11 +17810,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 canvas_context.drawImage(title, 0, 0, 1280, 720, 0, 0, 1920, 1080)
                 tutButton.draw()
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Tutorial", tutButton.x + 10, tutButton.y + 30)
                 modeButton.draw()
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 if (mode == 1) {
                     canvas_context.fillText(`Mode: Run!`, modeButton.x + 10, modeButton.y + 30)
@@ -17366,53 +17826,53 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                 crabButton.draw()
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Crabs", crabButton.x + 10, crabButton.y + 30)
 
                 energyButton.draw()
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Energy", energyButton.x + 10, energyButton.y + 30)
 
                 gumButton.draw()
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Gumnut", gumButton.x + 10, gumButton.y + 30)
 
                 numButton.draw()
 
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Numberfolk", numButton.x + 10, numButton.y + 30)
                 plantButton.draw()
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Plants", plantButton.x + 10, plantButton.y + 30)
 
                 blobButton.draw()
-                canvas_context.font = "20px comic sans ms"
+                canvas_context.font = "20px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Blobs", blobButton.x + 10, blobButton.y + 30)
 
                 shieldButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Shieldabeasts", shieldButton.x + 10, shieldButton.y + 30)
 
                 fireButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Fireknives", fireButton.x + 10, fireButton.y + 30)
                 beanButton.draw()
-                canvas_context.font = "17px comic sans ms"
+                canvas_context.font = "17px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Beans", beanButton.x + 8, beanButton.y + 30)
 
                 fishButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Fish", fishButton.x + 10, fishButton.y + 30)
 
@@ -17420,22 +17880,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
                 combButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Hops", combButton.x + 10, combButton.y + 30)
 
                 normButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Pomao's Crew", normButton.x + 10, normButton.y + 30)
 
                 mumButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Mummies", mumButton.x + 10, mumButton.y + 30)
 
                 joButton.draw()
-                canvas_context.font = "18px comic sans ms"
+                canvas_context.font = "18px helvetica"
                 canvas_context.fillStyle = "white"
                 canvas_context.fillText("Play As Echomites", joButton.x + 10, joButton.y + 30)
 
@@ -17459,7 +17919,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 vessel.web = [stars.stars[0].body]
             }
             if (stars.collapsed == 1) {
-            }else{
+            } else {
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1920, 1080)
                 canvas_context.drawImage(starcanvas, 0, 0, 640, 360, 0, 0, 1919, 1079)
 
@@ -17536,7 +17996,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 // let beadX = new X(vessel.weapons[w].metatarget.x+(vessel.weapons[w].metatarget.width*.5), vessel.weapons[w].metatarget.y+(vessel.weapons[w].metatarget.height*.5), "yellow", 10)
                                 // beadX.draw()
                                 canvas_context.fillStyle = "yellow"
-                                canvas_context.font = "10px comic sans ms"
+                                canvas_context.font = "10px helvetica"
                                 canvas_context.fillText(w + 1, bead.x - 3, bead.y + 3)
                             }
                         }
@@ -17585,7 +18045,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 // beadX.draw()
 
                                 canvas_context.fillStyle = "yellow"
-                                canvas_context.font = "10px comic sans ms"
+                                canvas_context.font = "10px helvetica"
                                 canvas_context.fillText(w + 1, bead.x - 3, bead.y + 3)
 
                             }
