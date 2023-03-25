@@ -4468,7 +4468,7 @@ gigadebug = 0
 break
 }
                 if(vessel.guys[t]){
-                    if(!vessel.guys[t].healthbox){
+                    if(vessel.guys[t].healthbox){
                         if(!vessel.guys[t].healthbox.isPointInside(TIP_engine)){
                         vessel.guys[t].selected = 0
                     }
@@ -4635,7 +4635,7 @@ break
                     break
                     }
                 if(dragger.isPointInside(enemy.guys[t].body)){
-                    if(enemy.guys[t].hostile!=1){
+                    if(enemy.guys[t].hostile==1){
                         enemy.guys[t].selected = 1
                     }
                 }
@@ -7388,13 +7388,25 @@ break
             if (this.type == 18) {
                 this.name1 = 'Fire '
                 this.name2 = 'Extinguisher'
-                this.gearvalue = 2
+                this.gearvalue = 1
                 this.armor = .4
                 this.damage = .5
                 this.speed = 0
                 this.regen = 0
                 this.repair = 2
                 this.extinguish = 25
+                this.medical = 0
+            }
+            if (this.type == 19) {
+                this.name1 = 'Vampyro '
+                this.name2 = 'Pod'
+                this.gearvalue = 2.25
+                this.armor = .7
+                this.damage = 2.25
+                this.speed = -1
+                this.regen = .75
+                this.repair = 0
+                this.extinguish = 0
                 this.medical = 0
             }
             if (this.type == 9999) {
@@ -7778,6 +7790,11 @@ break
                     if (this.guy.gear[t].type == 18) {
                         canvas_context.drawImage(fireExtinguisher, 0, 0, 32, 32, x, y, 96, 96)
                     }
+                    if (this.guy.gear[t].type == 19) {
+                        canvas_context.drawImage(podGun, 0, 0, 32, 32, x, y, 96, 96)
+                    }
+
+                    
                     if (this.guy.gear[t].type == 9999) {
                         canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, x, y, 96, 96)
                     }
@@ -8641,6 +8658,11 @@ break
             //         this.gear.push(new Gear(-1, this))
             //     }
             // }
+
+
+            //repair nerf
+            this.repair*= .8
+
             this.rateSto = this.rate
             this.regenSto = this.regen
             this.repairSto = this.repair
@@ -9464,7 +9486,7 @@ break
             
             if (this.tile.air < 50) {
                 this.rate = Math.max(2, this.rateSto - (-this.gearSpeed))
-                if (this.airless == 0) {
+                if (this.airless == 0 && this.shielded <= 0) {
                     if(this.type == 19){
                         this.health -= ((((50 - this.tile.air) / 50) * .5) + .4) // this.health -= ((50 - this.tile.air) / 50) * .5
                         this.stats[0] =  Math.max(2, this.rateSto - (-this.gearSpeed))
@@ -10355,7 +10377,7 @@ break
                 // this.tile.draw()
             }
             if (this.tile.air < 50) {
-                if (this.airless == 0) {
+                if (this.airless == 0 && this.shielded <= 0) {
                     if(this.type == 19){
                         this.health -= ((((50 - this.tile.air) / 50) * .5) + .4) // this.health -= ((50 - this.tile.air) / 50) * .5
                         // this.stats[0] = 50
@@ -10373,7 +10395,9 @@ break
 
             }
             if (this.tile.fire < 50) {
-                if(this.flameheal == 1){
+                if(this.shielded > 0){
+
+                }else if(this.flameheal == 1){
                     this.health += (((50 - this.tile.fire) / 50) * 2)
                 }else  if (this.fireproof == 0) {
                     this.health -= (((50 - this.tile.fire) / 50) * 1.5) + (this.regen * .9)
@@ -10563,8 +10587,8 @@ break
 
             if(this.prevhealth>this.health && this.health < this.maxhealth){
                 if(this.shielded >= 1){
-                    // this.health = this.prevhealth
-                    // this.shielded--
+                    this.health = this.prevhealth
+                    this.shielded--
                 }
             }
             this.prevhealth = this.health
@@ -13765,6 +13789,28 @@ break
                     this.shotCount = 1
                     this.buy = 50
                     this.sell = 32
+
+                }  else if (this.type == 6969) {
+
+                    this.name1 = "Secret"
+                    this.name2 = "Mindsap"
+                    // this.bomb = 1
+                    // this.warp = 1
+                    // this.beam = 1
+                    this.sap = 1
+                    // this.railgun = 0
+                    this.max = 1000
+                    this.damage = 0
+                    this.real = 1
+                    this.crew = 1
+                    this.fireChance = 0
+                    this.double = 0
+                    this.secretDouble = 0
+                    this.shotCount = 1
+                    this.buy = 50
+                    this.sell = 32
+                    this.mind = 1
+                    this.sap = 1
 
                 } else if (this.type == 100) {
                     this.name1 = "Wodopom"
@@ -19183,6 +19229,10 @@ break
                 } else if (this.type == 17) {
                     if (this.firing == 10) {
                         sap1aud.play()
+                        if(!this.target){
+                            this.metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            this.target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                        }
                     }
                     let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing) * 36)) - 20, 5), "#FF000044")
                     ring.draw()
@@ -20856,6 +20906,9 @@ break
                     if (this.droneType == 5) {
                         canvas_context.drawImage(blockDrone, 0, 0, 256, 256, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
+                    if (this.droneType == 6) {
+                        canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
 
                     
                 } else if (this.gearType >= 0) {
@@ -20917,6 +20970,11 @@ break
                     if (this.gearType == 18) {
                         canvas_context.drawImage(fireExtinguisher, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
+                    if (this.gearType == 19) {
+                        canvas_context.drawImage(podGun, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
+
+                    
                     if (this.gearType == 9999) {
                         canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
@@ -23812,12 +23870,18 @@ break
 
                 } else if (this.type == 27) {
                     if (this.firing == 10) {
+                        if(!this.target){
+                            this.metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            this.target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                        }
+
                         sap1aud.pause()
                     }
                     let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
                     ring.draw(1)
                     let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#FFFFFF44")
                     ring2.draw(1)
+                    
                     //this.firing -= .5
                 } else if (this.type == 28) {
                     if (this.firing == 10) {
@@ -24968,6 +25032,9 @@ break
                     if (this.droneType == 5) {
                         canvas_context.drawImage(blockDrone, 0, 0, 256, 256, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
+                    if (this.droneType == 6) {
+                        canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
 
                     
                 } else if (this.gearType >= 0) {
@@ -25030,6 +25097,11 @@ break
                     if (this.gearType == 18) {
                         canvas_context.drawImage(fireExtinguisher, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
+                    if (this.gearType == 19) {
+                        canvas_context.drawImage(podGun, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
+
+                    
                     if (this.guy.gear[t].type == 9999) {
                         canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
@@ -25115,6 +25187,10 @@ break
     superbGlue.src = "superbGlue.png"
     let  beserkblaster = new Image()
     beserkblaster.src = "beserkblaster.png"
+
+    
+    let  podGun = new Image()
+    podGun.src = "podGun.png"
 
     let personnelBlaster = new Image()
     personnelBlaster.src = "personnelBlaster.png"
@@ -27933,10 +28009,23 @@ break
                 this.name1 = "Shielding "
                 this.name2 = "Drone I"
                 this.charge = 0
-                this.max = 1
+                this.max = 1000
                 this.firstCharge = 1000
                 this.real = 1
                 this.buy = 60
+                this.sell = 30
+                this.blocking = 1
+            }
+            if(this.type == 6){
+                this.damage = 0
+                this.weaponType = 6969
+                this.name1 = "Mindsap "
+                this.name2 = "Drone I"
+                this.charge = 0
+                this.max = 500
+                this.firstCharge = 2500
+                this.real = 1
+                this.buy = 40
                 this.sell = 30
                 this.blocking = 1
             }
@@ -27951,6 +28040,7 @@ break
             this.aux2 = new Circle(0,0,21, "orange")
             this.aux3 = new Circle(0,0,15, "yellow")
             this.auxflag = -1
+            this.firstCharge = Math.floor(this.firstCharge*.4)
         }
         explode(){
             this.aux = new Circle(0,0,30, "red")
@@ -28019,6 +28109,9 @@ break
                 }
                 if(this.type == 5){
                     canvas_context.drawImage(blockDrone, 0, 0, blockDrone.width, blockDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if(this.type == 6){
+                    canvas_context.drawImage(mindDrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 canvas_context.fillStyle = "black"
                 canvas_context.font = "10px helvetica"
@@ -28115,6 +28208,9 @@ break
                 }
                 if(this.type == 5){
                     canvas_context.drawImage(blockDrone, 0, 0, blockDrone.width, blockDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if(this.type == 6){
+                    canvas_context.drawImage(mindDrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 canvas_context.fillStyle = "black"
                 canvas_context.font = "10px helvetica"
@@ -28301,18 +28397,33 @@ break
                 }
                 if(this.type == 5){
                     let link = (new LineOP(this.center, this.ship.body)).angle()+(Math.PI*.25)
-                    this.center.x += Math.cos(link)*.6+(Math.random()/10)*4
-                    this.center.y += Math.sin(link)*.6+(Math.random()/10)*4
+                    this.center.x += Math.cos(link)*8+(Math.random()/10)*1
+                    this.center.y += Math.sin(link)*8+(Math.random()/10)*1
                     if((new LineOP(this.center, this.ship.body)).hypotenuse() > 350){
-                        this.center.x -= Math.cos(link-(Math.PI*.25))*.6*.707*1.01*4
-                        this.center.y -= Math.sin(link-(Math.PI*.25))*.6*.707*1.01*4
+                        this.center.x -= Math.cos(link-(Math.PI*.25))*8*.707*1.01*1
+                        this.center.y -= Math.sin(link-(Math.PI*.25))*8*.707*1.01*1
                     }
                     this.center.radius*=1.01
                     if(this.center.radius >= 70){
                         this.center.radius = 70
                     }
-                    this.charge = 0
+                    // this.charge = 0
                     canvas_context.drawImage(blockDrone, 0,0,256,256, this.center.x-this.center.radius,  this.center.y-this.center.radius, this.center.radius*2,this.center.radius*2)
+                }
+                if(this.type == 6){
+                    let link = (new LineOP(this.center, this.ship.body)).angle()+(Math.PI*.25)
+                    this.center.x += Math.cos(link)*8+(Math.random()/10)*1
+                    this.center.y += Math.sin(link)*8+(Math.random()/10)*1
+                    if((new LineOP(this.center, this.ship.body)).hypotenuse() > 350){
+                        this.center.x -= Math.cos(link-(Math.PI*.25))*8*.707*1.01*1
+                        this.center.y -= Math.sin(link-(Math.PI*.25))*8*.707*1.01*1
+                    }
+                    // this.center.radius*=1.01
+                    if(this.center.radius >= 70){
+                        this.center.radius = 70
+                    }
+                    // this.charge = 0
+                    canvas_context.drawImage(mindDrone, 0,0,128,128, this.center.x-this.center.radius,  this.center.y-this.center.radius, this.center.radius*2,this.center.radius*2)
                 }
                 
             }
@@ -28540,6 +28651,9 @@ break
                 }
                 if(this.type == 5){
                     canvas_context.drawImage(blockDrone, 0,0,256,256, this.center.x-this.center.radius,  this.center.y-this.center.radius, this.center.radius*2,this.center.radius*2)
+                }
+                if(this.type == 6){
+                    canvas_context.drawImage(mindDrone, 0,0,128,128, this.center.x-this.center.radius,  this.center.y-this.center.radius, this.center.radius*2,this.center.radius*2)
                 }
                 
             }
@@ -30517,6 +30631,60 @@ break
                             vessel.weapons[x].following = 1
                             vessel.weapons[x].fire()
                         }
+                        
+                        if(this.drones[t].type == 5){
+                            let wep = new Weapon(this.drones[t].weaponType)
+                            wep.temp = 22
+                            let x = enemy.weapons.length
+                            vessel.weapons[x] = wep
+                            vessel.weapons[x].charge = vessel.weapons[x].max
+                            vessel.weapons[x].center.y = this.drones[t].center.y
+                            vessel.weapons[x].center.x = this.drones[t].center.x
+                            vessel.weapons[x].follow = this.drones[t].center
+                            vessel.weapons[x].metatarget = this.drones[t].metatarget
+                            vessel.weapons[x].following = 1
+                            vessel.weapons[x].fire()
+                        }
+                        if(this.drones[t].type == 6){
+                            let wep = new Weapon(17)
+                            wep.temp = 52
+                            let x = vessel.weapons.length
+                            vessel.weapons[x] = wep
+                            vessel.weapons[x].charge = vessel.weapons[x].max
+                            vessel.weapons[x].center.y = this.drones[t].center.y
+                            vessel.weapons[x].center.x = this.drones[t].center.x
+                            vessel.weapons[x].follow = this.drones[t].center
+                            if(this.drones[t].metatarget.x){
+                            // vessel.weapons[x].metatarget = this.drones[t].metatarget
+                            vessel.weapons[x].target = this.drones[t].metatarget
+                            }else{
+                            // vessel.weapons[x].metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            }
+                            vessel.weapons[x].following = 1
+                            vessel.weapons[x].fire(vessel.weapons[x].target )
+
+                            
+                            let wep2 = new Weapon(27)
+                            wep2.temp = 52
+                            let x2 = vessel.weapons.length
+                            vessel.weapons[x2] = wep2
+                            vessel.weapons[x2].charge = vessel.weapons[x2].max
+                            vessel.weapons[x2].center.y = this.drones[t].center.y
+                            vessel.weapons[x2].center.x = this.drones[t].center.x
+                            vessel.weapons[x2].follow = this.drones[t].center
+                            if(this.drones[t].metatarget.x){
+                                // vessel.weapons[x2].metatarget = this.drones[t].metatarget
+                                vessel.weapons[x2].target = this.drones[t].metatarget
+                                }else{
+                                // vessel.weapons[x2].metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                                vessel.weapons[x2].target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            }
+                            vessel.weapons[x2].following = 1
+                            vessel.weapons[x2].fire(vessel.weapons[x2].target)
+
+
+                        }
                     }
                 }
             }
@@ -31575,7 +31743,7 @@ break
                         this.weapons.push(wep4)
                         // this.weapons.push(wep5)
                         this.drones = []
-                        this.drones[0] = new Drone(2, this)
+                        this.drones[0] = new Drone(6, this)
                         this.drones[1] = new Drone(-1, this)
                         this.drones[2] = new Drone(-1, this)
                         this.drones[3] = new Drone(-1, this)
@@ -33963,7 +34131,9 @@ accelerator.play()
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         for (let r = 0; r < rooms.length; r++) {
                             if (this.blocks[t][k][rooms[r]] == 1) {
-                                this.blocks[t][k].integrity = (this.hash[rooms[r]].integrity)
+                                // this.blocks[t][k].integrity = (this.hash[rooms[r]].integrity)
+                                
+                                this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 9)) * .1
                                 // this.blocks[t][k].air = ( this.hash[rooms[r]].air) 
                                 // this.blocks[t][k].fire = ( this.hash[rooms[r]].fire) 
                             }
@@ -35166,7 +35336,7 @@ break
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     for (let r = 0; r < rooms.length; r++) {
                         if (this.blocks[t][k][rooms[r]] == 1) {
-                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
+                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 9)) * .1
                             if (this.blocks[t][k].empty == 1 && this.hull > 0) {
 
                                 this.blocks[t][k].xmom = (Math.random() - .5) * 40
@@ -35253,6 +35423,76 @@ break
                             enemy.weapons[x].follow = this.drones[t].center
                             enemy.weapons[x].following = 1
                         }
+                        
+                        if(this.drones[t].type == 4){
+                            let wep = new Weapon(36)
+                            wep.temp = 2
+                            let x = enemy.weapons.length
+                            enemy.weapons[x] = wep
+                            enemy.weapons[x].charge = enemy.weapons[x].max
+                            enemy.weapons[x].center.y = this.drones[t].center.y
+                            enemy.weapons[x].center.x = this.drones[t].center.x
+                            enemy.weapons[x].follow = this.drones[t].center
+                            enemy.weapons[x].metatarget = this.drones[t].metatarget
+                            enemy.weapons[x].following = 1
+                            enemy.weapons[x].fire()
+                        }
+                        
+                        if(this.drones[t].type == 5){
+                            let wep = new Weapon(this.drones[t].weaponType)
+                            wep.temp = 22
+                            let x = enemy.weapons.length
+                            enemy.weapons[x] = wep
+                            enemy.weapons[x].charge = enemy.weapons[x].max
+                            enemy.weapons[x].center.y = this.drones[t].center.y
+                            enemy.weapons[x].center.x = this.drones[t].center.x
+                            enemy.weapons[x].follow = this.drones[t].center
+                            enemy.weapons[x].metatarget = this.drones[t].metatarget
+                            enemy.weapons[x].following = 1
+                            enemy.weapons[x].fire()
+                        }
+
+                        if(this.drones[t].type == 6){
+                            let wep = new Weapon(17)
+                            wep.temp = 52
+                            let x = enemy.weapons.length
+                            enemy.weapons[x] = wep
+                            enemy.weapons[x].charge = enemy.weapons[x].max
+                            enemy.weapons[x].center.y = this.drones[t].center.y
+                            enemy.weapons[x].center.x = this.drones[t].center.x
+                            enemy.weapons[x].follow = this.drones[t].center
+                            if(this.drones[t].metatarget.x){
+                            // enemy.weapons[x].metatarget = this.drones[t].metatarget
+                            enemy.weapons[x].target = this.drones[t].metatarget
+                            }else{
+                            // enemy.weapons[x].metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            enemy.weapons[x].target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            }
+                            enemy.weapons[x].following = 1
+                            enemy.weapons[x].fire(enemy.weapons[x].target )
+
+                            
+                            let wep2 = new Weapon(27)
+                            wep2.temp = 52
+                            let x2 = enemy.weapons.length
+                            enemy.weapons[x2] = wep2
+                            enemy.weapons[x2].charge = enemy.weapons[x2].max
+                            enemy.weapons[x2].center.y = this.drones[t].center.y
+                            enemy.weapons[x2].center.x = this.drones[t].center.x
+                            enemy.weapons[x2].follow = this.drones[t].center
+                            if(this.drones[t].metatarget.x){
+                                // enemy.weapons[x2].metatarget = this.drones[t].metatarget
+                                enemy.weapons[x2].target = this.drones[t].metatarget
+                                }else{
+                                // enemy.weapons[x2].metatarget = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                                enemy.weapons[x2].target = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            }
+                            enemy.weapons[x2].following = 1
+                            enemy.weapons[x2].fire(enemy.weapons[x2].target)
+
+
+                        }
+                    
                     }
                 }
             }
@@ -35698,12 +35938,12 @@ break
                     if (enemy.guys.length > 0 && enemy.hull > 0) {
                         if (mode == 1) {
                             if (stars.stars[vessel.star].shop != 1) {
-                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/25)  + ` Ship Level: ${this.level}`, 1450, 100)
+                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/66)  + ` Ship Level: ${this.level}`, 1450, 100)
                             }
 
                         } else {
                             if (stars.stars[vessel.star].shop != 1) {
-                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/25) + ` Ship Level: ${this.level}`, 1450, 100)
+                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/66) + ` Ship Level: ${this.level}`, 1450, 100)
                             }
                         }
                     }
@@ -36013,7 +36253,7 @@ break
                     if (ttable[t] >= 3) {
                     } else {
                         for (let k = 0; k < 1; k++) {
-                            let item = new Gear(Math.floor(Math.random() * 19), this.guys[t])
+                            let item = new Gear(Math.floor(Math.random() * 20), this.guys[t])
                             if(gearcount >= item.gearvalue){
                                 this.guys[t].gear.push(item)
                                 ttable[t] = this.guys[t].gear.length
@@ -36134,7 +36374,7 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.05){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else if (this.level < 21) {
 
@@ -36158,10 +36398,10 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.15){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.15){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else if (this.level < 29) {
 
@@ -36201,13 +36441,13 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.70){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.40){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.05){
-                        this.drones[3] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[3] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else {
                     let wep1 = new Weapon(2)
@@ -36266,16 +36506,16 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.90){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.70){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.65){
-                        this.drones[3] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[3] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.05){
-                        this.drones[4] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[4] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 }
             }
@@ -36715,7 +36955,7 @@ accelerator.play()
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     for (let r = 0; r < rooms.length; r++) {
                         if (this.blocks[t][k][rooms[r]] == 1) {
-                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
+                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 9)) * .1
                             if (this.blocks[t][k].empty == 1 && this.hull > 0) {
 
                                 this.blocks[t][k].xmom = (Math.random() - .5) * 40
@@ -37813,7 +38053,7 @@ break
                                 }
 
                                 if (indexd > -1) {
-                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 6)))
+                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 7)))
                                 } else {
                                     this.droneflag = 1
                                 }
@@ -37876,7 +38116,7 @@ break
                                 }
 
                                 if (indexd > -1) {
-                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 6)))
+                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 7)))
                                 } else {
                                     this.droneflag = 1
                                 }
@@ -38397,12 +38637,12 @@ break
                     if (enemy.guys.length > 0 && enemy.hull > 0) {
                         if (mode == 1) {
                             if (stars.stars[vessel.star].shop != 1) {
-                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/25)  + ` Ship Level: ${this.level}`, 1450, 100)
+                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/66)  + ` Ship Level: ${this.level}`, 1450, 100)
                             }
 
                         } else {
                             if (stars.stars[vessel.star].shop != 1) {
-                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/25) + ` Ship Level: ${this.level}`, 1450, 100)
+                                canvas_context.fillText("Powering leap: " + Math.floor(this.frames/66) + ` Ship Level: ${this.level}`, 1450, 100)
                             }
                         }
                     }
@@ -38712,7 +38952,7 @@ break
                     if (ttable[t] >= 3) {
                     } else {
                         for (let k = 0; k < 1; k++) {
-                            let item = new Gear(Math.floor(Math.random() * 19), this.guys[t])
+                            let item = new Gear(Math.floor(Math.random() * 20), this.guys[t])
                             if(gearcount >= item.gearvalue){
                                 this.guys[t].gear.push(item)
                                 ttable[t] = this.guys[t].gear.length
@@ -38833,7 +39073,7 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.05){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else if (this.level < 21) {
 
@@ -38857,10 +39097,10 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.15){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.15){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else if (this.level < 29) {
 
@@ -38900,13 +39140,13 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.70){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.40){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.05){
-                        this.drones[3] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[3] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 } else {
                     let wep1 = new Weapon(2)
@@ -38965,16 +39205,16 @@ break
                         this.drones[0] = new Drone(0, this)
                     }
                     if(Math.random()<.90){
-                        this.drones[1] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[1] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.70){
-                        this.drones[2] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[2] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.65){
-                        this.drones[3] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[3] = new Drone(Math.floor(Math.random()*7), this)
                     }
                     if(Math.random()<.05){
-                        this.drones[4] = new Drone(Math.floor(Math.random()*5), this)
+                        this.drones[4] = new Drone(Math.floor(Math.random()*7), this)
                     }
                 }
             }
@@ -39414,7 +39654,7 @@ accelerator.play()
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     for (let r = 0; r < rooms.length; r++) {
                         if (this.blocks[t][k][rooms[r]] == 1) {
-                            this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
+                            // this.blocks[t][k].integrity = ((this.hash[rooms[r]].integrity) + (this.blocks[t][k].integrity * 99)) * .01
                             if (this.blocks[t][k].empty == 1 && this.hull > 0) {
 
                                 this.blocks[t][k].xmom = (Math.random() - .5) * 40
@@ -40503,7 +40743,7 @@ break
                                 }
 
                                 if (indexd > -1) {
-                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 6)))
+                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 7)))
                                 } else {
                                     this.droneflag = 1
                                 }
@@ -40566,7 +40806,7 @@ break
                                 }
 
                                 if (indexd > -1) {
-                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 6)))
+                                    vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1,-1,-1, Math.floor(Math.random() * 7)))
                                 } else {
                                     this.droneflag = 1
                                 }
@@ -40841,7 +41081,7 @@ break
             if(false){
 
                 for (let t = 0; t < 2; t++) {
-                    this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                    this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -40860,7 +41100,7 @@ break
                 if (Math.random() < .5) {
 
                     for (let t = 0; t < 2; t++) {
-                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -40879,7 +41119,7 @@ break
                     if (Math.random() < .5) {
 
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -40896,7 +41136,7 @@ break
                     } else {
 
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -40921,7 +41161,7 @@ break
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -40935,7 +41175,7 @@ break
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -40953,7 +41193,7 @@ break
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                             }
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -40970,7 +41210,7 @@ break
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                             }
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 19)))
+                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -41275,7 +41515,9 @@ break
     let title = new Image()
     title.src = "title.png"
 
-
+    
+    let mindDrone = new Image()
+    mindDrone.src = "mindDrone.png"
     let blockDrone = new Image()
     blockDrone.src = "blockDrone.png"
     let combatDrone1 = new Image()
