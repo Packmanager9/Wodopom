@@ -4235,6 +4235,9 @@ break
             for (let t = 0; t < vessel.blocks.length; t++) {
                 for (let k = 0; k < vessel.blocks[t].length; k++) {
                     if (vessel.blocks[t][k].isPointInside(TIP_engine) || chet == 0) {
+                        // if(keysPressed['r']){
+                        //     vessel.blocks[t][k].integrity = 0
+                        // }
                         // if (keysPressed['p']) {
                         //     // let guy = new Guy(vessel.supratiles[0], 1)
                         //     // vessel.guys.push(guy)
@@ -4404,6 +4407,7 @@ break
                         if(tile.walkable == true){
                             if (vessel.guys) {
                                 // vessel.guys.sort((a, b) => a.selected > b.selected ? -1 : 1)
+                                                    vessel.guys[selectedIndex].zapto = tile
                                 if (vessel.guys.length > 0) {
                                     if (vessel.guys[selectedIndex].selected == 1) {
                                         whet = 1
@@ -4415,6 +4419,7 @@ break
                                                     vessel.guys[selectedIndex].turning = 1
                                                     vessel.guys[selectedIndex].flagpath = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
                                                     vessel.guys[selectedIndex].stogo = tile
+                                                    vessel.guys[selectedIndex].zapto = tile
                                                 }
                                                 if (vessel.guys[selectedIndex].flagpath.length > 1) {
                                                     vessel.guys[selectedIndex].selected = 0
@@ -4423,6 +4428,7 @@ break
                                                 if (zopen == 0) {
                                                     vessel.guys[selectedIndex].path = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
                                                     vessel.guys[selectedIndex].stogo = tile
+                                                    vessel.guys[selectedIndex].zapto = tile
                                                 }
                                                 if (vessel.guys[selectedIndex].path.length > 1) {
                                                     vessel.guys[selectedIndex].selected = 0
@@ -4480,6 +4486,9 @@ break
             for (let t = 0; t < enemy.blocks.length; t++) {
                 for (let k = 0; k < enemy.blocks[t].length; k++) {
                     if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
+                        // if(keysPressed['r']){
+                        //     enemy.blocks[t][k].integrity = 0
+                        // }
                         // if (keysPressed['p']) {
                         //     enemy.blocks[t][k].fire = -100
                         //     // enemy.blocks[t][k].onFire = 1
@@ -4553,6 +4562,7 @@ break
 
                         if (enemy.guys) {
                             enemy.guys.sort((a, b) => a.selected > b.selected ? -1 : 1)
+                            // enemy.guys[0].zapto = tile
                             if (enemy.guys.length > 0) {
                                 if (enemy.guys[0].selected == 1) {
                                     whet = 1
@@ -4563,12 +4573,14 @@ break
                                             enemy.guys[0].turning = 1
                                             enemy.guys[0].flagpath = astar.search(enemy, enemy.guys[0].tile, tile)
                                             enemy.guys[0].stogo = tile
+                                            enemy.guys[0].zapto = tile
                                             if (enemy.guys[0].flagpath.length > 1) {
                                                 enemy.guys[0].selected = 0
                                             }
                                         } else {
                                             enemy.guys[0].path = astar.search(enemy, enemy.guys[0].tile, tile)
                                             enemy.guys[0].stogo = tile
+                                            enemy.guys[0].zapto = tile
                                             if (enemy.guys[0].path.length > 1) {
                                                 enemy.guys[0].selected = 0
                                             }
@@ -7200,6 +7212,7 @@ break
             this.shieldTimer = -1
             this.extinguish = 0
             this.frame = 0
+            this.teleporting = 0
             if (this.type == 0) {
                 this.gearvalue = 2
                 this.name1 = 'Basic Body '
@@ -7409,6 +7422,19 @@ break
                 this.extinguish = 0
                 this.medical = 0
             }
+            if (this.type == 20) {
+                this.name1 = 'Personal '
+                this.name2 = 'Teleporter'
+                this.gearvalue = 2
+                this.armor = 0
+                this.damage = 0
+                this.speed = 0
+                this.regen = 0
+                this.repair = 0
+                this.extinguish = 0
+                this.medical = 0
+                this.teleporting = 1
+            }
             if (this.type == 9999) {
                 this.name1 = 'Broken '
                 this.name2 = 'Rewinder'
@@ -7471,6 +7497,7 @@ break
                     this.guy.shielded = 1
                 }
             }
+            this.guy.teleporting += this.teleporting
             this.guy.gearSpeed += this.speed
             this.guy.gearArmor += this.armor
             this.guy.gearDamage += this.damage
@@ -7793,6 +7820,10 @@ break
                     if (this.guy.gear[t].type == 19) {
                         canvas_context.drawImage(podGun, 0, 0, 32, 32, x, y, 96, 96)
                     }
+                    if (this.guy.gear[t].type == 20) {
+                        this.guy.gear[t].frame+=.05
+                        canvas_context.drawImage(personalTeleporter, (Math.round(this.guy.gear[t].frame)%40)*32, 0, 32, 32, x, y, 96, 96)
+                    }
 
                     
                     if (this.guy.gear[t].type == 9999) {
@@ -7812,6 +7843,7 @@ break
     class Guy {
         constructor(tile, type = -1) {
             this.secretColor = getRandomLightColor()
+            this.teleporting = 0
             // this.skillslist[9] = 1
             // this.skillslist[8] = 1
             this.fighting = -1
@@ -7830,6 +7862,7 @@ break
             this.energydeathtag = 0
             this.name = getRandomLightColor()
             this.tile = tile
+            this.zapto = tile
             if(type != -2){
                 this.tile.walkable = false
             }
@@ -9681,6 +9714,7 @@ break
                             if(n.length > 0){
                             this.path = astar.search(vessel, this.tile, n[0])
                             this.stogo = n[Math.floor(Math.random() * n.length)]
+                            this.zapto = n[Math.floor(Math.random() * n.length)]
                             }
                         }
                     }
@@ -9709,6 +9743,7 @@ break
                             if(vessel.supratiles[t].doorway == -1 && vessel.supratiles[t].walkable == true){
                                 this.path = astar.search(vessel, this.tile, vessel.supratiles[t])
                                 this.stogo = vessel.supratiles[t]
+                                this.zapto = vessel.supratiles[t]
                                 if(Math.random()<.055){
                                     break
                                 }
@@ -10181,6 +10216,48 @@ break
             }
             //bodydraw
 
+            if(this.teleporting > 0&& this.zapto.walkable == true){
+                if(this.tile !=  this.zapto){
+                    for(let t = 0;t<25;t++){
+                        if(t%3==0){
+
+                            let glove = new Circle(this.body.x, this.body.y, 3, "magenta", (Math.random()-.5)*10,  (Math.random()-.5)*10)
+                            glove.life = 7
+                            globalParticles.push(glove)
+                        }else if(t%3==1){
+                            
+                            let glove = new Circle(this.body.x, this.body.y, 3, "cyan", (Math.random()-.5)*2,  (Math.random()-.5)*10)
+                            glove.life = 7
+                            globalParticles.push(glove)
+                            }else if(Math.random()<.3){
+                            
+                                let glove = new Circle(this.body.x, this.body.y, 3, "yellow", (Math.random()-.5)*10,  (Math.random()-.5)*2)
+                                glove.life = 7
+                                globalParticles.push(glove)
+                                }
+                    }
+                    this.cound = 0
+                    
+                    this.tile.walkable = true
+                    this.tile = this.zapto
+                    this.path = [this.zapto]
+                    if(this.stretch == 1){
+                        this.tiles = [this.zapto, this.zapto, this.zapto, this.zapto, this.zapto, this.zapto]
+                    }
+                    this.zapto.walkable = false
+                    this.tile.walkable = false
+                }
+            }
+            if(this.teleporting > 0){
+                this.path = [this.zapto]
+                this.cound =0 
+                this.tile.walkable = false
+                this.zapto.walkable = false
+                if(this.stretch == 1){
+                    this.tiles = [this.zapto, this.zapto, this.zapto, this.zapto, this.zapto, this.zapto]
+                }
+            }
+
             if (this.turning > 0) {
                 if (this.path[1] == this.flagpath[1]) {
                     this.turning = 0
@@ -10247,7 +10324,31 @@ break
                         }
                     }
                 }
-                if (this.path[this.step]) {
+                if(this.teleporting > 0&& this.zapto.walkable == true){
+                    // if(this.tile !=  this.zapto){
+                    //     for(let t = 0;t<25;t++){
+                    //         if(Math.random()<.3){
+
+                    //             let glove = new Circle(this.body.x, this.body.y, 3, "magenta", (Math.random()-.5)*10,  (Math.random()-.5)*10)
+                    //             glove.life = 10
+                    //             globalParticles.push(glove)
+                    //         }else if(Math.random()<.3){
+                                
+                    //             let glove = new Circle(this.body.x, this.body.y, 3, "cyan", (Math.random()-.5)*2,  (Math.random()-.5)*10)
+                    //             glove.life = 10
+                    //             globalParticles.push(glove)
+                    //             }else if(Math.random()<.3){
+                                
+                    //                 let glove = new Circle(this.body.x, this.body.y, 3, "yellow", (Math.random()-.5)*10,  (Math.random()-.5)*2)
+                    //                 glove.life = 10
+                    //                 globalParticles.push(glove)
+                    //                 }
+                    //     }
+                    // }
+                    // this.cound = 0
+                    // this.tile = this.zapto
+                    // this.path = [this.zapto]
+                }else   if (this.path[this.step]) {
 
                     this.tile = this.path[this.step]
                 }
@@ -10313,7 +10414,6 @@ break
                                 this.path = astar.search(vessel, this.tile, this.stogo)
                             }
                         } else {
-
                             if(this.stogo.walkable == false){
                                 let n = enemy.neighbors(this.stogo)
                                 if(n.length == 0){
@@ -10575,6 +10675,7 @@ break
         justgearbalance(){
             
             this.gearSpeed = 0
+            this.teleporting = 0
             this.gearArmor = this.gearArmorSto
             this.gearDamage = 0
             this.airless = this.airlessSto
@@ -10601,6 +10702,7 @@ break
         gearbalance(){
             
             this.gearSpeed = 0
+            this.teleporting = 0
             this.gearArmor = this.gearArmorSto
             this.gearDamage = 0
             this.airless = this.airlessSto
@@ -12924,6 +13026,10 @@ break
                         this.buy = 70
                         this.sell = 40
                     }
+                    if (this.gearType == 20) {
+                        this.buy = 100
+                        this.sell = 40
+                    }
                     this.buy = Math.floor(this.buy * .5)
                     this.sell = Math.floor(this.sell * .5)
                 } else {
@@ -12942,6 +13048,10 @@ break
                     }
                     if (this.gearType == 14) {
                         this.buy = 70
+                        this.sell = 40
+                    }
+                    if (this.gearType == 20) {
+                        this.buy = 100
                         this.sell = 40
                     }
                 }
@@ -20973,7 +21083,11 @@ break
                     if (this.gearType == 19) {
                         canvas_context.drawImage(podGun, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
-
+                    if (this.gearType == 20) {
+                        this.frame+=.05
+                        canvas_context.drawImage(personalTeleporter,(Math.round(this.frame)%40)*32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
+                    
                     
                     if (this.gearType == 9999) {
                         canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -25101,6 +25215,10 @@ break
                         canvas_context.drawImage(podGun, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                     }
 
+                    if (this.gearType == 20) {
+                        canvas_context.drawImage(personalTeleporter, (Math.round(this.guy.gear[t].frame)%40)*32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                    }
+
                     
                     if (this.guy.gear[t].type == 9999) {
                         canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -25191,6 +25309,9 @@ break
     
     let  podGun = new Image()
     podGun.src = "podGun.png"
+    
+    let  personalTeleporter = new Image()
+    personalTeleporter.src = "personalTeleporter.png"
 
     let personnelBlaster = new Image()
     personnelBlaster.src = "personnelBlaster.png"
@@ -25942,6 +26063,14 @@ break
 
                     } else if (this.type == 8) {
                         let v = new Weapon(-1, -1, 9)
+
+                        // let v = new Weapon(-1, -1, 11)
+                        v.auto = 0
+                        this.wepsto.push(v)
+
+
+                    }else if (this.type == 2) {
+                        let v = new Weapon(-1, -1, 20)
 
                         // let v = new Weapon(-1, -1, 11)
                         v.auto = 0
@@ -27370,6 +27499,15 @@ parto.lifted = 1
                     // this.body.y = ship14doors[vessel.doors.indexOf(this)].body.y
                 }
             }
+            if (vessel.type == 14) {
+                vverts = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+                let drop = [1, 2]
+                let up = [0, 3]
+                if (vessel.doors.includes(this)) {
+                    // this.body.x = ship14doors[vessel.doors.indexOf(this)].body.x
+                    // this.body.y = ship14doors[vessel.doors.indexOf(this)].body.y
+                }
+            }
             if(vessel.doors.includes(this)){
 
                 if (vverts.includes(vessel.doors.indexOf(this))) {
@@ -27727,6 +27865,15 @@ break
                     // this.body.y = ship14doors[vessel.doors.indexOf(this)].body.y
                 }
             }
+            if (vessel.type == 14) {
+                vverts = [ 0,3,11,7,10,8]
+                let drop = [1, 2]
+                let up = [0, 3]
+                if (vessel.doors.includes(this)) {
+                    // this.body.x = ship14doors[vessel.doors.indexOf(this)].body.x
+                    // this.body.y = ship14doors[vessel.doors.indexOf(this)].body.y
+                }
+            }
             if (vverts.includes(vessel.doors.indexOf(this))) {
                 if (this.body.color == "#00ff00") {
                     let rect = new RectangleR(this.body.x - 2, this.body.y - (this.count * 10), 4, 4, this.body.color)
@@ -27874,7 +28021,20 @@ break
                         for (let k = 0; k < vessel.blocks[t].length; k++) {
                             if (vessel.blocks[t][k].doesPerimeterTouch(this.body)) {
                                 // ////////////////////////////////console.log(vessel.doors.indexOf(this))
-                                vessel.blocks[t][k].doorway *= -1
+
+                                let debt = 0
+                                for(let d = 0;d<vessel.doors.length;d++){
+                                    if(this == vessel.doors[d]){
+                                        continue
+                                    }else{
+                                        if(vessel.blocks[t][k].doesPerimeterTouch(vessel.doors[d].body)&&vessel.doors[d].airlock !=1){
+                                            debt = 1
+                                        }
+                                    }
+                                }
+                                if(debt ==0 ){
+                                    vessel.blocks[t][k].doorway *= -1
+                                }
                                 wet = 1
                                 if (vessel.blocks[t][k].doorway == 1) {
                                     this.body.color = "#00ff00"
@@ -28659,6 +28819,15 @@ break
             }
 
 
+            if(this.auxflag > 0){
+                // this.auxflag--
+                // this.aux.radius+=Math.random()*2
+                // this.aux2.radius+=Math.random()*2
+                // this.aux3.radius+=Math.random()*2
+                this.aux.draw()
+                this.aux2.draw()
+                this.aux3.draw()
+            }
             
         }
 
@@ -28919,6 +29088,12 @@ break
                             tile[keys[f]] = ship14[t][k][keys[f]]
                         }
                     }
+                    if (this.type == 14) {
+                        let keys = Object.keys(ship15[t][k])
+                        for (let f = 0; f < keys.length; f++) {
+                            tile[keys[f]] = ship15[t][k][keys[f]]
+                        }
+                    }
                     ////////////////////////////////////////////////////////////////////////////////////////console.log(tile)
                     if (tile.color == "#ff000044") {
                         ////////////////////////////////////////////////////////////////////////////////////////console.log("h")
@@ -28982,7 +29157,7 @@ break
 
                             }
 
-                            if (this.type == 9 || this.type == 8 ||this.type == 10 || this.type == 12) {
+                            if (this.type == 9 || this.type == 8 ||this.type == 10 || this.type == 12|| this.type == 14) {
                                 tile.color = "#152638"
                                 tile.empty = 1
                             }
@@ -29455,6 +29630,16 @@ break
                         this.doors.push(new Door(ship14doors[t].body.x - 0, ship14doors[t].body.y + 0))
                     } else {
                         this.doors.push(new Airlock(ship14doors[t].body.x - 0, ship14doors[t].body.y + 0))
+                    }
+                }
+            }
+
+            if (this.type == 14) {
+                for (let t = 0; t < ship15doors.length; t++) {
+                    if (t <= 11) {
+                        this.doors.push(new Door(ship15doors[t].body.x - 0, ship15doors[t].body.y + 0))
+                    } else {
+                        this.doors.push(new Airlock(ship15doors[t].body.x - 0, ship15doors[t].body.y + 0))
                     }
                 }
             }
@@ -31214,6 +31399,8 @@ break
                         }
                     } else if (this.type == 13) {
                         this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
+                    }else if (this.type == 14) {
+                        this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
                     } else {
                         this.guys = [new Guy(tiles[6], 12), new Guy(tiles[34], 1), new Guy(tiles[90], 11)]
                         if(this.alt == 1){
@@ -31887,6 +32074,22 @@ break
                         // this.weapons.push(new Weapon(43))
                         // this.weapons.push(new Weapon(43))
                         // this.weapons.push(new Weapon(43))
+                    }
+                    if (this.type == 14) {
+                        let wep1 = new Weapon(37)
+                        let wep2 = new Weapon(43)
+                        let wep3 = new Weapon(-1)
+                        let wep4 = new Weapon(-1)
+                        let wep5 = new Weapon(-1)
+                        this.weapons.push(wep1)
+                        this.weapons.push(wep2)
+                        this.weapons.push(wep3)
+                        this.weapons.push(wep4)
+                        this.weapons.push(wep5)
+                        this.drones[0] = new Drone(0, this)
+                        this.drones[1] = new Drone(-1, this)
+                        this.drones[2] = new Drone(-1, this)
+                        this.drones[3] = new Drone(-1, this)
                     }
 
 
@@ -36253,7 +36456,7 @@ break
                     if (ttable[t] >= 3) {
                     } else {
                         for (let k = 0; k < 1; k++) {
-                            let item = new Gear(Math.floor(Math.random() * 20), this.guys[t])
+                            let item = new Gear(Math.floor(Math.random() * 21), this.guys[t])
                             if(gearcount >= item.gearvalue){
                                 this.guys[t].gear.push(item)
                                 ttable[t] = this.guys[t].gear.length
@@ -37564,6 +37767,7 @@ break
                             this.guys[t].turning = 1
                             this.guys[t].flagpath = astar.search(this, this.guys[t].tile, tile)
                             this.guys[t].stogo = tile
+                            this.guys[t].zapto = tile
                             if (this.guys[t].flagpath.length > 1) {
                                 this.guys[t].selected = 0
                             }
@@ -37573,6 +37777,7 @@ break
                             }
                         }
                         this.guys[t].stogo = tile
+                        this.guys[t].zapto = tile
                     }
                 }
             }
@@ -38952,7 +39157,7 @@ break
                     if (ttable[t] >= 3) {
                     } else {
                         for (let k = 0; k < 1; k++) {
-                            let item = new Gear(Math.floor(Math.random() * 20), this.guys[t])
+                            let item = new Gear(Math.floor(Math.random() * 21), this.guys[t])
                             if(gearcount >= item.gearvalue){
                                 this.guys[t].gear.push(item)
                                 ttable[t] = this.guys[t].gear.length
@@ -39328,7 +39533,7 @@ accelerator.play()
                     }else{
                         if(this.guys[t].tile.integrity <= 10){
                         }else{
-                            this.guys[t].tile.integrity -= (this.guys[t].repair*2)/(this.UI.systems[5].max+1)
+                            // this.guys[t].tile.integrity -= (this.guys[t].repair*2)/(this.UI.systems[5].max+1)
                             if(this.guys[t].tile.integrity <= 10){
                                 this.guys[t].tile.integrity = 10
                             }
@@ -39358,7 +39563,7 @@ accelerator.play()
                         }
                     }
                     if(this.hostile != 1){
-                         this.guys[t].tile.integrity += this.guys[t].repair
+                        //  this.guys[t].tile.integrity += this.guys[t].repair
                     }else{
                     }
                     if (this.guys[t].tile.integrity > 100) {
@@ -39422,7 +39627,7 @@ accelerator.play()
                         }
 
                         // this.guys[t].draw()
-                        this.guys[t].tiles[q].integrity += (1 / 6) * this.guys[t].repair
+                        // this.guys[t].tiles[q].integrity += (1 / 6) * this.guys[t].repair
                         if (this.guys[t].tiles[q].integrity > 100) {
                             this.guys[t].tiles[q].integrity = 100
                         }
@@ -40263,6 +40468,7 @@ break
                             this.guys[t].turning = 1
                             this.guys[t].flagpath = astar.search(this, this.guys[t].tile, tile)
                             this.guys[t].stogo = tile
+                            this.guys[t].zapto = tile
                             if (this.guys[t].flagpath.length > 1) {
                                 this.guys[t].selected = 0
                             }
@@ -40272,6 +40478,7 @@ break
                             }
                         }
                         this.guys[t].stogo = tile
+                        this.guys[t].zapto = tile
                     }
                 }
             }
@@ -41081,7 +41288,7 @@ break
             if(false){
 
                 for (let t = 0; t < 2; t++) {
-                    this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                    this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -41100,7 +41307,7 @@ break
                 if (Math.random() < .5) {
 
                     for (let t = 0; t < 2; t++) {
-                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -41119,7 +41326,7 @@ break
                     if (Math.random() < .5) {
 
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -41136,7 +41343,7 @@ break
                     } else {
 
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
@@ -41161,7 +41368,7 @@ break
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 49)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                        this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -41175,7 +41382,7 @@ break
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                            this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -41193,7 +41400,7 @@ break
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                             }
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
@@ -41210,7 +41417,7 @@ break
                                 this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
                             }
                             for (let t = 0; t < 1; t++) {
-                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 20)))
+                                this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                             }
                             for (let t = 0; t < 1; t++) {
                                 this.weapons.push(new Weapon(-1, -1,-1, Math.floor(Math.random()*6)))
