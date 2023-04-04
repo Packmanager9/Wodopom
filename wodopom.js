@@ -28830,6 +28830,7 @@ class Ship {
                 this.distortionPoints.splice(t, 1)
             }
         }
+        canvas_context.imageSmoothingEnabled = true
     }
     justdistorting() {
         distort_context.imageSmoothingEnabled = false
@@ -28856,6 +28857,7 @@ class Ship {
         // canvas_context.globalAlpha = .5
         // canvas_context.globalAlpha = 1
 
+        canvas_context.imageSmoothingEnabled = true
     }
 
     UIdraw() {
