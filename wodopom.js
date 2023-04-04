@@ -41,87 +41,87 @@ for (let t = 0; t < 10000000; t++) {
 }
 let video_recorder
 let recording = 0
-function CanvasCaptureToWEBM(canvas, bitrate) {
-    // it uses the same canvas as the rest of the file.
-    // to start a recording call .record() on video_recorder
-    /*
-    for example, 
-    */
-    this.record = Record
-    this.stop = Stop
-    this.download = saveToDownloads
-    let blobCaptures = []
-    let outputFormat = {}
-    let recorder = {}
-    let canvasInput = canvas.captureStream()
-    if (typeof canvasInput == undefined || !canvasInput) {
-        return
-    }
-    const video = document.createElement('video')
-    video.style.display = 'none'
-    function Record() {
-        let formats = [
-            "video/webm\;codecs=h264",
-            "video/webm\;codecs=vp8",
-            'video/vp8',
-            "video/webm",
-            'video/webm,codecs=vp9',
-            "video/webm\;codecs=daala",
-            "video/mpeg"
-        ];
-        for (let t = 0; t < formats.length; t++) {
-            if (MediaRecorder.isTypeSupported(formats[t])) {
-                outputFormat = formats[t]
-                break
-            }
-        }
-        if (typeof outputFormat != "string") {
-            return
-        } else {
-            let videoSettings = {
-                mimeType: outputFormat,
-                videoBitsPerSecond: bitrate || 2000000 // 2Mbps
-            };
-            blobCaptures = []
-            try {
-                recorder = new MediaRecorder(canvasInput, videoSettings)
-            } catch (error) {
-                return;
-            }
-            recorder.onstop = handleStop
-            recorder.ondataavailable = handleAvailableData
-            recorder.start(100)
-        }
-    }
-    function handleAvailableData(event) {
-        if (event.data && event.data.size > 0) {
-            blobCaptures.push(event.data)
-        }
-    }
-    function handleStop() {
-        const superBuffer = new Blob(blobCaptures, { type: outputFormat })
-        video.src = window.URL.createObjectURL(superBuffer)
-    }
-    function Stop() {
-        recorder.stop()
-        video.controls = true
-    }
-    function saveToDownloads(input) { // specifying a file name for the output
-        const name = input || 'video_out.webm'
-        const blob = new Blob(blobCaptures, { type: outputFormat })
-        const url = window.URL.createObjectURL(blob)
-        const storageElement = document.createElement('a')
-        storageElement.style.display = 'none'
-        storageElement.href = url
-        storageElement.download = name
-        document.body.appendChild(storageElement)
-        storageElement.click()
-        setTimeout(() => {
-            document.body.removeChild(storageElement)
-            window.URL.revokeObjectURL(url)
-        }, 100)
-    }
-}
+// function CanvasCaptureToWEBM(canvas, bitrate) {
+//     // it uses the same canvas as the rest of the file.
+//     // to start a recording call .record() on video_recorder
+//     /*
+//     for example, 
+//     */
+//     this.record = Record
+//     this.stop = Stop
+//     this.download = saveToDownloads
+//     let blobCaptures = []
+//     let outputFormat = {}
+//     let recorder = {}
+//     let canvasInput = canvas.captureStream()
+//     if (typeof canvasInput == undefined || !canvasInput) {
+//         return
+//     }
+//     const video = document.createElement('video')
+//     video.style.display = 'none'
+//     function Record() {
+//         let formats = [
+//             "video/webm\;codecs=h264",
+//             "video/webm\;codecs=vp8",
+//             'video/vp8',
+//             "video/webm",
+//             'video/webm,codecs=vp9',
+//             "video/webm\;codecs=daala",
+//             "video/mpeg"
+//         ];
+//         for (let t = 0; t < formats.length; t++) {
+//             if (MediaRecorder.isTypeSupported(formats[t])) {
+//                 outputFormat = formats[t]
+//                 break
+//             }
+//         }
+//         if (typeof outputFormat != "string") {
+//             return
+//         } else {
+//             let videoSettings = {
+//                 mimeType: outputFormat,
+//                 videoBitsPerSecond: bitrate || 2000000 // 2Mbps
+//             };
+//             blobCaptures = []
+//             try {
+//                 recorder = new MediaRecorder(canvasInput, videoSettings)
+//             } catch (error) {
+//                 return;
+//             }
+//             recorder.onstop = handleStop
+//             recorder.ondataavailable = handleAvailableData
+//             recorder.start(100)
+//         }
+//     }
+//     function handleAvailableData(event) {
+//         if (event.data && event.data.size > 0) {
+//             blobCaptures.push(event.data)
+//         }
+//     }
+//     function handleStop() {
+//         const superBuffer = new Blob(blobCaptures, { type: outputFormat })
+//         video.src = window.URL.createObjectURL(superBuffer)
+//     }
+//     function Stop() {
+//         recorder.stop()
+//         video.controls = true
+//     }
+//     function saveToDownloads(input) { // specifying a file name for the output
+//         const name = input || 'video_out.webm'
+//         const blob = new Blob(blobCaptures, { type: outputFormat })
+//         const url = window.URL.createObjectURL(blob)
+//         const storageElement = document.createElement('a')
+//         storageElement.style.display = 'none'
+//         storageElement.href = url
+//         storageElement.download = name
+//         document.body.appendChild(storageElement)
+//         storageElement.click()
+//         setTimeout(() => {
+//             document.body.removeChild(storageElement)
+//             window.URL.revokeObjectURL(url)
+//         }, 100)
+//     }
+// }
 // const gamepadAPI = {
 //     controller: {},
 //     turbo: true,
@@ -1711,7 +1711,7 @@ let speedsto = 5
 
 function setUp(canvas_pass, style = "#000000") {
     canvas = canvas_pass
-    video_recorder = new CanvasCaptureToWEBM(canvas, 3000000);
+    // video_recorder = new CanvasCaptureToWEBM(canvas, 3000000);
     canvas_context = canvas.getContext('2d');
     starcanvas_context = starcanvas.getContext('2d');
     starcanvas2_context = starcanvas2.getContext('2d');
@@ -27109,6 +27109,28 @@ class Drone {
         }
     }
     draw() {
+
+        let wet = 0
+        if(vessel.guys){
+            for(let t = 0;t<vessel.guys.length;t++){
+                if(vessel.guys[t].droneLine == this){
+                    wet = 1
+                }
+            }
+        }
+        if(enemy.guys){
+            for(let t = 0;t<enemy.guys.length;t++){
+                if(enemy.guys[t].droneLine == this){
+                    wet = 1
+                }
+            }
+        }
+        if(wet == 0){
+            this.flaggedOn = 0
+        }else{
+            this.flaggedOn = 1
+        }
+
         if (vessel.drones.includes(this)) {
             if (this.selected == 1) {
                 if (keysPressed['a']) {
@@ -42460,15 +42482,15 @@ function main() {
         start = 0
     }
     // CanvasC
-    if (keysPressed['-'] && recording == 0) {
-        recording = 1
-        video_recorder.record()
-    }
-    if (keysPressed['='] && recording == 1) {
-        recording = 0
-        video_recorder.stop()
-        video_recorder.download('File Name As A String.webm')
-    }
+    // if (keysPressed['-'] && recording == 0) {
+    //     recording = 1
+    //     video_recorder.record()
+    // }
+    // if (keysPressed['='] && recording == 1) {
+    //     recording = 0
+    //     video_recorder.stop()
+    //     video_recorder.download('File Name As A String.webm')
+    // }
     if (start == 0) {
         if (tut == 1) {
             stframe += 1
