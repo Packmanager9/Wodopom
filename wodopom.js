@@ -222,6 +222,8 @@ class Options {
     constructor(){
         this.shake = 1
         this.shakeText = "Screen Shake On"
+        this.starScroll = 1
+        this.scrollText = "Parallax Stars On"
     }
 }
 let options = new Options()
@@ -2054,6 +2056,17 @@ function setUp(canvas_pass, style = "#000000") {
                     }
                     return
                 } 
+                if (starScrollButton.isPointInside(TIP_engine)) {
+                    options.starScroll *= -1
+                    if(options.starScroll == 1){
+                        options.scrollText = "Parallax Stars On"
+                        starScrollButton.color = "#FF000044"
+                    }else{
+                        options.scrollText = "Parallax Stars Off"
+                        starScrollButton.color = "#00ff0044"
+                    }
+                    return
+                } 
                 if (normButton1.isPointInside(TIP_engine)) {
                     vessel = new Ship(0)
                     start = 1
@@ -3624,11 +3637,15 @@ function setUp(canvas_pass, style = "#000000") {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             vessel.weapons[t].charge = 0
                         }
-                        vessel.fuel--
-                        start = 1
-                        starfirst = 0
-                        enemy = new EnemyShip(Math.floor(Math.random() * 40), enemy.level + 1)
-                        return
+                        if(start!=1){
+
+                            vessel.fuel--
+                            start = 1
+                            starfirst = 0
+                            enemy = new EnemyShip(Math.floor(Math.random() * 40), enemy.level + 1)
+                            return
+
+                        }
                     }
                 } else {
                     if (vessel.jumper.isPointInside(TIP_engine)) {
@@ -6796,12 +6813,12 @@ let shipimage3 = new Image()
 shipimage3.src = "ship4.png"
 let holeimg = new Image()
 holeimg.src = "hole.png"
-for (let t = 1; t < 42; t++) {
+for (let t = 1; t < 44; t++) {
     let ing = new Image()
     ing.src = `r${t}.png`
     rs.push(ing)
 }
-for (let t = 1; t < 42; t++) {
+for (let t = 1; t < 44; t++) {
     let ing = new Image()
     ing.src = `p${t}.png`
     ps.push(ing)
@@ -7063,6 +7080,30 @@ class Gear {
             this.extinguish = 0
             this.medical = 0
             this.teleporting = 1
+        }
+        if (this.type == 8001) {
+            this.name1 = 'Interface '
+            this.name2 = 'Panel'
+            this.buy = 0
+            this.sell = 0
+        }
+        if (this.type == 8002) {
+            this.name1 = 'Drone '
+            this.name2 = 'Fuelpack'
+            this.buy = 0
+            this.sell = 0
+        }
+        if (this.type == 8003) {
+            this.name1 = 'Motor '
+            this.name2 = 'Drive'
+            this.buy = 0
+            this.sell = 0
+        }
+        if (this.type == 8004) {
+            this.name1 = 'Optic '
+            this.name2 = 'Interface'
+            this.buy = 0
+            this.sell = 0
         }
         if (this.type == 9999) {
             this.name1 = 'Broken '
@@ -7437,6 +7478,18 @@ class Gear {
                     this.guy.gear[t].frame += .05
                     canvas_context.drawImage(personalTeleporter, (Math.round(this.guy.gear[t].frame) % 40) * 32, 0, 32, 32, x, y, 96, 96)
                 }
+                if (this.guy.gear[t].type == 8001) {
+                    canvas_context.drawImage(dronePart1, 0, 0, 64, 64, x, y, 96, 96)
+                }
+                if (this.guy.gear[t].type == 8002) {
+                    canvas_context.drawImage(dronePart2, 0, 0, 64, 64, x, y, 96, 96)
+                }
+                if (this.guy.gear[t].type == 8003) {
+                    canvas_context.drawImage(dronePart3, 0, 0, 64, 64, x, y, 96, 96)
+                }
+                if (this.guy.gear[t].type == 8004) {
+                    canvas_context.drawImage(dronePart4, 0, 0, 64, 64, x, y, 96, 96)
+                }
                 if (this.guy.gear[t].type == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, x, y, 96, 96)
                 }
@@ -7479,7 +7532,7 @@ class Guy {
         this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
         this.count = 0
         if (type == -1) {
-            this.type = Math.floor(Math.random() * 41) //there is manterfly don't forget
+            this.type = Math.floor(Math.random() * 43) //there is manterfly don't forget
         } else {
             this.type = type
         }
@@ -7537,7 +7590,7 @@ class Guy {
                 }
                 if (type == -1 && this.type == 11) {
                     while (this.type == 11) {
-                        this.type = Math.floor(Math.random() * 41)
+                        this.type = Math.floor(Math.random() * 43)
                     }
                 }
             }
@@ -7567,72 +7620,72 @@ class Guy {
         if (vessel.type == 0) { }
         // } else {
         //     while (this.type == 11) {
-        //         this.type = Math.floor(Math.random() * 41)
+        //         this.type = Math.floor(Math.random() * 43)
         //     }
         // }
         if (vessel.type == 1) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 2) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 3) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 4) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 5) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 6) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 7) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 8) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 9) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 10) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 11) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type == 12) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         if (vessel.type >= 13) { //enough
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 41)
+                this.type = Math.floor(Math.random() * 43)
             }
         }
         // while (this.type == 18) {
@@ -7675,7 +7728,7 @@ class Guy {
         // }
         let jbreak = 0
         while (this.type == 37 || (type != 40 && this.type == 40) ||  (type != 39 && this.type == 39)  || (type != 36 && this.type == 36)  || (this.isPomao != 1 && this.type == 11)) {
-            this.type = Math.floor(Math.random() * 41)
+            this.type = Math.floor(Math.random() * 43)
             jbreak++
             if(jbreak > 10000){
                 break
@@ -7941,6 +7994,32 @@ class Guy {
             this.names = ["Grobhost", "Hogrobst", "Grobohoze", "Dialshell", "Shellphone", "Ringroll", "Pingslime", "Slipconnect", "Shellantia", "Slurk"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 420
+            this.maxhealth = this.health
+        }
+
+        if (this.type == 41) {
+            this.stats[0] = 8
+            this.rate = 8
+            this.stats[1] += 1
+            this.stats[6] += 1
+            this.damage = 9
+            this.skills += 'Fight+, Weapons+, Engine+'
+            this.names = ["Hiss", "Shhsi", "Hissihys", "Keshhsh", "Hisk", "Hyssis", "Hisshyss", "Ssssss", "Schshss"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 390
+            this.maxhealth = this.health
+        }
+        if (this.type == 42) {
+            this.stats[0] = 12
+            this.rate = 12
+            this.stats[2] += 1
+            this.stats[6] += 1
+            this.damage = 5
+            this.repair +=1
+            this.skills += 'Healthy+, Shield+, Engine+, Repair+'
+            this.names = ["Wooo", "Hawooo", "Woogaa", "Ahhaoo", "Ooohoo", "Woohehoo", "Snaaa", "Booouh", "Hawahao"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 500
             this.maxhealth = this.health
         }
         if (this.type == 28) {
@@ -8215,6 +8294,7 @@ class Guy {
             this.health = 100
             this.maxhealth = this.health 
             this.temp = 2500
+            this.gear = [new Gear(8001, this), new Gear(8002, this), new Gear(8003, this), new Gear(8004, this)]
         }
         if (this.type == 40) {
             this.rate = 6
@@ -8230,6 +8310,7 @@ class Guy {
             this.health = 400
             this.maxhealth = this.health 
             this.temp = 2500
+            this.gear = [new Gear(8001, this), new Gear(8002, this), new Gear(8003, this), new Gear(8004, this)]
         }
         if (this.type == 6) {
             this.stats[5] += 1
@@ -8348,6 +8429,25 @@ class Guy {
             // if(this.health <= 0){
             //     // this.droneLine.flaggedOn = 0
             // }
+        }else if(this.temp > -1){
+            let count = 0
+            for(let t = 0;t<this.gear.length;t++){
+                if(this.gear[t].type == 8001 && t == 0){
+                    count++
+                }
+                if(this.gear[t].type == 8002 && t == 1){
+                    count++
+                }
+                if(this.gear[t].type == 8003 && t == 2){
+                    count++
+                }
+                if(this.gear[t].type == 8004 && t == 3){
+                    count++
+                }
+            }
+            if(count != 4){
+                this.health -= 11
+            }
         }
         if(this.addtiles > 0){
             this.tiles.push(this.tile)
@@ -12841,12 +12941,20 @@ class Weapon {
                     this.sell = 40
                 }
             }
+                if (this.gearType >= 8000 && this.gearType <= 8010) {
+                    this.buy = 0
+                    this.sell = 0
+                }
         } else if (crew != -1) {
             this.real = 1
             // let crew2 = new Guy({}, crew)
             this.firing = -1
             this.crewType = crew
-            if (this.crewType == 11) {
+            if (this.crewType == 11) { //
+                this.crewType = 10
+            }
+
+            if (this.crewType == 37 || (this.crewType == 40) ||  (this.crewType == 39)  || (this.crewType == 36)  || (this.crewType == 11)) {
                 this.crewType = 10
             }
             this.name1 = "Hire"
@@ -20411,6 +20519,19 @@ class Weapon {
                     this.frame += .05
                     canvas_context.drawImage(personalTeleporter, (Math.round(this.frame) % 40) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
+
+                if (this.gearType == 8001) {
+                    canvas_context.drawImage(dronePart1, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8002) {
+                    canvas_context.drawImage(dronePart2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8003) {
+                    canvas_context.drawImage(dronePart3, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8004) {
+                    canvas_context.drawImage(dronePart4, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                }
                 if (this.gearType == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
@@ -23636,21 +23757,21 @@ class Weapon {
                     }
                     if (this.missed != 1) {
                         if (vessel.weapons.includes(this)) {
-                            enemy.hull -= this.damage * .1
+                            // enemy.hull -= this.damage * .1
                             for (let t = 0; t < enemy.guys.length; t++) {
                                 if (enemy.guys[t].tile == this.target) {
-                                    enemy.guys[t].health -= this.damage / (1 + (enemy.guys[t].gearArmor))
+                                    // enemy.guys[t].health -= this.damage / (1 + (enemy.guys[t].gearArmor))
                                 }
                             }
                         } else {
-                            vessel.hull -= this.damage * .1
+                            // vessel.hull -= this.damage * .1
                             for (let t = 0; t < vessel.guys.length; t++) {
                                 if (vessel.guys[t].tile == this.target) {
-                                    vessel.guys[t].health -= this.damage / (1 + (vessel.guys[t].gearArmor))
+                                    // vessel.guys[t].health -= this.damage / (1 + (vessel.guys[t].gearArmor))
                                 }
                             }
                         }
-                        this.target.integrity -= this.damage
+                        // this.target.integrity -= this.damage
                     }
                 }
                 if (this.flaggedDetonation == 0) {
@@ -24204,7 +24325,7 @@ class Weapon {
                 if (this.gearType == 16) {
                     canvas_context.drawImage(shieldGenerator, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
-                if (this.guy.gear[t].type == 17) {
+                if (this.gearType == 17) {
                     this.guy.gear[t].frame += .05
                     canvas_context.drawImage(timeRewinder, (Math.round(this.guy.gear[t].frame) % 17) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
@@ -24217,7 +24338,20 @@ class Weapon {
                 if (this.gearType == 20) {
                     canvas_context.drawImage(personalTeleporter, (Math.round(this.guy.gear[t].frame) % 40) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
-                if (this.guy.gear[t].type == 9999) {
+
+                if (this.gearType == 8001) {
+                    canvas_context.drawImage(dronePart1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8002) {
+                    canvas_context.drawImage(dronePart2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8003) {
+                    canvas_context.drawImage(dronePart3, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 8004) {
+                    canvas_context.drawImage(dronePart4, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
             } else {
@@ -24278,6 +24412,19 @@ let vitalityVestment = new Image()
 vitalityVestment.src = "vitalityVestment.png"
 let superbGlue = new Image()
 superbGlue.src = "superbGlue.png"
+
+
+
+let dronePart1 = new Image()
+dronePart1.src = "dronePart1.png"
+let dronePart2 = new Image()
+dronePart2.src = "dronePart2.png"
+let dronePart3 = new Image()
+dronePart3.src = "dronePart3.png"
+let dronePart4 = new Image()
+dronePart4.src = "dronePart4.png"
+
+
 let beserkblaster = new Image()
 beserkblaster.src = "beserkblaster.png"
 let podGun = new Image()
@@ -27317,7 +27464,7 @@ class Drone {
             this.aux2.draw()
             this.aux3.draw()
         }
-        if (this.active == 1) {
+        if (this.active == 1 && this.internal != 1) {
             this.center.radius *= 1.5
             if (enemy.drones.includes(this)) {
                 for (let t = 0; t < vessel.weapons.length; t++) {
@@ -39126,7 +39273,7 @@ class Star {
                 this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
             }
             for (let t = 0; t < 1; t++) {
                 this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39143,7 +39290,7 @@ class Star {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39160,7 +39307,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39176,7 +39323,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39203,7 +39350,7 @@ class Star {
             } else {
                 if (Math.random() < .2) {
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -39220,7 +39367,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -39236,7 +39383,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                         }
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 36), (new Guy({}, Math.floor(Math.random() * 36)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -42302,6 +42449,7 @@ let tut = -1
 let difficultyButton = new RectangleR(100 * globalRat, 550 * globalRat, 130 * globalRat, 50 * globalRat, "#FF000044")
 let tutButton = new RectangleR(100 * globalRat, 600 * globalRat, 100 * globalRat, 50 * globalRat, "#FF000044")
 let shakeButton = new RectangleR(1700, 0, 220, 50, "#FF000044")
+let starScrollButton = new RectangleR(1700, 50, 220, 50, "#FF000044")
 let modeButton = new RectangleR(100 * globalRat, 650 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
 let crabButton = new RectangleR(900 * globalRat, 600 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
 let crabButton1 = new RectangleR(900 * globalRat, 600 * globalRat, 25 * globalRat, 50 * globalRat, "#FF000044")
@@ -42613,6 +42761,10 @@ function main() {
             canvas_context.font = "20px helvetica"
             canvas_context.fillStyle = "#FFFFFF"
             canvas_context.fillText(options.shakeText, shakeButton.x + 10, shakeButton.y + 30)
+            starScrollButton.draw()
+            canvas_context.font = "20px helvetica"
+            canvas_context.fillStyle = "#FFFFFF"
+            canvas_context.fillText(options.scrollText, starScrollButton.x + 10, starScrollButton.y + 30)
 
 
             shieldButton.draw()
@@ -42701,7 +42853,10 @@ function main() {
         }
         if (stars.collapsed == 1) { } else {
             // vessel.stardist =  ((vessel.stardist * 19) + (((1-vessel.dodgeRate())*.3)+.66)    )/20
-            vessel.starrate += .001
+
+            if(options.starScroll == 1){
+                vessel.starrate += .001
+            }
             if (vessel.starrate > 2560) {
                 vessel.starrate = 0
             }
@@ -42769,9 +42924,11 @@ function main() {
         if (vessel.shake > 0) {
             vessel.shake--
             vessel.stardist = ((vessel.stardist * 19) + (((1 - vessel.dodgeRate()) * .3) + .66)) / 20
+            if(options.starScroll == 1){
             vessel.starrate += (vessel.stardist * .7)
             vessel.starrate2 += (vessel.stardist * .7) * .5
             vessel.starrate3 += (vessel.stardist * .7) * .33
+            }
             if (vessel.starrate > 2560) {
                 vessel.starrate = 0
             }
@@ -42869,9 +43026,11 @@ function main() {
             vessel.shaker()
         } else {
             vessel.stardist = ((vessel.stardist * 19) + (((1 - vessel.dodgeRate()) * .3) + .66)) / 20
+            if(options.starScroll == 1){
             vessel.starrate += (vessel.stardist * .7)
             vessel.starrate2 += (vessel.stardist * .7) * .5
             vessel.starrate3 += (vessel.stardist * .7) * .33
+            }
             if (vessel.starrate > 2560) {
                 vessel.starrate = 0
             }
