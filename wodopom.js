@@ -39683,7 +39683,7 @@ class Stars {
         this.subdots = []
         for(let t = 0;t<44;t++){
             let faction = {}
-            faction.type = t
+            faction.type = t%43
             faction.color = getRandomColor()
             this.factions.push(faction)
             this.boxes.push([])
