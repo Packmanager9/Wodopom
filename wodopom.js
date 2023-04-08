@@ -413,6 +413,83 @@ class LineOP {
         canvas_context.lineWidth = linewidthstorage
     }
 }
+class LineOPS {
+    constructor(object, target, color, width) {
+        this.object = object
+        this.target = target
+        this.color = color
+        this.width = width
+    }
+    intersects(line) {
+        var det, gm, lm;
+        if (line) {
+            if (this.target) {
+                if (this.object) {
+                    if (line.object) {
+                        if (line.target) {
+                            det = (this.target.x - this.object.x) * (line.target.y - line.object.y) - (line.target.x - line.object.x) * (this.target.y - this.object.y);
+                        }
+                    }
+                }
+            }
+        }
+        if (det === 0) {
+            return false;
+        } else {
+            if (line) {
+                if (this.target) {
+                    if (this.object) {
+                        if (line.object) {
+                            if (line.target) {
+                                lm = ((line.target.y - line.object.y) * (line.target.x - this.object.x) + (line.object.x - line.target.x) * (line.target.y - this.object.y)) / det;
+                                gm = ((this.object.y - this.target.y) * (line.target.x - this.object.x) + (this.target.x - this.object.x) * (line.target.y - this.object.y)) / det;
+                                return (0 <= lm && lm <= 1) && (0 <= gm && gm <= 1);
+                            }
+                        }
+                    }
+                }
+            }
+            return false
+        }
+    }
+    squareDistance() {
+        let xdif = this.object.x - this.target.x
+        let ydif = this.object.y - this.target.y
+        let squareDistance = (xdif * xdif) + (ydif * ydif)
+        return squareDistance
+    }
+    hypotenuse() {
+        let xdif = this.object.x - this.target.x
+        let ydif = this.object.y - this.target.y
+        let hypotenuse = (xdif * xdif) + (ydif * ydif)
+        if (hypotenuse < 10000000 - 1) {
+            if (hypotenuse > 1000) {
+                return squaretable[`${Math.round(10 * Math.round((hypotenuse * .1)))}`]
+            } else {
+                return squaretable[`${Math.round(hypotenuse)}`]
+            }
+        } else {
+            return Math.sqrt(hypotenuse)
+        }
+    }
+    angle() {
+        return Math.atan2(this.object.y - this.target.y, this.object.x - this.target.x)
+    }
+    draw(srt = '', redu = 1) {
+        let linewidthstorage = canvas_context.lineWidth
+        if (srt != 1) {
+            canvas_context.strokeStyle = this.color + srt
+        } else {
+            canvas_context.strokeStyle = this.color
+        }
+        canvas_context.lineWidth = this.width * redu
+        // canvas_context.beginPath()
+        // canvas_context.moveTo(this.object.x, this.object.y)
+        canvas_context.lineTo(this.target.x, this.target.y)
+        // canvas_context.stroke()
+        canvas_context.lineWidth = linewidthstorage
+    }
+}
 class LineOPX {
     constructor(object, target, color, width) {
         this.object = object
@@ -7727,12 +7804,17 @@ class Guy {
         //     this.skillslist[t] = 1+Math.random()
         // }
         let jbreak = 0
-        while (this.type == 37 || (type != 40 && this.type == 40) ||  (type != 39 && this.type == 39)  || (type != 36 && this.type == 36)  || (this.isPomao != 1 && this.type == 11)) {
-            this.type = Math.floor(Math.random() * 43)
-            jbreak++
-            if(jbreak > 10000){
-                break
+        if(this.isPomao != 1){
+            while (this.type == 37 || (type != 40 && this.type == 40) ||  (type != 39 && this.type == 39)  || (type != 36 && this.type == 36)  || (this.isPomao == 1 && this.type == 11)) {
+                this.type = Math.floor(Math.random() * 43)
+                jbreak++
+                if(jbreak > 10000){
+                    break
+                }
             }
+        }
+        if(this.isPomao == 1){
+            this.type = 11
         }
 
         this.damage = 5
@@ -8345,7 +8427,8 @@ class Guy {
             this.names = ["Mani", "Stock", "Ockman", "Iasto", "Stoman", "Smanto", "Namitos", "Numman", "Manth", "Nine"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
         }
-        if (this.type == 11) {
+        if (this.type == 11 || this.isPomao == 1) {
+            this.type = 11
             this.stats[3] += 4
             this.helmPower = 1
             this.health = 369
@@ -16776,7 +16859,7 @@ class Weapon {
             if (this.bullets[t].aura == 1) { } else {
                 if (this.missed == 1) { } else {
                     if (this.shrink(t)) {
-                        t--
+                        t-- //suspicious
                         continue
                     }
                     if (this.bullets[t].noline != 1) {
@@ -21722,7 +21805,7 @@ class Weapon {
                     // for(let k = 0;k<)
                 }
                 if (this.justshrink(t)) {
-                    t--
+                    // t-- //suspicious 
                     continue
                 }
                 if (this.bullets[t].noline != 1) {
@@ -21861,7 +21944,7 @@ class Weapon {
             if (this.bullets[t].aura == 1) { } else {
                 if (this.missed == 1) { } else {
                     if (this.justshrink(t)) {
-                        t--
+                        // t-- //suspicious 
                         continue
                     }
                     if (this.bullets[t].noline != 1) {
@@ -34792,6 +34875,12 @@ class EnemyShip {
                     this.guys.push(new Guy(tiles[8]))
                 }
             }
+
+            for(let t = 0;t<this.guys.length;t++){
+                if(Math.random() < .4){
+                    this.guys[t] = new Guy(this.guys[t].tile, stars.stars[vessel.star].faction.type) //starfaction
+                }
+            }
             if (this.level <= 3) { } else {
                 if (Math.random() < .04) {
                     let h = this.guys.length
@@ -37219,7 +37308,7 @@ class EnemyShip {
             emergencyLock.draw(1)
             this.doors.push(emergencyLock)
             if (this.level < 8) {
-                this.guys = [new Guy(tiles[1])]
+                this.guys = [new Guy(tiles[1])] 
             } else if (this.level < 16) {
                 this.guys = [new Guy(tiles[1]), new Guy(tiles[2])]
             } else if (this.level < 24) {
@@ -37243,6 +37332,13 @@ class EnemyShip {
                     this.guys.push(new Guy(tiles[8]))
                 }
             }
+            for(let t = 0;t<this.guys.length;t++){
+                if(Math.random() < .4){
+                    this.guys[t] = new Guy(this.guys[t].tile, stars.stars[vessel.star].faction.type) //starfaction
+                }
+            }
+
+
             if (this.level <= 3) { } else {
                 if (Math.random() < .04) {
                     let h = this.guys.length
@@ -39239,8 +39335,15 @@ class Event {
     draw() { }
     check() { }
 }
+
+let guyTypes = ['Shieldabeast', 'Psybean', 'Oscarto', 'Bobbin', 'Obchovies', 'Crabster', 'Gulpodian', 'Hops', 'Echomites', 'Stockmani', 'Squinians', 'Pomaoranians', 'Potei', "Solalani", "Heaba", 'Geliphants', 'Banandroids', 'Runnybabbits', 'Gumnut', 'Fireknives', 'Kachortian', 'Yuggo', 'Sluggernaut', 'Schmodozers', 'Rushrooms', 'Nhainhainians', 'Missileaneans', 'Grobhostians', 'Doughgnatians', 'Deblobbian', 'Habodians', 'Soarbian', "Bellajarian", 'Mnemonts', 'Junkian', 'Squidbot', "Manterflyian", 'Oscarto', 'Xlitchian', 'Drone', 'Drone', 'Hysisian', "Whalien"]
 class Star {
     constructor(x, y, shop = 0) {
+        this.matrix = []
+
+        for(let k = 0;k<44;k++){
+            this.matrix.push(999999999)
+        }
         this.event = new Event()
         this.shop = 0
         this.color = getRandomLightColor()
@@ -39398,6 +39501,7 @@ class Star {
                 }
             }
         }
+        this.link = new LineOP(this.body, this.body)
     }
     expand() {
         this.body.x -= 640 * globalRat
@@ -39430,6 +39534,8 @@ class Star {
         this.spot.size *= .2
     }
     draw() {
+        this.name = this.spot.color + " System"
+        this.name += ' - ' + guyTypes[this.faction.type] + ' ' + 'Controlled' 
         if (mode == 1) { } else {
             this.link.target = stars.stars[vessel.star].body
             if (this.link.hypotenuse() > 1280) {
@@ -39538,6 +39644,7 @@ class Stars {
             for (let t = 0; this.stars.length < 580; t++) {
                 let star = new Star(((130 / 4) + (Math.random() * (1280))), Math.random() * (canvas.height - 40))
                 let wet = 1
+                star.link = new LineOP(star.body,star.body)
                 for (let k = 0; k < this.stars.length; k++) {
                     if (star.body.doesPerimeterTouch(this.stars[k].body)) {
                         wet = 0
@@ -39557,6 +39664,7 @@ class Stars {
             for (let t = 0; this.stars.length < 4200; t++) {
                 let star = new Star((((140 / 4) * globalRat) + (((Math.random() * (canvas.width))) * (Math.random() - .5) * 3)), ((((Math.random() * (1280)) * (Math.random() - .5))) * 3) + 360)
                 let wet = 1
+                star.link = new LineOP(star.body,star.body)
                 for (let k = 0; k < this.stars.length; k++) {
                     if (star.body.doesPerimeterTouch(this.stars[k].body)) {
                         wet = 0
@@ -39569,8 +39677,123 @@ class Stars {
             }
             this.flag = 0
         }
+
+        this.factions = []
+        this.boxes = []
+        this.subdots = []
+        for(let t = 0;t<44;t++){
+            let faction = {}
+            faction.type = t
+            faction.color = getRandomColor()
+            this.factions.push(faction)
+            this.boxes.push([])
+            if (mode == 1) {
+                let star = new Star(((130 / 4) + (Math.random() * (1280))), Math.random() * (canvas.height - 40))
+
+                    // star.matrix = []
+                    // for(let k = 0;k<44;k++){
+                    //     star.matrix.push(999999999)
+                    // }
+                    star.link = new LineOP(star.body,star.body)
+
+
+                this.subdots.push(star)
+                
+            } else {
+                let star = new Star((((140 / 4) * globalRat) + (((Math.random() * (canvas.width))) * (Math.random() - .5) * 3)), ((((Math.random() * (1280)) * (Math.random() - .5))) * 3) + 360)
+
+                // star.matrix = []
+                // for(let k = 0;k<44;k++){
+                //     star.matrix.push(999999999)
+                // }
+                star.link = new LineOP(star.body,star.body)
+
+
+            this.subdots.push(star)
+
+            }
+        }
+        this.compute1()
     }
+
+  compute1(){
+    for(let t = 0;t<this.stars.length;t++){
+        for(let k = 0;k<this.subdots.length;k++){
+            this.stars[t].link.target = this.subdots[k].body
+            this.stars[t].matrix[k] = this.stars[t].link.hypotenuse()
+        }
+    }
+    this.links = []
+    for(let t = 0;t<this.stars.length;t++){
+        let min = 999999999
+        let secondMin = 999999999
+            for (var i= 0; i< this.stars[t].matrix.length; i++) {
+                if (this.stars[t].matrix[i]< min) {
+                    secondMin = min;
+                    min = this.stars[t].matrix[i]; 
+                } else if (this.stars[t].matrix[i]< secondMin) {
+                    secondMin = this.stars[t].matrix[i]; 
+                }
+            }
+            // let index2 = this.stars[t].matrix.indexOf(secondMin)
+            let index = this.stars[t].matrix.indexOf(min)
+            this.stars[t].color = this.subdots[index].body.color
+            this.stars[t].faction = this.factions[index]
+            this.stars[t].link.target = this.subdots[index].body
+            // if(secondMin < min*1.2){
+                this.stars[t].link.color = this.subdots[index].body.color
+                this.stars[t].link.width = 1
+                this.links.push(this.stars[t].link)
+            // }else{
+            this.boxes[index].push(this.stars[t].body)
+            // this.stars[t].link.color = "transparent"
+            // this.stars[t].link.width = 1
+            // }
+    }
+    this.linkdraw = 1
+
+    // console.log(this.boxes)
+    for(let t = 0;t<this.boxes.length;t++){
+       this.boxes[t] =  grahamScan(this.boxes[t])
+    }
+    console.log(this.boxes)
+}
+
     draw() {
+
+
+        for(let t = 0;t<this.boxes.length;t++){
+            if(this.boxes[t].length > 0){
+
+
+        // canvas_context.beginPath()
+        // canvas_context.moveTo(this.nodes[0].x, this.nodes[0].y)
+        // for (let t = 1; t < this.nodes.length; t++) {
+        //     canvas_context.lineTo(this.nodes[t].x, this.nodes[t].y)
+        // }
+        // canvas_context.lineTo(this.nodes[0].x, this.nodes[0].y)
+        // canvas_context.fill()
+        // canvas_context.stroke()
+        // canvas_context.closePath()
+                canvas_context.beginPath()
+                canvas_context.moveTo(this.boxes[t][0].x, this.boxes[t][0].y)
+                let link = new LineOPS( this.boxes[t][this.boxes[t].length-1], this.boxes[t][0],this.factions[t].color+"44", 3)
+                link.draw()
+                // for(let k = 0;k<this.boxes[t].length;k++){
+                //     // this.boxes[t][k].draw()
+                // }
+                for(let k = 1;k<this.boxes[t].length;k++){
+                    let link = new LineOPS(this.boxes[t][k], this.boxes[t][k-1], this.factions[t].color+"44", 3)
+                    link.draw()
+                }
+                canvas_context.lineTo(this.boxes[t][0].x, this.boxes[t][0].y)
+                canvas_context.fillStyle = this.factions[t].color+"44"
+                canvas_context.fill()
+                canvas_context.stroke()
+            }
+        }
+
+
         this.link = new LineOP(this.stars[vessel.star].body, this.stars[this.to].body, "#FF0000", 2)
         if (mode == 1) {
             if (this.link.hypotenuse() < 420 * 1.5) {
@@ -43150,3 +43373,42 @@ function main() {
         main()
     }
 }
+
+
+  function grahamScan(points) {
+    // Find the point with the lowest y-coordinate (and lowest x-coordinate if there are ties)
+    if(points.length < 3){
+        return points
+    }
+    const startingPoint = points.reduce((lowest, point) => {
+      if (point.y < lowest.y || (point.y === lowest.y && point.x < lowest.x)) {
+        return point;
+      }
+      return lowest;
+    });
+  
+    // Sort the remaining points by polar angle with respect to the starting point
+    const sortedPoints = points
+      .filter(point => point !== startingPoint)
+      .sort((a, b) => {
+        const angleA = Math.atan2(a.y - startingPoint.y, a.x - startingPoint.x);
+        const angleB = Math.atan2(b.y - startingPoint.y, b.x - startingPoint.x);
+        return angleA - angleB;
+      });
+  
+    // Use a stack to keep track of the vertices of the convex hull
+    const stack = [startingPoint];
+    sortedPoints.forEach(point => {
+      while (stack.length > 1 && isPointRightOfLine(point, stack[stack.length - 2], stack[stack.length - 1])) {
+        stack.pop();
+      }
+      stack.push(point);
+    });
+  
+    return stack;
+  }
+  
+  // Helper function to determine if a point is to the right of a line
+  function isPointRightOfLine(point, lineStart, lineEnd) {
+    return ((lineEnd.x - lineStart.x) * (point.y - lineStart.y) - (lineEnd.y - lineStart.y) * (point.x - lineStart.x)) < 0;
+  }
