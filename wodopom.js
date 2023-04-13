@@ -6890,12 +6890,12 @@ let shipimage3 = new Image()
 shipimage3.src = "ship4.png"
 let holeimg = new Image()
 holeimg.src = "hole.png"
-for (let t = 1; t < 44; t++) {
+for (let t = 1; t < 45; t++) {
     let ing = new Image()
     ing.src = `r${t}.png`
     rs.push(ing)
 }
-for (let t = 1; t < 44; t++) {
+for (let t = 1; t < 45; t++) {
     let ing = new Image()
     ing.src = `p${t}.png`
     ps.push(ing)
@@ -7609,7 +7609,7 @@ class Guy {
         this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
         this.count = 0
         if (type == -1) {
-            this.type = Math.floor(Math.random() * 43) //there is manterfly don't forget
+            this.type = Math.floor(Math.random() * 44) //there is manterfly don't forget
         } else {
             this.type = type
         }
@@ -7667,7 +7667,7 @@ class Guy {
                 }
                 if (type == -1 && this.type == 11) {
                     while (this.type == 11) {
-                        this.type = Math.floor(Math.random() * 43)
+                        this.type = Math.floor(Math.random() * 44)
                     }
                 }
             }
@@ -7697,72 +7697,72 @@ class Guy {
         if (vessel.type == 0) { }
         // } else {
         //     while (this.type == 11) {
-        //         this.type = Math.floor(Math.random() * 43)
+        //         this.type = Math.floor(Math.random() * 44)
         //     }
         // }
         if (vessel.type == 1) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 2) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 3) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 4) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 5) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 6) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 7) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 8) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 9) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 10) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 11) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type == 12) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         if (vessel.type >= 13) { //enough
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
             }
         }
         // while (this.type == 18) {
@@ -7806,7 +7806,7 @@ class Guy {
         let jbreak = 0
         if(this.isPomao != 1){
             while (this.type == 37 || (type != 40 && this.type == 40) ||  (type != 39 && this.type == 39)  || (type != 36 && this.type == 36)  || (this.isPomao == 1 && this.type == 11)) {
-                this.type = Math.floor(Math.random() * 43)
+                this.type = Math.floor(Math.random() * 44)
                 jbreak++
                 if(jbreak > 10000){
                     break
@@ -8102,6 +8102,26 @@ class Guy {
             this.names = ["Wooo", "Hawooo", "Woogaa", "Ahhaoo", "Ooohoo", "Woohehoo", "Snaaa", "Booouh", "Hawahao"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 500
+            this.maxhealth = this.health
+        }
+        if (this.type == 43) {
+            this.stats[0] = 5
+            this.rate = 5
+            this.stats[4] += 2
+            this.stats[10] += 1.5
+            this.damage = 5
+            this.isMedbay = 1
+            this.skills += 'Medical+, Oxygen Systems++, Drones++, '
+            this.names = ["Nupromab", "Redlizavir", "Friamectin", "Albendazone", "Myrbildapine", "Arromab", "Alegovir", "Salinazone", "Hydramaxizine", "Solutionx"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            if(this.name == "Solutionx"){
+                this.skills += 'Helm+'
+                this.stats[3]+=1
+            }else{
+                this.skills += 'Engines+'
+                this.stats[6]+=1
+            }
+            this.health = 299
             this.maxhealth = this.health
         }
         if (this.type == 28) {
@@ -14759,7 +14779,9 @@ class Weapon {
             if (vessel.weapons.includes(this)) {
                 if (this.scrap >= 1) {
                     if (vessel.scrap >= this.scrap) {
-                        vessel.scrap -= this.scrap
+                        if(this.temp == -2){
+                            vessel.scrap -= this.scrap
+                        }
                         // return
                     } else {
                         return
@@ -22198,27 +22220,27 @@ class Weapon {
                 link2.draw(1)
                 let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 9 * ((10 - this.firing) / 8.1), "#FFFF00")
                 link3.draw(1)
-                if (this.firing == 10) {
-                    this.firing = 9.9
-                    let rocket = new Circle(this.center.x, this.center.y, 8, "#FFFFFF")
-                    let linkx = new LineOP(this.center, link)
-                    let xmom = Math.cos(linkx.angle())
-                    let ymom = Math.sin(linkx.angle())
-                    xmom *= -linkx.hypotenuse() / 30
-                    ymom *= -linkx.hypotenuse() / 30
-                    rocket.xmom = xmom
-                    rocket.missed = this.missed
-                    rocket.ymom = ymom
-                    rocket.life = 31
-                    rocket.stream = []
-                    rocket.particles = []
-                    rocket.stream = []
-                    if (Math.random() < .31) {
-                        rocket.spiral = (Math.random() - .5) * 100
-                        rocket.spiralTime = Math.floor(Math.random() * 10) + 10
-                    }
-                    //this.rockets.push(rocket)
-                }
+                // if (this.firing == 10) {
+                //     this.firing = 9.9
+                //     let rocket = new Circle(this.center.x, this.center.y, 8, "#FFFFFF")
+                //     let linkx = new LineOP(this.center, link)
+                //     let xmom = Math.cos(linkx.angle())
+                //     let ymom = Math.sin(linkx.angle())
+                //     xmom *= -linkx.hypotenuse() / 30
+                //     ymom *= -linkx.hypotenuse() / 30
+                //     rocket.xmom = xmom
+                //     rocket.missed = this.missed
+                //     rocket.ymom = ymom
+                //     rocket.life = 31
+                //     rocket.stream = []
+                //     rocket.particles = []
+                //     rocket.stream = []
+                //     if (Math.random() < .31) {
+                //         rocket.spiral = (Math.random() - .5) * 100
+                //         rocket.spiralTime = Math.floor(Math.random() * 10) + 10
+                //     }
+                //     //this.rockets.push(rocket)
+                // }
                 if (this.rockets.length == 0) {
                     // //this.firing -= 2
                 } else {
@@ -22240,26 +22262,26 @@ class Weapon {
                 link2.draw(1)
                 let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 12 * ((10 - this.firing) / 8.1), "#FFFF00")
                 link3.draw(1)
-                if (this.firing == 10) {
-                    this.firing = 9.9
-                    let rocket = new Circle(this.center.x, this.center.y, 10, "#FFFFFF")
-                    let linkx = new LineOP(this.center, link)
-                    let xmom = Math.cos(linkx.angle())
-                    let ymom = Math.sin(linkx.angle())
-                    xmom *= -linkx.hypotenuse() / 30
-                    ymom *= -linkx.hypotenuse() / 30
-                    rocket.xmom = xmom
-                    rocket.missed = this.missed
-                    rocket.ymom = ymom
-                    rocket.life = 31
-                    rocket.particles = []
-                    rocket.stream = []
-                    if (Math.random() < .31) {
-                        rocket.spiral = (Math.random() - .5) * 100
-                        rocket.spiralTime = Math.floor(Math.random() * 19)
-                    }
-                    //this.rockets.push(rocket)
-                }
+                // if (this.firing == 10) {
+                //     this.firing = 9.9
+                //     let rocket = new Circle(this.center.x, this.center.y, 10, "#FFFFFF")
+                //     let linkx = new LineOP(this.center, link)
+                //     let xmom = Math.cos(linkx.angle())
+                //     let ymom = Math.sin(linkx.angle())
+                //     xmom *= -linkx.hypotenuse() / 30
+                //     ymom *= -linkx.hypotenuse() / 30
+                //     rocket.xmom = xmom
+                //     rocket.missed = this.missed
+                //     rocket.ymom = ymom
+                //     rocket.life = 31
+                //     rocket.particles = []
+                //     rocket.stream = []
+                //     if (Math.random() < .31) {
+                //         rocket.spiral = (Math.random() - .5) * 100
+                //         rocket.spiralTime = Math.floor(Math.random() * 19)
+                //     }
+                //     //this.rockets.push(rocket)
+                // }
                 if (this.rockets.length == 0) {
                     // //this.firing -= 2
                 } else {
@@ -22282,26 +22304,26 @@ class Weapon {
                 let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 14 * ((10 - this.firing) / 8.1), "#FFFFFF")
                 link3.draw(1)
                 // //this.firing -= 2
-                if (this.firing == 10) {
-                    this.firing = 9.9
-                    let rocket = new Circle(this.center.x, this.center.y, 12, "#FFFFFF")
-                    let linkx = new LineOP(this.center, link)
-                    let xmom = Math.cos(linkx.angle())
-                    let ymom = Math.sin(linkx.angle())
-                    xmom *= -linkx.hypotenuse() / 30
-                    ymom *= -linkx.hypotenuse() / 30
-                    rocket.xmom = xmom
-                    rocket.missed = this.missed
-                    rocket.ymom = ymom
-                    rocket.life = 31
-                    rocket.particles = []
-                    rocket.stream = []
-                    if (Math.random() < .31) {
-                        rocket.spiral = (Math.random() - .5) * 100
-                        rocket.spiralTime = Math.floor(Math.random() * 19)
-                    }
-                    //this.rockets.push(rocket)
-                }
+                // if (this.firing == 10) {
+                //     this.firing = 9.9
+                //     let rocket = new Circle(this.center.x, this.center.y, 12, "#FFFFFF")
+                //     let linkx = new LineOP(this.center, link)
+                //     let xmom = Math.cos(linkx.angle())
+                //     let ymom = Math.sin(linkx.angle())
+                //     xmom *= -linkx.hypotenuse() / 30
+                //     ymom *= -linkx.hypotenuse() / 30
+                //     rocket.xmom = xmom
+                //     rocket.missed = this.missed
+                //     rocket.ymom = ymom
+                //     rocket.life = 31
+                //     rocket.particles = []
+                //     rocket.stream = []
+                //     if (Math.random() < .31) {
+                //         rocket.spiral = (Math.random() - .5) * 100
+                //         rocket.spiralTime = Math.floor(Math.random() * 19)
+                //     }
+                //     //this.rockets.push(rocket)
+                // }
                 if (this.rockets.length == 0) {
                     // //this.firing -= 2
                 } else {
@@ -22324,26 +22346,26 @@ class Weapon {
                 let link3 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 16 * ((10 - this.firing) / 8.1), "#FFFFFF")
                 link3.draw(1)
                 // //this.firing -= 2
-                if (this.firing == 10) {
-                    this.firing = 9.9
-                    let rocket = new Circle(this.center.x, this.center.y, 15, "#FFFFFF")
-                    let linkx = new LineOP(this.center, link)
-                    let xmom = Math.cos(linkx.angle())
-                    let ymom = Math.sin(linkx.angle())
-                    xmom *= -linkx.hypotenuse() / 30
-                    ymom *= -linkx.hypotenuse() / 30
-                    rocket.xmom = xmom
-                    rocket.missed = this.missed
-                    rocket.ymom = ymom
-                    rocket.life = 31
-                    rocket.particles = []
-                    rocket.stream = []
-                    if (Math.random() < .31) {
-                        rocket.spiral = (Math.random() - .5) * 100
-                        rocket.spiralTime = Math.floor(Math.random() * 19)
-                    }
-                    //this.rockets.push(rocket)
-                }
+                // if (this.firing == 10) {
+                //     this.firing = 9.9
+                //     let rocket = new Circle(this.center.x, this.center.y, 15, "#FFFFFF")
+                //     let linkx = new LineOP(this.center, link)
+                //     let xmom = Math.cos(linkx.angle())
+                //     let ymom = Math.sin(linkx.angle())
+                //     xmom *= -linkx.hypotenuse() / 30
+                //     ymom *= -linkx.hypotenuse() / 30
+                //     rocket.xmom = xmom
+                //     rocket.missed = this.missed
+                //     rocket.ymom = ymom
+                //     rocket.life = 31
+                //     rocket.particles = []
+                //     rocket.stream = []
+                //     if (Math.random() < .31) {
+                //         rocket.spiral = (Math.random() - .5) * 100
+                //         rocket.spiralTime = Math.floor(Math.random() * 19)
+                //     }
+                //     //this.rockets.push(rocket)
+                // }
                 if (this.rockets.length == 0) {
                     // //this.firing -= 2
                 } else {
@@ -27898,7 +27920,8 @@ class Ship {
         this.engineCharge = 0
         this.angle = 0
         this.teleButton = new Circle(40, 715, 40, "#AA00AA")
-        this.recallButton = new Circle(40, 630, 40, "#AA00AA")
+        // this.recallButton = new Circle(40, 630, 40, "#AA00AA")
+        this.recallButton = new Circle(120, 715, 40, "#AA00AA")
         this.shake = 0
         this.copies = []
         this.star = 0
@@ -30166,6 +30189,9 @@ class Ship {
                     this.guys = [new Guy(tiles[0], 5), new Guy(tiles[20], 5), new Guy(tiles[31], 5), new Guy(tiles[32], 5)]
                     if (this.alt == 5) {
                         this.guys.push(new Guy(tiles[7], 8))
+                    }       
+                    if (this.alt == 2) {
+                        this.guys[0] = new Guy(tiles[0], 43)
                     }
                 } else if (this.type == 2) {
                     this.guys = [new Guy(tiles[0], 0), new Guy(tiles[20], 0), new Guy(tiles[21], 0), new Guy(tiles[25], 23)]
@@ -31835,6 +31861,9 @@ class Ship {
                     this.guys = [new Guy(tiles[0], 5), new Guy(tiles[20], 5), new Guy(tiles[31], 5), new Guy(tiles[32], 5)]
                     if (this.alt == 5) {
                         this.guys.push(new Guy(tiles[7], 8))
+                    }    
+                    if (this.alt == 2) {
+                        this.guys[0] = new Guy(tiles[0], 43)
                     }
                 } else if (this.type == 2) {
                     this.guys = [new Guy(tiles[0], 0), new Guy(tiles[20], 0), new Guy(tiles[21], 0), new Guy(tiles[25], 23)]
@@ -39336,7 +39365,7 @@ class Event {
     check() { }
 }
 
-let guyTypes = ['Shieldabeast', 'Psybean', 'Oscarto', 'Bobbin', 'Obchovies', 'Crabster', 'Gulpodian', 'Hops', 'Echomites', 'Stockmani', 'Squinians', 'Pomaoranians', 'Potei', "Solalani", "Heaba", 'Geliphants', 'Banandroids', 'Runnybabbits', 'Gumnut', 'Fireknives', 'Kachortian', 'Yuggo', 'Sluggernaut', 'Schmodozers', 'Rushrooms', 'Nhainhainians', 'Missileaneans', 'Grobhostians', 'Doughgnatians', 'Deblobbian', 'Habodians', 'Soarbian', "Bellajarian", 'Mnemonts', 'Junkian', 'Squidbot', "Manterflyian", 'Oscarto', 'Xlitchian', 'Drone', 'Drone', 'Hysisian', "Whalien"]
+let guyTypes = ['Shieldabeast', 'Psybean', 'Oscarto', 'Bobbin', 'Obchovies', 'Crabster', 'Gulpodian', 'Hops', 'Echomites', 'Stockmani', 'Squinians', 'Pomaoranians', 'Potei', "Solalani", "Heaba", 'Geliphants', 'Banandroids', 'Runnybabbits', 'Gumnut', 'Fireknives', 'Kachortian', 'Yuggo', 'Sluggernaut', 'Schmodozers', 'Rushrooms', 'Nhainhainians', 'Missileaneans', 'Grobhostians', 'Doughgnatians', 'Deblobbian', 'Habodians', 'Soarbian', "Bellajarian", 'Mnemonts', 'Junkian', 'Squidbot', "Manterflyian", 'Oscarto', 'Xlitchian', 'Drone', 'Drone', 'Hysisian', "Whalien", "Bugglepills"]
 class Star {
     constructor(x, y, shop = 0) {
         this.matrix = []
@@ -39376,7 +39405,7 @@ class Star {
                 this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
             }
             for (let t = 0; t < 1; t++) {
                 this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39393,7 +39422,7 @@ class Star {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39410,7 +39439,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39426,7 +39455,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
@@ -39453,7 +39482,7 @@ class Star {
             } else {
                 if (Math.random() < .2) {
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -39470,7 +39499,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -39486,7 +39515,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
                         }
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 42), (new Guy({}, Math.floor(Math.random() * 43)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -39683,7 +39712,7 @@ class Stars {
         this.subdots = []
         for(let t = 0;t<44;t++){
             let faction = {}
-            faction.type = t%43
+            faction.type = t%44
             faction.color = getRandomColor()
             this.factions.push(faction)
             this.boxes.push([])
@@ -39995,7 +40024,7 @@ fluff.src = "fluff.png"
 let teleportButton = new Image()
 teleportButton.src = "teleportRepair.png"
 let teleportRepairRecall = new Image()
-teleportRepairRecall.src = "teleportRepairRecall.png"
+teleportRepairRecall.src = "teleportRepairRecall2.png"
 let miscPanels = new Image()
 miscPanels.src = "miscPanels.png"
 let jumpPanel = new Image()
@@ -43412,3 +43441,15 @@ function main() {
   function isPointRightOfLine(point, lineStart, lineEnd) {
     return ((lineEnd.x - lineStart.x) * (point.y - lineStart.y) - (lineEnd.y - lineStart.y) * (point.x - lineStart.x)) < 0;
   }
+
+//   let dist = []
+//   for(let t = 0;t<1000000;t++){
+//     dist.push(0)
+//     for(let k = 0;k<100;k++){
+//         if(Math.random() > (.5 - (dist[t]/200))){
+//             dist[t] += 1
+//         }
+//     }
+//   }
+// dist.sort((a,b) => a>b?1:-1)
+// console.log(dist)
