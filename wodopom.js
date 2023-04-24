@@ -122,6 +122,10 @@ let recording = 0
 //         }, 100)
 //     }
 // }
+
+
+
+
 // const gamepadAPI = {
 //     controller: {},
 //     turbo: true,
@@ -219,11 +223,13 @@ let XS_engine
 let YS_engine
 
 class Options {
-    constructor(){
+    constructor() {
         this.shake = 1
         this.shakeText = "Screen Shake On"
         this.starScroll = 1
         this.scrollText = "Parallax Stars On"
+        this.rightClick = 1
+        this.rightClickText = "Right Click Move Off"
     }
 }
 let options = new Options()
@@ -864,6 +870,166 @@ class Circle {
         return false
     }
 }
+class ExpandingCircle {
+    constructor(x, y, radius, color, xmom = 0, ymom = 0, friction = 1, reflect = 0, strokeWidth = 0, strokeColor = "transparent") {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.xmom = xmom
+        this.ymom = ymom
+        this.friction = friction
+        this.reflect = reflect
+        this.strokeWidth = strokeWidth
+        this.strokeColor = strokeColor
+        this.life = 50
+    }
+    movex(zise) {
+        this.x += this.xmom / zise
+        this.y += this.ymom / zise
+    }
+    draw() {
+        canvas_context.lineWidth = 4
+        canvas_context.strokeStyle = this.color
+        canvas_context.beginPath();
+        this.radius = 15 + (15*(50/(Math.max(this.life,1)*.5)))
+        this.x = this.lock.x
+        this.y = this.lock.y
+        if (this.radius > 0) {
+            canvas_context.arc(this.x, this.y, this.radius, 0, (Math.PI * 2), true)
+            canvas_context.fillStyle = this.color
+            // canvas_context.fill()
+            canvas_context.stroke();
+        } else {
+            ////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        }
+        canvas_context.lineWidth = 1
+    }
+    move() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+    }
+    unmove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    frictiveMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+        this.xmom *= this.friction
+        this.ymom *= this.friction
+    }
+    frictiveunMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.xmom /= this.friction
+        this.ymom /= this.friction
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    isPointInside(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= (this.radius * this.radius)) {
+            return true
+        }
+        return false
+    }
+    doesPerimeterTouch(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+            return true
+        }
+        return false
+    }
+}
 class CircleF {
     constructor(x, y, radius, color, xmom = 0, ymom = 0, friction = 1, reflect = 0, strokeWidth = 0, strokeColor = "transparent") {
         this.x = x
@@ -894,6 +1060,170 @@ class CircleF {
         rad.addColorStop(0.975, "#00FFFF44");
         rad.addColorStop(.995, "#00FFFFAA");
         rad.addColorStop(1, "#00FFFF");
+        canvas_context.arc(this.x, this.y, this.radius, 0, (Math.PI * 2), true)
+        canvas_context.fillStyle = rad
+        canvas_context.fill()
+        // canvas_context.fill()
+        // canvas_context.stroke();
+        // } else {
+        //     ////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        // }
+    }
+    move() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+    }
+    unmove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    frictiveMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+        this.xmom *= this.friction
+        this.ymom *= this.friction
+    }
+    frictiveunMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.xmom /= this.friction
+        this.ymom /= this.friction
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    isPointInside(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= (this.radius * this.radius)) {
+            return true
+        }
+        return false
+    }
+    doesPerimeterTouch(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+            return true
+        }
+        return false
+    }
+}
+class CircleG {
+    constructor(x, y, radius, color, xmom = 0, ymom = 0, friction = 1, reflect = 0, strokeWidth = 0, strokeColor = "transparent") {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.xmom = xmom
+        this.ymom = ymom
+        this.friction = friction
+        this.reflect = reflect
+        this.strokeWidth = strokeWidth
+        this.strokeColor = strokeColor
+    }
+    movex(zise) {
+        this.x += this.xmom / zise
+        this.y += this.ymom / zise
+    }
+    draw() {
+        canvas_context.lineWidth = 2
+        canvas_context.strokeStyle = this.color
+        canvas_context.beginPath();
+        // if (this.radius > 0) {
+        let rad = canvas_context.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius)
+        rad.addColorStop(0, "transparent");
+        rad.addColorStop(0.5, "transparent");
+        rad.addColorStop(0.925, "#88888805");
+        rad.addColorStop(0.935, "#88888830");
+        rad.addColorStop(0.955, "#88888844");
+        rad.addColorStop(.975, "#888888AA");
+        rad.addColorStop(1, "#888888");
         canvas_context.arc(this.x, this.y, this.radius, 0, (Math.PI * 2), true)
         canvas_context.fillStyle = rad
         canvas_context.fill()
@@ -1215,6 +1545,163 @@ class CircleR {
         canvas_context.beginPath();
         // if (this.radius > 0) {
         canvas_context.arc(this.x, this.y, this.radius, 0, (Math.PI * 2), true)
+        canvas_context.fillStyle = this.color
+        // canvas_context.fill()
+        canvas_context.stroke();
+        // } else {
+        //     ////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        // }
+    }
+    move() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+    }
+    unmove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    frictiveMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+        this.xmom *= this.friction
+        this.ymom *= this.friction
+    }
+    frictiveunMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.xmom /= this.friction
+        this.ymom /= this.friction
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    isPointInside(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= (this.radius * this.radius)) {
+            return true
+        }
+        return false
+    }
+    doesPerimeterTouch(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+            return true
+        }
+        return false
+    }
+}
+class CircleA {
+    constructor(a, x, y, radius, color, xmom = 0, ymom = 0, friction = 1, reflect = 0, strokeWidth = 0, strokeColor = "transparent") {
+        this.x = x
+        this.y = y
+        this.a = a
+        this.radius = radius
+        this.color = color
+        this.xmom = xmom
+        this.ymom = ymom
+        this.friction = friction
+        this.reflect = reflect
+        this.strokeWidth = strokeWidth
+        this.strokeColor = strokeColor
+        this.life = 250
+    }
+    movex(zise) {
+        this.x += this.xmom / zise
+        this.y += this.ymom / zise
+    }
+    draw() {
+        canvas_context.lineWidth = 4
+        canvas_context.strokeStyle = this.color
+        canvas_context.beginPath();
+        // if (this.radius > 0) {
+        canvas_context.arc(this.x, this.y, this.radius, this.a, this.a + Math.PI, true)
         canvas_context.fillStyle = this.color
         // canvas_context.fill()
         canvas_context.stroke();
@@ -1790,6 +2277,81 @@ let speedsto = 5
 
 function setUp(canvas_pass, style = "#000000") {
     canvas = canvas_pass
+
+
+
+    canvas.ondrop = dropHandler
+
+
+
+    canvas.ondragover = function (e) {
+        e.preventDefault();
+        return false;
+    };
+
+
+    // let form = document.querySelector('#upload');
+    let file = document.querySelector('.canvas');
+    file.value = {}
+    file.files = []
+    file.value.length = 1
+    console.log(file.value)
+
+    // form.addEventListener('submit', handleSubmit);
+
+
+    function dropHandler(ev) {
+        let reader = new FileReader();
+
+
+        console.log('File(s) dropped');
+
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+                // If dropped items aren't files, reject them
+                if (ev.dataTransfer.items[i].kind === 'file') {
+                    const file = ev.dataTransfer.items[i].getAsFile();
+                    console.log('... file[' + i + '].name = ' + file.name);
+                    //   console.log((file.text()))
+                    file.text().then(result => {
+                        saved = JSON.parse(result)
+                    }).catch(err => {
+                        // process error here
+                    });
+                }
+            }
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            for (let i = 0; i < ev.dataTransfer.files.length; i++) {
+                console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // video_recorder = new CanvasCaptureToWEBM(canvas, 3000000);
     canvas_context = canvas.getContext('2d');
     starcanvas_context = starcanvas.getContext('2d');
@@ -1802,6 +2364,30 @@ function setUp(canvas_pass, style = "#000000") {
     starcanvas.style.background = style
     shipcanvas.style.background = style
     window.setInterval(function () {
+        if (keysPressed['[']) {
+            gameSave()
+            canvas_context.fillStyle = "white"
+            canvas_context.font = "60px helvetica"
+            canvas_context.fillText("Game Saved", 400, 500)
+            keysPressed['['] = false
+            return
+        }
+        if (keysPressed['/']) {
+            gameSave()
+            exportJSON(saved)
+            canvas_context.fillStyle = "white"
+            canvas_context.font = "60px helvetica"
+            canvas_context.fillText("Game Saved", 400, 500)
+            keysPressed['/'] = false
+            return
+        }
+        if (keysPressed[']']) {
+            gameLoad(saved)
+            keysPressed[']'] = false
+            return
+        }
+
+
 
         for (let t = vessel.weapons.length - 1; t > 0; t--) {
             if (vessel.weapons[t].temp <= 0 && vessel.weapons[t].temp > -2) {
@@ -1993,7 +2579,9 @@ function setUp(canvas_pass, style = "#000000") {
     });
     window.addEventListener('contextmenu', e => {
         e.preventDefault()
-        right += 20
+        if (options.rightClick == 0) {
+            right += 20
+        }
         FLEX_engine = canvas.getBoundingClientRect();
         XS_engine = e.clientX - FLEX_engine.left;
         YS_engine = e.clientY - FLEX_engine.top;
@@ -2002,11 +2590,11 @@ function setUp(canvas_pass, style = "#000000") {
         TIP_engine.body = TIP_engine
         // wad.launch(TIP_engine)
         for (let t = 0; t < vessel.weapons.length; t++) {
-            vessel.weapons[t].check2(TIP_engine)
+            vessel.weapons[t].check2(TIP_engine, e.button)
             vessel.weapons[t].beingchecked = 1
         }
         for (let t = 0; t < vessel.drones.length; t++) {
-            vessel.drones[t].check2(TIP_engine)
+            vessel.drones[t].check2(TIP_engine, e.button)
             vessel.drones[t].beingchecked = 1
         }
     })
@@ -2019,7 +2607,7 @@ function setUp(canvas_pass, style = "#000000") {
         //     // }
         //     }
         // }
-        if (e.button == 2) {
+        if (e.button == 2 && options.rightClick == 0) {
             return
         }
         radio.check(TIP_engine)
@@ -2124,26 +2712,26 @@ function setUp(canvas_pass, style = "#000000") {
                 } else { }
                 if (shakeButton.isPointInside(TIP_engine)) {
                     options.shake *= -1
-                    if(options.shake == 1){
+                    if (options.shake == 1) {
                         options.shakeText = "Screen Shake On"
                         shakeButton.color = "#FF000044"
-                    }else{
+                    } else {
                         options.shakeText = "Screen Shake Off"
                         shakeButton.color = "#00ff0044"
                     }
                     return
-                } 
+                }
                 if (starScrollButton.isPointInside(TIP_engine)) {
                     options.starScroll *= -1
-                    if(options.starScroll == 1){
+                    if (options.starScroll == 1) {
                         options.scrollText = "Parallax Stars On"
                         starScrollButton.color = "#FF000044"
-                    }else{
+                    } else {
                         options.scrollText = "Parallax Stars Off"
                         starScrollButton.color = "#00ff0044"
                     }
                     return
-                } 
+                }
                 if (normButton1.isPointInside(TIP_engine)) {
                     vessel = new Ship(0)
                     start = 1
@@ -2622,6 +3210,7 @@ function setUp(canvas_pass, style = "#000000") {
                             vessel.supratiles[t].medbay = 1
                         } else if (vessel.supratiles[t].special == 1) {
                             vessel.supratiles[t].oxygen = 1
+                            vessel.supratiles[t].empty = 1
                             vessel.supratiles[t].special = 0
                         } else if (vessel.supratiles[t].medbay == 1) {
                             vessel.supratiles[t].medbay = 0
@@ -2836,7 +3425,6 @@ function setUp(canvas_pass, style = "#000000") {
                         if (vessel.supratiles[t].security == 1) {
                             vessel.supratiles[t].oxygen = 1
                             vessel.supratiles[t].security = 0
-                            vessel.supratiles[t].empty = 0
                         } else if (vessel.supratiles[t].special == 1) {
                             // vessel.supratiles[t].empty = 1
                             // vessel.supratiles[t].special = 0
@@ -3714,7 +4302,7 @@ function setUp(canvas_pass, style = "#000000") {
                         for (let t = 0; t < vessel.weapons.length; t++) {
                             vessel.weapons[t].charge = 0
                         }
-                        if(start!=1){
+                        if (start != 1) {
 
                             vessel.fuel--
                             start = 1
@@ -3943,7 +4531,7 @@ function setUp(canvas_pass, style = "#000000") {
         }
         for (let t = 0; t < vessel.weapons.length; t++) {
             if (right <= 0) {
-                vessel.weapons[t].check(TIP_engine)
+                vessel.weapons[t].check(TIP_engine, e.button)
             }
         }
         for (let t = 0; t < vessel.drones.length; t++) {
@@ -4527,7 +5115,7 @@ function setUp(canvas_pass, style = "#000000") {
     });
     window.addEventListener('pointermove', continued_stimuli);
     window.addEventListener('pointerup', e => {
-        if (e.button == 2) {
+        if (e.button == 2 && options.rightClick == 0) {
             return
         }
         // radio.counterCheck(TIP_engine)
@@ -5256,7 +5844,38 @@ class Tile {
         }
         let subx = (this.width - 16)
         let subz = (this.width - 16) * .5
-        if (this.special == 1 && this.empty == 1) {
+
+        if (this.oxygen == 1 && this.empty == 1) {
+            if (vessel.supratiles.includes(this)) {
+                if (vessel.hash['oxygen'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[2].max)))) {
+                    canvas_context.drawImage(oxysysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
+                } else {
+                    canvas_context.drawImage(oxysysiconr, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
+                }
+            } else {
+                if (enemy.hash['oxygen'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[2].max)))) {
+                    canvas_context.drawImage(oxysysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
+                } else {
+                    canvas_context.drawImage(oxysysiconr, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
+                }
+            }
+
+            if (this.empty == 1) {
+                if (vessel.supratiles.includes(this)) {
+                    if (vessel.hash['empty'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[8].max)))) {
+                        canvas_context.drawImage(dronesysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
+                    } else {
+                        canvas_context.drawImage(dronesysiconr, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
+                    }
+                } else {
+                    if (enemy.hash['empty'].integrity > 100 * (1 - (1 / (11 - enemy.UI.systems[8].max)))) {
+                        canvas_context.drawImage(dronesysicon, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
+                    } else {
+                        canvas_context.drawImage(dronesysiconr, 0, 0, 16, 16, this.x + subz - 5, this.y + subz - 5, this.width - subx, this.height - subx)
+                    }
+                }
+            }
+        } else if (this.special == 1 && this.empty == 1) {
             if (vessel.supratiles.includes(this)) {
                 if (vessel.hash['special'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[2].max)))) {
                     canvas_context.drawImage(teleportersysicon, 0, 0, 16, 16, this.x + subz + 5, this.y + subz + 5, this.width - subx, this.height - subx)
@@ -6000,6 +6619,48 @@ class Tile {
                                         canvas_context.drawImage(distortionField, 0, 0, healShield2.height, healShield2.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 50) {
                                         canvas_context.drawImage(filament, 0, 0, healShield2.height, healShield2.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 51) {
+                                        canvas_context.drawImage(hotlaser, 0, 0, hotlaser.height, hotlaser.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 52) {
+                                        canvas_context.drawImage(caplaser, 0, 0, caplaser.height, caplaser.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 53) {
+                                        canvas_context.drawImage(capshield, 0, 0, capshield.height, capshield.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 54) {
+                                        canvas_context.drawImage(pongwep, 0, 0, pongwep.height, pongwep.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 55) {
+                                        canvas_context.drawImage(antidevice, 0, 0, antidevice.height, antidevice.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 56) {
+                                        canvas_context.drawImage(spingun1, 0, 0, spingun1.height, spingun1.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 561) {
+                                        canvas_context.drawImage(spingun2, 0, 0, spingun1.height, spingun1.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 562) {
+                                        canvas_context.drawImage(spingun3, 0, 0, spingun1.height, spingun1.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 57) {
+                                        canvas_context.drawImage(bubblegun, 0, 0, bubblegun.height, bubblegun.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 58) {
+                                        canvas_context.drawImage(detwall, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 59) {
+                                        canvas_context.drawImage(lightgun, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 60) {
+                                        canvas_context.drawImage(lightgunc, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 61) {
+                                        canvas_context.drawImage(lightgunh, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 62) {
+                                        canvas_context.drawImage(chainlight, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 63) {
+                                        canvas_context.drawImage(bubbleguncold, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 64) {
+                                        canvas_context.drawImage(bubblegunhot, 0, 0, detwall.height, detwall.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 65) {
+                                        canvas_context.drawImage(meanwave, 0, 0, meanwave.height, meanwave.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    }else if (vessel.weapons[vessel.wepDrawCount].type == 66) {
+                                        canvas_context.drawImage(meanwave2, 0, 0, meanwave.height, meanwave.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    }else if (vessel.weapons[vessel.wepDrawCount].type == 67) {
+                                        canvas_context.drawImage(meanwavez, 0, 0, meanwave.height, meanwave.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    }else if (vessel.weapons[vessel.wepDrawCount].type == 68) {
+                                        canvas_context.drawImage(spotlight, 0, 0, meanwave.height, meanwave.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
+                                    }else if (vessel.weapons[vessel.wepDrawCount].type == 69) {
+                                        canvas_context.drawImage(hotlight, 0, 0, meanwave.height, meanwave.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
                                     }
                                 }
                             }
@@ -6163,6 +6824,48 @@ class Tile {
                                             canvas_context.drawImage(distortionField, 0, 0, healShield2.width, healShield2.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (vessel.weapons[vessel.wepDrawCount].type == 50) {
                                             canvas_context.drawImage(filament, 0, 0, healShield2.width, healShield2.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 51) {
+                                            canvas_context.drawImage(hotlaser, 0, 0, hotlaser.width, hotlaser.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 52) {
+                                            canvas_context.drawImage(caplaser, 0, 0, caplaser.width, caplaser.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 53) {
+                                            canvas_context.drawImage(capshield, 0, 0, capshield.width, capshield.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 54) {
+                                            canvas_context.drawImage(pongwep, 0, 0, pongwep.width, pongwep.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 55) {
+                                            canvas_context.drawImage(antidevice, 0, 0, antidevice.width, antidevice.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 56) {
+                                            canvas_context.drawImage(spingun1, 0, 0, spingun1.width, spingun1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 561) {
+                                            canvas_context.drawImage(spingun2, 0, 0, spingun2.width, spingun1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 562) {
+                                            canvas_context.drawImage(spingun3, 0, 0, spingun3.width, spingun1.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 57) {
+                                            canvas_context.drawImage(bubblegun, 0, 0, bubblegun.width, bubblegun.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 58) {
+                                            canvas_context.drawImage(detwall, 0, 0, detwall.width, detwall.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 59) {
+                                            canvas_context.drawImage(lightgun, 0, 0, lightgun.width, lightgun.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 60) {
+                                            canvas_context.drawImage(lightgunc, 0, 0, lightgun.width, lightgun.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 61) {
+                                            canvas_context.drawImage(lightgunh, 0, 0, lightgun.width, lightgun.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 62) {
+                                            canvas_context.drawImage(chainlight, 0, 0, lightgun.width, lightgun.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 63) {
+                                            canvas_context.drawImage(bubbleguncold, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 64) {
+                                            canvas_context.drawImage(bubblegunhot, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (vessel.weapons[vessel.wepDrawCount].type == 65) {
+                                            canvas_context.drawImage(meanwave, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 66) {
+                                            canvas_context.drawImage(meanwave2, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 67) {
+                                            canvas_context.drawImage(meanwavez, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 68) {
+                                            canvas_context.drawImage(spotlight, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (vessel.weapons[vessel.wepDrawCount].type == 69) {
+                                            canvas_context.drawImage(hotlight, 0, 0, bubbleguncold.width, bubbleguncold.height, (this.x + (this.width * 1)) + 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
                                     }
                                 }
@@ -6284,6 +6987,48 @@ class Tile {
                                         canvas_context.drawImage(distortionFieldr, 0, 0, newBombr1.width, newBombr1.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                     } else if (enemy.weapons[enemy.wepDrawCount].type == 50) {
                                         canvas_context.drawImage(filamentr, 0, 0, newBombr1.width, newBombr1.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 51) {
+                                        canvas_context.drawImage(hotlaserr, 0, 0, hotlaserr.width, hotlaserr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 52) {
+                                        canvas_context.drawImage(caplaserr, 0, 0, caplaserr.width, caplaserr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 53) {
+                                        canvas_context.drawImage(capshieldr, 0, 0, capshield.width, capshield.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 54) {
+                                        canvas_context.drawImage(pongwepr, 0, 0, pongwepr.width, pongwepr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 55) {
+                                        canvas_context.drawImage(antidevicer, 0, 0, antidevice.width, antidevice.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 56) {
+                                        canvas_context.drawImage(spingunr1, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 561) {
+                                        canvas_context.drawImage(spingunr2, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 562) {
+                                        canvas_context.drawImage(spingunr3, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 57) {
+                                        canvas_context.drawImage(bubblegunr, 0, 0, bubblegunr.width, bubblegunr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 58) {
+                                        canvas_context.drawImage(detwallr, 0, 0, detwallr.width, detwallr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 59) {
+                                        canvas_context.drawImage(lightgunr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 60) {
+                                        canvas_context.drawImage(lightguncr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 61) {
+                                        canvas_context.drawImage(lightgunhr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 62) {
+                                        canvas_context.drawImage(chainlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 63) {
+                                        canvas_context.drawImage(bubbleguncoldr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 64) {
+                                        canvas_context.drawImage(bubblegunhotr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 65) {
+                                        canvas_context.drawImage(meanwaver, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 66) {
+                                        canvas_context.drawImage(meanwave2r, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 67) {
+                                        canvas_context.drawImage(meanwavezr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 68) {
+                                        canvas_context.drawImage(spotlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
+                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 69) {
+                                        canvas_context.drawImage(hotlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                     }
                                 }
                             }
@@ -6395,6 +7140,48 @@ class Tile {
                                             canvas_context.drawImage(distortionFieldr, 0, 0, newBombr2.width, newBombr2.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         } else if (enemy.weapons[enemy.wepDrawCount].type == 50) {
                                             canvas_context.drawImage(filamentr, 0, 0, newBombr2.width, newBombr2.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 51) {
+                                            canvas_context.drawImage(hotlaserr, 0, 0, hotlaserr.width, hotlaserr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 52) {
+                                            canvas_context.drawImage(caplaserr, 0, 0, caplaserr.width, caplaserr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 53) {
+                                            canvas_context.drawImage(capshieldr, 0, 0, capshield.width, capshield.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 54) {
+                                            canvas_context.drawImage(pongwepr, 0, 0, pongwepr.width, pongwepr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 55) {
+                                            canvas_context.drawImage(antidevicer, 0, 0, antidevicer.width, antidevicer.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 56) {
+                                            canvas_context.drawImage(spingunr1, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 561) {
+                                            canvas_context.drawImage(spingunr2, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 562) {
+                                            canvas_context.drawImage(spingunr3, 0, 0, spingunr1.width, spingunr1.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 57) {
+                                            canvas_context.drawImage(bubblegunr, 0, 0, bubblegunr.width, bubblegunr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 58) {
+                                            canvas_context.drawImage(detwallr, 0, 0, detwallr.width, detwallr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 59) {
+                                            canvas_context.drawImage(lightgunr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 60) {
+                                            canvas_context.drawImage(lightguncr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 61) {
+                                            canvas_context.drawImage(lightgunhr, 0, 0, lightgunr.width, lightgunr.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 62) {
+                                            canvas_context.drawImage(chainlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 63) {
+                                            canvas_context.drawImage(bubbleguncoldr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 64) {
+                                            canvas_context.drawImage(bubblegunhotr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 65) {
+                                            canvas_context.drawImage(meanwaver, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 66) {
+                                            canvas_context.drawImage(meanwave2r, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        } else if (enemy.weapons[enemy.wepDrawCount].type == 67) {
+                                            canvas_context.drawImage(meanwavezr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (enemy.weapons[enemy.wepDrawCount].type == 68) {
+                                            canvas_context.drawImage(spotlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
+                                        }else if (enemy.weapons[enemy.wepDrawCount].type == 69) {
+                                            canvas_context.drawImage(hotlightr, 0, 0, chainlight.width, chainlight.height, (this.x - (this.width * .5)) - 2.5, this.y + (this.width * .5), this.width * .5, this.height * .5)
                                         }
                                     }
                                 }
@@ -6890,12 +7677,12 @@ let shipimage3 = new Image()
 shipimage3.src = "ship4.png"
 let holeimg = new Image()
 holeimg.src = "hole.png"
-for (let t = 1; t < 45; t++) {
+for (let t = 1; t < 50; t++) {
     let ing = new Image()
     ing.src = `r${t}.png`
     rs.push(ing)
 }
-for (let t = 1; t < 45; t++) {
+for (let t = 1; t < 50; t++) {
     let ing = new Image()
     ing.src = `p${t}.png`
     ps.push(ing)
@@ -7609,7 +8396,7 @@ class Guy {
         this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
         this.count = 0
         if (type == -1) {
-            this.type = Math.floor(Math.random() * 44) //there is manterfly don't forget
+            this.type = Math.floor(Math.random() * 49) //there is manterfly don't forget
         } else {
             this.type = type
         }
@@ -7667,7 +8454,7 @@ class Guy {
                 }
                 if (type == -1 && this.type == 11) {
                     while (this.type == 11) {
-                        this.type = Math.floor(Math.random() * 44)
+                        this.type = Math.floor(Math.random() * 49)
                     }
                 }
             }
@@ -7697,72 +8484,72 @@ class Guy {
         if (vessel.type == 0) { }
         // } else {
         //     while (this.type == 11) {
-        //         this.type = Math.floor(Math.random() * 44)
+        //         this.type = Math.floor(Math.random() * 49)
         //     }
         // }
         if (vessel.type == 1) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 2) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 3) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 4) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 5) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 6) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 7) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 8) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 9) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 10) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 11) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type == 12) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         if (vessel.type >= 13) { //enough
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 44)
+                this.type = Math.floor(Math.random() * 49)
             }
         }
         // while (this.type == 18) {
@@ -7804,19 +8591,21 @@ class Guy {
         //     this.skillslist[t] = 1+Math.random()
         // }
         let jbreak = 0
-        if(this.isPomao != 1){
-            while (this.type == 37 || (type != 40 && this.type == 40) ||  (type != 39 && this.type == 39)  || (type != 36 && this.type == 36)  || (this.isPomao == 1 && this.type == 11)) {
-                this.type = Math.floor(Math.random() * 44)
+        if (this.isPomao != 1) {
+            while (this.type == 37 || (type != 40 && this.type == 40) || (type != 39 && this.type == 39) || (type != 36 && this.type == 36) || (this.isPomao == 1 && this.type == 11)) {
+                this.type = Math.floor(Math.random() * 49)
                 jbreak++
-                if(jbreak > 10000){
+                if (jbreak > 10000) {
                     break
                 }
             }
         }
-        if(this.isPomao == 1){
+        if (this.isPomao == 1) {
             this.type = 11
         }
-
+        if (this.type == 11) {
+            this.type = 10
+        }
         this.damage = 5
         if (this.type == 18) {
             this.stats[0] = 4
@@ -8026,7 +8815,8 @@ class Guy {
             this.fireproof = 1
             this.gearArmorSto = .3
             this.damage = 7
-            this.skills += 'Regen+, Engineer++, Drones++, Armored+, Fight+, Fireproof+'
+            this.metal = 1
+            this.skills += 'Regen+, Engineer++, Drones++, Armored+, Fight+, Fireproof+, Metal Body+'
             this.names = ["Schmodozer", "Shmodozer", "Scodozer", "Doschmozer", "Doughschmachine", "Dozesmo", "Zodoschmo", "Zodomoso", "Honk", "Dozebert"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
         }
@@ -8056,7 +8846,8 @@ class Guy {
             this.airless = 1
             this.fireproof = 1
             // this.isMedbay = 1
-            this.skills += 'Fight+, Armored+, Weapons+++, Drones+++, Explodes--, Breathless+, Fireproof+'
+            this.metal = 1
+            this.skills += 'Fight+, Armored+, Weapons+++, Drones+++, Explodes--, Breathless+, Fireproof+, Metal Body+'
             this.names = ["Missileanous", "Bomsortable", "Blastorize", "Splodganize", "Sortsplosion", "Categorboom", "Plodelist", "Snaptable", "Miscmortar", "Mortganize"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 333
@@ -8082,10 +8873,10 @@ class Guy {
         if (this.type == 41) {
             this.stats[0] = 8
             this.rate = 8
-            this.stats[1] += 1
-            this.stats[6] += 1
+            this.stats[1] += 2
+            this.stats[6] += 2
             this.damage = 9
-            this.skills += 'Fight+, Weapons+, Engine+'
+            this.skills += 'Fight+, Weapons++, Engine++'
             this.names = ["Hiss", "Shhsi", "Hissihys", "Keshhsh", "Hisk", "Hyssis", "Hisshyss", "Ssssss", "Schshss"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 390
@@ -8097,11 +8888,83 @@ class Guy {
             this.stats[2] += 1
             this.stats[6] += 1
             this.damage = 5
-            this.repair +=1
+            this.repair += 1
             this.skills += 'Healthy+, Shield+, Engine+, Repair+'
             this.names = ["Wooo", "Hawooo", "Woogaa", "Ahhaoo", "Ooohoo", "Woohehoo", "Snaaa", "Booouh", "Hawahao"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 500
+            this.maxhealth = this.health
+        }
+        if (this.type == 44) {
+            this.stats[0] = 15
+            this.rate = 15
+            this.stats[3] += 2
+            this.stats[6] += 2
+            this.damage = 4
+            this.extinguish += 4
+            this.skills += 'Healthy++, Helm++, Engine++, Extinguish+'
+            this.names = ["Camelie", "Cameloo", "Mamelcal", "Hamalu", "Mark", "Dusti", "Thirstzo", "Sloshmel", "Humpbump"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 700
+            this.maxhealth = this.health
+        }
+        if (this.type == 45) {
+            this.stats[0] = 7
+            this.rate = 7
+            this.stats[1] += 1
+            this.stats[4] += 2
+            this.damage = 11
+            this.gearArmorSto = .4
+            // this.extinguish +=4
+            this.skills += 'Armored++, Fight++, Weapons++, Oxygen++'
+            this.names = ["Rook", "Rooki", "Rookie", "Hookson", "Elock", "Grodulak", "Kabzudak", "Chippi", "Nibbule"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 234
+            this.maxhealth = this.health
+        }
+        if (this.type == 46) {
+            this.stats[0] = 13
+            this.rate = 13
+            this.stats[1] += 1.5
+            this.stats[6] += 2
+            this.stats[2] += 1
+            this.damage = 6
+            this.gearArmorSto = .1
+            // this.extinguish +=4
+            this.skills += 'Armored+, Fight+, Weapons+, Engine++, Shield+'
+            this.names = ["Beauregard", "Joregard", "Smoregard", "Tomegart", "Blublu", "Hosenose", "Spont", "Goobulat", "Glike"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 345
+            this.maxhealth = this.health
+        }
+        if (this.type == 47) {
+            this.stats[0] = 10
+            this.rate = 10
+            this.stats[6] += 2
+            this.stats[3] += 2
+            this.stats[2] += 1
+            this.damage = 6
+            this.gearArmorSto = 0
+            // this.extinguish +=4
+            this.skills += 'Fight+, Helm++, Engine++, Shield+'
+            this.names = ["Hobeau", "Kehn", "Seetart", "Rome", "Stalt", "Beatty", "Layver", "Gry", "Lettus"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 380
+            this.maxhealth = this.health
+        }
+        if (this.type == 48) {
+            this.stats[0] = 11
+            this.rate = 11
+            this.stats[4] += 2
+            this.stats[10] += 2
+            this.damage = 11
+            this.gearArmorSto = .3
+            this.airless = 1
+            // this.extinguish +=4
+            this.skills += 'Fight++, Armored+, Oxygen++, Drones++, Breathless+'
+            this.names = ["Tew", "Tu", "Too", "Tou", "Teau", "Two", "Teauh", "Tough", "Teaux"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 409
             this.maxhealth = this.health
         }
         if (this.type == 43) {
@@ -8114,12 +8977,12 @@ class Guy {
             this.skills += 'Medical+, Oxygen Systems++, Drones++, '
             this.names = ["Nupromab", "Redlizavir", "Friamectin", "Albendazone", "Myrbildapine", "Arromab", "Alegovir", "Salinazone", "Hydramaxizine", "Solutionx"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
-            if(this.name == "Solutionx"){
+            if (this.name == "Solutionx") {
                 this.skills += 'Helm+'
-                this.stats[3]+=1
-            }else{
+                this.stats[3] += 1
+            } else {
                 this.skills += 'Engines+'
-                this.stats[6]+=1
+                this.stats[6] += 1
             }
             this.health = 299
             this.maxhealth = this.health
@@ -8152,7 +9015,8 @@ class Guy {
             this.damage = 9
             // this.explodes = 1
             // this.isMedbay = 1
-            this.skills += 'Weapons++, Drones++, Armored++, Fight+'
+            this.metal = 1
+            this.skills += 'Weapons++, Drones++, Armored++, Fight+, Metal Body+'
             this.names = ["Deblobb.io", "Chom.ping", "Const.ernaton", "Ange.rar", "Zip.zap", "DotBlue", ".Worker()", ".Entity()", "Child[0]", "Return true"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 110
@@ -8256,7 +9120,8 @@ class Guy {
             this.airless = 1
             // this.explodes = 1
             // this.isMedbay = 1
-            this.skills += 'Armored+,Weapons++, Engine++, Helm++, Breathless'
+            this.metal = 1
+            this.skills += 'Armored+,Weapons++, Engine++, Helm++, Breathless+, Metal Body+'
             this.names = ["Junk", "Rice_Junk", "Rice", "Punk", "Junch", "Runk", "Punch", "Jung", "Jungek", "Bleep"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 350
@@ -8378,7 +9243,8 @@ class Guy {
             this.airless = 1
             this.damage = 2
             this.gearArmorSto = 1.3
-            this.skills += 'Armored++, Air-sucking--,'
+            this.skills += 'Armored++, Air-sucking--, Antimatter+ '
+            this.xlitchmatter = 1
             this.names = ["Xlitch", "Ϫlitxh", "Ϫlitch", "#7D67AE", "Zlitch", "Glychh", "Statich", "Cucuculith", "Supst"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
         }
@@ -8394,7 +9260,7 @@ class Guy {
             // this.names = ["Xlitch", "Ϫlitxh", "Ϫlitch", "#7D67AE", "Zlitch", "Glychh", "Statich", "Cucuculith", "Supst"]
             // this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 100
-            this.maxhealth = this.health 
+            this.maxhealth = this.health
             this.temp = 2500
             this.gear = [new Gear(8001, this), new Gear(8002, this), new Gear(8003, this), new Gear(8004, this)]
         }
@@ -8410,7 +9276,7 @@ class Guy {
             // this.names = ["Xlitch", "Ϫlitxh", "Ϫlitch", "#7D67AE", "Zlitch", "Glychh", "Statich", "Cucuculith", "Supst"]
             // this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 400
-            this.maxhealth = this.health 
+            this.maxhealth = this.health
             this.temp = 2500
             this.gear = [new Gear(8001, this), new Gear(8002, this), new Gear(8003, this), new Gear(8004, this)]
         }
@@ -8526,33 +9392,33 @@ class Guy {
         //activated
         this.cooldown--
         this.temp--
-        if(this.temp == -1){
+        if (this.temp == -1) {
             this.temp = 0
             this.health -= 11
             // if(this.health <= 0){
             //     // this.droneLine.flaggedOn = 0
             // }
-        }else if(this.temp > -1){
+        } else if (this.temp > -1) {
             let count = 0
-            for(let t = 0;t<this.gear.length;t++){
-                if(this.gear[t].type == 8001 && t == 0){
+            for (let t = 0; t < this.gear.length; t++) {
+                if (this.gear[t].type == 8001 && t == 0) {
                     count++
                 }
-                if(this.gear[t].type == 8002 && t == 1){
+                if (this.gear[t].type == 8002 && t == 1) {
                     count++
                 }
-                if(this.gear[t].type == 8003 && t == 2){
+                if (this.gear[t].type == 8003 && t == 2) {
                     count++
                 }
-                if(this.gear[t].type == 8004 && t == 3){
+                if (this.gear[t].type == 8004 && t == 3) {
                     count++
                 }
             }
-            if(count != 4){
+            if (count != 4) {
                 this.health -= 11
             }
         }
-        if(this.addtiles > 0){
+        if (this.addtiles > 0) {
             this.tiles.push(this.tile)
             this.addtiles--
         }
@@ -8563,7 +9429,7 @@ class Guy {
             }
 
             if (this.type == 26) { //missileaneous
-                if(vessel.guys.includes(this)){
+                if (vessel.guys.includes(this)) {
                     let wep = new Weapon(45)
                     wep.temp = 120
                     let x = enemy.weapons.length
@@ -8577,7 +9443,7 @@ class Guy {
                     bonmb.life = 50
                     enemy.weapons[x].bombs = []
                     enemy.weapons[x].bombs.push(bonmb)
-                }else{
+                } else {
                     let wep = new Weapon(45)
                     wep.temp = 120
                     let x = vessel.weapons.length
@@ -8700,29 +9566,29 @@ class Guy {
             if (this.cooldown <= 0) {
                 this.flameheal = 0
             }
-        }else if (this.type == 18) {
+        } else if (this.type == 18) {
             if (this.cooldown <= 0) {
                 this.addtiles = 0
-                if(this.tiles.length > 6){
-                    this.tiles.splice(0,1)
+                if (this.tiles.length > 6) {
+                    this.tiles.splice(0, 1)
                 }
             }
-        }else if (this.type == 23) {
+        } else if (this.type == 23) {
             if (this.cooldown <= 0) {
                 this.addtiles = 0
                 this.stretch = 0
-                if(this.tiles){
-                    for(let t=  0 ;t<this.tiles.length;t++){
+                if (this.tiles) {
+                    for (let t = 0; t < this.tiles.length; t++) {
                         this.tiles[t].walkable = true
                     }
                 }
                 this.tiles = []
             }
-        }else if(this.type == 26){ //missileaneous 
+        } else if (this.type == 26) { //missileaneous 
 
         }
 
-        
+
 
     }
     powercheck() {
@@ -8734,6 +9600,18 @@ class Guy {
             }
         }
         return false
+    }
+    becomePomao() {
+        this.type = 11
+        this.stats[3] += 4
+        this.helmPower = 1
+        this.health = 369
+        this.maxhealth = this.health
+        this.skills += 'Helm+++, '
+        this.names = ["Pomao", "Jomao", "Pobo", "Podmao", "Peamao", "Pomom", "Pamao", "Pomo", "Pomoo", "Pomoa"]
+        this.name = this.names[Math.floor(Math.random() * this.names.length)]
+        this.stats[0] = 7
+        this.rate = 7
     }
     bodydraw() {
 
@@ -9488,7 +10366,7 @@ class Guy {
             return
         }
 
-    
+
         this.ropestunned--
         this.activatePower()
         this.fighting--
@@ -9884,7 +10762,7 @@ class Guy {
                 this.skillslist[t] = 1.75
             }
         }
-        let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
+        let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"] //said drones
         let hass = 0
         if (vessel.guys) {
             if (vessel.guys.includes(this)) {
@@ -10127,27 +11005,29 @@ class Guy {
                             }
                         }
                     }
-                    for (let t = 0; t < enemy.guys.length; t++) {
-                        if (this != enemy.guys[t]) {
-                            if (enemy.guys[t].path.length <= 1 && this.path.length <= 1) {
-                                if ((this.tile == enemy.guys[t].tile || kiles.includes(enemy.guys[t].tile))) {
-                                    let n = enemy.neighbors(this.tile)
-                                    for (let r = 0; r < n.length; r++) {
-                                        if (n[r].walkable == true && n[r].guyIn == false && !kiles.includes(n[r])) {
-                                            if (enemy.guys[t].fighting < 0) {
-                                                enemy.guys[t].path = astar.search(enemy, this.tile, n[r])
-                                                enemy.guys[t].stogo = n[r]
-                                                break
-                                            }
-                                        } else {
-                                            n = enemy.neighbors(n[r])
-                                            for (let d = Math.floor(Math.random() * (n.length)); d < n.length; d++) {
-                                                if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
-                                                    if (enemy.guys[t].fighting < 0) {
-                                                        enemy.guys[t].path = astar.search(enemy, enemy.guys[t].tile, n[d])
-                                                        enemy.guys[t].stogo = n[d]
-                                                        ////////////////////////////////////////////////////////console.log(n)
-                                                        break
+                    if (enemy.guys) {
+                        for (let t = 0; t < enemy.guys.length; t++) {
+                            if (this != enemy.guys[t]) {
+                                if (enemy.guys[t].path.length <= 1 && this.path.length <= 1) {
+                                    if ((this.tile == enemy.guys[t].tile || kiles.includes(enemy.guys[t].tile))) {
+                                        let n = enemy.neighbors(this.tile)
+                                        for (let r = 0; r < n.length; r++) {
+                                            if (n[r].walkable == true && n[r].guyIn == false && !kiles.includes(n[r])) {
+                                                if (enemy.guys[t].fighting < 0) {
+                                                    enemy.guys[t].path = astar.search(enemy, this.tile, n[r])
+                                                    enemy.guys[t].stogo = n[r]
+                                                    break
+                                                }
+                                            } else {
+                                                n = enemy.neighbors(n[r])
+                                                for (let d = Math.floor(Math.random() * (n.length)); d < n.length; d++) {
+                                                    if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
+                                                        if (enemy.guys[t].fighting < 0) {
+                                                            enemy.guys[t].path = astar.search(enemy, enemy.guys[t].tile, n[d])
+                                                            enemy.guys[t].stogo = n[d]
+                                                            ////////////////////////////////////////////////////////console.log(n)
+                                                            break
+                                                        }
                                                     }
                                                 }
                                             }
@@ -10204,6 +11084,18 @@ class Guy {
                 this.tiles = [this.zapto, this.zapto, this.zapto, this.zapto, this.zapto, this.zapto]
             }
         }
+
+        if (this.ropestunned <= 0) {
+            // this.cound++
+        } else {
+            this.ropestunned--
+            this.cound = 0
+            let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+            let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+            link.draw()
+            link2.draw()
+
+        }
         if (this.turning > 0) {
             if (this.path[1] == this.flagpath[1]) {
                 this.turning = 0
@@ -10211,12 +11103,12 @@ class Guy {
                 if (this.ropestunned <= 0) {
                     this.cound++
                 } else {
-                    this.ropestunned--
-                    this.cound = 0
-                    let link = new Line(this.body.x - 25, this.body.y - 25, this.body.x + 25, this.body.y + 25, "white", 3)
-                    let link2 = new Line(this.body.x + 25, this.body.y - 25, this.body.x - 25, this.body.y + 25, "white", 3)
-                    link.draw()
-                    link2.draw()
+                    // this.ropestunned--
+                    // this.cound = 0
+                    // let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+                    // let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+                    // link.draw()
+                    // link2.draw()
 
                 }
             }
@@ -10232,18 +11124,30 @@ class Guy {
                 }
                 // if (this.path.length > 1) {
                 // ////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
+
+                if (this.ropestunned <= 0) {
+                    // this.cound++
+                } else {
+                    this.ropestunned--
+                    this.cound = 0
+                    let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+                    let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+                    link.draw()
+                    link2.draw()
+
+                }
                 if (this.hostile == 1) {
                     if (vessel.guys.includes(this) && this.hostile == 1) {
                         if (this.path[this.step + 1].walkable == true) { //made enemies unpassable, not fun.
                             if (this.ropestunned <= 0) {
                                 this.cound++
                             } else {
-                                this.ropestunned--
-                                this.cound = 0
-                                let link = new Line(this.body.x - 25, this.body.y - 25, this.body.x + 25, this.body.y + 25, "white", 3)
-                                let link2 = new Line(this.body.x + 25, this.body.y - 25, this.body.x - 25, this.body.y + 25, "white", 3)
-                                link.draw()
-                                link2.draw()
+                                // this.ropestunned--
+                                // this.cound = 0
+                                // let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+                                // let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+                                // link.draw()
+                                // link2.draw()
 
                             }
                         }
@@ -10251,12 +11155,12 @@ class Guy {
                         if (this.ropestunned <= 0) {
                             this.cound++
                         } else {
-                            this.ropestunned--
-                            this.cound = 0
-                            let link = new Line(this.body.x - 25, this.body.y - 25, this.body.x + 25, this.body.y + 25, "white", 3)
-                            let link2 = new Line(this.body.x + 25, this.body.y - 25, this.body.x - 25, this.body.y + 25, "white", 3)
-                            link.draw()
-                            link2.draw()
+                            // this.ropestunned--
+                            // this.cound = 0
+                            // let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+                            // let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+                            // link.draw()
+                            // link2.draw()
 
                         }
                     }
@@ -10264,12 +11168,12 @@ class Guy {
                     if (this.ropestunned <= 0) {
                         this.cound++
                     } else {
-                        this.ropestunned--
-                        this.cound = 0
-                        let link = new Line(this.body.x - 25, this.body.y - 25, this.body.x + 25, this.body.y + 25, "white", 3)
-                        let link2 = new Line(this.body.x + 25, this.body.y - 25, this.body.x - 25, this.body.y + 25, "white", 3)
-                        link.draw()
-                        link2.draw()
+                        // this.ropestunned--
+                        // this.cound = 0
+                        // let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+                        // let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
+                        // link.draw()
+                        // link2.draw()
 
                     }
                 }
@@ -10492,8 +11396,8 @@ class Guy {
         // }
 
 
-        if(this.type == 38){
-            let point = new Point(this.body.x , this.body.y)
+        if (this.type == 38) {
+            let point = new Point(this.body.x, this.body.y)
             point.life = 0
             point.angle = 2
             vessel.distortionPoints.push(point)
@@ -11077,7 +11981,7 @@ class Guy {
         //         this.skillslist[t] = 1.75
         //     }
         // }
-        let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
+        let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"] //said drones
         let hass = 0
         // if (vessel.guys) {
         //     if (vessel.guys.includes(this)) {
@@ -11380,8 +12284,8 @@ class Guy {
         } else {
             // this.ropestunned--
             this.cound = 0
-            let link = new Line(this.body.x - 25, this.body.y - 25, this.body.x + 25, this.body.y + 25, "white", 3)
-            let link2 = new Line(this.body.x + 25, this.body.y - 25, this.body.x - 25, this.body.y + 25, "white", 3)
+            let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
+            let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
             link.draw()
             link2.draw()
 
@@ -11696,8 +12600,8 @@ class Guy {
         // this.tiles[t].draw()
         // }
 
-        if(this.type == 38){
-            let point = new Point(this.body.x , this.body.y)
+        if (this.type == 38) {
+            let point = new Point(this.body.x, this.body.y)
             point.life = 0
             point.angle = 2
             vessel.distortionPoints.push(point)
@@ -12327,8 +13231,10 @@ class Shields {
             for (let t = 0; t < this.previous - this.rings.length; t++) {
                 if (this == vessel.shield) {
                     vessel.breaking.push(new BreakingShield(vessel.body.x, vessel.body.y, 366 + (this.previous * 13)))
+                    vessel.dettimer = 10
                 } else {
                     enemy.breaking.push(new BreakingShield(enemy.body.x, enemy.body.y, 220 + (this.previous * 12)))
+                    enemy.dettimer = 10
                 }
             }
         }
@@ -12906,6 +13812,7 @@ class StarX {
 }
 class Weapon {
     constructor(type, crew = -1, gear = -1, drone = -1, part = -1) {
+        this.ball = new Circle(0, 0, 0, "transparent")
         this.droneType = drone
         this.part = part
         this.drone = 0
@@ -13044,10 +13951,10 @@ class Weapon {
                     this.sell = 40
                 }
             }
-                if (this.gearType >= 8000 && this.gearType <= 8010) {
-                    this.buy = 0
-                    this.sell = 0
-                }
+            if (this.gearType >= 8000 && this.gearType <= 8010) {
+                this.buy = 0
+                this.sell = 0
+            }
         } else if (crew != -1) {
             this.real = 1
             // let crew2 = new Guy({}, crew)
@@ -13057,7 +13964,7 @@ class Weapon {
                 this.crewType = 10
             }
 
-            if (this.crewType == 37 || (this.crewType == 40) ||  (this.crewType == 39)  || (this.crewType == 36)  || (this.crewType == 11)) {
+            if (this.crewType == 37 || (this.crewType == 40) || (this.crewType == 39) || (this.crewType == 36) || (this.crewType == 11)) {
                 this.crewType = 10
             }
             this.name1 = "Hire"
@@ -13106,6 +14013,7 @@ class Weapon {
                 this.buy = 0
                 this.sell = 0
             }
+            this.value = 0
             if (this.type == 0) {
                 this.name1 = "Basic"
                 this.name2 = "Laser"
@@ -13114,19 +14022,21 @@ class Weapon {
                 this.real = 1
                 this.fireChance = 10
                 this.buy = 50
-                this.sell = 15
+                this.sell = 24
                 this.laser = 1
+                this.value = 10
             } else if (this.type == 1) {
                 this.name1 = "Basic"
                 this.name2 = "Rocket"
                 this.max = 1000
-                this.damage = 90
+                this.damage = 110
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 20
                 this.buy = 40
-                this.sell = 12
+                this.sell = 23
                 this.double = 0
+                this.value = 18
             } else if (this.type == 2) {
                 this.name1 = "Double"
                 this.name2 = "Laser"
@@ -13138,6 +14048,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 30
                 this.laser = 1
+                this.value = 17
             } else if (this.type == 3) {
                 this.name1 = "Triple"
                 this.name2 = "Laser"
@@ -13149,6 +14060,7 @@ class Weapon {
                 this.buy = 80
                 this.sell = 40
                 this.laser = 1
+                this.value = 20
             } else if (this.type == 4) {
                 this.name1 = "Crew"
                 this.name2 = "Laser"
@@ -13161,6 +14073,7 @@ class Weapon {
                 this.buy = 85
                 this.sell = 40
                 this.laser = 1
+                this.value = 23
             } else if (this.type == 5) {
                 this.name1 = "Mega"
                 this.name2 = "Laser"
@@ -13173,22 +14086,24 @@ class Weapon {
                 this.buy = 100
                 this.sell = 45
                 this.laser = 1
+                this.value = 25
             } else if (this.type == 6) {
                 this.name1 = "Medium"
                 this.name2 = "Rocket"
                 this.max = 1250
-                this.damage = 150
+                this.damage = 180
                 this.bomb = 1
                 this.real = 1
                 this.fireChance = 30
                 this.buy = 45
                 this.sell = 18
                 this.double = 0
+                this.value = 22
             } else if (this.type == 7) {
                 this.name1 = "Big"
                 this.name2 = "Rocket"
-                this.max = 1500
-                this.damage = 210
+                this.max = 1600
+                this.damage = 250
                 this.bomb = 1
                 this.real = 1
                 this.crew = 1.5
@@ -13196,11 +14111,12 @@ class Weapon {
                 this.sell = 24
                 this.fireChance = 45
                 this.double = 0
+                this.value = 35
             } else if (this.type == 8) {
                 this.name1 = "Mega"
                 this.name2 = "Rocket"
-                this.max = 2000 //2900
-                this.damage = 300
+                this.max = 2100 //2900
+                this.damage = 350
                 this.bomb = 1
                 this.real = 1
                 this.crew = 1.8
@@ -13209,6 +14125,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 30
                 this.double = 0
+                this.value = 50
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam II"
@@ -13223,6 +14140,7 @@ class Weapon {
                 this.double = 0
                 this.buy = 60
                 this.sell = 31
+                this.value = 20
             } else if (this.type == 10) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet I"
@@ -13232,9 +14150,10 @@ class Weapon {
                 this.crew = .5
                 this.fireChance = 1
                 this.double = 1
-                this.buy = 45
+                this.buy = 30
                 this.sell = 20
                 this.shooter = 1
+                this.value = 5
             } else if (this.type == 11) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet II"
@@ -13244,9 +14163,10 @@ class Weapon {
                 this.crew = 1
                 this.fireChance = 20
                 this.double = 2
-                this.buy = 55
+                this.buy = 45
                 this.sell = 22
                 this.shooter = 1
+                this.value = 10
             } else if (this.type == 12) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet I"
@@ -13259,6 +14179,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 24
                 this.shooter = 1
+                this.value = 20
             } else if (this.type == 13) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet II"
@@ -13271,6 +14192,7 @@ class Weapon {
                 this.buy = 70
                 this.sell = 30
                 this.shooter = 1
+                this.value = 30
             } else if (this.type == 14) {
                 this.name1 = "Railgun"
                 this.name2 = "I"
@@ -13284,6 +14206,7 @@ class Weapon {
                 this.buy = 40
                 this.sell = 19
                 this.shooter = 1
+                this.value = 10
             } else if (this.type == 15) {
                 this.name1 = "Railgun"
                 this.name2 = "II"
@@ -13299,6 +14222,7 @@ class Weapon {
                 this.buy = 50
                 this.sell = 24
                 this.shooter = 1
+                this.value = 18
             } else if (this.type == 16) {
                 this.name1 = "Railgun"
                 this.name2 = "Repeater I"
@@ -13312,6 +14236,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 29
                 this.shooter = 1
+                this.value = 21
             } else if (this.type == 17) {
                 this.name1 = "Shield"
                 this.name2 = "Sap I"
@@ -13325,6 +14250,7 @@ class Weapon {
                 this.double = 0
                 this.buy = 30
                 this.sell = 10
+                this.value = 18
             } else if (this.type == 18) {
                 this.name1 = "Shield"
                 this.name2 = "Sap II"
@@ -13338,6 +14264,7 @@ class Weapon {
                 this.double = 0
                 this.buy = 35
                 this.sell = 18
+                this.value = 28
             } else if (this.type == 19) {
                 this.name1 = "Shield"
                 this.name2 = "Sap III"
@@ -13351,6 +14278,7 @@ class Weapon {
                 this.double = 0
                 this.buy = 40
                 this.sell = 22
+                this.value = 37
             } else if (this.type == 20) {
                 this.name1 = "Hard"
                 this.name2 = "Beam I"
@@ -13366,6 +14294,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 29
                 this.hard = 1
+                this.value = 10
             } else if (this.type == 21) {
                 this.name1 = "Hard"
                 this.name2 = "Beam II"
@@ -13381,6 +14310,7 @@ class Weapon {
                 this.buy = 90
                 this.sell = 64
                 this.hard = 1
+                this.value = 19
             } else if (this.type == 22) {
                 this.name1 = "Hard"
                 this.name2 = "Beam III"
@@ -13396,6 +14326,7 @@ class Weapon {
                 this.buy = 110
                 this.sell = 74
                 this.hard = 1
+                this.value = 30
             } else if (this.type == 23) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon I"
@@ -13415,6 +14346,7 @@ class Weapon {
                 this.shooter = 1
                 this.shotCount = 2
                 // this.hard = 1
+                this.value = 12
             } else if (this.type == 24) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon II"
@@ -13434,6 +14366,7 @@ class Weapon {
                 this.buy = 65
                 this.sell = 34
                 // this.hard = 1
+                this.value = 30
             } else if (this.type == 25) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon III"
@@ -13453,6 +14386,7 @@ class Weapon {
                 this.sell = 42
                 this.scrap = 3
                 // this.hard = 1
+                this.value = 50
             } else if (this.type == 26) {
                 this.name1 = "Heat"
                 this.name2 = "Beam I"
@@ -13468,6 +14402,7 @@ class Weapon {
                 this.buy = 45
                 this.sell = 20
                 this.mini = 1
+                this.value = 8
             } else if (this.type == 27) {
                 this.name1 = "Mind"
                 this.name2 = "Control I"
@@ -13483,6 +14418,7 @@ class Weapon {
                 this.buy = 65
                 this.sell = 45
                 this.mind = 1
+                this.value = 20
             } else if (this.type == 28) {
                 this.name1 = "Mind"
                 this.name2 = "Control II"
@@ -13498,6 +14434,7 @@ class Weapon {
                 this.buy = 70
                 this.sell = 55
                 this.mind = 2
+                this.value = 30
             } else if (this.type == 29) {
                 this.name1 = "Ship"
                 this.name2 = "Tether I"
@@ -13514,6 +14451,7 @@ class Weapon {
                 this.buy = 30
                 this.sell = 15
                 // this.mind = 2
+                this.value = 6
             } else if (this.type == 30) {
                 this.name1 = "Ship"
                 this.name2 = "Tether II"
@@ -13530,6 +14468,7 @@ class Weapon {
                 this.buy = 35
                 this.sell = 20
                 // this.mind = 2
+                this.value = 9
             } else if (this.type == 31) {
                 this.name1 = "Ship"
                 this.name2 = "Tether III"
@@ -13545,6 +14484,7 @@ class Weapon {
                 this.buy = 40
                 this.sell = 25
                 // this.mind = 2
+                this.value = 11
             } else if (this.type == 32) {
                 this.name1 = "Tractor"
                 this.name2 = "Beam I"
@@ -13560,6 +14500,7 @@ class Weapon {
                 this.buy = 50
                 this.sell = 25
                 // this.mind = 2
+                this.value = 20
             } else if (this.type == 33) {
                 this.name1 = "Tractor"
                 this.name2 = "Beam II"
@@ -13576,6 +14517,7 @@ class Weapon {
                 this.buy = 60
                 this.sell = 35
                 // this.mind = 2
+                this.value = 30
             } else if (this.type == 34) {
                 this.name1 = "Mirror"
                 this.name2 = "Shell I"
@@ -13593,6 +14535,7 @@ class Weapon {
                 this.buy = 40
                 this.sell = 22
                 // this.mind = 2
+                this.value = 22
             } else if (this.type == 35) {
                 this.name1 = "Mirror"
                 this.name2 = "Shell II"
@@ -13610,6 +14553,7 @@ class Weapon {
                 this.buy = 50
                 this.sell = 28
                 // this.mind = 2
+                this.value = 25
             } else if (this.type == 36) {
                 this.name1 = "Capacitor"
                 this.name2 = "I"
@@ -13629,6 +14573,7 @@ class Weapon {
                 this.baseCharge = .05
                 this.capacitor = 1
                 // this.mind = 2
+                this.value = 12
             } else if (this.type == 37) {
                 this.name1 = "Capacitor"
                 this.name2 = "II"
@@ -13648,6 +14593,7 @@ class Weapon {
                 this.buy = 50
                 this.sell = 28
                 // this.mind = 2
+                this.value = 13
             } else if (this.type == 38) {
                 this.name1 = "Evasion"
                 this.name2 = "Module I"
@@ -13668,6 +14614,7 @@ class Weapon {
                 this.buy = 50
                 this.sell = 28
                 // this.mind = 2
+                this.value = 40
             } else if (this.type == 39) {
                 this.name1 = "Healing"
                 this.name2 = "Shield I"
@@ -13690,6 +14637,7 @@ class Weapon {
                 this.sell = 15
                 this.pulsing = 0
                 // this.mind = 2
+                this.value = 7
             } else if (this.type == 40) {
                 this.name1 = "Death"
                 this.name2 = "Beam I"
@@ -13712,6 +14660,7 @@ class Weapon {
                 this.sell = 40
                 this.pulsing = 0
                 // this.mind = 2
+                this.value = 25
             } else if (this.type == 41) {
                 this.name1 = "Telescopic"
                 this.name2 = "Spine I"
@@ -13737,6 +14686,7 @@ class Weapon {
                 this.sell = 50
                 this.pulsing = 0
                 // this.mind = 2
+                this.value = 20
             } else if (this.type == 42) {
                 this.name1 = "Telescopic"
                 this.name2 = "Spine II"
@@ -13762,6 +14712,7 @@ class Weapon {
                 this.sell = 60
                 this.pulsing = 0
                 // this.mind = 2
+                this.value = 30
             } else if (this.type == 43) {
                 this.name1 = "Boomerang"
                 this.name2 = "Blade I"
@@ -13781,6 +14732,7 @@ class Weapon {
                 this.sell = 20
                 // this.scrap = 3
                 // this.hard = 1
+                this.value = 20
             } else if (this.type == 44) {
                 this.name1 = "Boomerang"
                 this.name2 = "Blade II"
@@ -13800,6 +14752,7 @@ class Weapon {
                 this.sell = 35
                 // this.scrap = 3
                 // this.hard = 1
+                this.value = 27
             } else if (this.type == 45) {
                 this.name1 = "Basic"
                 this.name2 = "Bomb"
@@ -13809,7 +14762,7 @@ class Weapon {
                 this.sap = 0
                 // this.railgun = 0
                 this.max = 1111
-                this.damage = 100
+                this.damage = 105
                 this.real = 1
                 this.crew = 1
                 this.fireChance = 20
@@ -13820,6 +14773,7 @@ class Weapon {
                 this.sell = 12
                 // this.scrap = 3
                 // this.hard = 1
+                this.value = 21
             } else if (this.type == 46) {
                 this.name1 = "Anti-Mobility"
                 this.name2 = "Beads I"
@@ -13842,6 +14796,7 @@ class Weapon {
                 this.mobility = 1
                 // this.scrap = 3
                 // this.hard = 1
+                this.value = 11
             } else if (this.type == 47) {
                 this.name1 = "Healing"
                 this.name2 = "Shield II"
@@ -13865,6 +14820,7 @@ class Weapon {
                 this.sell = 30
                 this.pulsing = 0
                 // this.mind = 2
+                this.value = 20
             } else if (this.type == 48) {
                 this.name1 = "Advanced"
                 this.name2 = "Bomb"
@@ -13883,6 +14839,7 @@ class Weapon {
                 this.shotCount = 1
                 this.buy = 50
                 this.sell = 32
+                this.value = 35
             } else if (this.type == 49) {
                 this.name1 = "Zero Area"
                 this.name2 = "Field"
@@ -13897,6 +14854,7 @@ class Weapon {
                 this.spine = 1
                 this.bomb = 1
                 this.zero = 1
+                this.value = 22
             } else if (this.type == 50) {
                 this.name1 = "1-D"
                 this.name2 = "Filament"
@@ -13910,7 +14868,327 @@ class Weapon {
                 this.sell = 20
                 // this.shooter = 1
                 this.one = 1
-            }else if (this.type == 4242) {
+                this.value = 9
+            } else if (this.type == 51) {
+                this.name1 = "Hot"
+                this.name2 = "Laser"
+                this.max = 600
+                this.damage = 35
+                this.real = 1
+                this.fireChance = 100
+                this.buy = 55
+                this.sell = 30
+                this.laser = 1
+                this.value = 12
+            } else if (this.type == 52) {
+                this.name1 = "Cap"
+                this.name2 = "Laser"
+                this.max = 700
+                this.damage = 20
+                this.real = 1
+                this.fireChance = 5
+                this.buy = 75
+                this.sell = 40
+                this.laser = 1
+                this.capacitor = 1
+                this.caplaser = 1
+                this.value = 12
+            } else if (this.type == 53) {
+                this.name1 = "Cap"
+                this.name2 = "Shield"
+                this.max = 720
+                this.damage = 0
+                this.real = 1
+                this.fireChance = 0
+                this.buy = 40
+                this.sell = 23
+                // this.laser = 1
+                this.healShield = 1
+                this.capacitor = 1
+                this.caplaser = 1
+                this.capshield = 1
+                this.value = 12
+                this.secretDouble = 0
+                this.double = 0
+            } else if (this.type == 54) {
+                this.name1 = "Crash"
+                this.name2 = "Paddle"
+                this.max = 290
+                this.damage = 18
+                this.stack = 0
+                this.real = 1
+                this.fireChance = 5
+                this.buy = 35
+                this.sell = 18
+                // this.laser = 1
+                this.ball = new Circle(-11, -11, 11, "#FF00AA")
+                this.string = {}
+                this.string.cx = 0
+                this.string.cy = 0
+                this.paddle = 1
+                this.primed = -1
+                this.cable = 1
+                this.value = 11
+                this.secretDouble = 1
+                this.double = 1
+            } else if (this.type == 55) {
+                this.name1 = "Matter"
+                this.name2 = "Annihilator"
+                this.max = 3456
+                this.antimatter = 1
+                this.damage = 321
+                this.stack = 0
+                this.real = 1
+                this.fireChance = 100
+                this.buy = 60
+                this.sell = 45
+                this.value = 40 //40
+                this.median = new Point(0, 0)
+                this.dist = 100
+                this.dot1 = new Circle(this.center.x, this.center.y, 10, "#FFAA00")
+                this.dot2 = new Circle(this.center.x, this.center.y, 10, "#00AAFF")
+                this.secretDouble = 2
+                this.double = 2
+            } else if (this.type == 56) {
+                this.name1 = "Spinner"
+                this.name2 = "Pellet"
+                this.max = 350
+                this.damage = 45
+                this.real = 1
+                this.crew = 1
+                this.fireChance = 1
+                this.double = 1
+                this.buy = 45
+                this.sell = 20
+                this.shooter = 1
+                this.value = 10
+                this.turnTo = 561
+            } else if (this.type == 57) {
+                this.name1 = "Bubble"
+                this.name2 = "Gun"
+                this.max = 750
+                this.damage = 65
+                this.real = 1
+                this.crew = 2
+                this.fireChance = 10
+                this.double = 1
+                this.buy = 50
+                this.sell = 25
+                this.shooter = 1
+                this.value = 17
+                this.stuns = 1
+            } else if (this.type == 58) {
+                this.name1 = "Detonating"
+                this.name2 = "Shield"
+                this.max = 300
+                this.detwall = 1
+                this.damage = 0
+                this.real = 1
+                this.crew = 1
+                this.fireChance = 0
+                this.double = 0
+                this.buy = 30
+                this.sell = 20
+                // this.shooter = 1
+                this.value = 17
+                this.stuns = 1
+            } else if (this.type == 59) {
+                this.name1 = "Crew"
+                this.name2 = "Lightning"
+                this.max = 250
+                this.damage = 9
+                this.real = 1
+                this.crew = 12
+                this.fireChance = 20
+                this.double = 0
+                this.buy = 45
+                this.sell = 22
+                this.lightning = 1
+                // this.shooter = 1
+                this.value = 20
+                // this.stuns = 1
+            } else if (this.type == 60) {
+                this.name1 = "Quick"
+                this.name2 = "Lightning"
+                this.max = 220
+                this.damage = 10
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 10
+                this.double = 1
+                this.buy = 40
+                this.sell = 20
+                this.lightning = 1
+                // this.shooter = 1
+                this.value = 18
+                // this.stuns = 1
+            } else if (this.type == 61) {
+                this.name1 = "Hot"
+                this.name2 = "Lightning"
+                this.max = 270
+                this.damage = 10
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 40
+                this.double = 1
+                this.buy = 45
+                this.sell = 22
+                this.lightning = 1
+                // this.shooter = 1
+                this.value = 20
+                // this.stuns = 1
+            } else if (this.type == 62) {
+                this.name1 = "Chain"
+                this.name2 = "Lightning"
+                this.max = 800
+                this.damage = 7
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 40
+                this.double = 1
+                this.buy = 60
+                this.sell = 30
+                this.lightning = 1
+                // this.shooter = 1
+                this.value = 30
+                // this.stuns = 1
+            } else if (this.type == 63) {
+                this.name1 = "Minty Ion"
+                this.name2 = "Bubble Gun"
+                this.max = 600
+                this.damage = 55
+                this.real = 1
+                this.crew = 2
+                this.fireChance = 5
+                this.double = 2
+                this.secretDouble = 2
+                this.buy = 45
+                this.sell = 25
+                this.shooter = 1
+                this.value = 16
+                this.stuns = 1
+            } else if (this.type == 64) {
+                this.name1 = "Cinnamon"
+                this.name2 = "Bubble Gun"
+                this.max = 700
+                this.damage = 55
+                this.real = 1
+                this.crew = 2
+                this.fireChance = 120
+                this.double = 1
+                this.secretDouble = 1
+                this.buy = 45
+                this.sell = 25
+                this.shooter = 1
+                this.value = 18
+                this.stuns = 1
+            } else if (this.type == 65) {
+                this.name1 = "Harm"
+                this.name2 = "Wave"
+                this.max = 198
+                this.damage = 0
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 0
+                this.double = 0
+                this.secretDouble = 0
+                this.buy = 45
+                this.sell = 30
+                this.shooter = 1
+                this.value = 12
+                // this.stuns = 1
+                this.meanwave = 1
+            }  else if (this.type == 66) {
+                this.name1 = "Stun"
+                this.name2 = "Wave"
+                this.max = 99
+                this.damage = 0
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 0
+                this.double = 0
+                this.secretDouble = 0
+                this.buy = 40
+                this.sell = 23
+                this.shooter = 1
+                this.value = 12
+                this.stuns = 1
+                this.meanwave = 1
+            }  else if (this.type == 67) {
+                this.name1 = "Mean"
+                this.name2 = "Wave"
+                this.max = 297
+                this.damage = 0
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 0
+                this.double = 0
+                this.secretDouble = 0
+                this.buy = 50
+                this.sell = 27
+                this.shooter = 1
+                this.value = 18
+                this.stuns = 1
+                this.meanwave = 1
+            }else if (this.type == 68) {
+                this.name1 = "Spot"
+                this.name2 = "Light I"
+                this.max = 400
+                this.damage = 25
+                this.beam = 1
+                this.real = 1
+                this.crew = 4
+                this.fireChance = 10
+                this.double = 0
+                this.buy = 40
+                this.sell = 21
+                this.pulsing = 0
+                this.value = 15
+                this.light = 1
+            }else if (this.type == 69) {
+                this.name1 = "Hot"
+                this.name2 = "Light I"
+                this.max = 450
+                this.damage = 27
+                this.beam = 1
+                this.real = 1
+                this.crew = 5
+                this.fireChance = 50
+                this.double = 0
+                this.buy = 45
+                this.sell = 23
+                this.pulsing = 0
+                this.value = 17
+                this.light = 1
+            }  else if (this.type == 561) {
+                this.name1 = "Spinner"
+                this.name2 = "Pellet"
+                this.max = 450
+                this.damage = 40
+                this.real = 1
+                this.crew = 2
+                this.fireChance = 30
+                this.double = 1
+                this.buy = 45
+                this.sell = 20
+                this.shooter = 1
+                this.value = 10
+                this.turnTo = 562
+            } else if (this.type == 562) {
+                this.name1 = "Spinner"
+                this.name2 = "Pellet"
+                this.max = 400
+                this.damage = 1
+                this.real = 1
+                this.crew = 1
+                this.fireChance = 1
+                this.double = 3
+                this.buy = 45
+                this.sell = 20
+                this.shooter = 1
+                this.value = 10
+                this.turnTo = 56
+            } else if (this.type == 4242) {
                 this.name1 = ""
                 this.name2 = ""
                 this.max = 0
@@ -14524,6 +15802,9 @@ class Weapon {
                 this.bullets[t].stopped = 1
                 for (let g = 0; g < enemy.guys.length; g++) {
                     if (this.bullets[t].goTo.t == enemy.guys[g].tile.t && this.bullets[t].goTo.k == enemy.guys[g].tile.k) {
+                        if (this.bullets[t].stun > 0) {
+                            enemy.guys[g].ropestunned = this.bullets[t].stun
+                        }
                         enemy.guys[g].health -= ((this.damage / this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
                     }
                     if (enemy.guys[g].stretch == 1) {
@@ -14608,6 +15889,9 @@ class Weapon {
                 }
                 for (let g = 0; g < vessel.guys.length; g++) {
                     if (this.bullets[t].goTo.t == vessel.guys[g].tile.t && this.bullets[t].goTo.k == vessel.guys[g].tile.k) {
+                        if (this.bullets[t].stun > 0) {
+                            vessel.guys[g].ropestunned = this.bullets[t].stun
+                        }
                         vessel.guys[g].health -= (this.damage * this.crew) / (1 + vessel.guys[g].gearArmor)
                     }
                     if (vessel.guys[g].stretch == 1) {
@@ -14674,30 +15958,60 @@ class Weapon {
                     let ixs = []
                     for (let t = 0; t < vessel.weapons.length; t++) {
                         if (vessel.weapons[t].real == 1 && vessel.weapons[t].temp == -2) {
-                            ixs.push(t)
+                            if (vessel.weapons[t] != this) {
+                                ixs.push(t)
+                            }
                         }
                     }
                     let c = this.charge
                     for (let t = 0; t < ixs.length; t++) {
-                        vessel.weapons[ixs[t]].charge += c / ixs.length
-                        this.charge -= c / ixs.length
-                        if (vessel.weapons[ixs[t]].charge > vessel.weapons[ixs[t]].max) {
-                            this.charge += vessel.weapons[ixs[t]].charge - vessel.weapons[ixs[t]].max
+                        if (vessel.weapons[ixs[t]].charge < vessel.weapons[ixs[t]].max) {
+                            vessel.weapons[ixs[t]].charge += c / ixs.length
+                            this.charge -= c / ixs.length
+                            if (vessel.weapons[ixs[t]].charge > vessel.weapons[ixs[t]].max) {
+                                this.charge += vessel.weapons[ixs[t]].charge - vessel.weapons[ixs[t]].max
+                            }
                         }
                     }
-                    return
+                    if (this.charge > this.max) {
+                        this.charge = this.max //new to fix overflow?
+                    }
+                    if (this.caplaser != 1) {
+                        return
+                    }
                 }
+            }
+            if (this.cable == 1) {
+                if (this.primed == -1) {
+                    if (enemy.hull <= 0) {
+                        return
+                    }
+                    if (enemy.guys) {
+                        if (enemy.guys.length <= 0) {
+                            return
+                        }
+                    }
+                    this.primed = 1
+                    this.target = tile
+                    this.charge = 0
+                    this.firing = 10
+                }
+                return
             }
             if (vessel.weapons.includes(this)) {
                 if (this.healShield > 0) {
                     this.charge = 0
-                    this.pulsing = 20
+                    if (!this.capshield == 1) {
+                        this.pulsing = 20
+                    }
                     if (vessel.shield.state < vessel.shield.level) {
                         vessel.shield.state++
                     }
-                    for (let t = 0; t < vessel.guys.length; t++) {
-                        if (vessel.guys[t].hostile != 1 && vessel.guys[t].mindControlled != 1) {
-                            vessel.guys[t].health += 5
+                    if (!this.capshield == 1) {
+                        for (let t = 0; t < vessel.guys.length; t++) {
+                            if (vessel.guys[t].hostile != 1 && vessel.guys[t].mindControlled != 1) {
+                                vessel.guys[t].health += 5
+                            }
                         }
                     }
                     return
@@ -14705,13 +16019,18 @@ class Weapon {
             } else {
                 if (this.healShield > 0) {
                     this.charge = 0
-                    this.pulsing = 20
+                    if (!this.capshield == 1) {
+                        this.pulsing = 20
+                    }
                     if (enemy.shield.state < enemy.shield.level) {
                         enemy.shield.state++
                     }
-                    for (let t = 0; t < enemy.guys.length; t++) {
-                        if (enemy.guys[t].hostile != 1 && enemy.guys[t].mindControlled != 1) {
-                            enemy.guys[t].health += 5
+
+                    if (!this.capshield == 1) {
+                        for (let t = 0; t < enemy.guys.length; t++) {
+                            if (enemy.guys[t].hostile != 1 && enemy.guys[t].mindControlled != 1) {
+                                enemy.guys[t].health += 5
+                            }
                         }
                     }
                     return
@@ -14722,19 +16041,28 @@ class Weapon {
                     this.charge = this.max
                     let ixs = []
                     for (let t = 0; t < enemy.weapons.length; t++) {
-                        if (enemy.weapons[t].real == 1) {
-                            ixs.push(t)
+                        if (enemy.weapons[t].real == 1 && enemy.weapons[t].temp == -2) {
+                            if (enemy.weapons[t] != this) {
+                                ixs.push(t)
+                            }
                         }
                     }
                     let c = this.charge
                     for (let t = 0; t < ixs.length; t++) {
-                        enemy.weapons[ixs[t]].charge += c / ixs.length
-                        this.charge -= c / ixs.length
-                        if (enemy.weapons[ixs[t]].charge > enemy.weapons[ixs[t]].max) {
-                            this.charge += enemy.weapons[ixs[t]].charge - enemy.weapons[ixs[t]].max
+                        if (enemy.weapons[ixs[t]].charge < enemy.weapons[ixs[t]].max) {
+                            enemy.weapons[ixs[t]].charge += c / ixs.length
+                            this.charge -= c / ixs.length
+                            if (enemy.weapons[ixs[t]].charge > enemy.weapons[ixs[t]].max) {
+                                this.charge += enemy.weapons[ixs[t]].charge - enemy.weapons[ixs[t]].max
+                            }
                         }
                     }
-                    return
+                    if (this.charge > this.max) {
+                        this.charge = this.max //new to fix overflow?
+                    }
+                    if (this.caplaser != 1) {
+                        return
+                    }
                 }
             }
             if (vessel.weapons.includes(this)) {
@@ -14779,7 +16107,7 @@ class Weapon {
             if (vessel.weapons.includes(this)) {
                 if (this.scrap >= 1) {
                     if (vessel.scrap >= this.scrap) {
-                        if(this.temp == -2){
+                        if (this.temp == -2) {
                             vessel.scrap -= this.scrap
                         }
                         // return
@@ -14789,32 +16117,58 @@ class Weapon {
                 }
             }
             this.reflect = 0
-            if (this.laser == 1) {
-                if (vessel.weapons.includes(this)) {
-                    for (let t = 0; t < enemy.weapons.length; t++) {
-                        if (enemy.weapons[t].mirror == 1) {
-                            if (enemy.weapons[t].shine > 0) {
-                                let link = new LineOP(this.center, tile)
-                                if (enemy.weapons[t].plate) {
-                                    if (link.intersects(enemy.weapons[t].plate)) {
-                                        this.reflect = 1
-                                        this.pointOut = t
-                                        tile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
-                                    }
+            if (this.laser == 1 || this.light == 1) {
+                if(this.light == 1){
+
+                    if (vessel.weapons.includes(this)) {
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            if (enemy.weapons[t].mirror == 1) {
+                                if (enemy.weapons[t].shine > 0) {
+                                            this.reflect = 1
+                                            this.pointOut = t
+                                            tile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
+                                }
+                            }
+                        }
+                    } else {
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            if (vessel.weapons[t].mirror == 1) {
+                                if (vessel.weapons[t].shine > 0) {
+                                            this.reflect = 1
+                                            this.pointOut = t
+                                            tile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                                 }
                             }
                         }
                     }
-                } else {
-                    for (let t = 0; t < vessel.weapons.length; t++) {
-                        if (vessel.weapons[t].mirror == 1) {
-                            if (vessel.weapons[t].shine > 0) {
-                                let link = new LineOP(this.center, tile)
-                                if (vessel.weapons[t].plate) {
-                                    if (link.intersects(vessel.weapons[t].plate)) {
-                                        this.reflect = 1
-                                        this.pointOut = t
-                                        tile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
+                }else{
+
+                    if (vessel.weapons.includes(this)) {
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            if (enemy.weapons[t].mirror == 1) {
+                                if (enemy.weapons[t].shine > 0) {
+                                    let link = new LineOP(this.center, tile)
+                                    if (enemy.weapons[t].plate) {
+                                        if (link.intersects(enemy.weapons[t].plate)) {
+                                            this.reflect = 1
+                                            this.pointOut = t
+                                            tile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            if (vessel.weapons[t].mirror == 1) {
+                                if (vessel.weapons[t].shine > 0) {
+                                    let link = new LineOP(this.center, tile)
+                                    if (vessel.weapons[t].plate) {
+                                        if (link.intersects(vessel.weapons[t].plate)) {
+                                            this.reflect = 1
+                                            this.pointOut = t
+                                            tile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
+                                        }
                                     }
                                 }
                             }
@@ -14822,14 +16176,47 @@ class Weapon {
                     }
                 }
             }
+            if (this.detwall == 1) {
+                if (vessel.weapons.includes(this)) {
+                    if (vessel.dettimer > 0) {
+                        if (enemy.guys) {
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                enemy.guys[t].ropestunned = 170
+                                enemy.guys[t].health -= 10
+                            }
+                            this.target = tile
+                            this.charge = 0
+                            vessel.arcs.push(new CircleA(Math.PI * .5, vessel.body.x, vessel.body.y, 350, "cyan", 22, 0))
+                        }
+                    }
+                } else {
+                    if (enemy.dettimer > 0) {
+                        if (vessel.guys) {
+                            for (let t = 0; t < vessel.guys.length; t++) {
+                                vessel.guys[t].ropestunned = 170
+                                vessel.guys[t].health -= 10
+                            }
+                            this.target = tile
+                            this.charge = 0
+                            enemy.arcs.push(new CircleA(Math.PI * 1.5, enemy.body.x, enemy.body.y, 220, "cyan", -22, 0))
+                        }
+                    }
+                }
+                return
+            }
             if (this.firing <= 0) {
                 this.firing = 10
                 this.target = tile
                 this.charge = 0
                 this.stopBlade = 0
+                if (this.antimatter == 1 || this.lightning == 1 || this.meanwave == 1) {
+                    return
+                }
             } else {
                 if (this.spine != 1) {
-                    this.target = tile
+                    if (this.antimatter != 1) {
+                        this.target = tile
+                    }
                 }
                 return
             }
@@ -14864,9 +16251,9 @@ class Weapon {
                     let sweart = 0
                     for (let w = 0; w < enemy.weapons.length; w++) {
                         if (enemy.weapons[w].bullets.length > 0) {
-                            sweart = 1
                             for (let f = 0; f < enemy.weapons[w].bullets.length; f++) {
                                 if (enemy.weapons[w].bullets[f].aura != 1 && enemy.weapons[w].bullets[f].dummy != 1) {
+                                    sweart = 1
                                     enemy.weapons[w].bullets[f].xmom *= .8
                                     enemy.weapons[w].bullets[f].ymom *= .8
                                     enemy.weapons[w].bullets[f].life += 20
@@ -14882,9 +16269,9 @@ class Weapon {
                             }
                         }
                         if (enemy.weapons[w].rockets.length > 0) {
-                            sweart = 1
                             for (let f = 0; f < enemy.weapons[w].rockets.length; f++) {
                                 if (enemy.weapons[w].rockets[f].aura != 1 && enemy.weapons[w].rockets[f].dummy != 1) {
+                                    sweart = 1
                                     enemy.weapons[w].rockets[f].xmom *= .95
                                     enemy.weapons[w].rockets[f].ymom *= .95
                                     enemy.weapons[w].rockets[f].life += 50
@@ -15188,6 +16575,12 @@ class Weapon {
                             }
                         }
                     }
+                }
+
+                if (this.mirror == 1) {
+                    this.shine = this.shineMax
+                    this.firing = -1
+                    return
                 }
                 if (this.tractor == 1) {
                     let sweart = 0
@@ -15496,10 +16889,11 @@ class Weapon {
             }
         }
     }
-    check(point) {
-        if (this.selected == 1) {
-            if (this.body.isPointInside(point)) {
-                // this.selected = 0
+    check(point, e) {
+        // if (this.selected == 1) {
+        if (this.body.isPointInside(point)) {
+            // this.selected = 0
+            if (e == 2) {
                 this.auto *= -1
                 if (this.auto == 1) {
                     autoOn.play()
@@ -15509,6 +16903,7 @@ class Weapon {
                 return
             }
         }
+        // }
         if (vessel.wepSelect == -1) {
             if (this.body.isPointInside(point)) {
                 vessel.wepSelect = 1
@@ -15561,13 +16956,15 @@ class Weapon {
             this.selected = 0
         }
     }
-    check2(point) {
+    check2(point, e) {
         if (this.body.isPointInside(point)) {
-            this.auto *= -1
-            if (this.auto == 1) {
-                autoOn.play()
-            } else {
-                autoOff.play()
+            if (false) { //e == 2
+                this.auto *= -1
+                if (this.auto == 1) {
+                    autoOn.play()
+                } else {
+                    autoOff.play()
+                }
             }
         }
     }
@@ -15578,6 +16975,99 @@ class Weapon {
             this.center.x = this.follow.x
             this.center.y = this.follow.y
         }
+
+        if (this.temp > 0) {
+            this.temp--
+            // return
+        }
+
+
+        if (vessel.weapons.includes(this)) {
+            if (this.mirror == 1) {
+                if (this.shine > 0) {
+                    this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 2)
+                    this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), "gray", 2)
+                    this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 200), "gray", 6)
+                    this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
+                    // this.beam1.draw()
+                    // this.beam2.draw()
+                    let xm = ((((vessel.body.x + enemy.body.x) * .5) - 50)) - vessel.body.x
+                    let subplate = new CircleG(vessel.body.x, vessel.body.y, Math.abs(xm) * 1.02, "gray")
+                    this.subplate = subplate
+                    // this.plate.draw()
+                    subplate.draw()
+                    this.shine--
+                } else {
+                    this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                    let subplate = new CircleG(-100,-100, 5, "gray")
+                    this.subplate = subplate
+                }
+            }
+        } else {
+            if (this.mirror == 1) {
+                if (this.shine > 0) {
+                    this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 2)
+                    this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 100), "gray", 2)
+                    this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 200), "gray", 6)
+                    this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
+                    // this.beam1.draw()
+                    // this.beam2.draw()
+                    // this.plate.draw()
+                    let xm = ((((vessel.body.x + enemy.body.x) * .5) + 50)) - enemy.body.x
+                    let subplate = new CircleG(enemy.body.x, enemy.body.y, Math.abs(xm) * .72, "gray")
+                    this.subplate = subplate
+                    // this.plate.draw()
+                    subplate.draw()
+                    this.shine--
+                } else {
+                    this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                    let subplate = new CircleG(-100,-100, 5, "gray")
+                    this.subplate = subplate
+                }
+            }
+        }
+        if (this.pulsing > 0) {
+            if (vessel.weapons.includes(this)) {
+                this.pulsing--
+                for (let t = 0; t < vessel.guys.length; t++) {
+                    if (vessel.guys[t].hostile != 1 && vessel.guys[t].mindControlled != 1) {
+                        let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
+                        dot.draw()
+                        vessel.guys[t].health += 5
+                    } else {
+                        if (this.healControl == 1) {
+                            if (vessel.guys[t].hostile == 1) {
+                                if (vessel.guys[t].mindControlled != 1) {
+                                    let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                    dot.draw()
+                                    vessel.guys[t].health -= 5
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                this.pulsing--
+                for (let t = 0; t < enemy.guys.length; t++) {
+                    if (enemy.guys[t].hostile != 1 && enemy.guys[t].mindControlled != 1) {
+                        let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
+                        dot.draw()
+                        enemy.guys[t].health += 5
+                    } else {
+                        if (this.healControl == 1) {
+                            if (enemy.guys[t].hostile == 1) {
+                                if (enemy.guys[t].mindControlled != 1) {
+                                    let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                    dot.draw()
+                                    enemy.guys[t].health -= 5
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // if(this.type == 23){
         // }
         for (let t = 0; t < this.bombs.length; t++) {
@@ -15912,7 +17402,7 @@ class Weapon {
                         vessel.weapons[x].center.x = this.rockets[t].x
                         vessel.weapons[x].center.y = this.rockets[t].y
                         this.rockets[t].life = -1
-                        this.rockets[t].aura = 0
+                        // this.rockets[t].aura = 0 //wtf why?
                     } else {
                         let wep = new Weapon(this.type)
                         wep.temp = 50
@@ -15923,7 +17413,7 @@ class Weapon {
                         enemy.weapons[x].center.x = this.rockets[t].x
                         enemy.weapons[x].center.y = this.rockets[t].y
                         this.rockets[t].life = -1
-                        this.rockets[t].aura = 0
+                        // this.rockets[t].aura = 0//wtf why?
                     }
                 }
                 if (this.rockets[t].fling > -1) {
@@ -16290,7 +17780,7 @@ class Weapon {
                         vessel.weapons[x].center.x = this.bullets[t].x
                         vessel.weapons[x].center.y = this.bullets[t].y
                         this.bullets[t].life = -1
-                        this.bullets[t].aura = 0
+                        // this.bullets[t].aura = 0//wtf why?
                     } else {
                         let wep = new Weapon(this.type)
                         wep.temp = 50
@@ -17176,162 +18666,23 @@ class Weapon {
                 if (this.firing == 10) {
                     this.lines = []
                     laser1.play()
-                }
-                if (this.reflect == 1) {
-                    if (vessel.weapons.includes(this)) {
-                        //basic laser
-                        if (vessel.shield.rings.length > 0) {
-                            let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            let link3 = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin4k = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            this.lines.push(link)
-                            this.lines.push(lin2k)
-                            this.opacity = 10
-                            this.lines.push(link3)
-                            this.lines.push(lin4k)
-                            //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
-                            vessel.shield.state--
-                            for (let k = 0; k < 5; k++) {
-                                let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
-                                particle1.life = 12
-                                particle1.xmom *= 2
-                                particle1.ymom *= 2
-                                if (this.target.marked == 1) {
-                                    if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                        globalParticles.push(particle1)
-                                    }
-                                }
-                            }
-                            vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
-                            vessel.shield.charge = 0
-                        } else {
-                            let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            let link3 = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin4k = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            this.lines.push(link)
-                            this.lines.push(lin2k)
-                            this.opacity = 10
-                            this.lines.push(link3)
-                            this.lines.push(lin4k)
-                            for (let k = 0; k < 5; k++) {
-                                let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
-                                particle1.life = 12
-                                particle1.xmom *= 2
-                                particle1.ymom *= 2
-                                if (this.target.marked == 1) {
-                                    if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                        globalParticles.push(particle1)
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        if (enemy.shield.rings.length > 0) {
-                            let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            let link3 = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin4k = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            this.lines.push(link)
-                            this.lines.push(lin2k)
-                            this.opacity = 10
-                            this.lines.push(link3)
-                            this.lines.push(lin4k)
-                            //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
-                            enemy.shield.state--
-                            for (let k = 0; k < 5; k++) {
-                                let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
-                                particle1.life = 12
-                                particle1.xmom *= 2
-                                particle1.ymom *= 2
-                                if (this.target.marked == 1) {
-                                    if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                        globalParticles.push(particle1)
-                                    }
-                                }
-                            }
-                            vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
-                            vessel.shield.charge = 0
-                        } else {
-                            let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            let link3 = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
-                            let lin4k = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
-                            this.lines.push(link)
-                            this.lines.push(lin2k)
-                            this.opacity = 10
-                            this.lines.push(link3)
-                            this.lines.push(lin4k)
-                            for (let k = 0; k < 5; k++) {
-                                let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
-                                particle1.life = 12
-                                particle1.xmom *= 2
-                                particle1.ymom *= 2
-                                if (this.target.marked == 1) {
-                                    if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                        globalParticles.push(particle1)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (this.firing == 10) {
-                        this.lines = []
+                    if (this.reflect == 1) {
                         if (vessel.weapons.includes(this)) {
-                            if (enemy.shield.rings.length > 0) {
-                                let link = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FF0000", 7)
-                                let lin2k = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FFFFFF", 3)
-                                this.lines.push(link)
-                                this.lines.push(lin2k)
-                                this.opacity = 10
-                                //this.lines.push(enemy.shield.rings[enemy.shield.rings.length - 1])
-                                enemy.shield.state--
-                                for (let k = 0; k < 5; k++) {
-                                    let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
-                                    particle1.life = 12
-                                    particle1.xmom *= 2
-                                    particle1.ymom *= 2
-                                    if (this.target.marked == 1) {
-                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                            globalParticles.push(particle1)
-                                        }
-                                    }
-                                }
-                                enemy.shield.rings.splice(enemy.shield.rings.length - 1, 1)
-                                enemy.shield.charge = 0
-                            } else {
-                                let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF0000", 7)
-                                let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
-                                this.lines.push(link)
-                                this.lines.push(lin2k)
-                                this.opacity = 10
-                                for (let k = 0; k < 5; k++) {
-                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
-                                    particle1.life = 12
-                                    particle1.xmom *= 2
-                                    particle1.ymom *= 2
-                                    if (this.target.marked == 1) {
-                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
-                                            globalParticles.push(particle1)
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
+                            //basic laser
                             if (vessel.shield.rings.length > 0) {
-                                let link = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FF0000", 7)
-                                // link.draw()
-                                let lin2k = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FFFFFF", 3)
-                                // lin2k.draw()
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin4k = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
                                 this.lines.push(link)
                                 this.lines.push(lin2k)
                                 this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
                                 //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
                                 vessel.shield.state--
                                 for (let k = 0; k < 5; k++) {
-                                    let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                    let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
                                     particle1.life = 12
                                     particle1.xmom *= 2
                                     particle1.ymom *= 2
@@ -17344,21 +18695,160 @@ class Weapon {
                                 vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
                                 vessel.shield.charge = 0
                             } else {
-                                let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF0000", 7)
-                                // link.draw()
-                                let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
-                                // lin2k.draw()
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin4k = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
                                 this.lines.push(link)
                                 this.lines.push(lin2k)
                                 this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
                                 for (let k = 0; k < 5; k++) {
-                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
                                     particle1.life = 12
                                     particle1.xmom *= 2
                                     particle1.ymom *= 2
                                     if (this.target.marked == 1) {
                                         if (enemy.hull > 0 && enemy.guys.length > 0) {
                                             globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (enemy.shield.rings.length > 0) {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin4k = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                enemy.shield.state--
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                                vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                vessel.shield.charge = 0
+                            } else {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FF0000", 7)
+                                let lin4k = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (this.firing == 10) {
+                            this.lines = []
+                            if (vessel.weapons.includes(this)) {
+                                if (enemy.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FF0000", 7)
+                                    let lin2k = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(enemy.shield.rings[enemy.shield.rings.length - 1])
+                                    enemy.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    enemy.shield.rings.splice(enemy.shield.rings.length - 1, 1)
+                                    enemy.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF0000", 7)
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (vessel.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FF0000", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                    vessel.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                    vessel.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF0000", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
                                         }
                                     }
                                 }
@@ -19403,10 +20893,10 @@ class Weapon {
                     heatbeamaud.play()
                 }
                 let rat = 0
-                let invrat = 13
+                let invrat = 20
                 let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
                 let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
-                for (let t = 0; t < 14; t++) {
+                for (let t = 0; t < 21; t++) {
                     let scrat = rat / invrat
                     let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 2, "#FF000088")
                     rat++
@@ -20014,24 +21504,40 @@ class Weapon {
                         }
                     }
 
-                    if (this.flaggedDetonation == 0) {
+                    this.ring = 0
+                    if (vessel.weapons.includes(this)) {
+                        if (enemy.shield.rings.length > 0) {
+
+                            this.ring = 1
+                        }
+                    } else {
+                        if (vessel.shield.rings.length > 0) {
+                            this.ring = 1
+
+                        }
+                    }
+                    if (this.ring == 1) {
+
+                    } else if (this.flaggedDetonation == 0) {
 
                         if (this.missed != 1) {
                             if (vessel.weapons.includes(this)) {
+
                                 enemy.hull -= this.damage * .1
                                 for (let t = 0; t < enemy.guys.length; t++) {
                                     if (enemy.guys[t].tile == this.target) {
-                                        enemy.guys[t].health -= this.damage / (1 + (enemy.guys[t].gearArmor))
+                                        enemy.guys[t].health -= (this.damage *1) / (1 + (enemy.guys[t].gearArmor)) // this.crew no 2x is perfect
                                     }
                                 }
                             } else {
                                 vessel.hull -= this.damage * .1
                                 for (let t = 0; t < vessel.guys.length; t++) {
                                     if (vessel.guys[t].tile == this.target) {
-                                        vessel.guys[t].health -= this.damage / (1 + (vessel.guys[t].gearArmor))
+                                        vessel.guys[t].health -= (this.damage * 1) / (1 + (vessel.guys[t].gearArmor))
                                     }
                                 }
                             }
+
                             this.target.integrity -= this.damage
                         }
                     } else {
@@ -20057,23 +21563,1733 @@ class Weapon {
                     }
 
                 }
-                if (this.flaggedDetonation == 0) {
-                    for (let t = 0; t < 9; t++) {
-                        let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
-                        let link = new LineOP(p, this.center, getRandomColor(), 1)
-                        link.draw()
-                    }
-                } else {
+                if(this.ring == 1){
 
-                    for (let t = 0; t < 9; t++) {
-                        let p = new Circle(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
-                        let link = new LineOP(p, this.center, getRandomColor(), 1)
-                        link.draw()
-                        p.draw()
+                    if (vessel.weapons.includes(this)) {
+                        for (let t = 0; t < 9; t++) {
+                            if (enemy.shield.rings.length > 0) {
+                                let p = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius)+ (Math.random() * this.target.height), enemy.shield.rings[enemy.shield.rings.length - 1].y+ (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }else{
+                                let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }
+                        }
+                    }else{
+                        for (let t = 0; t < 9; t++) {
+                            if (vessel.shield.rings.length > 0) {
+                                let p = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius)+ (Math.random() * this.target.height), vessel.shield.rings[vessel.shield.rings.length - 1].y+ (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }else{
+                                let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }
+                        }
+
+                    }
+                }else{
+                    if (this.flaggedDetonation == 0) {
+                        for (let t = 0; t < 9; t++) {
+                            let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                            let link = new LineOP(p, this.center, getRandomColor(), 1)
+                            link.draw()
+                        }
+                    } else {
+
+                        for (let t = 0; t < 9; t++) {
+                            let p = new Circle(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                            let link = new LineOP(p, this.center, getRandomColor(), 1)
+                            link.draw()
+                            p.draw()
+                        }
                     }
                 }
                 this.firing -= .5
-            } else if (this.type == 100) {
+                // if(this.firing <= 0){
+                //     this.ring = 0
+                // }
+            } else if (this.type == 51) {
+
+                //hot laser
+
+
+                if (this.firing == 10) {
+                    this.lines = []
+                    laser1.play()
+                    if (this.reflect == 1) {
+                        if (vessel.weapons.includes(this)) {
+                            //basic laser
+                            if (vessel.shield.rings.length > 0) {
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin4k = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                vessel.shield.state--
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                                vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                vessel.shield.charge = 0
+                            } else {
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin4k = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (enemy.shield.rings.length > 0) {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin4k = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                enemy.shield.state--
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                                vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                vessel.shield.charge = 0
+                            } else {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FFAA00", 7)
+                                let lin4k = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (this.firing == 10) {
+                            this.lines = []
+                            if (vessel.weapons.includes(this)) {
+                                if (enemy.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FFAA00", 7)
+                                    let lin2k = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(enemy.shield.rings[enemy.shield.rings.length - 1])
+                                    enemy.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    enemy.shield.rings.splice(enemy.shield.rings.length - 1, 1)
+                                    enemy.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFAA00", 7)
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (vessel.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FFAA00", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                    vessel.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                    vessel.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFAA00", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                this.firing -= 2
+
+            } else if (this.type == 52) {
+
+                //cap laser
+
+
+                if (this.firing == 10) {
+                    this.lines = []
+                    laser1.play()
+                    if (this.reflect == 1) {
+                        if (vessel.weapons.includes(this)) {
+                            //basic laser
+                            if (vessel.shield.rings.length > 0) {
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin4k = new LineOP(new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                vessel.shield.state--
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                                vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                vessel.shield.charge = 0
+                            } else {
+                                let link = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin2k = new LineOP(this.center, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin4k = new LineOP(this.target, enemy.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (enemy.shield.rings.length > 0) {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin4k = new LineOP(new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                enemy.shield.state--
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                                vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                vessel.shield.charge = 0
+                            } else {
+                                let link = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin2k = new LineOP(this.center, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                let link3 = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FF00AA", 7)
+                                let lin4k = new LineOP(this.target, vessel.weapons[this.pointOut].platecenter, "#FFFFFF", 3)
+                                this.lines.push(link)
+                                this.lines.push(lin2k)
+                                this.opacity = 10
+                                this.lines.push(link3)
+                                this.lines.push(lin4k)
+                                for (let k = 0; k < 5; k++) {
+                                    let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(link3.angle() + (Math.random() - .5)) * 7, Math.sin(link3.angle() + (Math.random() - .5)) * 3)
+                                    particle1.life = 12
+                                    particle1.xmom *= 2
+                                    particle1.ymom *= 2
+                                    if (this.target.marked == 1) {
+                                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                            globalParticles.push(particle1)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (this.firing == 10) {
+                            this.lines = []
+                            if (vessel.weapons.includes(this)) {
+                                if (enemy.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FF00AA", 7)
+                                    let lin2k = new LineOP(this.center, new Point(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(enemy.shield.rings[enemy.shield.rings.length - 1])
+                                    enemy.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius), enemy.shield.rings[enemy.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    enemy.shield.rings.splice(enemy.shield.rings.length - 1, 1)
+                                    enemy.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 7)
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (vessel.shield.rings.length > 0) {
+                                    let link = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FF00AA", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    //this.lines.push(vessel.shield.rings[vessel.shield.rings.length - 1])
+                                    vessel.shield.state--
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius), vessel.shield.rings[vessel.shield.rings.length - 1].y, 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                    vessel.shield.rings.splice(vessel.shield.rings.length - 1, 1)
+                                    vessel.shield.charge = 0
+                                } else {
+                                    let link = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FF00AA", 7)
+                                    // link.draw()
+                                    let lin2k = new LineOP(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), "#FFFFFF", 3)
+                                    // lin2k.draw()
+                                    this.lines.push(link)
+                                    this.lines.push(lin2k)
+                                    this.opacity = 10
+                                    for (let k = 0; k < 5; k++) {
+                                        let particle1 = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 3, "pink", Math.cos(lin2k.angle() + (Math.random() - .5)) * 7, Math.sin(lin2k.angle() + (Math.random() - .5)) * 3)
+                                        particle1.life = 12
+                                        particle1.xmom *= 2
+                                        particle1.ymom *= 2
+                                        if (this.target.marked == 1) {
+                                            if (enemy.hull > 0 && enemy.guys.length > 0) {
+                                                globalParticles.push(particle1)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                this.firing -= 2
+
+            } else if (this.type == 53) {
+
+                //cap shield
+                //play a sound
+            } else if (this.type == 54) {
+
+                //paddle crash
+
+            } else if (this.type == 55) {
+                //matter annihilartor
+                let pit = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
+                let link = new LineOP(this.center, pit)
+                this.dist = (link.hypotenuse() * .5) * .97
+                let a1 = (-(Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                let a2 = (-(Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                if (vessel.weapons.includes(this)) {
+
+                    a1 = (-(Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    a2 = (-(Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    this.median.x = (this.center.x + pit.x) * .5
+                    this.median.y = ((this.center.y * (9 - (9 - (this.firing - 1)))) + (pit.y * (9 - (this.firing - 1)))) * (1 / 9)
+
+                    this.dot1.x = (Math.cos(a1) * this.dist) + this.median.x
+                    this.dot1.y = (Math.sin(a1) * this.dist) + this.median.y
+                    this.dot2.x = (Math.cos(a2) * this.dist) + this.median.x
+                    this.dot2.y = (Math.sin(a2) * this.dist) + this.median.y
+                } else {
+
+                    a1 = ((Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    a2 = ((Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    this.median.x = (this.center.x + pit.x) * .5
+                    this.median.y = ((this.center.y * (9 - (9 - (this.firing - 1)))) + (pit.y * (9 - (this.firing - 1)))) * (1 / 9)
+
+                    this.dot1.x = (Math.cos(a1) * -this.dist) + this.median.x
+                    this.dot1.y = (Math.sin(a1) * -this.dist) + this.median.y
+                    this.dot2.x = (Math.cos(a2) * -this.dist) + this.median.x
+                    this.dot2.y = (Math.sin(a2) * -this.dist) + this.median.y
+                }
+
+
+                if (this.firing > 5.5) {
+                    this.dot1.radius *= 1.01
+                    this.dot2.radius *= 1.01
+                } else {
+                    this.dot1.radius /= 1.01
+                    this.dot2.radius /= 1.01
+
+                }
+                if (this.firing < 10 && this.firing > 1) {
+                    canvas_context.globalAlpha = (Math.abs(this.firing - 5.5) + 1) * (.25)
+                }
+                this.dot1.draw()
+                this.dot2.draw()
+                canvas_context.globalAlpha = 1
+
+
+                this.firing -= (5 / this.firing) * .1
+                if (this.firing <= 1) {
+
+
+                    this.target.fire -= this.fireChance
+                    if (Math.random() < (this.fireChance / 300)) {
+                        this.target.onFire = 1
+                        this.target.fire = 0
+                    }
+
+
+                    this.firing = -1
+                    this.target.integrity -= this.damage
+                    if (vessel.weapons.includes(this)) {
+                        enemy.hull -= this.damage * .1
+                        enemy.shield.state -= 2
+                        if (enemy.shield.state < 0) {
+                            enemy.shield.state = 0
+                        }
+                        let n = enemy.neighbors(this.target)
+                        for (let r = 0; r < n.length; r++) {
+                            n[r].integrity -= this.damage * .5
+                        }
+                        if (enemy.guys) {
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].xlitchmatter == 1) {
+                                    continue
+                                }
+                                if (this.target == enemy.guys[t].tile) {
+                                    enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                }
+                            }
+                        }
+                    } else {
+                        vessel.hull -= this.damage * .1
+                        vessel.shield.state -= 2
+                        if (vessel.shield.state < 0) {
+                            vessel.shield.state = 0
+                        }
+                        let n = vessel.neighbors(this.target)
+                        for (let r = 0; r < n.length; r++) {
+                            n[r].integrity -= this.damage * .5
+                        }
+                        if (vessel.guys) {
+                            for (let t = 0; t < vessel.guys.length; t++) {
+
+                                if (vessel.guys[t].xlitchmatter == 1) {
+                                    continue
+                                }
+                                if (this.target == vessel.guys[t].tile) {
+                                    vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                }
+                            }
+                        }
+                    }
+
+                    for (let k = 0; k < 10; k++) {
+                        let particle1 = new Circle(this.dot1.x, this.dot1.y, 5, this.dot1.color, (Math.random() - .5) * 50, (Math.random() - .5) * 50)
+                        particle1.life = 9
+                        let particle2 = new Circle(this.dot2.x, this.dot2.y, 5, this.dot2.color, (Math.random() - .5) * 50, (Math.random() - .5) * 50)
+                        particle2.life = 9
+                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                            globalParticles.push(particle1)
+                            globalParticles.push(particle2)
+                        }
+                    }
+                    this.particleflag = 10
+
+
+                }
+            } else if (this.type == 56) {
+                //spingun
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#00ff00")
+                if (this.temp <= -2) {
+                    ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
+                    let bullet = new Circle(link.object.x, link.object.y, 5, "#00ff00", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 6
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+
+                    this.name1 = "Spinner"
+                    this.name2 = "Pellet"
+                    this.max = 350
+                    this.damage = 45
+                    this.real = 1
+                    this.crew = 1
+                    this.fireChance = 1
+                    this.double = 1
+                    this.buy = 45
+                    this.sell = 20
+                    this.shooter = 1
+                    this.value = 10
+                    this.type = 562
+                }
+                this.firing -= 2
+
+
+            } else if (this.type == 561) {
+                //spingun
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#FF0088")
+                if (this.temp <= -2) {
+                    ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
+                    let bullet = new Circle(link.object.x, link.object.y, 5, "#FF0088", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 6
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+                    this.name1 = "Spinner"
+                    this.name2 = "Pellet"
+                    this.max = 450
+                    this.damage = 70
+                    this.real = 1
+                    this.crew = 2
+                    this.fireChance = 30
+                    this.double = 1
+                    this.buy = 45
+                    this.sell = 20
+                    this.shooter = 1
+                    this.value = 10
+                    this.type = 56
+                }
+                this.firing -= 2
+
+
+            } else if (this.type == 562) {
+                //spingun
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#FFDD00")
+                if (this.temp <= -2) {
+                    ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 5
+                    ymom *= link.hypotenuse() / 5
+                    let bullet = new Circle(link.object.x, link.object.y, 5, "#FFDD00", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 6
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 5
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+                    this.name1 = "Spinner"
+                    this.name2 = "Pellet"
+                    this.max = 400
+                    this.damage = 1
+                    this.real = 1
+                    this.crew = 1
+                    this.fireChance = 1
+                    this.double = 3
+                    this.buy = 45
+                    this.sell = 20
+                    this.shooter = 1
+                    this.value = 10
+                    this.type = 561
+                }
+                this.firing -= 2
+
+
+            } else if (this.type == 57) {
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#FF00AA")
+                if (this.temp <= -2) {
+                    // ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 24
+                    ymom *= link.hypotenuse() / 24
+                    let bullet = new Circle(link.object.x, link.object.y, 15, "#FF00AA88", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 25
+                    bullet.stun = 250
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 24
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 24
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+                }
+                this.firing -= 2
+
+            } else if (this.type == 59) {
+
+                if (this.firing == 10) {
+                    let miss = 1
+                    let droned = -1
+                    if (vessel.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
+                                if (vessel.weapons[t].bullets[k].rope == 1) {
+                                    if (vessel.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < enemy.dodgeRate()) {
+                            miss = 0
+                        }
+
+                        for (let t = 0; t < enemy.drones.length; t++) {
+                            if (enemy.drones[t].rod == 1 && enemy.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    enemy.drones[t].charge = enemy.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if (enemy.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
+                                if (enemy.weapons[t].bullets[k].rope == 1) {
+                                    if (enemy.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < vessel.dodgeRate()) {
+                            miss = 0
+                        }
+                        for (let t = 0; t < vessel.drones.length; t++) {
+                            if (vessel.drones[t].rod == 1 && vessel.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    vessel.drones[t].charge = vessel.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+
+                    if (droned > -1) {
+                        if (vessel.weapons.includes(this)) {
+                            let zap = new Lightning(this.center, enemy.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        } else {
+                            let zap = new Lightning(this.center, vessel.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        }
+                    } else if (miss == 1) {
+                        let zap = new Lightning(this.center, new Point(this.target.x + (this.target.width * .5) + (Math.random() * 100), this.target.y + (this.target.height * .5) + (Math.random() * 100)))
+                        vessel.zaps.push(zap)
+                    } else {
+
+                        let zap = new Lightning(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)))
+                        vessel.zaps.push(zap)
+
+
+                        this.target.fire -= this.fireChance
+                        if (Math.random() < (this.fireChance / 300)) {
+                            this.target.onFire = 1
+                            this.target.fire = 0
+                        }
+
+                        if (vessel.weapons.includes(this)) {
+                            enemy.hull -= this.damage * .1
+                            enemy.shield.state -= 0
+                            if (enemy.shield.state < 0) {
+                                enemy.shield.state = 0
+                            }
+                            let n = enemy.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (enemy.guys) {
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == enemy.guys[t].tile) {
+                                        enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        } else {
+                            vessel.hull -= this.damage * .1
+                            vessel.shield.state -= 0
+                            if (vessel.shield.state < 0) {
+                                vessel.shield.state = 0
+                            }
+                            let n = vessel.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (vessel.guys) {
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == vessel.guys[t].tile) {
+                                        vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+                this.firing -= 2
+
+            } else if (this.type == 60) {
+
+                // this.bullets[t].goTo.fire -= this.fireChance
+                // if (Math.random() < (this.fireChance / 300)) {
+                //     this.bullets[t].goTo.onFire = 1
+                //     this.bullets[t].goTo.fire = 0
+                // }
+                if (this.firing == 10) {
+
+                    let miss = 1
+                    let droned = -1
+                    if (vessel.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
+                                if (vessel.weapons[t].bullets[k].rope == 1) {
+                                    if (vessel.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < enemy.dodgeRate()) {
+                            miss = 0
+                        }
+
+                        for (let t = 0; t < enemy.drones.length; t++) {
+                            if (enemy.drones[t].rod == 1 && enemy.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    enemy.drones[t].charge = enemy.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if (enemy.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
+                                if (enemy.weapons[t].bullets[k].rope == 1) {
+                                    if (enemy.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < vessel.dodgeRate()) {
+                            miss = 0
+                        }
+                        for (let t = 0; t < vessel.drones.length; t++) {
+                            if (vessel.drones[t].rod == 1 && vessel.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    vessel.drones[t].charge = vessel.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if (droned > -1) {
+                        if (vessel.weapons.includes(this)) {
+                            let zap = new LightningC(this.center, enemy.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        } else {
+                            let zap = new LightningC(this.center, vessel.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        }
+                    } else if (miss == 1) {
+                        let zap = new LightningC(this.center, new Point(this.target.x + (this.target.width * .5) + (Math.random() * 100), this.target.y + (this.target.height * .5) + (Math.random() * 100)))
+                        vessel.zaps.push(zap)
+                    } else {
+
+                        let zap = new LightningC(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)))
+                        vessel.zaps.push(zap)
+
+
+                        this.target.fire -= this.fireChance
+                        if (Math.random() < (this.fireChance / 300)) {
+                            this.target.onFire = 1
+                            this.target.fire = 0
+                        }
+
+
+                        if (vessel.weapons.includes(this)) {
+                            enemy.hull -= this.damage * .1
+                            enemy.shield.state -= 1
+                            if (enemy.shield.state < 0) {
+                                enemy.shield.state = 0
+                            }
+                            let n = enemy.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (enemy.guys) {
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == enemy.guys[t].tile) {
+                                        enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        } else {
+                            vessel.hull -= this.damage * .1
+                            vessel.shield.state -= 1
+                            if (vessel.shield.state < 0) {
+                                vessel.shield.state = 0
+                            }
+                            let n = vessel.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (vessel.guys) {
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == vessel.guys[t].tile) {
+                                        vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+                this.firing -= 2
+
+            } else if (this.type == 61) {
+
+
+                // this.bullets[t].goTo.fire -= this.fireChance
+                // if (Math.random() < (this.fireChance / 300)) {
+                //     this.bullets[t].goTo.onFire = 1
+                //     this.bullets[t].goTo.fire = 0
+                // }
+                if (this.firing == 10) {
+
+                    let miss = 1
+                    let droned = -1
+                    if (vessel.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
+                                if (vessel.weapons[t].bullets[k].rope == 1) {
+                                    if (vessel.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < enemy.dodgeRate()) {
+                            miss = 0
+                        }
+
+                        for (let t = 0; t < enemy.drones.length; t++) {
+                            if (enemy.drones[t].rod == 1 && enemy.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    enemy.drones[t].charge = enemy.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if (enemy.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
+                                if (enemy.weapons[t].bullets[k].rope == 1) {
+                                    if (enemy.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < vessel.dodgeRate()) {
+                            miss = 0
+                        }
+                        for (let t = 0; t < vessel.drones.length; t++) {
+                            if (vessel.drones[t].rod == 1 && vessel.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    vessel.drones[t].charge = vessel.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+
+                    if (droned > -1) {
+                        if (vessel.weapons.includes(this)) {
+                            let zap = new LightningO(this.center, enemy.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        } else {
+                            let zap = new LightningO(this.center, vessel.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        }
+                    } else if (miss == 1) {
+                        let zap = new LightningO(this.center, new Point(this.target.x + (this.target.width * .5) + (Math.random() * 100), this.target.y + (this.target.height * .5) + (Math.random() * 100)))
+                        vessel.zaps.push(zap)
+                    } else {
+
+                        let zap = new LightningO(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)))
+                        vessel.zaps.push(zap)
+
+
+                        this.target.fire -= this.fireChance
+                        if (Math.random() < (this.fireChance / 300)) {
+                            this.target.onFire = 1
+                            this.target.fire = 0
+                        }
+
+
+                        if (vessel.weapons.includes(this)) {
+                            enemy.hull -= this.damage * .1
+                            enemy.shield.state -= 1
+                            if (enemy.shield.state < 0) {
+                                enemy.shield.state = 0
+                            }
+                            let n = enemy.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (enemy.guys) {
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == enemy.guys[t].tile) {
+                                        enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        } else {
+                            vessel.hull -= this.damage * .1
+                            vessel.shield.state -= 1
+                            if (vessel.shield.state < 0) {
+                                vessel.shield.state = 0
+                            }
+                            let n = vessel.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (vessel.guys) {
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    if (this.target == vessel.guys[t].tile) {
+                                        vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+                this.firing -= 2
+
+            } else if (this.type == 62) {
+
+
+                // this.bullets[t].goTo.fire -= this.fireChance
+                // if (Math.random() < (this.fireChance / 300)) {
+                //     this.bullets[t].goTo.onFire = 1
+                //     this.bullets[t].goTo.fire = 0
+                // }
+                if (this.firing == 10) {
+
+                    let miss = 1
+                    let droned = -1
+                    if (vessel.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < vessel.weapons.length; t++) {
+                            for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
+                                if (vessel.weapons[t].bullets[k].rope == 1) {
+                                    if (vessel.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < enemy.dodgeRate()) {
+                            miss = 0
+                        }
+
+                        for (let t = 0; t < enemy.drones.length; t++) {
+                            if (enemy.drones[t].rod == 1 && enemy.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    enemy.drones[t].charge = enemy.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if (enemy.weapons.includes(this)) {
+                        let enododge = 0
+                        for (let t = 0; t < enemy.weapons.length; t++) {
+                            for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
+                                if (enemy.weapons[t].bullets[k].rope == 1) {
+                                    if (enemy.weapons[t].bullets[k].life > 10) {
+                                        enododge++
+                                    }
+                                }
+                            }
+                        }
+                        if (Math.random() - (enododge / 10) < vessel.dodgeRate()) {
+                            miss = 0
+                        }
+                        for (let t = 0; t < vessel.drones.length; t++) {
+                            if (vessel.drones[t].rod == 1 && vessel.drones[t].active == 1) {
+                                droned = t
+                                if (Math.random() < .4) {
+                                    vessel.drones[t].charge = vessel.drones[t].max
+                                    break
+                                }
+                            }
+                        }
+                    }
+
+                    if (droned > -1) {
+                        if (vessel.weapons.includes(this)) {
+                            let zap = new ChainLightning(this.center, enemy.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        } else {
+                            let zap = new ChainLightning(this.center, vessel.drones[droned].center)
+                            vessel.zaps.push(zap)
+                        }
+                    } else if (miss == 1) {
+                        let zap = new ChainLightning(this.center, new Point(this.target.x + (this.target.width * .5) + (Math.random() * 100), this.target.y + (this.target.height * .5) + (Math.random() * 100)))
+                        vessel.zaps.push(zap)
+                    } else {
+
+                        let zap = new ChainLightning(this.center, new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)))
+                        vessel.zaps.push(zap)
+
+
+                        this.target.fire -= this.fireChance
+                        if (Math.random() < (this.fireChance / 300)) {
+                            this.target.onFire = 1
+                            this.target.fire = 0
+                        }
+
+
+                        if (vessel.weapons.includes(this)) {
+                            enemy.hull -= this.damage * .1
+                            enemy.shield.state -= 1
+                            if (enemy.shield.state < 0) {
+                                enemy.shield.state = 0
+                            }
+                            let n = enemy.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (enemy.guys) {
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    let zap = new ChainLightning(new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), enemy.guys[t].body)
+                                    vessel.zaps.push(zap)
+                                    enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                }
+                            }
+                        } else {
+                            vessel.hull -= this.damage * .1
+                            vessel.shield.state -= 1
+                            if (vessel.shield.state < 0) {
+                                vessel.shield.state = 0
+                            }
+                            let n = vessel.neighbors(this.target)
+                            for (let r = 0; r < n.length; r++) {
+                                n[r].integrity -= this.damage * .5
+                            }
+                            if (vessel.guys) {
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].metal == 1) {
+                                        continue
+                                    }
+                                    let zap = new ChainLightning(new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5)), vessel.guys[t].body)
+                                    vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                    vessel.zaps.push(zap)
+                                }
+                            }
+                        }
+                    }
+
+                }
+                this.firing -= 2
+
+            } else if (this.type == 63) {
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#AAFFFF88")
+                if (this.temp <= -2) {
+                    // ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 16
+                    ymom *= link.hypotenuse() / 16
+                    let bullet = new Circle(link.object.x, link.object.y, 15, "#AAFFFF88", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 17
+                    bullet.stun = 250
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 16
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 16
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+                }
+                this.firing -= 2
+
+            } else if (this.type == 64) {
+
+                let ring = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), 20, "#FF888888")
+                if (this.temp <= -2) {
+                    // ring.draw()
+                }
+                if (this.firing == 10) {
+                    if (this.temp == -2) {
+                        // ion1aud.play()
+                    }
+                    let link = new LineOP()
+                    if (vessel.weapons.includes(this)) {
+                        link.target = ring
+                        link.object = this.center
+                    } else {
+                        //////////////////////////////////////////////////////////////console.log("d")
+                        link.target = ring
+                        link.object = this.center
+                    }
+                    let xmom = Math.cos(link.angle())
+                    let ymom = Math.sin(link.angle())
+                    xmom *= link.hypotenuse() / 18
+                    ymom *= link.hypotenuse() / 18
+                    let bullet = new Circle(link.object.x, link.object.y, 15, "#FF888888", -xmom, -ymom)
+                    //////////////////////////////////////////////////////////////console.log(bullet)
+                    bullet.goTo = this.target
+                    bullet.life = 19
+                    bullet.stun = 250
+                    this.bullets.push(bullet)
+                    //////////////////////////////////////////////////////////////console.log(this.bullets)
+                    if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 18
+                        bullet.stopshort = 1
+                    }
+                    if (enemy.weapons.includes(this) && vessel.shield.rings.length > 0) {
+                        // bullet.goTo = this.target
+                        bullet.life = 18
+                        bullet.stopshort = 1
+                    }
+                    if (this.target.walkable != 1) {
+                        bullet.life += 100
+                    }
+                }
+                this.firing -= 2
+
+            }else if (this.type == 65){
+                if(this.firing == 10){
+
+
+                    let link = new LineOP(this.center, new Point(this.target.x+(.5*this.target.width),  this.target.y+(.5*this.target.height)))
+                    let angle = link.angle()
+                    let arc = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 24, "#FF00AA88", Math.cos(angle-Math.PI)*10, Math.sin(angle-Math.PI)*10)
+                    arc.life = 300
+                    arc.damaging = 2
+                   let arc2 = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 17, "#FF00AA88", Math.cos(angle-Math.PI)*10, Math.sin(angle-Math.PI)*10)
+                   arc2.life = 300
+                   arc2.damaging = 4
+                   arc.stun = 0
+                   arc2.stun = 0
+                   if(vessel.weapons.includes(this)){
+                    vessel.arcs.push(arc)
+                    vessel.arcs.push(arc2)
+                   }else if(enemy.weapons.includes(this)){
+                    enemy.arcs.push(arc)
+                    enemy.arcs.push(arc2)
+                    }
+                }
+                this.firing-=11
+            }else if (this.type == 66){
+                if(this.firing == 10){
+
+
+                    let link = new LineOP(this.center, new Point(this.target.x+(.5*this.target.width),  this.target.y+(.5*this.target.height)))
+                    let angle = link.angle()
+                    let arc = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 36, "#AA00FF88", Math.cos(angle-Math.PI)*12, Math.sin(angle-Math.PI)*12)
+                    arc.life = 300
+                    arc.damaging = .0000001
+                   let arc2 = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 18, "#AA00FF88", Math.cos(angle-Math.PI)*12, Math.sin(angle-Math.PI)*12)
+                   arc2.life = 300
+                   arc2.damaging = .0000001
+                   arc2.stun = 30
+                   arc.stun = 20
+                   if(vessel.weapons.includes(this)){
+                    vessel.arcs.push(arc)
+                    vessel.arcs.push(arc2)
+                   }else if(enemy.weapons.includes(this)){
+                    enemy.arcs.push(arc)
+                    enemy.arcs.push(arc2)
+                    }
+                }
+                this.firing-=11
+            }else if (this.type == 67){
+                if(this.firing == 10){
+
+                    if(this.target){
+
+                    }else{
+                        if(vessel.weapons.includes(this)){
+                            this.target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
+                        }else{
+                            this.target = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
+                        }
+
+                    }
+                    let link = new LineOP(this.center, new Point(this.target.x+(.5*this.target.width),  this.target.y+(.5*this.target.height)))
+                    let angle = link.angle()
+                    let arc = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 30, "#ff335288", Math.cos(angle-Math.PI)*11, Math.sin(angle-Math.PI)*11)
+                    arc.life = 300
+                    arc.damaging = 2
+                   let arc2 = new CircleA(angle-(Math.PI*.5), this.center.x, this.center.y, 17.5, "#ff335288", Math.cos(angle-Math.PI)*11, Math.sin(angle-Math.PI)*11)
+                   arc2.life = 300
+                   arc2.damaging = 4
+                   arc2.stun = 30
+                   arc.stun = 20
+                   if(vessel.weapons.includes(this)){
+                    vessel.arcs.push(arc)
+                    vessel.arcs.push(arc2)
+                   }else if(enemy.weapons.includes(this)){
+                    enemy.arcs.push(arc)
+                    enemy.arcs.push(arc2)
+                    }
+                }
+                this.firing-=11
+            }else if (this.type == 68) {
+                if (this.firing == 10) {
+                    heatbeamaud.play()
+                }
+                     if(this.reflect == 1){
+                        
+                        let rat = 0
+                        let invrat = 20
+                        let xdif  = 0
+                        let ydif = 0
+                        if (vessel.weapons.includes(this)) {
+                        xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (enemy.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }else{
+                            xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (vessel.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }
+                            for (let t = 0; t < 21; t++) {
+
+
+                                let scrat = rat / invrat
+                                let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                                rat++
+                                if (vessel.weapons.includes(this)) {
+                                    if (enemy.shield.rings.length > 0) {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                                if (enemy.weapons.includes(this)) {
+                                    if (vessel.shield.rings.length > 0) {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                            
+                        }
+
+                        if(true){
+
+                            let rat = 0
+                            let invrat = 20
+                            let xdif  = 0
+                            let ydif = 0
+                            if (vessel.weapons.includes(this)) {
+                                xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - (this.target.x + (this.target.width * .5)) 
+                            ydif = (enemy.weapons[this.pointOut].subplate.y ) -(this.target.y + (this.target.height * .5)) 
+                            }else{
+                                xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) -(this.target.x + (this.target.width * .5)) 
+                            ydif = (vessel.weapons[this.pointOut].subplate.y ) - (this.target.y + (this.target.height * .5)) 
+                            }
+                                for (let t = 0; t < 21; t++) {
+            
+            
+                                    let scrat = rat / invrat
+                                    let dot = new Circle((this.target.x + (this.target.width * .5))  + (xdif * scrat), (this.target.y + (this.target.height * .5)) + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                                    rat++
+                                    if (vessel.weapons.includes(this)) {
+                                        if (enemy.shield.rings.length > 0) {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                    if (enemy.weapons.includes(this)) {
+                                        if (vessel.shield.rings.length > 0) {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                
+                            }
+                        }
+                    }else{
+
+                        let rat = 0
+                        let invrat = 26
+                        let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
+                        let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
+                    for (let t = 0; t < 27; t++) {
+
+
+                        let scrat = rat / invrat
+                        let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                        rat++
+                        if (vessel.weapons.includes(this)) {
+                            if (enemy.shield.rings.length > 0) {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                        if (enemy.weapons.includes(this)) {
+                            if (vessel.shield.rings.length > 0) {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                    
+                }
+                }
+                this.firing--
+            } else if (this.type == 69) {
+                    if (this.firing == 10) {
+                        heatbeamaud.play()
+                    }
+                     if(this.reflect == 1){
+                        
+                        let rat = 0
+                        let invrat = 13
+                        let xdif  = 0
+                        let ydif = 0
+                        if (vessel.weapons.includes(this)) {
+                        xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (enemy.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }else{
+                            xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (vessel.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }
+                            for (let t = 0; t < 14; t++) {
+
+
+                                let scrat = rat / invrat
+                                let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                                rat++
+                                if (vessel.weapons.includes(this)) {
+                                    if (enemy.shield.rings.length > 0) {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                                if (enemy.weapons.includes(this)) {
+                                    if (vessel.shield.rings.length > 0) {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                            
+                        }
+
+                        if(true){
+
+                            let rat = 0
+                            let invrat = 13
+                            let xdif  = 0
+                            let ydif = 0
+                            if (vessel.weapons.includes(this)) {
+                                xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - (this.target.x + (this.target.width * .5)) 
+                            ydif = (enemy.weapons[this.pointOut].subplate.y ) -(this.target.y + (this.target.height * .5)) 
+                            }else{
+                                xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) -(this.target.x + (this.target.width * .5)) 
+                            ydif = (vessel.weapons[this.pointOut].subplate.y ) - (this.target.y + (this.target.height * .5)) 
+                            }
+                                for (let t = 0; t < 14; t++) {
+            
+            
+                                    let scrat = rat / invrat
+                                    let dot = new Circle((this.target.x + (this.target.width * .5))  + (xdif * scrat), (this.target.y + (this.target.height * .5)) + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                                    rat++
+                                    if (vessel.weapons.includes(this)) {
+                                        if (enemy.shield.rings.length > 0) {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                    if (enemy.weapons.includes(this)) {
+                                        if (vessel.shield.rings.length > 0) {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                
+                            }
+                        }
+                    }else{
+
+                        let rat = 0
+                        let invrat = 26
+                        let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
+                        let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
+                    for (let t = 0; t < 27; t++) {
+
+
+                        let scrat = rat / invrat
+                        let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                        rat++
+                        if (vessel.weapons.includes(this)) {
+                            if (enemy.shield.rings.length > 0) {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                        if (enemy.weapons.includes(this)) {
+                            if (vessel.shield.rings.length > 0) {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                    
+                }
+                }
+                this.firing--
+            }  else if (this.type == 100) {
                 if (vessel.weapons.includes(this)) {
                     let g = Math.max(10 - this.firing)
                     for (let k = 0; k < g; k++) {
@@ -20088,6 +23304,189 @@ class Weapon {
         } else {
             this.lines = []
         }
+
+        if (this.particleflag > 0) {
+            this.particleflag--
+            // for (let k = 0; k < 10; k++) {
+            //     let particle1 = new Circle(this.dot1.x, this.dot1.y, 5, this.dot1.color, (Math.random()-.5) * 50, (Math.random()-.5) * 50)
+            //     particle1.life = 9
+            //     let particle2 = new Circle(this.dot2.x, this.dot2.y, 5, this.dot2.color, (Math.random()-.5) * 50, (Math.random()-.5) * 50)
+            //     particle2.life = 9
+            //         if (enemy.hull > 0 && enemy.guys.length > 0) {
+            //             globalParticles.push(particle1)
+            //             globalParticles.push(particle2)
+            //         }
+            // }
+
+        } else {
+
+            if (this.firing <= 0) {
+
+                this.dot1 = new Circle(this.center.x, this.center.y, 10, "#FFAA00")
+                this.dot2 = new Circle(this.center.x, this.center.y, 10, "#AA00FF")
+            }
+        }
+
+        if (this.cable == 1) {
+            if (this.primed == -1) {
+                this.ball.xmom = 0
+                this.ball.ymom = 0
+                this.ball.x = this.center.x
+                this.ball.y = this.center.y
+            }
+            if (this.firing <= 0) {
+
+                this.ball.xmom += (this.center.x - this.ball.x) / (30 - (this.stack / 100))
+                this.ball.ymom += (this.center.y - this.ball.y) / (30 - (this.stack / 100))
+                let link = new LineOP(this.ball, this.center)
+                if (link.hypotenuse() < 80) {
+                    this.ball.xmom = 0
+                    this.ball.ymom = 0
+                    this.string.cx *= .7
+                    this.string.cy *= .7
+                    this.ball.x = this.center.x
+                    this.ball.y = this.center.y
+                    if (this.primed != -1) {
+                        this.stack += 10
+                    } else {
+                        this.stack *= .999
+                    }
+                    this.primed = -1
+                } else {
+                    this.string.cx *= 1.5
+                    this.string.cy *= 1.5
+                    if (Math.abs(this.string.cy) > 100) {
+                        this.string.cy /= 1.4
+                    }
+                    if (Math.abs(this.string.cx) > 100) {
+                        this.string.cx /= 1.4
+                    }
+                }
+                this.ball.xmom *= .96
+                this.ball.ymom *= .96
+                this.ball.move()
+            } else {
+                let point = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
+                this.ball.xmom += (point.x - this.ball.x) / (50 - (this.stack / 100))
+                this.ball.ymom += (point.y - this.ball.y) / (50 - (this.stack / 100))
+                let link = new LineOP(this.ball, this.target)
+                if (vessel.weapons.includes(this)) {
+                    this.vflag = 1
+                } else {
+                    this.vflag = 0
+                }
+                this.breakbounce = 0
+                this.ball.radius *= 4.5
+                if (enemy.shield.rings.length > 0) {
+                    if (this.vflag == 1 && this.ball.doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
+                        this.breakbounce = 1
+                    }
+                }
+                if (vessel.shield.rings.length > 0) {
+                    if (this.vflag == 0 && this.ball.doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
+                        this.breakbounce = 1
+                    }
+                }
+                this.ball.radius /= 4.5
+                if (this.breakbounce == 1) {
+
+                    for (let k = 0; k < 5; k++) {
+                        let particle1 = new Circle(this.ball.x, this.ball.y, 3, this.ball.color, (this.ball.xmom / 6) * (1 + ((Math.random() - .5) / 2)), (this.ball.ymom / 6) * (1 + ((Math.random() - .5) / 2)))
+                        particle1.life = 8
+                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                            globalParticles.push(particle1)
+                        }
+                    }
+                    this.firing = -1
+                    this.ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                    this.ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                    if (this.primed == 1) {
+                        this.primed = 0
+                        if (vessel.weapons.includes(this)) {
+                            // enemy.hull -= this.damage*.1
+                            // this.target.integrity -= this.damage  
+                            enemy.shield.state--
+                            enemy.shield.charge = 0
+                        } else {
+                            // vessel.hull -= this.damage*.1
+                            // this.target.integrity -= this.damage
+                            vessel.shield.state--
+                            vessel.shield.charge = 0
+                        }
+                    }
+                } else if (link.hypotenuse() < 50) {
+
+                    for (let k = 0; k < 5; k++) {
+                        let particle1 = new Circle(this.ball.x, this.ball.y, 3, this.ball.color, (this.ball.xmom / 6) * (1 + ((Math.random() - .5) / 4)), (this.ball.ymom / 6) * (1 + ((Math.random() - .5) / 4)))
+                        particle1.life = 8
+                        if (enemy.hull > 0 && enemy.guys.length > 0) {
+                            globalParticles.push(particle1)
+                        }
+                    }
+
+
+                    this.ball.x = this.target.x + (this.target.width * .5)
+                    this.ball.y = this.target.y + (this.target.height * .5)
+                    this.firing = -1
+                    this.ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                    this.ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                    if (this.primed == 1) {
+                        this.primed = 0
+
+
+
+                        this.target.fire -= this.fireChance
+                        if (Math.random() < (this.fireChance / 300)) {
+                            this.target.onFire = 1
+                            this.target.fire = 0
+                        }
+
+
+                        if (vessel.weapons.includes(this)) {
+                            enemy.hull -= this.damage * .1
+                            this.target.integrity -= this.damage
+                            // enemy.shield.state--
+                            if (enemy.guys) {
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (this.target == enemy.guys[t].tile) {
+                                        enemy.guys[t].health -= (this.damage * this.crew) / (1 + enemy.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        } else {
+                            vessel.hull -= this.damage * .1
+                            this.target.integrity -= this.damage
+                            // vessel.shield.state--
+                            if (vessel.guys) {
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (this.target == vessel.guys[t].tile) {
+                                        vessel.guys[t].health -= (this.damage * this.crew) / (1 + vessel.guys[t].gearArmor)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (!this.target) {
+                    this.firing = -1
+                }
+                this.ball.xmom *= .97
+                this.ball.ymom *= .97
+                this.ball.move()
+            }
+            canvas_context.beginPath()
+            this.median = new Point((this.center.x + this.ball.x) * .5, (this.center.y + this.ball.y) * .5)
+            this.string.cx -= (this.ball.xmom * -(1 + ((Math.random() - .5) * .3))) / 23
+            this.string.cy -= (this.ball.xmom * -(1 + ((Math.random() - .5) * .3))) / 23
+            this.string.cx *= .98
+            this.string.cy *= .98
+            canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.string.cx, this.median.y + (this.string.cy), this.ball.x, this.ball.y)
+            canvas_context.fillStyle = "#AAFFFF"
+            canvas_context.strokeStyle = "#AAFFFF"
+            canvas_context.lineWidth = 4
+            canvas_context.stroke()
+            // this.ball.draw()
+            canvas_context.drawImage(spikeball, 0, 0, 44, 44, this.ball.x - this.ball.radius, this.ball.y - this.ball.radius, this.ball.radius * 2, this.ball.radius * 2)
+        }
     }
     draw(specialSkip = 0) {
         if (this.temp > 0) {
@@ -20096,82 +23495,12 @@ class Weapon {
             }
         }
         if (specialSkip != 1) {
-            if (this.pulsing > 0) {
-                if (vessel.weapons.includes(this)) {
-                    this.pulsing--
-                    for (let t = 0; t < vessel.guys.length; t++) {
-                        if (vessel.guys[t].hostile != 1 && vessel.guys[t].mindControlled != 1) {
-                            let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
-                            dot.draw()
-                            vessel.guys[t].health += 5
-                        } else {
-                            if (this.healControl == 1) {
-                                if (vessel.guys[t].hostile == 1) {
-                                    if (vessel.guys[t].mindControlled != 1) {
-                                        let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
-                                        dot.draw()
-                                        vessel.guys[t].health -= 5
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    this.pulsing--
-                    for (let t = 0; t < enemy.guys.length; t++) {
-                        if (enemy.guys[t].hostile != 1 && enemy.guys[t].mindControlled != 1) {
-                            let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
-                            dot.draw()
-                            enemy.guys[t].health += 5
-                        } else {
-                            if (this.healControl == 1) {
-                                if (enemy.guys[t].hostile == 1) {
-                                    if (enemy.guys[t].mindControlled != 1) {
-                                        let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
-                                        dot.draw()
-                                        enemy.guys[t].health -= 5
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (vessel.weapons.includes(this)) {
-                if (this.mirror == 1) {
-                    if (this.shine > 0) {
-                        this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 2)
-                        this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), "gray", 2)
-                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 6)
-                        this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
-                        // this.beam1.draw()
-                        // this.beam2.draw()
-                        this.plate.draw()
-                        this.shine--
-                    } else {
-                        this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
-                    }
-                }
-            } else {
-                if (this.mirror == 1) {
-                    if (this.shine > 0) {
-                        this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 2)
-                        this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 100), "gray", 2)
-                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 6)
-                        this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
-                        // this.beam1.draw()
-                        // this.beam2.draw()
-                        this.plate.draw()
-                        this.shine--
-                    } else {
-                        this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
-                    }
-                }
-            }
-            if (this.temp > 0) {
-                this.temp--
-                // return
-            }
+
+            //moved to work?
+            // if (this.temp > 0) {
+            //     this.temp--
+            //     // return
+            // }
             // if (this.temp <= 0 && this.temp > -2) {
             //     if (vessel.weapons.includes(this)) {
             //         vessel.weapons.splice(vessel.weapons.indexOf(this), 1)
@@ -20518,6 +23847,48 @@ class Weapon {
                     canvas_context.drawImage(distortionField, 0, 0, distortionField.width, distortionField.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 } else if (this.type == 50) {
                     canvas_context.drawImage(filament, 0, 0, filament.width, filament.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 51) {
+                    canvas_context.drawImage(hotlaser, 0, 0, hotlaser.width, hotlaser.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 52) {
+                    canvas_context.drawImage(caplaser, 0, 0, caplaser.width, caplaser.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 53) {
+                    canvas_context.drawImage(capshield, 0, 0, capshield.width, capshield.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 54) {
+                    canvas_context.drawImage(pongwep, 0, 0, pongwep.width, pongwep.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 55) {
+                    canvas_context.drawImage(antidevice, 0, 0, antidevice.width, antidevice.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 56) {
+                    canvas_context.drawImage(spingun1, 0, 0, spingun1.width, spingun1.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 57) {
+                    canvas_context.drawImage(bubblegun, 0, 0, bubblegun.width, bubblegun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 58) {
+                    canvas_context.drawImage(detwall, 0, 0, detwall.width, detwall.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 59) {
+                    canvas_context.drawImage(lightgun, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 60) {
+                    canvas_context.drawImage(lightgunc, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 61) {
+                    canvas_context.drawImage(lightgunh, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 62) {
+                    canvas_context.drawImage(chainlight, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 63) {
+                    canvas_context.drawImage(bubbleguncold, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 64) {
+                    canvas_context.drawImage(bubblegunhot, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 65) {
+                    canvas_context.drawImage(meanwave, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 66) {
+                    canvas_context.drawImage(meanwave2, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 67) {
+                    canvas_context.drawImage(meanwavez, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 68) {
+                    canvas_context.drawImage(spotlight, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 69) {
+                    canvas_context.drawImage(hotlight, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 561) {
+                    canvas_context.drawImage(spingun2, 0, 0, spingun2.width, spingun2.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 562) {
+                    canvas_context.drawImage(spingun3, 0, 0, spingun3.width, spingun3.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 } else if (this.type == 100) {
                     this.frame++
                     canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -20553,10 +23924,16 @@ class Weapon {
                     canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.droneType == 7) {
-                    canvas_context.drawImage(rs[39], 0, 0, 64, rs[39].height,  this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(rs[39], 0, 0, 64, rs[39].height, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.droneType == 8) {
-                    canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height,  this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.droneType == 9) {
+                    canvas_context.drawImage(lightdrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.droneType == 10) {
+                    canvas_context.drawImage(pulsedrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
             } else if (this.gearType >= 0) {
                 if (this.gearType == 0) {
@@ -20626,7 +24003,7 @@ class Weapon {
                 }
 
                 if (this.gearType == 8001) {
-                    canvas_context.drawImage(dronePart1, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(dronePart1, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.gearType == 8002) {
                     canvas_context.drawImage(dronePart2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -20635,7 +24012,7 @@ class Weapon {
                     canvas_context.drawImage(dronePart3, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.gearType == 8004) {
-                    canvas_context.drawImage(dronePart4, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(dronePart4, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.gearType == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -20653,6 +24030,96 @@ class Weapon {
         if (this.following == 1) {
             this.center.x = this.follow.x
             this.center.y = this.follow.y
+        }
+
+
+        if (vessel.weapons.includes(this)) {
+            if (this.mirror == 1) {
+                if (this.shine > 0) {
+                    this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 2)
+                    this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), "gray", 2)
+                    this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 200), "gray", 6)
+                    this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
+                    // this.beam1.draw()
+                    // this.beam2.draw()
+                    let xm = ((((vessel.body.x + enemy.body.x) * .5) - 50)) - vessel.body.x
+                    let subplate = new CircleG(vessel.body.x, vessel.body.y, Math.abs(xm) * 1.02, "gray")
+                    this.subplate = subplate
+                    // this.plate.draw()
+                    subplate.draw()
+                    // this.shine--
+                } else {
+                    this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                    let subplate = new CircleG(-100,-100, 5, "gray")
+                    this.subplate = subplate
+                }
+            }
+        } else {
+            if (this.mirror == 1) {
+                if (this.shine > 0) {
+                    this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 2)
+                    this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 100), "gray", 2)
+                    this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 200), "gray", 6)
+                    this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
+                    // this.beam1.draw()
+                    // this.beam2.draw()
+                    // this.plate.draw()
+                    let xm = ((((vessel.body.x + enemy.body.x) * .5) + 50)) - enemy.body.x
+                    let subplate = new CircleG(enemy.body.x, enemy.body.y, Math.abs(xm) * .72, "gray")
+                    this.subplate = subplate
+                    // this.plate.draw()
+                    subplate.draw()
+                    // this.shine--
+                } else {
+                    this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                    let subplate = new CircleG(-100,-100, 5, "gray")
+                    this.subplate = subplate
+                }
+            }
+        }
+
+
+
+        if (this.pulsing > 0) {
+            if (vessel.weapons.includes(this)) {
+                // this.pulsing--
+                for (let t = 0; t < vessel.guys.length; t++) {
+                    if (vessel.guys[t].hostile != 1 && vessel.guys[t].mindControlled != 1) {
+                        let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
+                        dot.draw()
+                        // vessel.guys[t].health += 5
+                    } else {
+                        if (this.healControl == 1) {
+                            if (vessel.guys[t].hostile == 1) {
+                                if (vessel.guys[t].mindControlled != 1) {
+                                    let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                    dot.draw()
+                                    // vessel.guys[t].health -= 5
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // this.pulsing--
+                for (let t = 0; t < enemy.guys.length; t++) {
+                    if (enemy.guys[t].hostile != 1 && enemy.guys[t].mindControlled != 1) {
+                        let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#00FF0044")
+                        dot.draw()
+                        // enemy.guys[t].health += 5
+                    } else {
+                        if (this.healControl == 1) {
+                            if (enemy.guys[t].hostile == 1) {
+                                if (enemy.guys[t].mindControlled != 1) {
+                                    let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                    dot.draw()
+                                    // enemy.guys[t].health -= 5
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         // if(this.type == 23){
         // }
@@ -23251,10 +26718,10 @@ class Weapon {
                     heatbeamaud.pause()
                 }
                 let rat = 0
-                let invrat = 13
+                let invrat = 20
                 let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
                 let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
-                for (let t = 0; t < 14; t++) {
+                for (let t = 0; t < 21; t++) {
                     let scrat = rat / invrat
                     let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 2, "#FF000088")
                     rat++
@@ -23853,6 +27320,7 @@ class Weapon {
 
                 if (this.firing == 10) {
                     this.flaggedDetonation = 0
+
                     for (let k = 0; k < vessel.distortionPoints.length; k++) {
                         let link = new LineOP(this.target, vessel.distortionPoints[k])
                         if (link.hypotenuse() < 40) {
@@ -23860,42 +27328,390 @@ class Weapon {
                             break
                         }
                     }
-                    if (this.missed != 1) {
-                        if (vessel.weapons.includes(this)) {
-                            // enemy.hull -= this.damage * .1
-                            for (let t = 0; t < enemy.guys.length; t++) {
-                                if (enemy.guys[t].tile == this.target) {
-                                    // enemy.guys[t].health -= this.damage / (1 + (enemy.guys[t].gearArmor))
+
+                    this.ring = 0
+                    if (vessel.weapons.includes(this)) {
+                        if (enemy.shield.rings.length > 0) {
+
+                            this.ring = 1
+                        }
+                    } else {
+                        if (vessel.shield.rings.length > 0) {
+                            this.ring = 1
+
+                        }
+                    }
+                    if (this.ring == 1) {
+
+                    } else if (this.flaggedDetonation == 0) {
+
+                        if (this.missed != 1) {
+                            if (vessel.weapons.includes(this)) {
+
+                                // enemy.hull -= this.damage * .1
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].tile == this.target) {
+                                        // enemy.guys[t].health -= (this.damage * this.crew) / (1 + (enemy.guys[t].gearArmor))
+                                    }
+                                }
+                            } else {
+                                // vessel.hull -= this.damage * .1
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].tile == this.target) {
+                                        // vessel.guys[t].health -= (this.damage * this.crew) / (1 + (vessel.guys[t].gearArmor))
+                                    }
                                 }
                             }
-                        } else {
-                            // vessel.hull -= this.damage * .1
-                            for (let t = 0; t < vessel.guys.length; t++) {
-                                if (vessel.guys[t].tile == this.target) {
-                                    // vessel.guys[t].health -= this.damage / (1 + (vessel.guys[t].gearArmor))
+
+                            // this.target.integrity -= this.damage
+                        }
+                    } else {
+
+                        if (this.missed != 1) {
+                            if (vessel.weapons.includes(this)) {
+                                // enemy.hull -= this.damage * .1 * 5
+                                for (let t = 0; t < enemy.guys.length; t++) {
+                                    if (enemy.guys[t].tile == this.target) {
+                                        // enemy.guys[t].health -= this.damage / (1 + (enemy.guys[t].gearArmor)) * 5
+                                    }
                                 }
+                            } else {
+                                // vessel.hull -= this.damage * .1 * 5
+                                for (let t = 0; t < vessel.guys.length; t++) {
+                                    if (vessel.guys[t].tile == this.target) {
+                                        // vessel.guys[t].health -= this.damage / (1 + (vessel.guys[t].gearArmor)) * 5
+                                    }
+                                }
+                            }
+                            // this.target.integrity -= this.damage * 5
+                        }
+                    }
+
+                }
+                if(this.ring == 1){
+
+                    if (vessel.weapons.includes(this)) {
+                        for (let t = 0; t < 9; t++) {
+                            if (enemy.shield.rings.length > 0) {
+                                let p = new Circle(enemy.shield.rings[enemy.shield.rings.length - 1].x - (enemy.shield.rings[enemy.shield.rings.length - 1].radius)+ (Math.random() * this.target.height), enemy.shield.rings[enemy.shield.rings.length - 1].y+ (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }else{
+                                let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
                             }
                         }
-                        // this.target.integrity -= this.damage
+                    }else{
+                        for (let t = 0; t < 9; t++) {
+                            if (vessel.shield.rings.length > 0) {
+                                let p = new Circle(vessel.shield.rings[vessel.shield.rings.length - 1].x + (vessel.shield.rings[vessel.shield.rings.length - 1].radius)+ (Math.random() * this.target.height), vessel.shield.rings[vessel.shield.rings.length - 1].y+ (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }else{
+                                let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                                let link = new LineOP(p, this.center, getRandomColor(), 1)
+                                link.draw()
+                            }
+                        }
+
+                    }
+                }else{
+                    if (this.flaggedDetonation == 0) {
+                        for (let t = 0; t < 9; t++) {
+                            let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
+                            let link = new LineOP(p, this.center, getRandomColor(), 1)
+                            link.draw()
+                        }
+                    } else {
+
+                        for (let t = 0; t < 9; t++) {
+                            let p = new Circle(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
+                            let link = new LineOP(p, this.center, getRandomColor(), 1)
+                            link.draw()
+                            p.draw()
+                        }
                     }
                 }
-                if (this.flaggedDetonation == 0) {
-                    for (let t = 0; t < 9; t++) {
-                        let p = new Point(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height))
-                        let link = new LineOP(p, this.center, getRandomColor(), 1)
-                        link.draw()
-                    }
+                this.firing -= .5
+                // if(this.firing <= 0){
+                //     this.ring = 0
+                // }
+            }  else if (this.type == 55) {
+                //matter annihilartor
+                let pit = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
+                let link = new LineOP(this.center, pit)
+                this.dist = (link.hypotenuse() * .5) * .97
+                let a1 = (-(Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                let a2 = (-(Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                if (vessel.weapons.includes(this)) {
+
+                    a1 = (-(Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    a2 = (-(Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    this.median.x = (this.center.x + pit.x) * .5
+                    this.median.y = ((this.center.y * (9 - (9 - (this.firing - 1)))) + (pit.y * (9 - (this.firing - 1)))) * (1 / 9)
+
+                    this.dot1.x = (Math.cos(a1) * this.dist) + this.median.x
+                    this.dot1.y = (Math.sin(a1) * this.dist) + this.median.y
+                    this.dot2.x = (Math.cos(a2) * this.dist) + this.median.x
+                    this.dot2.y = (Math.sin(a2) * this.dist) + this.median.y
                 } else {
 
-                    for (let t = 0; t < 9; t++) {
-                        let p = new Circle(this.target.x + (Math.random() * this.target.width), this.target.y + (Math.random() * this.target.height), (Math.random() * 3) + 3, "yellow")
-                        let link = new LineOP(p, this.center, getRandomColor(), 1)
-                        link.draw()
-                        p.draw()
-                    }
+                    a1 = ((Math.PI)) + ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    a2 = ((Math.PI)) - ((9 - (this.firing - 1)) * (Math.PI / 9))
+                    this.median.x = (this.center.x + pit.x) * .5
+                    this.median.y = ((this.center.y * (9 - (9 - (this.firing - 1)))) + (pit.y * (9 - (this.firing - 1)))) * (1 / 9)
+
+                    this.dot1.x = (Math.cos(a1) * -this.dist) + this.median.x
+                    this.dot1.y = (Math.sin(a1) * -this.dist) + this.median.y
+                    this.dot2.x = (Math.cos(a2) * -this.dist) + this.median.x
+                    this.dot2.y = (Math.sin(a2) * -this.dist) + this.median.y
                 }
-                // this.firing-=.1
-            } else if (this.type == 100) {
+
+                if (this.firing < 10 && this.firing > 1) {
+                    canvas_context.globalAlpha = (Math.abs(this.firing - 5.5) + 1) * (.25)
+                }
+                this.dot1.draw()
+                this.dot2.draw()
+                canvas_context.globalAlpha = 1
+
+            }else if (this.type == 68) {
+                if (this.firing == 10) {
+                    // heatbeamaud.play()
+                }
+                     if(this.reflect == 1){
+                        
+                        let rat = 0
+                        let invrat = 20
+                        let xdif  = 0
+                        let ydif = 0
+                        if (vessel.weapons.includes(this)) {
+                        xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (enemy.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }else{
+                            xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (vessel.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }
+                            for (let t = 0; t < 21; t++) {
+
+
+                                let scrat = rat / invrat
+                                let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                                rat++
+                                if (vessel.weapons.includes(this)) {
+                                    if (enemy.shield.rings.length > 0) {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                                if (enemy.weapons.includes(this)) {
+                                    if (vessel.shield.rings.length > 0) {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                            
+                        }
+
+                        if(true){
+
+                            let rat = 0
+                            let invrat = 20
+                            let xdif  = 0
+                            let ydif = 0
+                            if (vessel.weapons.includes(this)) {
+                                xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - (this.target.x + (this.target.width * .5)) 
+                            ydif = (enemy.weapons[this.pointOut].subplate.y ) -(this.target.y + (this.target.height * .5)) 
+                            }else{
+                                xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) -(this.target.x + (this.target.width * .5)) 
+                            ydif = (vessel.weapons[this.pointOut].subplate.y ) - (this.target.y + (this.target.height * .5)) 
+                            }
+                                for (let t = 0; t < 21; t++) {
+            
+            
+                                    let scrat = rat / invrat
+                                    let dot = new Circle((this.target.x + (this.target.width * .5))  + (xdif * scrat), (this.target.y + (this.target.height * .5)) + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                                    rat++
+                                    if (vessel.weapons.includes(this)) {
+                                        if (enemy.shield.rings.length > 0) {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                    if (enemy.weapons.includes(this)) {
+                                        if (vessel.shield.rings.length > 0) {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                
+                            }
+                        }
+                    }else{
+
+                        let rat = 0
+                        let invrat = 26
+                        let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
+                        let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
+                    for (let t = 0; t < 27; t++) {
+
+
+                        let scrat = rat / invrat
+                        let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FFFF0044")
+                        rat++
+                        if (vessel.weapons.includes(this)) {
+                            if (enemy.shield.rings.length > 0) {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                        if (enemy.weapons.includes(this)) {
+                            if (vessel.shield.rings.length > 0) {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                    
+                }
+                }
+                // this.firing--
+            } else if (this.type == 69) {
+                    if (this.firing == 10) {
+                        // heatbeamaud.play()
+                    }
+                     if(this.reflect == 1){
+                        
+                        let rat = 0
+                        let invrat = 20
+                        let xdif  = 0
+                        let ydif = 0
+                        if (vessel.weapons.includes(this)) {
+                        xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (enemy.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }else{
+                            xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) - this.center.x
+                        ydif = (vessel.weapons[this.pointOut].subplate.y ) - this.center.y
+                        }
+                            for (let t = 0; t < 21; t++) {
+
+
+                                let scrat = rat / invrat
+                                let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                                rat++
+                                if (vessel.weapons.includes(this)) {
+                                    if (enemy.shield.rings.length > 0) {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                                if (enemy.weapons.includes(this)) {
+                                    if (vessel.shield.rings.length > 0) {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            dot.draw()
+                                        }
+                                    } else {
+                                        dot.draw()
+                                    }
+                                }
+                            
+                        }
+
+                        if(true){
+
+                            let rat = 0
+                            let invrat = 20
+                            let xdif  = 0
+                            let ydif = 0
+                            if (vessel.weapons.includes(this)) {
+                                xdif = (enemy.weapons[this.pointOut].subplate.x -enemy.weapons[this.pointOut].subplate.radius ) - (this.target.x + (this.target.width * .5)) 
+                            ydif = (enemy.weapons[this.pointOut].subplate.y ) -(this.target.y + (this.target.height * .5)) 
+                            }else{
+                                xdif = (vessel.weapons[this.pointOut].subplate.x +vessel.weapons[this.pointOut].subplate.radius ) -(this.target.x + (this.target.width * .5)) 
+                            ydif = (vessel.weapons[this.pointOut].subplate.y ) - (this.target.y + (this.target.height * .5)) 
+                            }
+                                for (let t = 0; t < 21; t++) {
+            
+            
+                                    let scrat = rat / invrat
+                                    let dot = new Circle((this.target.x + (this.target.width * .5))  + (xdif * scrat), (this.target.y + (this.target.height * .5)) + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                                    rat++
+                                    if (vessel.weapons.includes(this)) {
+                                        if (enemy.shield.rings.length > 0) {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                    if (enemy.weapons.includes(this)) {
+                                        if (vessel.shield.rings.length > 0) {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                                dot.draw()
+                                            }
+                                        } else {
+                                            dot.draw()
+                                        }
+                                    }
+                                
+                            }
+                        }
+                    }else{
+
+                        let rat = 0
+                        let invrat = 26
+                        let xdif = (this.target.x + (this.target.width * .5)) - this.center.x
+                        let ydif = (this.target.y + (this.target.height * .5)) - this.center.y
+                    for (let t = 0; t < 27; t++) {
+
+
+                        let scrat = rat / invrat
+                        let dot = new Circle(this.center.x + (xdif * scrat), this.center.y + (ydif * scrat), (t + 1) * 1, "#FF880066")
+                        rat++
+                        if (vessel.weapons.includes(this)) {
+                            if (enemy.shield.rings.length > 0) {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                        if (enemy.weapons.includes(this)) {
+                            if (vessel.shield.rings.length > 0) {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                    dot.draw()
+                                }
+                            } else {
+                                dot.draw()
+                            }
+                        }
+                    
+                }
+                }
+                // this.firing--
+            }  else if (this.type == 100) {
                 if (vessel.weapons.includes(this)) {
                     let g = Math.max(10 - this.firing)
                     for (let k = 0; k < g; k++) {
@@ -23909,6 +27725,70 @@ class Weapon {
             }
         } else {
             this.lines = []
+        }
+
+        if (this.cable == 1) {
+            if (this.primed == -1) {
+                this.ball.xmom = 0
+                this.ball.ymom = 0
+                this.ball.x = this.center.x
+                this.ball.y = this.center.y
+            }
+            if (this.firing <= 0) {
+                // this.ball.xmom += (this.center.x-this.ball.x)/(30-(this.stack/1000))
+                // this.ball.ymom += (this.center.y-this.ball.y)/(30-(this.stack/1000))
+                let link = new LineOP(this.ball, this.center)
+                if (link.hypotenuse() < 80) {
+                    // this.ball.xmom = 0
+                    // this.ball.ymom = 0
+                    // this.ball.x = this.center.x
+                    // this.ball.y = this.center.y
+                    // this.primed = -1
+                    // this.stack++
+                }
+                // this.ball.xmom *= .96
+                // this.ball.ymom *= .96
+                // this.ball.move()
+            } else {
+                let point = new Point(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5))
+                // this.ball.xmom += (point.x-this.ball.x)/50
+                // this.ball.ymom += (point.y-this.ball.y)/50
+                let link = new LineOP(this.ball, this.target)
+                if (link.hypotenuse() < 65) {
+                    // this.firing = -1
+                    // this.ball.xmom *= -(1+((Math.random()-.5)*.1))
+                    // this.ball.ymom *= -(1+((Math.random()-.5)*.1))
+                    if (this.primed == 1) {
+                        // this.primed = 0
+                        if (vessel.weapons.includes(this)) {
+                            // enemy.hull -= this.damage*.1
+                            // this.target.integrity -= this.damage
+                        } else {
+                            // vessel.hull -= this.damage*.1
+                            // this.target.integrity -= this.damage
+                        }
+                    }
+                } else if (!this.target) {
+                    // this.firing = -1
+                }
+                // this.ball.xmom *= .97
+                // this.ball.ymom *= .97
+                // this.ball.move()
+            }
+            canvas_context.beginPath()
+            this.median = new Point((this.center.x + this.ball.x) * .5, (this.center.y + this.ball.y) * .5)
+            // this.string.cx -= (this.ball.xmom* -(1+((Math.random()-.5)*.3)))/23
+            // this.string.cy -= (this.ball.xmom* -(1+((Math.random()-.5)*.3)))/23
+            // this.string.cx *= .98
+            // this.string.cy *= .98
+            canvas_context.bezierCurveTo(this.center.x, this.center.y, this.median.x + this.string.cx, this.median.y + (this.string.cy), this.ball.x, this.ball.y)
+            canvas_context.fillStyle = "#AAFFFF"
+            canvas_context.strokeStyle = "#AAFFFF"
+            canvas_context.lineWidth = 4
+            canvas_context.stroke()
+            // this.ball.draw()
+            canvas_context.drawImage(spikeball, 0, 0, 44, 44, this.ball.x - this.ball.radius, this.ball.y - this.ball.radius, this.ball.radius * 2, this.ball.radius * 2)
+            // this.stack*=.999
         }
     }
     justdraw(specialSkip = 0) {
@@ -23928,12 +27808,12 @@ class Weapon {
                             // vessel.guys[t].health += 5
                         } else {
                             if (this.healControl == 1) {
-                            if (vessel.guys[t].hostile == 1) {
-                                if (vessel.guys[t].mindControlled != 1) {
-                                    let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
-                                    dot.draw()
-                                    // vessel.guys[t].health -= 5
-                                }
+                                if (vessel.guys[t].hostile == 1) {
+                                    if (vessel.guys[t].mindControlled != 1) {
+                                        let dot = new Circle(vessel.guys[t].body.x, vessel.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                        dot.draw()
+                                        // vessel.guys[t].health -= 5
+                                    }
                                 }
                             }
                         }
@@ -23947,12 +27827,12 @@ class Weapon {
                             // enemy.guys[t].health += 5
                         } else {
                             if (this.healControl == 1) {
-                            if (enemy.guys[t].hostile == 1) {
-                                if (enemy.guys[t].mindControlled != 1) {
-                                    let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
-                                    dot.draw()
-                                    // enemy.guys[t].health -= 5
-                                }
+                                if (enemy.guys[t].hostile == 1) {
+                                    if (enemy.guys[t].mindControlled != 1) {
+                                        let dot = new Circle(enemy.guys[t].body.x, enemy.guys[t].body.y, 12 + (Math.cos(this.pulsing) * 4), "#FF000044")
+                                        dot.draw()
+                                        // enemy.guys[t].health -= 5
+                                    }
                                 }
                             }
                         }
@@ -23964,14 +27844,20 @@ class Weapon {
                     if (this.shine > 0) {
                         this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 2)
                         this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), "gray", 2)
-                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 100), "gray", 6)
+                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) - 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) - 50, vessel.body.y + 200), "gray", 6)
                         this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
                         // this.beam1.draw()
                         // this.beam2.draw()
-                        this.plate.draw()
+                        let xm = ((((vessel.body.x + enemy.body.x) * .5) - 50)) - vessel.body.x
+                        let subplate = new CircleG(vessel.body.x, vessel.body.y, Math.abs(xm) * 1.02, "gray")
+                        this.subplate = subplate
+                        // this.plate.draw()
+                        subplate.draw()
                         // this.shine--
                     } else {
                         this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                        let subplate = new CircleG(-100,-100, 5, "gray")
+                        this.subplate = subplate
                     }
                 }
             } else {
@@ -23979,14 +27865,20 @@ class Weapon {
                     if (this.shine > 0) {
                         this.beam1 = new LineOP(this.center, new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 2)
                         this.beam2 = new LineOP(this.center, new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 100), "gray", 2)
-                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 100), "gray", 6)
+                        this.plate = new LineOP(new Point((((vessel.body.x + enemy.body.x) * .5) + 50), vessel.body.y - 200), new Point(((vessel.body.x + enemy.body.x) * .5) + 50, vessel.body.y + 200), "gray", 6)
                         this.platecenter = new Circle((this.plate.object.x + this.plate.target.x) * .5, (this.plate.object.y + this.plate.target.y) * .5)
                         // this.beam1.draw()
                         // this.beam2.draw()
-                        this.plate.draw()
+                        let xm = ((((vessel.body.x + enemy.body.x) * .5) + 50)) - enemy.body.x
+                        let subplate = new CircleG(enemy.body.x, enemy.body.y, Math.abs(xm) * .72, "gray")
+                        this.subplate = subplate
+                        // this.plate.draw()
+                        subplate.draw()
                         // this.shine--
                     } else {
                         this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
+                        let subplate = new CircleG(-100,-100, 5, "gray")
+                        this.subplate = subplate
                     }
                 }
             }
@@ -24338,6 +28230,48 @@ class Weapon {
                     canvas_context.drawImage(distortionField, 0, 0, distortionField.width, distortionField.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 } else if (this.type == 50) {
                     canvas_context.drawImage(filament, 0, 0, filament.width, filament.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 51) {
+                    canvas_context.drawImage(hotlaser, 0, 0, hotlaser.width, hotlaser.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 52) {
+                    canvas_context.drawImage(caplaser, 0, 0, caplaser.width, caplaser.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 53) {
+                    canvas_context.drawImage(capshield, 0, 0, capshield.width, capshield.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 54) {
+                    canvas_context.drawImage(pongwep, 0, 0, pongwep.width, pongwep.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 55) {
+                    canvas_context.drawImage(antidevice, 0, 0, antidevice.width, antidevice.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 56) {
+                    canvas_context.drawImage(spingun1, 0, 0, spingun1.width, spingun1.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 57) {
+                    canvas_context.drawImage(bubblegun, 0, 0, bubblegun.width, bubblegun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 58) {
+                    canvas_context.drawImage(detwall, 0, 0, detwall.width, detwall.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 59) {
+                    canvas_context.drawImage(lightgun, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 60) {
+                    canvas_context.drawImage(lightgunc, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 61) {
+                    canvas_context.drawImage(lightgunh, 0, 0, lightgun.width, lightgun.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 62) {
+                    canvas_context.drawImage(chainlight, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 63) {
+                    canvas_context.drawImage(bubbleguncold, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 64) {
+                    canvas_context.drawImage(bubblegunhot, 0, 0, chainlight.width, chainlight.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 65) {
+                    canvas_context.drawImage(meanwave, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 66) {
+                    canvas_context.drawImage(meanwave2, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 67) {
+                    canvas_context.drawImage(meanwavez, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 68) {
+                    canvas_context.drawImage(spotlight, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 69) {
+                    canvas_context.drawImage(hotlight, 0, 0, meanwave.width, meanwave.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 561) {
+                    canvas_context.drawImage(spingun2, 0, 0, spingun1.width, spingun1.height, this.body.x + 4, this.body.y + 18, 44, 44)
+                } else if (this.type == 562) {
+                    canvas_context.drawImage(spingun3, 0, 0, spingun1.width, spingun1.height, this.body.x + 4, this.body.y + 18, 44, 44)
                 } else if (this.type == 100) {
                     this.frame++
                     canvas_context.drawImage(wodopomimg, (this.frame % 30) * 32, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -24373,10 +28307,16 @@ class Weapon {
                     canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.droneType == 7) {
-                    canvas_context.drawImage(rs[39], 0, 0, 64, rs[39].height,  this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(rs[39], 0, 0, 64, rs[39].height, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.droneType == 8) {
-                    canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height,  this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.droneType == 9) {
+                    canvas_context.drawImage(lightdrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.droneType == 10) {
+                    canvas_context.drawImage(pulsedrone, 0, 0, 128, 128, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
             } else if (this.gearType >= 0) {
                 if (this.gearType == 0) {
@@ -24451,7 +28391,7 @@ class Weapon {
                     canvas_context.drawImage(dronePart2, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.gearType == 8003) {
-                    canvas_context.drawImage(dronePart3, 0, 0, 64, 64,this.body.x + 4, this.body.y + 18, 44, 44)
+                    canvas_context.drawImage(dronePart3, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
                 if (this.gearType == 8004) {
                     canvas_context.drawImage(dronePart4, 0, 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -24465,8 +28405,85 @@ class Weapon {
         }
     }
 }
+let spikeball = new Image()
+spikeball.src = "spikeball.png"
 let fire = new Image()
 fire.src = "fire.png"
+
+
+let bubblegun = new Image()
+bubblegun.src = "bubblegun.png"
+let bubblegunr = new Image()
+bubblegunr.src = "bubblegunr.png"
+
+
+let bubblegunhot = new Image()
+bubblegunhot.src = "bubblegunhot.png"
+let bubblegunhotr = new Image()
+bubblegunhotr.src = "bubblegunhotr.png"
+
+let meanwave = new Image()
+meanwave.src = "meanwave.png"
+let meanwaver = new Image()
+meanwaver.src = "meanwaver.png"
+
+let meanwavez = new Image()
+meanwavez.src = "meanwavez.png"
+let meanwavezr = new Image()
+meanwavezr.src = "meanwavezr.png"
+
+let meanwave2 = new Image()
+meanwave2.src = "meanwave2.png"
+let meanwave2r = new Image()
+meanwave2r.src = "meanwave2r.png"
+
+
+let bubbleguncold = new Image()
+bubbleguncold.src = "bubbleguncold.png"
+let bubbleguncoldr = new Image()
+bubbleguncoldr.src = "bubbleguncoldr.png"
+
+
+
+let detwall = new Image()
+detwall.src = "detwall.png"
+let detwallr = new Image()
+detwallr.src = "detwallr.png"
+
+let lightgun = new Image()
+lightgun.src = "lightgun.png"
+let lightgunr = new Image()
+lightgunr.src = "lightgunr.png"
+
+
+let lightgunc = new Image()
+lightgunc.src = "lightgunc.png"
+let lightguncr = new Image()
+lightguncr.src = "lightguncr.png"
+
+
+let lightgunh = new Image()
+lightgunh.src = "lightgunh.png"
+let lightgunhr = new Image()
+lightgunhr.src = "lightgunhr.png"
+
+let spingun1 = new Image()
+spingun1.src = "spingun1.png"
+let spingunr1 = new Image()
+spingunr1.src = "spingunr1.png"
+
+let spingun2 = new Image()
+spingun2.src = "spingun2.png"
+let spingunr2 = new Image()
+spingunr2.src = "spingunr2.png"
+
+let spingun3 = new Image()
+spingun3.src = "spingun3.png"
+let spingunr3 = new Image()
+spingunr3.src = "spingunr3.png"
+
+
+
 let filament = new Image()
 filament.src = "filament.png"
 let filamentr = new Image()
@@ -24481,6 +28498,10 @@ let beadsaud = new Audio()
 beadsaud.src = "beadsaud.mp3"
 let healShield = new Image()
 healShield.src = "healShield.png"
+let capshield = new Image()
+capshield.src = "capshield.png"
+let capshieldr = new Image()
+capshieldr.src = "capshieldr.png"
 let healShieldr = new Image()
 healShieldr.src = "healShieldr.png"
 let healShield2 = new Image()
@@ -24700,6 +28721,18 @@ let scrapcannonr3 = new Image()
 scrapcannonr3.src = "scrapcannonr3.png"
 let basiclaser = new Image()
 basiclaser.src = "basiclaser.png"
+let hotlaser = new Image()
+hotlaser.src = "hotlaser.png"
+let caplaser = new Image()
+caplaser.src = "caplaser.png"
+let pongwep = new Image()
+pongwep.src = "pongwep.png"
+let pongwepr = new Image()
+pongwepr.src = "pongwepr.png"
+let caplaserr = new Image()
+caplaserr.src = "caplaserr.png"
+let hotlaserr = new Image()
+hotlaserr.src = "hotlaserr.png"
 let laserNew = new Image()
 laserNew.src = "laserNew.png"
 let missileNew = new Image()
@@ -26088,7 +30121,7 @@ class Battery {
                 this.power = Math.ceil(this.powersto * .5)
             }
             for (let t = 0; t < this.systems.length; t++) {
-                this.power -= this.systems[t].demand
+                this.power -= this.systems[t].sto //demand?
             }
             if (enemy.nebula == 1) {
                 let j = 0
@@ -27143,6 +31176,35 @@ class Drone {
             // this.blocking = 1
             this.internal = 1
         }
+        if (this.type == 9) {
+            this.damage = 0
+            this.weaponType = 36
+            this.name1 = "Zap Cap Rod "
+            this.name2 = "Drone I"
+            this.charge = 0
+            this.max = 400
+            this.firstCharge = 400
+            this.real = 1
+            this.buy = 50
+            this.sell = 30
+            this.rod = 1
+            // this.blocking = 1
+            // this.internal = 1
+        }
+        if (this.type == 10) {
+            this.damage = 0
+            this.weaponType = 67
+            this.name1 = "Wave "
+            this.name2 = "Pulse Drone I"
+            this.charge = 0
+            this.max = 300
+            this.firstCharge = 25
+            this.real = 1
+            this.buy = 30
+            this.sell = 12
+            // this.blocking = 1
+            // this.internal = 1
+        }
         this.active = 0
         this.auto = 1
         if (mode != 1) {
@@ -27226,6 +31288,12 @@ class Drone {
             }
             if (this.type == 8) {
                 canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height, this.body.x + 4, this.body.y + 18, 44, 44)
+            }
+            if (this.type == 9) {
+                canvas_context.drawImage(lightdrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
+            }
+            if (this.type == 10) {
+                canvas_context.drawImage(pulsedrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
             }
             canvas_context.fillStyle = "black"
             canvas_context.font = "10px helvetica"
@@ -27323,6 +31391,12 @@ class Drone {
             if (this.type == 8) {
                 canvas_context.drawImage(rs[40], 0, 0, 64, rs[40].height, this.body.x + 4, this.body.y + 18, 44, 44)
             }
+            if (this.type == 9) {
+                canvas_context.drawImage(lightdrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
+            }
+            if (this.type == 10) {
+                canvas_context.drawImage(pulsedrone, 0, 0, mindDrone.width, mindDrone.height, this.body.x + 4, this.body.y + 18, 44, 44)
+            }
             canvas_context.fillStyle = "black"
             canvas_context.font = "10px helvetica"
             canvas_context.fillText(this.name1 + " " + this.name2, this.body.x + 5, this.body.y + 75)
@@ -27363,23 +31437,23 @@ class Drone {
     draw() {
 
         let wet = 0
-        if(vessel.guys){
-            for(let t = 0;t<vessel.guys.length;t++){
-                if(vessel.guys[t].droneLine == this){
+        if (vessel.guys) {
+            for (let t = 0; t < vessel.guys.length; t++) {
+                if (vessel.guys[t].droneLine == this) {
                     wet = 1
                 }
             }
         }
-        if(enemy.guys){
-            for(let t = 0;t<enemy.guys.length;t++){
-                if(enemy.guys[t].droneLine == this){
+        if (enemy.guys) {
+            for (let t = 0; t < enemy.guys.length; t++) {
+                if (enemy.guys[t].droneLine == this) {
                     wet = 1
                 }
             }
         }
-        if(wet == 0){
+        if (wet == 0) {
             this.flaggedOn = 0
-        }else{
+        } else {
             this.flaggedOn = 1
         }
 
@@ -27443,8 +31517,8 @@ class Drone {
                 if (vessel.droneparts > 0) {
                     if (this.auto == 1) {
                         if (stars.stars[vessel.star].shop != 1) {
-                            if(this.type != 7){
-                            vessel.droneparts--
+                            if (this.type != 7) {
+                                vessel.droneparts--
                             }
                             this.charge = 0
                             this.active = 1
@@ -27454,7 +31528,7 @@ class Drone {
             } else {
                 if (enemy.droneparts > 0) {
                     if (this.auto == 1) {
-                        if(this.type != 7){
+                        if (this.type != 7) {
                             enemy.droneparts--
                         }
                         this.charge = 0
@@ -27553,9 +31627,39 @@ class Drone {
                 // this.charge = 0
                 canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
             }
+            if (this.type == 9) {
+                let link = (new LineOP(this.center, this.ship.body)).angle() + (Math.PI * .25)
+                this.center.x += Math.cos(link) * 8 + (Math.random() / 10) * 1
+                this.center.y += Math.sin(link) * 8 + (Math.random() / 10) * 1
+                if ((new LineOP(this.center, this.ship.body)).hypotenuse() > 350) {
+                    this.center.x -= Math.cos(link - (Math.PI * .25)) * 8 * .707 * 1.01 * 1
+                    this.center.y -= Math.sin(link - (Math.PI * .25)) * 8 * .707 * 1.01 * 1
+                }
+                // this.center.radius*=1.01
+                if (this.center.radius >= 70) {
+                    this.center.radius = 70
+                }
+                // this.charge = 0
+                canvas_context.drawImage(lightdrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
+            }
+            if (this.type == 10) {
+                let link = (new LineOP(this.center, this.ship.body)).angle() + (Math.PI * .25)
+                this.center.x += Math.cos(link) * 8 + (Math.random() / 10) * 1
+                this.center.y += Math.sin(link) * 8 + (Math.random() / 10) * 1
+                if ((new LineOP(this.center, this.ship.body)).hypotenuse() > 350) {
+                    this.center.x -= Math.cos(link - (Math.PI * .25)) * 8 * .707 * 1.01 * 1
+                    this.center.y -= Math.sin(link - (Math.PI * .25)) * 8 * .707 * 1.01 * 1
+                }
+                // this.center.radius*=1.01
+                if (this.center.radius >= 70) {
+                    this.center.radius = 70
+                }
+                // this.charge = 0
+                canvas_context.drawImage(pulsedrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
+            }
 
             if (this.internal == 1) {
-                if(this.flaggedOn == 1){
+                if (this.flaggedOn == 1) {
                     this.charge = 0
                 }
             }
@@ -27578,6 +31682,21 @@ class Drone {
                         console.log("ha ha!")
                         gigadebug = 0
                         break
+                    }
+                    if (this.center.doesPerimeterTouch(vessel.weapons[t].ball)) {
+                        if (this.internal == 1) {
+                        } else if (this.blocking != 1) {
+                            this.explode()
+                            vessel.weapons[t].primed = 0
+                            vessel.weapons[t].firing = -1
+                            vessel.weapons[t].ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                            vessel.weapons[t].ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                        } else {
+                            vessel.weapons[t].primed = 0
+                            vessel.weapons[t].firing = -1
+                            vessel.weapons[t].ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                            vessel.weapons[t].ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                        }
                     }
                     for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
                         gigadebug++
@@ -27606,9 +31725,9 @@ class Drone {
                                 this.active = 0
                                 this.charge = 0
                             } else {
-                                if(this.internal == 1){
+                                if (this.internal == 1) {
 
-                                }else  if (this.blocking != 1) {
+                                } else if (this.blocking != 1) {
                                     this.explode()
                                 } else {
                                     this.auxflag = 10
@@ -27640,9 +31759,9 @@ class Drone {
                             break
                         }
                         if (this.center.doesPerimeterTouch(vessel.weapons[t].rockets[k])) {
-                            if(this.internal == 1){
+                            if (this.internal == 1) {
 
-                            }else  if (this.blocking != 1) {
+                            } else if (this.blocking != 1) {
                                 this.explode()
                             } else {
                                 this.auxflag = 10
@@ -27671,6 +31790,23 @@ class Drone {
                         gigadebug = 0
                         break
                     }
+                    if (this.center.doesPerimeterTouch(enemy.weapons[t].ball)) {
+                        if (this.internal == 1) {
+                        } else if (this.blocking != 1) {
+                            this.explode()
+                            enemy.weapons[t].primed = 0
+                            enemy.weapons[t].firing = -1
+                            enemy.weapons[t].ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                            enemy.weapons[t].ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                        } else {
+                            enemy.weapons[t].primed = 0
+                            enemy.weapons[t].firing = -1
+                            enemy.weapons[t].ball.xmom *= -(1 + ((Math.random() - .5) * .1))
+                            enemy.weapons[t].ball.ymom *= -(1 + ((Math.random() - .5) * .1))
+                        }
+                    }
+
+
                     for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
@@ -27697,9 +31833,8 @@ class Drone {
                                 this.active = 0
                                 this.charge = 0
                             } else {
-                                if(this.internal == 1){
-
-                                }else  if (this.blocking != 1) {
+                                if (this.internal == 1) {
+                                } else if (this.blocking != 1) {
                                     this.explode()
                                 } else {
                                     this.auxflag = 10
@@ -27731,9 +31866,9 @@ class Drone {
                             break
                         }
                         if (this.center.doesPerimeterTouch(enemy.weapons[t].rockets[k])) {
-                            if(this.internal == 1){
+                            if (this.internal == 1) {
 
-                            }else if (this.blocking != 1) {
+                            } else if (this.blocking != 1) {
                                 this.explode()
                             } else {
                                 this.auxflag = 10
@@ -27783,6 +31918,12 @@ class Drone {
             }
             if (this.type == 6) {
                 canvas_context.drawImage(mindDrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
+            }
+            if (this.type == 9) {
+                canvas_context.drawImage(lightdrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
+            }
+            if (this.type == 10) {
+                canvas_context.drawImage(pulsedrone, 0, 0, 128, 128, this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
             }
             // if (this.type == 7) {
             //     canvas_context.drawImage(rs[39], 0, 0, 64, rs[39].height,  this.center.x - this.center.radius, this.center.y - this.center.radius, this.center.radius * 2, this.center.radius * 2)
@@ -27876,7 +32017,7 @@ class Drone {
             this.selected = 0
         }
     }
-    check2(point) {
+    check2(point, e) {
         if (this.body.isPointInside(point)) {
             this.auto *= -1
             if (this.auto == 1) {
@@ -27887,9 +32028,129 @@ class Drone {
         }
     }
 }
+
+
+class Lightning {
+    constructor(from, to) {
+        this.from = from
+        this.to = to
+        this.beam = []
+        this.movetime = 14
+        this.life = 14
+        for (let t = 0; t < 25; t++) {
+            let r1 = (24 - t) / 24
+            let r2 = t / 24
+            let circ = new Circle((this.from.x * r1) + (this.to.x * r2), (this.from.y * r1) + (this.to.y * r2), 2, "#FFFFFF", (Math.random() - .5) * 2.5, (Math.random() - .5) * 2.5)
+            this.beam.push(circ)
+        }
+    }
+    draw() {
+        this.movetime--
+        let link = new LineOP(this.beam[0], this.beam[1], "#AAFF6688", 12)
+        // link.draw()
+        for (let t = 1; t < this.beam.length; t++) {
+            link = new LineOP(this.beam[t], this.beam[t - 1], "#AAFF6688", ((24 - t) * .5) + 2)
+            link.draw()
+            if (this.movetime > 0 && t != 0 && t != this.beam.length - 1) {
+                this.beam[t].move()
+            }
+            // this.beam[t].draw()
+        }
+    }
+}
+
+class ChainLightning {
+    constructor(from, to) {
+        this.from = from
+        this.to = to
+        this.beam = []
+        this.movetime = 10
+        this.life = 10
+        for (let t = 0; t < 25; t++) {
+            let r1 = (24 - t) / 24
+            let r2 = t / 24
+            let circ = new Circle((this.from.x * r1) + (this.to.x * r2), (this.from.y * r1) + (this.to.y * r2), 2, "#FFFFFF", (Math.random() - .5) * 2, (Math.random() - .5) * 2)
+            this.beam.push(circ)
+        }
+    }
+    draw() {
+        this.movetime--
+        let link = new LineOP(this.beam[0], this.beam[1], "#AAFFFF44", 7)
+        for (let t = 1; t < this.beam.length; t++) {
+            link = new LineOP(this.beam[t], this.beam[t - 1], "#AAFFFF44", ((24 - t) * .25) + 2)
+            link.draw()
+            if (this.movetime > 0 && t != 0 && t != this.beam.length - 1) {
+                this.beam[t].move()
+            }
+        }
+    }
+}
+
+class LightningC {
+    constructor(from, to) {
+        this.from = from
+        this.to = to
+        this.beam = []
+        this.movetime = 14
+        this.life = 14
+        for (let t = 0; t < 25; t++) {
+            let r1 = (24 - t) / 24
+            let r2 = t / 24
+            let circ = new Circle((this.from.x * r1) + (this.to.x * r2), (this.from.y * r1) + (this.to.y * r2), 2, "#FFFFFF", (Math.random() - .5) * 2.5, (Math.random() - .5) * 2.5)
+            this.beam.push(circ)
+        }
+    }
+    draw() {
+        this.movetime--
+        let link = new LineOP(this.beam[0], this.beam[1], "#00FFFF88", 12)
+        // link.draw()
+        for (let t = 1; t < this.beam.length; t++) {
+            link = new LineOP(this.beam[t], this.beam[t - 1], "#00FFFF88", ((24 - t) * .5) + 2)
+            link.draw()
+            if (this.movetime > 0 && t != 0 && t != this.beam.length - 1) {
+                this.beam[t].move()
+            }
+            // this.beam[t].draw()
+        }
+    }
+}
+class LightningO {
+    constructor(from, to) {
+        this.from = from
+        this.to = to
+        this.beam = []
+        this.movetime = 14
+        this.life = 14
+        for (let t = 0; t < 25; t++) {
+            let r1 = (24 - t) / 24
+            let r2 = t / 24
+            let circ = new Circle((this.from.x * r1) + (this.to.x * r2), (this.from.y * r1) + (this.to.y * r2), 2, "#FFFFFF", (Math.random() - .5) * 2.5, (Math.random() - .5) * 2.5)
+            this.beam.push(circ)
+        }
+    }
+    draw() {
+        this.movetime--
+        let link = new LineOP(this.beam[0], this.beam[1], "#FFAA0088", 12)
+        // link.draw()
+        for (let t = 1; t < this.beam.length; t++) {
+            link = new LineOP(this.beam[t], this.beam[t - 1], "#FFAA0088", ((24 - t) * .5) + 2)
+            link.draw()
+            if (this.movetime > 0 && t != 0 && t != this.beam.length - 1) {
+                this.beam[t].move()
+            }
+            // this.beam[t].draw()
+        }
+    }
+}
+
+
+
+
 class Ship {
     constructor(type, width, height, posx, posy, gridPoints,) {
         this.distortionPoints = []
+        this.dettimer = 0
+        this.arcs = []
         this.breaking = []
         this.speedset = 0
         this.exhaust = 0
@@ -28181,6 +32442,8 @@ class Ship {
         this.roadtiles = []
         this.guests = []
         this.body = new Circle((256 * rat) + 200, (256 * rat) + 150, (256 * rat), "#FFFFFF")
+        this.zap = new Lightning(this.body.x, this.body.y)
+        this.zaps = [] // [this.zap]
         this.count = 0
         let tiles = []
         for (let t = 0; t < this.blocks.length; t++) {
@@ -28627,6 +32890,17 @@ class Ship {
         }
     }
     justUIdraw() {
+
+        for (let t = 0; t < this.zaps.length; t++) {
+            // this.zaps[t].life--
+            this.zaps[t].draw()
+        }
+        // for (let t = 0; t <  this.zaps.length; t++) {
+        //     if(this.zaps[t].life <= 0){
+        //         // this.zaps.splice(t,1)
+        //     }
+        // }
+
         this.justdistorting()
 
         for (let t = 0; t < this.breaking.length; t++) {
@@ -29114,6 +33388,16 @@ class Ship {
     }
 
     UIdraw() {
+
+        for (let t = 0; t < this.zaps.length; t++) {
+            this.zaps[t].life--
+            this.zaps[t].draw()
+        }
+        for (let t = 0; t < this.zaps.length; t++) {
+            if (this.zaps[t].life <= 0) {
+                this.zaps.splice(t, 1)
+            }
+        }
         this.distorting()
         for (let t = 0; t < this.breaking.length; t++) {
             this.breaking[t].life--
@@ -29555,8 +33839,8 @@ class Ship {
         }
     }
     shaker() {
-        if(options.shake == 1){
-        }else{
+        if (options.shake == 1) {
+        } else {
             vessel.shake = 0
         }
         shake_context.clearRect(0, 0, 1920, 1080)
@@ -29762,62 +34046,103 @@ class Ship {
                         vessel.weapons[x2].following = 1
                         vessel.weapons[x2].fire(vessel.weapons[x2].target)
                     }
-                    if(this.drones[t].type == 7){
-                        let lile = vessel.supratiles[Math.floor(Math.random()*vessel.supratiles.length)]
+                    if (this.drones[t].type == 7) {
+                        let lile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
                         let j = 0
-                        while(lile.walkable == false){
+                        while (lile.walkable == false) {
                             j++
-                            if(j>100){
+                            if (j > 100) {
                                 break
                             }
-                            lile = vessel.supratiles[Math.floor(Math.random()*vessel.supratiles.length)]
+                            lile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
                         }
                         let robocrew = new Guy(lile, 39)
                         robocrew.droneLine = this.drones[t]
-                        if(robocrew.droneLine.flaggedOn == 0){
-                            if(vessel.guys.length < 17){
-                                    if(vessel.droneparts > 0){
-                                        vessel.guys.push(robocrew)
-                                        vessel.droneparts--
-                                    }else{
-                                        robocrew.tile.walkable = true
-                                   }
-                            }else{
-                             robocrew.tile.walkable = true
+                        if (robocrew.droneLine.flaggedOn == 0) {
+                            if (vessel.guys.length < 17) {
+                                if (vessel.droneparts > 0) {
+                                    vessel.guys.push(robocrew)
+                                    vessel.droneparts--
+                                } else {
+                                    robocrew.tile.walkable = true
+                                }
+                            } else {
+                                robocrew.tile.walkable = true
                             }
-                        }else{
+                        } else {
                             robocrew.tile.walkable = true
                         }
                         robocrew.droneLine.flaggedOn = 1
                     }
-                    if(this.drones[t].type == 8){
-                        let lile = vessel.supratiles[Math.floor(Math.random()*vessel.supratiles.length)]
+                    if (this.drones[t].type == 8) {
+                        let lile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
                         let j = 0
-                        while(lile.walkable == false){
+                        while (lile.walkable == false) {
                             j++
-                            if(j>100){
+                            if (j > 100) {
                                 break
                             }
-                            lile = vessel.supratiles[Math.floor(Math.random()*vessel.supratiles.length)]
+                            lile = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
                         }
                         let robocrew = new Guy(lile, 40)
                         robocrew.droneLine = this.drones[t]
-                        if(robocrew.droneLine.flaggedOn == 0){
-                            if(vessel.guys.length < 17){
-                                    if(vessel.droneparts > 0){
-                                        vessel.guys.push(robocrew)
-                                        vessel.droneparts--
-                                    }else{
-                                        robocrew.tile.walkable = true
-                                   }
-                            }else{
-                             robocrew.tile.walkable = true
+                        if (robocrew.droneLine.flaggedOn == 0) {
+                            if (vessel.guys.length < 17) {
+                                if (vessel.droneparts > 0) {
+                                    vessel.guys.push(robocrew)
+                                    vessel.droneparts--
+                                } else {
+                                    robocrew.tile.walkable = true
+                                }
+                            } else {
+                                robocrew.tile.walkable = true
                             }
-                        }else{
+                        } else {
                             robocrew.tile.walkable = true
                         }
                         robocrew.droneLine.flaggedOn = 1
                     }
+
+                    if (this.drones[t].type == 9) {
+                        let wep = new Weapon(37)
+                        wep.temp = 2
+                        let x = vessel.weapons.length
+                        vessel.weapons[x] = wep
+                        vessel.weapons[x].charge = vessel.weapons[x].max
+                        vessel.weapons[x].center.y = this.drones[t].center.y
+                        vessel.weapons[x].center.x = this.drones[t].center.x
+                        vessel.weapons[x].follow = this.drones[t].center
+                        vessel.weapons[x].metatarget = this.drones[t].metatarget
+                        vessel.weapons[x].following = 1
+                        vessel.weapons[x].fire()
+                    }
+                    if (this.drones[t].type == 10) {
+                        for(let t = 0;t<enemy.arcs.length;t++){
+                            enemy.arcs[t].life = -100000
+                        }
+                        let dot = new ExpandingCircle(this.drones[t].center.x, this.drones[t].center.y, 5, "#FFFF0088")
+                        dot.lock = this.drones[t].center
+                        vessel.arcs.push(dot)
+
+
+                        let wep = new Weapon(67)
+                        wep.temp = 2
+                        let x = vessel.weapons.length
+                        vessel.weapons[x] = wep
+                        vessel.weapons[x].charge = vessel.weapons[x].max
+                        vessel.weapons[x].center.y = this.drones[t].center.y
+                        vessel.weapons[x].center.x = this.drones[t].center.x
+                        vessel.weapons[x].follow = this.drones[t].center
+                        vessel.weapons[x].metatarget = this.drones[t].metatarget
+                        if (this.drones[t].metatarget.x) {
+                            vessel.weapons[x].target = this.drones[t].metatarget
+                        } else {
+                            vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
+                        }
+                        vessel.weapons[x].following = 1
+                        vessel.weapons[x].fire()
+                    }
+
                 }
             }
         }
@@ -29838,6 +34163,11 @@ class Ship {
             }
         }
         if (start == 2) {
+
+            //maybe  VVVV
+            // this.dettimer = 0
+
+
             this.shield.draw()
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
@@ -29958,6 +34288,7 @@ class Ship {
                 }
             }
         }
+
         if (mode == 1) { } else {
             if (start == 1) {
                 for (let t = 0; t < this.web.length - 1; t++) {
@@ -30189,12 +34520,21 @@ class Ship {
                     this.guys = [new Guy(tiles[0], 5), new Guy(tiles[20], 5), new Guy(tiles[31], 5), new Guy(tiles[32], 5)]
                     if (this.alt == 5) {
                         this.guys.push(new Guy(tiles[7], 8))
-                    }       
+                    }
                     if (this.alt == 2) {
                         this.guys[0] = new Guy(tiles[0], 43)
                     }
+                    if (this.alt == 4) {
+                        this.guys[0] = new Guy(tiles[0], 45)
+                    }
                 } else if (this.type == 2) {
                     this.guys = [new Guy(tiles[0], 0), new Guy(tiles[20], 0), new Guy(tiles[21], 0), new Guy(tiles[25], 23)]
+
+                    if (this.alt == 2) {
+                        this.guys[0] = new Guy(tiles[0], 46)
+                    }
+
+
                 } else if (this.type == 3) {
                     this.guys = [new Guy(tiles[0], 19), new Guy(tiles[2], 19), new Guy(tiles[3], 19)]
                 } else if (this.type == 4) {
@@ -30207,7 +34547,7 @@ class Ship {
                     if (this.alt == 0) {
                         this.guys = [new Guy(tiles[4], 18), new Guy(tiles[26], 22), new Guy(tiles[37], 6), new Guy(tiles[45], 16), new Guy(tiles[35], 24)]
                     } else if (this.alt == 1) {
-                        this.guys = [new Guy(tiles[4], 27), new Guy(tiles[26], 32), new Guy(tiles[37], 16), new Guy(tiles[45], 6), new Guy(tiles[35], 22)]
+                        this.guys = [new Guy(tiles[4], 27), new Guy(tiles[26], 32), new Guy(tiles[37], 45), new Guy(tiles[45], 6), new Guy(tiles[35], 22)] //
                     } else if (this.alt == 2) {
                         this.guys = [new Guy(tiles[4], 18), new Guy(tiles[26], 22), new Guy(tiles[37], 6), new Guy(tiles[45], 32), new Guy(tiles[35], 24)]
                     } else if (this.alt == 3) {
@@ -30273,6 +34613,7 @@ class Ship {
                     this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
                 } else {
                     this.guys = [new Guy(tiles[6], 12), new Guy(tiles[34], 1), new Guy(tiles[90], 11)]
+                    this.guys[2].becomePomao()
                     if (this.alt == 1) {
                         this.guys.push(new Guy(tiles[7], 33))
                     }
@@ -30319,11 +34660,12 @@ class Ship {
                         let wep2 = new Weapon(20)
                         let wep3 = new Weapon(41)
                         let wep4 = new Weapon(-1)
-                        // let wep5 = new Weapon(22)
+                        // let wep5 = new Weapon(51)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
                         this.weapons.push(wep3)
                         this.weapons.push(wep4)
+                        // this.weapons.push(wep5)
                         this.drones = []
                         this.drones[0] = new Drone(0, this)
                         this.drones[1] = new Drone(-1, this)
@@ -30358,7 +34700,7 @@ class Ship {
                         this.drones[2] = new Drone(-1, this)
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(5)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(52)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(22)
@@ -30475,8 +34817,8 @@ class Ship {
                         this.drones[1] = new Drone(-1, this)
                     } else if (this.alt == 1) {
                         let wep1 = new Weapon(50)
-                        let wep2 = new Weapon(50)
-                        let wep3 = new Weapon(50)
+                        let wep2 = new Weapon(56)
+                        let wep3 = new Weapon(59)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -30484,11 +34826,11 @@ class Ship {
                         this.weapons.push(wep4)
                         this.drones = []
                         this.drones[0] = new Drone(0, this)
-                        this.drones[1] = new Drone(-1, this)
+                        this.drones[1] = new Drone(9, this)
                         this.drones[2] = new Drone(-1, this)
                     } else if (this.alt == 2) {
                         let wep1 = new Weapon(13)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(58)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
@@ -30503,7 +34845,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(29)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(65)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
@@ -30520,7 +34862,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(43)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(66)
                         let wep3 = new Weapon(-1)
                         // let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -30538,7 +34880,7 @@ class Ship {
                         this.scrap += 120
                     } else if (this.alt == 5) {
                         let wep1 = new Weapon(42)
-                        let wep2 = new Weapon(42)
+                        let wep2 = new Weapon(67)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -30558,8 +34900,8 @@ class Ship {
                 }
                 if (this.type == 3) {
                     let wep1 = new Weapon(26)
-                    let wep2 = new Weapon(0)
-                    let wep3 = new Weapon(-1)
+                    let wep2 = new Weapon(51)
+                    let wep3 = new Weapon(69)
                     let wep4 = new Weapon(-1)
                     this.weapons.push(wep1)
                     this.weapons.push(wep2)
@@ -30611,14 +34953,14 @@ class Ship {
                     this.weapons.push(wep4)
                     this.drones = []
                     this.drones[0] = new Drone(0, this)
-                    this.drones[1] = new Drone(-1, this)
+                    this.drones[1] = new Drone(10, this)
                     this.drones[2] = new Drone(-1, this)
                 }
                 if (this.type == 7) {
                     if (this.alt == 0) {
                         let wep1 = new Weapon(18)
                         let wep2 = new Weapon(21)
-                        let wep3 = new Weapon(-1)
+                        let wep3 = new Weapon(68)
                         // let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -30648,9 +34990,9 @@ class Ship {
                         this.drones[4] = new Drone(-1, this)
                         // this.weapons.push(wep4)
                     } else if (this.alt == 2) {
-                        let wep1 = new Weapon(16)
-                        let wep2 = new Weapon(0)
-                        let wep3 = new Weapon(-1)
+                        let wep1 = new Weapon(63)
+                        let wep2 = new Weapon(64)
+                        let wep3 = new Weapon(57)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -30681,7 +35023,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(49)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(57)
                         let wep3 = new Weapon(-1)
                         // let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -30718,9 +35060,9 @@ class Ship {
                     }
                 }
                 if (this.type == 8) {
-                    let wep1 = new Weapon(23)
-                    let wep2 = new Weapon(34)
-                    let wep3 = new Weapon(-1)
+                    let wep1 = new Weapon(23) //scarp cannon
+                    let wep2 = new Weapon(34) //mirror shield
+                    let wep3 = new Weapon(54)
                     let wep4 = new Weapon(-1)
                     let wep5 = new Weapon(-1)
                     this.weapons.push(wep1)
@@ -30755,7 +35097,7 @@ class Ship {
                 if (this.type == 10) {
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(27)
-                    let wep3 = new Weapon(-1)
+                    let wep3 = new Weapon(53)
                     let wep4 = new Weapon(-1)
                     // let wep5 = new Weapon(-1)
                     this.weapons.push(wep1)
@@ -30792,7 +35134,7 @@ class Ship {
                 if (this.type == 12) {
                     if (this.alt == 0) {
                         let wep1 = new Weapon(0)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(60)
                         let wep3 = new Weapon(1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -30822,7 +35164,7 @@ class Ship {
                         this.drones[3] = new Drone(-1, this)
                     } else if (this.alt == 2) {
                         let wep1 = new Weapon(12)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(61)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -30838,7 +35180,7 @@ class Ship {
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(9)
                         let wep2 = new Weapon(11)
-                        let wep3 = new Weapon(9)
+                        let wep3 = new Weapon(62)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -30853,7 +35195,7 @@ class Ship {
                         this.drones[3] = new Drone(-1, this)
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(16)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(55)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -30941,6 +35283,7 @@ class Ship {
                 // this.weapons.push(new Weapon(0))
                 // }
             }
+            
             // canvas_context.drawImage(shipimage, 0, 0, 256, 256, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
             this.wepDrawCount = 0
             for (let t = 0; t < this.blocks.length; t++) {
@@ -30955,6 +35298,31 @@ class Ship {
                     }
                 }
             }
+
+
+        for (let t = 0; t < this.arcs.length; t++) {
+            // this.arcs[t].move()
+            this.arcs[t].draw()
+            // this.arcs[t].life--
+        }
+
+        for (let t = 0; t < this.arcs.length; t++) {
+            if (this.arcs[t].life <= 0) {
+                this.arcs.splice(t, 1)
+            }
+        }
+
+        for (let t = 0; t < enemy.arcs.length; t++) {
+            // enemy.arcs[t].move()
+            enemy.arcs[t].draw()
+            // enemy.arcs[t].life--
+        }
+
+        for (let t = 0; t < enemy.arcs.length; t++) {
+            if (enemy.arcs[t].life <= 0) {
+                enemy.arcs.splice(t, 1)
+            }
+        }
             for (let t = 0; t < this.guys.length; t++) {
                 let wet = 0
                 for (let k = 0; k < this.guys[t].gear.length; k++) {
@@ -31002,7 +35370,7 @@ class Ship {
                         enemy.weapons[x].bombs = []
                         enemy.weapons[x].bombs.push(bonmb)
                     }
-                    if(this.guys[t].droneLine.flaggedOn == 1){
+                    if (this.guys[t].droneLine.flaggedOn == 1) {
                         this.guys[t].droneLine.flaggedOn = 0
                     }
                     this.guys.splice(t, 1)
@@ -31495,6 +35863,10 @@ class Ship {
         if (start == 0) { }
     }
     draw() {
+
+        // this.zap.targets = [enemy.body]
+        // // this.zap.make()
+        // this.zap.draw()
         if (this.speedset == 0) {
             this.speedset = 1
             speedrate = 5
@@ -31510,6 +35882,8 @@ class Ship {
             }
         }
         if (start == 2) {
+            this.dettimer--
+
             this.shield.draw()
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
@@ -31630,6 +36004,7 @@ class Ship {
                 }
             }
         }
+
         if (mode == 1) { } else {
             if (start == 1) {
                 for (let t = 0; t < this.web.length - 1; t++) {
@@ -31861,12 +36236,18 @@ class Ship {
                     this.guys = [new Guy(tiles[0], 5), new Guy(tiles[20], 5), new Guy(tiles[31], 5), new Guy(tiles[32], 5)]
                     if (this.alt == 5) {
                         this.guys.push(new Guy(tiles[7], 8))
-                    }    
+                    }
                     if (this.alt == 2) {
                         this.guys[0] = new Guy(tiles[0], 43)
                     }
+                    if (this.alt == 4) {
+                        this.guys[0] = new Guy(tiles[0], 45)
+                    }
                 } else if (this.type == 2) {
                     this.guys = [new Guy(tiles[0], 0), new Guy(tiles[20], 0), new Guy(tiles[21], 0), new Guy(tiles[25], 23)]
+                    if (this.alt == 2) {
+                        this.guys[0] = new Guy(tiles[0], 46)
+                    }
                 } else if (this.type == 3) {
                     this.guys = [new Guy(tiles[0], 19), new Guy(tiles[2], 19), new Guy(tiles[3], 19)]
                 } else if (this.type == 4) {
@@ -31879,7 +36260,7 @@ class Ship {
                     if (this.alt == 0) {
                         this.guys = [new Guy(tiles[4], 18), new Guy(tiles[26], 22), new Guy(tiles[37], 6), new Guy(tiles[45], 16), new Guy(tiles[35], 24)]
                     } else if (this.alt == 1) {
-                        this.guys = [new Guy(tiles[4], 27), new Guy(tiles[26], 32), new Guy(tiles[37], 16), new Guy(tiles[45], 6), new Guy(tiles[35], 22)]
+                        this.guys = [new Guy(tiles[4], 27), new Guy(tiles[26], 32), new Guy(tiles[37], 45), new Guy(tiles[45], 6), new Guy(tiles[35], 22)]
                     } else if (this.alt == 2) {
                         this.guys = [new Guy(tiles[4], 18), new Guy(tiles[26], 22), new Guy(tiles[37], 6), new Guy(tiles[45], 32), new Guy(tiles[35], 24)]
                     } else if (this.alt == 3) {
@@ -31943,6 +36324,7 @@ class Ship {
                     this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
                 } else {
                     this.guys = [new Guy(tiles[6], 12), new Guy(tiles[34], 1), new Guy(tiles[90], 11)]
+                    this.guys[2].becomePomao()
                     if (this.alt == 1) {
                         this.guys.push(new Guy(tiles[7], 33))
                     }
@@ -31989,11 +36371,12 @@ class Ship {
                         let wep2 = new Weapon(20)
                         let wep3 = new Weapon(41)
                         let wep4 = new Weapon(-1)
-                        // let wep5 = new Weapon(22)
+                        // let wep5 = new Weapon(51)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
                         this.weapons.push(wep3)
                         this.weapons.push(wep4)
+                        // this.weapons.push(wep5)
                         this.drones = []
                         this.drones[0] = new Drone(0, this)
                         this.drones[1] = new Drone(-1, this)
@@ -32028,7 +36411,7 @@ class Ship {
                         this.drones[2] = new Drone(-1, this)
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(5)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(52)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(22)
@@ -32145,8 +36528,8 @@ class Ship {
                         this.drones[1] = new Drone(-1, this)
                     } else if (this.alt == 1) {
                         let wep1 = new Weapon(50)
-                        let wep2 = new Weapon(50)
-                        let wep3 = new Weapon(50)
+                        let wep2 = new Weapon(56)
+                        let wep3 = new Weapon(59)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -32154,11 +36537,11 @@ class Ship {
                         this.weapons.push(wep4)
                         this.drones = []
                         this.drones[0] = new Drone(0, this)
-                        this.drones[1] = new Drone(-1, this)
+                        this.drones[1] = new Drone(9, this)
                         this.drones[2] = new Drone(-1, this)
                     } else if (this.alt == 2) {
                         let wep1 = new Weapon(13)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(58)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
@@ -32173,7 +36556,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(29)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(65)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
@@ -32190,7 +36573,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(43)
-                        let wep2 = new Weapon(-1)
+                        let wep2 = new Weapon(66)
                         let wep3 = new Weapon(-1)
                         // let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -32208,7 +36591,7 @@ class Ship {
                         this.scrap += 120
                     } else if (this.alt == 5) {
                         let wep1 = new Weapon(42)
-                        let wep2 = new Weapon(42)
+                        let wep2 = new Weapon(67)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -32228,8 +36611,8 @@ class Ship {
                 }
                 if (this.type == 3) {
                     let wep1 = new Weapon(26)
-                    let wep2 = new Weapon(0)
-                    let wep3 = new Weapon(-1)
+                    let wep2 = new Weapon(51)
+                    let wep3 = new Weapon(69)
                     let wep4 = new Weapon(-1)
                     this.weapons.push(wep1)
                     this.weapons.push(wep2)
@@ -32281,14 +36664,14 @@ class Ship {
                     this.weapons.push(wep4)
                     this.drones = []
                     this.drones[0] = new Drone(0, this)
-                    this.drones[1] = new Drone(-1, this)
+                    this.drones[1] = new Drone(10, this)
                     this.drones[2] = new Drone(-1, this)
                 }
                 if (this.type == 7) {
                     if (this.alt == 0) {
                         let wep1 = new Weapon(18)
                         let wep2 = new Weapon(21)
-                        let wep3 = new Weapon(-1)
+                        let wep3 = new Weapon(68)
                         // let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -32318,9 +36701,9 @@ class Ship {
                         this.drones[4] = new Drone(-1, this)
                         // this.weapons.push(wep4)
                     } else if (this.alt == 2) {
-                        let wep1 = new Weapon(16)
-                        let wep2 = new Weapon(0)
-                        let wep3 = new Weapon(-1)
+                        let wep1 = new Weapon(63)
+                        let wep2 = new Weapon(64)
+                        let wep3 = new Weapon(57)
                         let wep4 = new Weapon(-1)
                         let wep5 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -32351,7 +36734,7 @@ class Ship {
                         this.droneparts += 20
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(49)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(57)
                         let wep3 = new Weapon(-1)
                         // let wep4 = new Weapon(-1)
                         // let wep5 = new Weapon(-1)
@@ -32388,9 +36771,9 @@ class Ship {
                     }
                 }
                 if (this.type == 8) {
-                    let wep1 = new Weapon(23)
-                    let wep2 = new Weapon(34)
-                    let wep3 = new Weapon(-1)
+                    let wep1 = new Weapon(23) //scarp cannon
+                    let wep2 = new Weapon(34) //mirror shield
+                    let wep3 = new Weapon(54)
                     let wep4 = new Weapon(-1)
                     let wep5 = new Weapon(-1)
                     this.weapons.push(wep1)
@@ -32425,7 +36808,7 @@ class Ship {
                 if (this.type == 10) {
                     let wep1 = new Weapon(0)
                     let wep2 = new Weapon(27)
-                    let wep3 = new Weapon(-1)
+                    let wep3 = new Weapon(53)
                     let wep4 = new Weapon(-1)
                     // let wep5 = new Weapon(-1)
                     this.weapons.push(wep1)
@@ -32462,7 +36845,7 @@ class Ship {
                 if (this.type == 12) {
                     if (this.alt == 0) {
                         let wep1 = new Weapon(0)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(60)
                         let wep3 = new Weapon(1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -32492,7 +36875,7 @@ class Ship {
                         this.drones[3] = new Drone(-1, this)
                     } else if (this.alt == 2) {
                         let wep1 = new Weapon(12)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(61)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -32508,7 +36891,7 @@ class Ship {
                     } else if (this.alt == 3) {
                         let wep1 = new Weapon(9)
                         let wep2 = new Weapon(11)
-                        let wep3 = new Weapon(9)
+                        let wep3 = new Weapon(62)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
                         this.weapons.push(wep2)
@@ -32523,7 +36906,7 @@ class Ship {
                         this.drones[3] = new Drone(-1, this)
                     } else if (this.alt == 4) {
                         let wep1 = new Weapon(16)
-                        let wep2 = new Weapon(0)
+                        let wep2 = new Weapon(55)
                         let wep3 = new Weapon(-1)
                         let wep4 = new Weapon(-1)
                         this.weapons.push(wep1)
@@ -32595,6 +36978,9 @@ class Ship {
                 // this.weapons.push(new Weapon(0))
                 // }
             }
+
+
+            
             // canvas_context.drawImage(shipimage, 0, 0, 256, 256, this.body.x - this.body.radius, this.body.y - this.body.radius, this.body.radius * 2, this.body.radius * 2)
             this.wepDrawCount = 0
             for (let t = 0; t < this.blocks.length; t++) {
@@ -32609,6 +36995,61 @@ class Ship {
                     }
                 }
             }
+
+        for (let t = 0; t < this.arcs.length; t++) {
+            this.arcs[t].move()
+            this.arcs[t].draw()
+            if(this.arcs[t].damaging >= 0){
+                if(enemy.guys){
+                    for(let k = 0;k<enemy.guys.length;k++){
+                        if(enemy.guys[k].body.doesPerimeterTouch(this.arcs[t])){
+                            enemy.guys[k].health -= this.arcs[t].damaging/(1+enemy.guys[k].gearArmor)
+                            enemy.guys[k].ropestunned = Math.max(this.arcs[t].stun, enemy.guys[k].ropestunned)
+                        }
+                    }
+
+                }
+            }
+            this.arcs[t].life--
+        }
+
+        for (let t = 0; t < this.arcs.length; t++) {
+            if (this.arcs[t].life <= 0) {
+                this.arcs.splice(t, 1)
+            }
+        }
+        
+
+
+
+
+
+
+
+
+
+    for (let t = 0; t < enemy.arcs.length; t++) {
+        enemy.arcs[t].move()
+        enemy.arcs[t].draw()
+        if(enemy.arcs[t].damaging > 0){
+            if(vessel.guys){
+                for(let k = 0;k<vessel.guys.length;k++){
+                    if(vessel.guys[k].body.doesPerimeterTouch(enemy.arcs[t])){
+                        vessel.guys[k].health -= enemy.arcs[t].damaging/(1+vessel.guys[k].gearArmor)
+                        vessel.guys[k].ropestunned =  Math.max(enemy.arcs[t].stun, vessel.guys[k].ropestunned)
+                    }
+                }
+
+            }
+        }
+        enemy.arcs[t].life--
+    }
+
+    for (let t = 0; t < enemy.arcs.length; t++) {
+        if (enemy.arcs[t].life <= 0) {
+            enemy.arcs.splice(t, 1)
+        }
+    }
             for (let t = 0; t < this.guys.length; t++) {
                 let wet = 0
                 for (let k = 0; k < this.guys[t].gear.length; k++) {
@@ -32657,7 +37098,7 @@ class Ship {
                         enemy.weapons[x].bombs.push(bonmb)
                     }
 
-                    if(this.guys[t].droneLine.flaggedOn == 1){
+                    if (this.guys[t].droneLine.flaggedOn == 1) {
                         this.guys[t].droneLine.flaggedOn = 0
                     }
                     this.guys.splice(t, 1)
@@ -33355,6 +37796,8 @@ let zz = 0
 class EnemyShip {
     constructor(type, level) {
         this.breaking = []
+        this.arcs = []
+        this.dettimer = 0
         this.allIn = 0
         this.skew = 0
         this.takeoff = 0
@@ -33387,7 +37830,7 @@ class EnemyShip {
             this.level = level
         } else {
             let link = new LineOP(stars.stars[0].body, stars.stars[stars.to].body)
-            if(vessel.fuel <= 0){
+            if (vessel.fuel <= 0) {
                 link = new LineOP(stars.stars[0].body, stars.stars[vessel.star].body)
             }
             if (stars.collapsed == 1) {
@@ -34213,61 +38656,101 @@ class EnemyShip {
                         enemy.weapons[x2].fire(enemy.weapons[x2].target)
                     }
 
-                    if(this.drones[t].type == 7){
-                        let lile = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                    if (this.drones[t].type == 7) {
+                        let lile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                         let j = 0
-                        while(lile.walkable == false){
+                        while (lile.walkable == false) {
                             j++
-                            if(j>100){
+                            if (j > 100) {
                                 break
                             }
-                            lile = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            lile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                         }
                         let robocrew = new Guy(lile, 39)
                         robocrew.droneLine = this.drones[t]
-                        if(robocrew.droneLine.flaggedOn == 0){
-                            if(enemy.guys.length < 17){
-                                if(enemy.droneparts > 0){
-                                        enemy.guys.push(robocrew)
-                                        enemy.droneparts--
-                                    }else{
-                                        robocrew.tile.walkable = true
-                                   }
-                            }else{
-                             robocrew.tile.walkable = true
+                        if (robocrew.droneLine.flaggedOn == 0) {
+                            if (enemy.guys.length < 17) {
+                                if (enemy.droneparts > 0) {
+                                    enemy.guys.push(robocrew)
+                                    enemy.droneparts--
+                                } else {
+                                    robocrew.tile.walkable = true
+                                }
+                            } else {
+                                robocrew.tile.walkable = true
                             }
-                        }else{
+                        } else {
                             robocrew.tile.walkable = true
                         }
                         robocrew.droneLine.flaggedOn = 1
                     }
-                    if(this.drones[t].type == 8){
-                        let lile = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                    if (this.drones[t].type == 8) {
+                        let lile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                         let j = 0
-                        while(lile.walkable == false){
+                        while (lile.walkable == false) {
                             j++
-                            if(j>100){
+                            if (j > 100) {
                                 break
                             }
-                            lile = enemy.supratiles[Math.floor(Math.random()*enemy.supratiles.length)]
+                            lile = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                         }
                         let robocrew = new Guy(lile, 40)
                         robocrew.droneLine = this.drones[t]
-                        if(robocrew.droneLine.flaggedOn == 0){
-                            if(enemy.guys.length < 17){
-                                if(enemy.droneparts > 0){
-                                        enemy.guys.push(robocrew)
-                                        enemy.droneparts--
-                                    }else{
-                                        robocrew.tile.walkable = true
-                                   }
-                            }else{
-                             robocrew.tile.walkable = true
+                        if (robocrew.droneLine.flaggedOn == 0) {
+                            if (enemy.guys.length < 17) {
+                                if (enemy.droneparts > 0) {
+                                    enemy.guys.push(robocrew)
+                                    enemy.droneparts--
+                                } else {
+                                    robocrew.tile.walkable = true
+                                }
+                            } else {
+                                robocrew.tile.walkable = true
                             }
-                        }else{
+                        } else {
                             robocrew.tile.walkable = true
                         }
                         robocrew.droneLine.flaggedOn = 1
+                    }
+
+                    if (this.drones[t].type == 9) {
+                        let wep = new Weapon(36)
+                        wep.temp = 2
+                        let x = enemy.weapons.length
+                        enemy.weapons[x] = wep
+                        enemy.weapons[x].charge = enemy.weapons[x].max
+                        enemy.weapons[x].center.y = this.drones[t].center.y
+                        enemy.weapons[x].center.x = this.drones[t].center.x
+                        enemy.weapons[x].follow = this.drones[t].center
+                        enemy.weapons[x].metatarget = this.drones[t].metatarget
+                        enemy.weapons[x].following = 1
+                        enemy.weapons[x].fire()
+                    }
+
+                    if (this.drones[t].type == 10) {
+                        for(let t = 0;t<vessel.arcs.length;t++){
+                            vessel.arcs[t].life = -100000
+                        }
+                        let dot = new ExpandingCircle(this.drones[t].center.x, this.drones[t].center.y, 5, "#FFFF0088")
+                        dot.lock = this.drones[t].center
+                        enemy.arcs.push(dot)
+
+                        let wep = new Weapon(67)
+                        wep.temp = 2
+                        let x = enemy.weapons.length
+                        enemy.weapons[x] = wep
+                        enemy.weapons[x].charge = enemy.weapons[x].max
+                        enemy.weapons[x].center.y = this.drones[t].center.y
+                        enemy.weapons[x].center.x = this.drones[t].center.x
+                        enemy.weapons[x].follow = this.drones[t].center
+                        enemy.weapons[x].metatarget = this.drones[t].metatarget
+                        if (this.drones[t].metatarget.x) {
+                            enemy.weapons[x].target = this.drones[t].metatarget
+                        } else {
+                            enemy.weapons[x].target = vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)]
+                        }
+                        enemy.weapons[x].following = 1
+                        enemy.weapons[x].fire()
                     }
                 }
             }
@@ -34791,6 +39274,8 @@ class EnemyShip {
             this.energy.power--
             this.UI.systems[2].sto++
         } //jank shield drop fix :(
+        this.dettimer--
+
         this.shield.draw()
         if (this.first == 0) {
             this.now = Date.now()
@@ -34905,8 +39390,8 @@ class EnemyShip {
                 }
             }
 
-            for(let t = 0;t<this.guys.length;t++){
-                if(Math.random() < .4){
+            for (let t = 0; t < this.guys.length; t++) {
+                if (Math.random() < .4) {
                     this.guys[t] = new Guy(this.guys[t].tile, stars.stars[vessel.star].faction.type) //starfaction
                 }
             }
@@ -35066,7 +39551,7 @@ class EnemyShip {
                     }
                 }
                 if (Math.random() < .05) {
-                    // let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    // let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     let wep5 = new Weapon(0)
                     this.weapons.push(wep5)
                 }
@@ -35087,7 +39572,7 @@ class EnemyShip {
                 this.weapons.push(wep3)
                 this.weapons.push(wep4)
                 if (Math.random() < .1) {
-                    let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     this.weapons.push(wep5)
                 }
                 if (Math.random() < .05) {
@@ -35098,7 +39583,7 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else if (this.level < 21) {
                 let wep1 = new Weapon(0)
@@ -35110,7 +39595,7 @@ class EnemyShip {
                 this.weapons.push(wep3)
                 this.weapons.push(wep4)
                 if (Math.random() < .5) {
-                    let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     this.weapons.push(wep5)
                 }
                 if (Math.random() < .05) {
@@ -35121,10 +39606,10 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .15) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .15) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else if (this.level < 29) {
                 let wep1 = new Weapon(2)
@@ -35137,19 +39622,19 @@ class EnemyShip {
                 this.weapons.push(wep4)
                 if (Math.random() < .9) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 100) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
@@ -35163,13 +39648,13 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .70) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .40) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[3] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[3] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else {
                 let wep1 = new Weapon(2)
@@ -35182,37 +39667,37 @@ class EnemyShip {
                 this.weapons.push(wep4)
                 if (Math.random() < .9) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 100) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
@@ -35226,19 +39711,37 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .90) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .70) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .65) {
-                    this.drones[3] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[3] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[4] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[4] = new Drone(Math.floor(Math.random() * 11), this)
+                }
+            }
+
+            this.weapons = []
+
+            this.gunPoints = (this.level * 2) + 8
+            let jout = 0
+            while (this.gunPoints > 0 && this.wepmax > this.weapons.length) {
+                jout++
+                if (jout > 10000) {
+                    break
+                }
+                let weapon = new Weapon(Math.floor(Math.random() * 70))
+                if (weapon.value <= this.gunPoints) {
+                    this.gunPoints -= weapon.value
+                    this.weapons.push(weapon)
                 }
             }
         }
+
+
         // this.body.draw()
         // canvas_context.drawImage(ship1img, 0, 0, 512, 512, this.blocks[0][0].x, this.blocks[0][0].y, 512, 512)
         this.wepDrawCount = 0
@@ -35324,7 +39827,7 @@ class EnemyShip {
                     vessel.weapons[x].bombs = []
                     vessel.weapons[x].bombs.push(bonmb)
                 }
-                if(this.guys[t].droneLine.flaggedOn == 1){
+                if (this.guys[t].droneLine.flaggedOn == 1) {
                     this.guys[t].droneLine.flaggedOn = 0
                 }
                 this.guys.splice(t, 1)
@@ -36607,7 +41110,7 @@ class EnemyShip {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 70)))
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -36618,7 +41121,7 @@ class EnemyShip {
                                 }
                             }
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 70)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -36633,7 +41136,7 @@ class EnemyShip {
                             }
                         }
                         if (indexd > -1) {
-                            vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 6), vessel))
+                            vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 11), vessel))
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -36644,7 +41147,7 @@ class EnemyShip {
                                 }
                             }
                             if (indexd > -1) {
-                                vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1, -1, -1, Math.floor(Math.random() * 7)))
+                                vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                             } else {
                                 this.droneflag = 1
                             }
@@ -36660,7 +41163,7 @@ class EnemyShip {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 70)))
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -36671,7 +41174,7 @@ class EnemyShip {
                                 }
                             }
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 70)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -36687,7 +41190,7 @@ class EnemyShip {
                             }
                         }
                         if (indexd > -1) {
-                            vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 6), vessel))
+                            vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 11), vessel))
                             ////////console.log(vessel.drones)
                         } else {
                             // this.wegflag = 1
@@ -36699,7 +41202,7 @@ class EnemyShip {
                                 }
                             }
                             if (indexd > -1) {
-                                vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1, -1, -1, Math.floor(Math.random() * 7)))
+                                vessel.upgradeMenu.wepsto[indexd] = (new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                             } else {
                                 this.droneflag = 1
                             }
@@ -37337,7 +41840,7 @@ class EnemyShip {
             emergencyLock.draw(1)
             this.doors.push(emergencyLock)
             if (this.level < 8) {
-                this.guys = [new Guy(tiles[1])] 
+                this.guys = [new Guy(tiles[1])]
             } else if (this.level < 16) {
                 this.guys = [new Guy(tiles[1]), new Guy(tiles[2])]
             } else if (this.level < 24) {
@@ -37361,8 +41864,8 @@ class EnemyShip {
                     this.guys.push(new Guy(tiles[8]))
                 }
             }
-            for(let t = 0;t<this.guys.length;t++){
-                if(Math.random() < .4){
+            for (let t = 0; t < this.guys.length; t++) {
+                if (Math.random() < .4) {
                     this.guys[t] = new Guy(this.guys[t].tile, stars.stars[vessel.star].faction.type) //starfaction
                 }
             }
@@ -37533,7 +42036,7 @@ class EnemyShip {
                     }
                 }
                 if (Math.random() < .05) {
-                    // let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    // let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     let wep5 = new Weapon(0)
                     this.weapons.push(wep5)
                 }
@@ -37554,7 +42057,7 @@ class EnemyShip {
                 this.weapons.push(wep3)
                 this.weapons.push(wep4)
                 if (Math.random() < .1) {
-                    let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     this.weapons.push(wep5)
                 }
                 if (Math.random() < .05) {
@@ -37565,7 +42068,7 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else if (this.level < 21) {
                 let wep1 = new Weapon(0)
@@ -37577,7 +42080,7 @@ class EnemyShip {
                 this.weapons.push(wep3)
                 this.weapons.push(wep4)
                 if (Math.random() < .5) {
-                    let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                    let wep5 = new Weapon(Math.floor(Math.random() * 70))
                     this.weapons.push(wep5)
                 }
                 if (Math.random() < .05) {
@@ -37588,10 +42091,10 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .15) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .15) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else if (this.level < 29) {
                 let wep1 = new Weapon(2)
@@ -37604,19 +42107,19 @@ class EnemyShip {
                 this.weapons.push(wep4)
                 if (Math.random() < .9) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 100) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
@@ -37630,13 +42133,13 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .70) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .40) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[3] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[3] = new Drone(Math.floor(Math.random() * 11), this)
                 }
             } else {
                 let wep1 = new Weapon(2)
@@ -37649,37 +42152,37 @@ class EnemyShip {
                 this.weapons.push(wep4)
                 if (Math.random() < .9) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 100) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
                 if (Math.random() < this.level / 500) {
                     if (this.wepmax > this.weapons.length) {
-                        let wep5 = new Weapon(Math.floor(Math.random() * 51))
+                        let wep5 = new Weapon(Math.floor(Math.random() * 70))
                         this.weapons.push(wep5)
                     }
                 }
@@ -37693,16 +42196,32 @@ class EnemyShip {
                     this.drones[0] = new Drone(0, this)
                 }
                 if (Math.random() < .90) {
-                    this.drones[1] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[1] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .70) {
-                    this.drones[2] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[2] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .65) {
-                    this.drones[3] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[3] = new Drone(Math.floor(Math.random() * 11), this)
                 }
                 if (Math.random() < .05) {
-                    this.drones[4] = new Drone(Math.floor(Math.random() * 9), this)
+                    this.drones[4] = new Drone(Math.floor(Math.random() * 11), this)
+                }
+            }
+
+            this.weapons = []
+
+            this.gunPoints = (this.level * 2) + 8
+            let jout = 0
+            while (this.gunPoints > 0 && this.wepmax > this.weapons.length) {
+                jout++
+                if (jout > 10000) {
+                    break
+                }
+                let weapon = new Weapon(Math.floor(Math.random() * 70))
+                if (weapon.value <= this.gunPoints) {
+                    this.gunPoints -= weapon.value
+                    this.weapons.push(weapon)
                 }
             }
         }
@@ -37791,7 +42310,7 @@ class EnemyShip {
                     vessel.weapons[x].bombs.push(bonmb)
                 }
 
-                if(this.guys[t].droneLine.flaggedOn == 1){
+                if (this.guys[t].droneLine.flaggedOn == 1) {
                     this.guys[t].droneLine.flaggedOn = 0
                 }
                 this.guys.splice(t, 1)
@@ -39064,7 +43583,7 @@ class EnemyShip {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 70)))
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -39075,7 +43594,7 @@ class EnemyShip {
                                 }
                             }
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 70)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -39117,7 +43636,7 @@ class EnemyShip {
                             }
                         }
                         if (index > -1) {
-                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                            vessel.weapons[index] = (new Weapon(Math.floor(Math.random() * 70)))
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -39128,7 +43647,7 @@ class EnemyShip {
                                 }
                             }
                             if (index > -1) {
-                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 51)))
+                                vessel.upgradeMenu.wepsto[index] = (new Weapon(Math.floor(Math.random() * 70)))
                             } else {
                                 this.wegflag = 1
                             }
@@ -39268,6 +43787,16 @@ class EnemyShip {
                     }
                 }
             }
+
+            for (let t = 0; t < this.weapons.length; t++) {
+                gigadebug++
+                if (gigadebug > 1000000) {
+                    console.log("ha ha!")
+                    gigadebug = 0
+                    break
+                }
+                this.weapons[t].charge = 0
+            }
         }
         for (let t = 0; t < this.supratiles.length; t++) {
             gigadebug++
@@ -39286,15 +43815,6 @@ class EnemyShip {
                 break
             }
             this.guys[t].justdraw()
-        }
-        for (let t = 0; t < this.weapons.length; t++) {
-            gigadebug++
-            if (gigadebug > 1000000) {
-                console.log("ha ha!")
-                gigadebug = 0
-                break
-            }
-            this.weapons[t].charge = 0
         }
         for (let t = 0; t < this.shield.rings.length; t++) {
             gigadebug++
@@ -39365,12 +43885,12 @@ class Event {
     check() { }
 }
 
-let guyTypes = ['Shieldabeast', 'Psybean', 'Oscarto', 'Bobbin', 'Obchovies', 'Crabster', 'Gulpodian', 'Hops', 'Echomites', 'Stockmani', 'Squinians', 'Pomaoranians', 'Potei', "Solalani", "Heaba", 'Geliphants', 'Banandroids', 'Runnybabbits', 'Gumnut', 'Fireknives', 'Kachortian', 'Yuggo', 'Sluggernaut', 'Schmodozers', 'Rushrooms', 'Nhainhainians', 'Missileaneans', 'Grobhostians', 'Doughgnatians', 'Deblobbian', 'Habodians', 'Soarbian', "Bellajarian", 'Mnemonts', 'Junkian', 'Squidbot', "Manterflyian", 'Oscarto', 'Xlitchian', 'Drone', 'Drone', 'Hysisian', "Whalien", "Bugglepills"]
+let guyTypes = ['Shieldabeast', 'Psybean', 'Oscarto', 'Bobbin', 'Obchovies', 'Crabster', 'Gulpodian', 'Hops', 'Echomites', 'Stockmani', 'Squinians', 'Pomaoranians', 'Potei', "Solalani", "Heaba", 'Geliphants', 'Banandroids', 'Runnybabbits', 'Gumnut', 'Fireknives', 'Kachortian', 'Yuggo', 'Sluggernaut', 'Schmodozers', 'Rushrooms', 'Nhainhainians', 'Missileaneans', 'Grobhostians', 'Doughgnatians', 'Deblobbian', 'Habodians', 'Soarbian', "Bellajarian", 'Mnemonts', 'Junkian', 'Squidbot', "Manterflyian", 'Oscarto', 'Xlitchian', 'Drone', 'Drone', 'Hysisian', "Whalien", "Bugglepills", "Camelien", "Mants", "Hosenosians", "Horkin", "Tutewtoo"]
 class Star {
     constructor(x, y, shop = 0) {
         this.matrix = []
 
-        for(let k = 0;k<44;k++){
+        for (let k = 0; k < 49; k++) {
             this.matrix.push(999999999)
         }
         this.event = new Event()
@@ -39402,13 +43922,13 @@ class Star {
                 this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
             }
             for (let t = 0; t < 3; t++) {
                 this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 6)))
@@ -39419,13 +43939,13 @@ class Star {
                     this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                    this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                 }
                 for (let t = 0; t < 3; t++) {
                     this.weapons.push(new Weapon(-1))
@@ -39436,13 +43956,13 @@ class Star {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                     }
                     for (let t = 0; t < 3; t++) {
                         this.weapons.push(new Weapon(-1))
@@ -39452,13 +43972,13 @@ class Star {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                     }
                     for (let t = 0; t < 3; t++) {
                         this.weapons.push(new Weapon(-1))
@@ -39468,13 +43988,13 @@ class Star {
         } else {
             if (Math.random() < .5) {
                 for (let t = 0; t < 3; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                    this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                 }
                 for (let t = 0; t < 3; t++) {
                     this.weapons.push(new Weapon(-1))
@@ -39482,13 +44002,13 @@ class Star {
             } else {
                 if (Math.random() < .2) {
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))   
+                        this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                     }
                     for (let t = 0; t < 3; t++) {
                         this.weapons.push(new Weapon(-1))
@@ -39496,32 +44016,32 @@ class Star {
                 } else {
                     if (Math.random() < .8) {
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                            this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                         }
                         for (let t = 0; t < 3; t++) {
                             this.weapons.push(new Weapon(-1))
                         }
                     } else {
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 51)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                         }
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 44), (new Guy({}, Math.floor(Math.random() * 44)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 9)))
+                            this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
                         }
                         for (let t = 0; t < 3; t++) {
                             this.weapons.push(new Weapon(-1))
@@ -39564,7 +44084,7 @@ class Star {
     }
     draw() {
         this.name = this.spot.color + " System"
-        this.name += ' - ' + guyTypes[this.faction.type] + ' ' + 'Controlled' 
+        this.name += ' - ' + guyTypes[this.faction.type] + ' ' + 'Controlled'
         if (mode == 1) { } else {
             this.link.target = stars.stars[vessel.star].body
             if (this.link.hypotenuse() > 1280) {
@@ -39673,7 +44193,7 @@ class Stars {
             for (let t = 0; this.stars.length < 580; t++) {
                 let star = new Star(((130 / 4) + (Math.random() * (1280))), Math.random() * (canvas.height - 40))
                 let wet = 1
-                star.link = new LineOP(star.body,star.body)
+                star.link = new LineOP(star.body, star.body)
                 for (let k = 0; k < this.stars.length; k++) {
                     if (star.body.doesPerimeterTouch(this.stars[k].body)) {
                         wet = 0
@@ -39693,7 +44213,7 @@ class Stars {
             for (let t = 0; this.stars.length < 4200; t++) {
                 let star = new Star((((140 / 4) * globalRat) + (((Math.random() * (canvas.width))) * (Math.random() - .5) * 3)), ((((Math.random() * (1280)) * (Math.random() - .5))) * 3) + 360)
                 let wet = 1
-                star.link = new LineOP(star.body,star.body)
+                star.link = new LineOP(star.body, star.body)
                 for (let k = 0; k < this.stars.length; k++) {
                     if (star.body.doesPerimeterTouch(this.stars[k].body)) {
                         wet = 0
@@ -39710,24 +44230,24 @@ class Stars {
         this.factions = []
         this.boxes = []
         this.subdots = []
-        for(let t = 0;t<44;t++){
+        for (let t = 0; t < 49; t++) {
             let faction = {}
-            faction.type = t%44
+            faction.type = t % 49
             faction.color = getRandomColor()
             this.factions.push(faction)
             this.boxes.push([])
             if (mode == 1) {
                 let star = new Star(((130 / 4) + (Math.random() * (1280))), Math.random() * (canvas.height - 40))
 
-                    // star.matrix = []
-                    // for(let k = 0;k<44;k++){
-                    //     star.matrix.push(999999999)
-                    // }
-                    star.link = new LineOP(star.body,star.body)
+                // star.matrix = []
+                // for(let k = 0;k<44;k++){
+                //     star.matrix.push(999999999)
+                // }
+                star.link = new LineOP(star.body, star.body)
 
 
                 this.subdots.push(star)
-                
+
             } else {
                 let star = new Star((((140 / 4) * globalRat) + (((Math.random() * (canvas.width))) * (Math.random() - .5) * 3)), ((((Math.random() * (1280)) * (Math.random() - .5))) * 3) + 360)
 
@@ -39735,33 +44255,33 @@ class Stars {
                 // for(let k = 0;k<44;k++){
                 //     star.matrix.push(999999999)
                 // }
-                star.link = new LineOP(star.body,star.body)
+                star.link = new LineOP(star.body, star.body)
 
 
-            this.subdots.push(star)
+                this.subdots.push(star)
 
             }
         }
         this.compute1()
     }
 
-  compute1(){
-    for(let t = 0;t<this.stars.length;t++){
-        for(let k = 0;k<this.subdots.length;k++){
-            this.stars[t].link.target = this.subdots[k].body
-            this.stars[t].matrix[k] = this.stars[t].link.hypotenuse()
+    compute1() {
+        for (let t = 0; t < this.stars.length; t++) {
+            for (let k = 0; k < this.subdots.length; k++) {
+                this.stars[t].link.target = this.subdots[k].body
+                this.stars[t].matrix[k] = this.stars[t].link.hypotenuse()
+            }
         }
-    }
-    this.links = []
-    for(let t = 0;t<this.stars.length;t++){
-        let min = 999999999
-        let secondMin = 999999999
-            for (var i= 0; i< this.stars[t].matrix.length; i++) {
-                if (this.stars[t].matrix[i]< min) {
+        this.links = []
+        for (let t = 0; t < this.stars.length; t++) {
+            let min = 999999999
+            let secondMin = 999999999
+            for (var i = 0; i < this.stars[t].matrix.length; i++) {
+                if (this.stars[t].matrix[i] < min) {
                     secondMin = min;
-                    min = this.stars[t].matrix[i]; 
-                } else if (this.stars[t].matrix[i]< secondMin) {
-                    secondMin = this.stars[t].matrix[i]; 
+                    min = this.stars[t].matrix[i];
+                } else if (this.stars[t].matrix[i] < secondMin) {
+                    secondMin = this.stars[t].matrix[i];
                 }
             }
             // let index2 = this.stars[t].matrix.indexOf(secondMin)
@@ -39770,53 +44290,53 @@ class Stars {
             this.stars[t].faction = this.factions[index]
             this.stars[t].link.target = this.subdots[index].body
             // if(secondMin < min*1.2){
-                this.stars[t].link.color = this.subdots[index].body.color
-                this.stars[t].link.width = 1
-                this.links.push(this.stars[t].link)
+            this.stars[t].link.color = this.subdots[index].body.color
+            this.stars[t].link.width = 1
+            this.links.push(this.stars[t].link)
             // }else{
             this.boxes[index].push(this.stars[t].body)
             // this.stars[t].link.color = "transparent"
             // this.stars[t].link.width = 1
             // }
-    }
-    this.linkdraw = 1
+        }
+        this.linkdraw = 1
 
-    // console.log(this.boxes)
-    for(let t = 0;t<this.boxes.length;t++){
-       this.boxes[t] =  grahamScan(this.boxes[t])
+        // console.log(this.boxes)
+        for (let t = 0; t < this.boxes.length; t++) {
+            this.boxes[t] = grahamScan(this.boxes[t])
+        }
+        console.log(this.boxes)
     }
-    console.log(this.boxes)
-}
 
     draw() {
 
 
-        for(let t = 0;t<this.boxes.length;t++){
-            if(this.boxes[t].length > 0){
+        for (let t = 0; t < this.boxes.length; t++) {
+            if (this.boxes[t].length > 0) {
 
 
-        // canvas_context.beginPath()
-        // canvas_context.moveTo(this.nodes[0].x, this.nodes[0].y)
-        // for (let t = 1; t < this.nodes.length; t++) {
-        //     canvas_context.lineTo(this.nodes[t].x, this.nodes[t].y)
-        // }
-        // canvas_context.lineTo(this.nodes[0].x, this.nodes[0].y)
-        // canvas_context.fill()
-        // canvas_context.stroke()
-        // canvas_context.closePath()
+                // canvas_context.beginPath()
+                // canvas_context.moveTo(this.nodes[0].x, this.nodes[0].y)
+                // for (let t = 1; t < this.nodes.length; t++) {
+                //     canvas_context.lineTo(this.nodes[t].x, this.nodes[t].y)
+                // }
+                // canvas_context.lineTo(this.nodes[0].x, this.nodes[0].y)
+                // canvas_context.fill()
+                // canvas_context.stroke()
+                // canvas_context.closePath()
                 canvas_context.beginPath()
                 canvas_context.moveTo(this.boxes[t][0].x, this.boxes[t][0].y)
-                let link = new LineOPS( this.boxes[t][this.boxes[t].length-1], this.boxes[t][0],this.factions[t].color+"44", 3)
+                let link = new LineOPS(this.boxes[t][this.boxes[t].length - 1], this.boxes[t][0], this.factions[t].color + "44", 3)
                 link.draw()
                 // for(let k = 0;k<this.boxes[t].length;k++){
                 //     // this.boxes[t][k].draw()
                 // }
-                for(let k = 1;k<this.boxes[t].length;k++){
-                    let link = new LineOPS(this.boxes[t][k], this.boxes[t][k-1], this.factions[t].color+"44", 3)
+                for (let k = 1; k < this.boxes[t].length; k++) {
+                    let link = new LineOPS(this.boxes[t][k], this.boxes[t][k - 1], this.factions[t].color + "44", 3)
                     link.draw()
                 }
                 canvas_context.lineTo(this.boxes[t][0].x, this.boxes[t][0].y)
-                canvas_context.fillStyle = this.factions[t].color+"44"
+                canvas_context.fillStyle = this.factions[t].color + "44"
                 canvas_context.fill()
                 canvas_context.stroke()
             }
@@ -39910,10 +44430,30 @@ class Stars {
 let start = 0
 let title = new Image()
 title.src = "title.png"
+
+
+let hotlight = new Image()
+hotlight.src = "hotlight.png"
+let hotlightr = new Image()
+hotlightr.src = "hotlightr.png"
+let spotlight = new Image()
+spotlight.src = "spotlight.png"
+let spotlightr = new Image()
+spotlightr.src = "spotlightr.png"
+
+
+let antidevice = new Image()
+antidevice.src = "antidevice.png"
+let antidevicer = new Image()
+antidevicer.src = "antidevicer.png"
 let mindDrone = new Image()
 mindDrone.src = "mindDrone.png"
 let blockDrone = new Image()
 blockDrone.src = "blockDrone.png"
+let lightdrone = new Image()
+lightdrone.src = "lightdrone.png"
+let pulsedrone = new Image()
+pulsedrone.src = "pulsedrone.png"
 let combatDrone1 = new Image()
 combatDrone1.src = "combatDrone2.png"
 let combatDrone2 = new Image()
@@ -40169,6 +44709,14 @@ let tileBomb1 = new Image()
 tileBomb1.src = "tileBomb1.png"
 let tileBomb2 = new Image()
 tileBomb2.src = "tileBomb2.png"
+
+
+let chainlight = new Image()
+chainlight.src = "chainlight.png"
+let chainlightr = new Image()
+chainlightr.src = "chainlightr.png"
+
+
 let vessel = new Ship(0)
 let enemy = new EnemyShip(Math.floor(Math.random() * 40), 1)
 vessel.draw()
@@ -40462,12 +45010,22 @@ class Labels {
                 } else {
                     let lsrt = "Tile harm: " + Math.round(vessel.weapons[t].damage / 10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10)
                 }
-                if (vessel.weapons[t].dodgeMod >= 1) {
+                if (vessel.weapons[t].stuns > 0) {
+                    if (vessel.weapons[t].crew > 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x" + " Also Stuns Crew"
+                    } else {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x" + " Stuns Crew When Your Shields Break"
+                    }
+                } else if (vessel.weapons[t].dodgeMod >= 1) {
                     lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Increases Dodge"
                 } else if (vessel.weapons[t].mobility == 1) {
                     lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Damages ships based on their dodge"
                 } else if (vessel.weapons[t].healShield == 1) {
-                    lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Heals Crew"
+                    if (vessel.weapons[t].capshield == 1) {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Builds Charge For Other Weapons"
+                    } else {
+                        lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Heals Crew"
+                    }
                 } else if (vessel.weapons[t].railgun == 1) {
                     lsrt = "Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce"
                 } else if (vessel.weapons[t].scrap > 0) {
@@ -40537,12 +45095,26 @@ class Labels {
                     canvas_context.fillText("Tile harm: " + Math.round(vessel.weapons[t].damage / 10) + ', ' + "Ship harm: " + (vessel.weapons[t].damage / 10), rect.x + 10, py - (dim.h + 10))
                 }
                 py += 20
-                if (vessel.weapons[t].dodgeMod >= 1) {
+                if (vessel.weapons[t].stuns > 0) {
+                    if (vessel.weapons[t].crew <= 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x" + " Stuns Crew When Your Shields Break", rect.x + 10, py - (dim.h + 10))
+                    } else {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Crew Damage: " + vessel.weapons[t].crew + "x" + " Also Stuns Crew", rect.x + 10, py - (dim.h + 10))
+                    }
+                } else if (vessel.weapons[t].dodgeMod >= 1) {
                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Increases Dodge", rect.x + 10, py - (dim.h + 10))
                 } else if (vessel.weapons[t].mobility == 1) {
                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Damages ships based on their dodge", rect.x + 10, py - (dim.h + 10))
                 } else if (vessel.weapons[t].healShield == 1) {
-                    canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Heals Crew", rect.x + 10, py - (dim.h + 10))
+
+
+                    if (vessel.weapons[t].capshield == 1) {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Builds Charge For Other Weapons", rect.x + 10, py - (dim.h + 10))
+                    } else {
+                        canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% Makes Shield Heals Crew", rect.x + 10, py - (dim.h + 10))
+                    }
+
+
                 } else if (vessel.weapons[t].railgun == 1) {
                     canvas_context.fillText("Fire Chance: " + Math.floor((vessel.weapons[t].fireChance / 300) * 100) + "% High Pierce", rect.x + 10, py - (dim.h + 10))
                 } else if (vessel.weapons[t].scrap > 0) {
@@ -42298,6 +46870,9 @@ class Labels {
                                 if (vessel.blocks[t][k].special == 1) {
                                     this.text1 += "-Teleporter"
                                 }
+                                if (vessel.blocks[t][k].oxygen == 1) {
+                                    this.text1 += "-Oxygen Systems"
+                                }
                                 if (vessel.blocks[t][k].security == 1) {
                                     this.text1 += "-Security"
                                 }
@@ -43106,7 +47681,7 @@ function main() {
         if (stars.collapsed == 1) { } else {
             // vessel.stardist =  ((vessel.stardist * 19) + (((1-vessel.dodgeRate())*.3)+.66)    )/20
 
-            if(options.starScroll == 1){
+            if (options.starScroll == 1) {
                 vessel.starrate += .001
             }
             if (vessel.starrate > 2560) {
@@ -43176,10 +47751,10 @@ function main() {
         if (vessel.shake > 0) {
             vessel.shake--
             vessel.stardist = ((vessel.stardist * 19) + (((1 - vessel.dodgeRate()) * .3) + .66)) / 20
-            if(options.starScroll == 1){
-            vessel.starrate += (vessel.stardist * .7)
-            vessel.starrate2 += (vessel.stardist * .7) * .5
-            vessel.starrate3 += (vessel.stardist * .7) * .33
+            if (options.starScroll == 1) {
+                vessel.starrate += (vessel.stardist * .7)
+                vessel.starrate2 += (vessel.stardist * .7) * .5
+                vessel.starrate3 += (vessel.stardist * .7) * .33
             }
             if (vessel.starrate > 2560) {
                 vessel.starrate = 0
@@ -43278,10 +47853,10 @@ function main() {
             vessel.shaker()
         } else {
             vessel.stardist = ((vessel.stardist * 19) + (((1 - vessel.dodgeRate()) * .3) + .66)) / 20
-            if(options.starScroll == 1){
-            vessel.starrate += (vessel.stardist * .7)
-            vessel.starrate2 += (vessel.stardist * .7) * .5
-            vessel.starrate3 += (vessel.stardist * .7) * .33
+            if (options.starScroll == 1) {
+                vessel.starrate += (vessel.stardist * .7)
+                vessel.starrate2 += (vessel.stardist * .7) * .5
+                vessel.starrate3 += (vessel.stardist * .7) * .33
             }
             if (vessel.starrate > 2560) {
                 vessel.starrate = 0
@@ -43404,43 +47979,149 @@ function main() {
 }
 
 
-  function grahamScan(points) {
+function grahamScan(points) {
     // Find the point with the lowest y-coordinate (and lowest x-coordinate if there are ties)
-    if(points.length < 3){
+    if (points.length < 3) {
         return points
     }
     const startingPoint = points.reduce((lowest, point) => {
-      if (point.y < lowest.y || (point.y === lowest.y && point.x < lowest.x)) {
-        return point;
-      }
-      return lowest;
+        if (point.y < lowest.y || (point.y === lowest.y && point.x < lowest.x)) {
+            return point;
+        }
+        return lowest;
     });
-  
+
     // Sort the remaining points by polar angle with respect to the starting point
     const sortedPoints = points
-      .filter(point => point !== startingPoint)
-      .sort((a, b) => {
-        const angleA = Math.atan2(a.y - startingPoint.y, a.x - startingPoint.x);
-        const angleB = Math.atan2(b.y - startingPoint.y, b.x - startingPoint.x);
-        return angleA - angleB;
-      });
-  
+        .filter(point => point !== startingPoint)
+        .sort((a, b) => {
+            const angleA = Math.atan2(a.y - startingPoint.y, a.x - startingPoint.x);
+            const angleB = Math.atan2(b.y - startingPoint.y, b.x - startingPoint.x);
+            return angleA - angleB;
+        });
+
     // Use a stack to keep track of the vertices of the convex hull
     const stack = [startingPoint];
     sortedPoints.forEach(point => {
-      while (stack.length > 1 && isPointRightOfLine(point, stack[stack.length - 2], stack[stack.length - 1])) {
-        stack.pop();
-      }
-      stack.push(point);
+        while (stack.length > 1 && isPointRightOfLine(point, stack[stack.length - 2], stack[stack.length - 1])) {
+            stack.pop();
+        }
+        stack.push(point);
     });
-  
+
     return stack;
-  }
-  
-  // Helper function to determine if a point is to the right of a line
-  function isPointRightOfLine(point, lineStart, lineEnd) {
+}
+
+// Helper function to determine if a point is to the right of a line
+function isPointRightOfLine(point, lineStart, lineEnd) {
     return ((lineEnd.x - lineStart.x) * (point.y - lineStart.y) - (lineEnd.y - lineStart.y) * (point.x - lineStart.x)) < 0;
-  }
+}
+
+let saved = {}
+
+function gameSave() {
+    let sav = {}
+    sav.type = vessel.type
+    sav.alt = vessel.alt
+    sav.hull = vessel.hull
+    sav.fire = []
+    sav.air = []
+    sav.integrity = []
+    sav.dcount = []
+    sav.crew = []
+    sav.inv = []
+
+    for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
+        sav.inv[t] = {}
+        sav.inv[t].type = vessel.upgradeMenu.wepsto[t].type
+        sav.inv[t].crewType = vessel.upgradeMenu.wepsto[t].crewType
+        sav.inv[t].gearType = vessel.upgradeMenu.wepsto[t].gearType
+        sav.inv[t].droneType = vessel.upgradeMenu.wepsto[t].droneType
+        sav.inv[t].part = vessel.upgradeMenu.wepsto[t].part
+    }
+    for (let t = 0; t < vessel.doors.length; t++) {
+        sav.dcount[t] = vessel.doors[t].count
+    }
+    for (let t = 0; t < vessel.supratiles.length; t++) {
+        sav.fire.push(vessel.supratiles[t].fire)
+        sav.air.push(vessel.supratiles[t].air)
+        sav.integrity.push(vessel.supratiles[t].integrity)
+    }
+    for (let t = 0; t < vessel.guys.length; t++) {
+        let crewman = {}
+        crewman.health = vessel.guys[t].health
+        crewman.skillslist = [...vessel.guys[t].skillslist]
+        crewman.tile = vessel.supratiles.indexOf(vessel.guys[t].tile)
+        crewman.type = vessel.guys[t].type
+        crewman.gear = []
+        for (let k = 0; k < vessel.guys[t].gear.length; k++) {
+            crewman.gear.push(vessel.guys[t].gear[k].type)
+        }
+        sav.crew.push(crewman)
+    }
+    sav.weapons = []
+    for (let t = 0; t < vessel.weapons.length; t++) {
+        sav.weapons.push(vessel.weapons[t].type)
+    }
+    sav.drones = []
+    for (let t = 0; t < vessel.drones.length; t++) {
+        sav.drones.push(vessel.drones[t].type)
+    }
+    saved = sav
+    console.log(JSON.stringify(sav))
+    // exportJSON(sav)
+}
+function gameLoad(sav) {
+    if (sav.type > -1) {
+    } else {
+        return
+    }
+    vessel = new Ship(sav.type)
+    vessel.alt = sav.alt
+    vessel.draw()
+    vessel.hull = sav.hull
+    vessel.guys = []
+    for (let t = 0; t < sav.fire.length; t++) {
+        vessel.supratiles[t].air = (sav.air[t])
+        vessel.supratiles[t].fire = (sav.fire[t])
+        vessel.supratiles[t].integrity = (sav.integrity[t])
+    }
+    for (let t = 0; t < sav.crew.length; t++) {
+        let crewman = new Guy(vessel.supratiles[sav.crew[t].tile], sav.crew[t].type)
+        crewman.health = sav.crew[t].health
+        crewman.skillslist = [...sav.crew[t].skillslist]
+        crewman.gear = []
+        for (let k = 0; k < sav.crew[t].gear.length; k++) {
+            crewman.gear[k] = new Gear(sav.crew[t].gear[k], crewman)
+        }
+        vessel.guys.push(crewman)
+    }
+    vessel.weapons = []
+    for (let t = 0; t < sav.weapons.length; t++) {
+        vessel.weapons[t] = (new Weapon(sav.weapons[t]))
+        console.log(vessel.weapons[t])
+        vessel.weapons[t].draw()
+    }
+    vessel.drones = []
+    for (let t = 0; t < sav.drones.length; t++) {
+        vessel.drones[t] = (new Drone(sav.drones[t], vessel))
+        vessel.drones[t].draw()
+    }
+
+    for (let t = 0; t < vessel.doors.length; t++) {
+        vessel.doors[t].count = sav.dcount[t]
+    }
+
+    for (let t = 0; t < sav.inv.length; t++) {
+        vessel.upgradeMenu.wepsto[t] = new Weapon(sav.inv[t].type, sav.inv[t].crewType, sav.inv[t].gearType, sav.inv[t].droneType, sav.inv[t].part)
+    }
+    // r(type, crew = -1, gear = -1, drone = -1, part = -1) {
+
+
+
+}
+
+
 
 //   let dist = []
 //   for(let t = 0;t<1000000;t++){
@@ -43453,3 +48134,15 @@ function main() {
 //   }
 // dist.sort((a,b) => a>b?1:-1)
 // console.log(dist)
+
+
+function exportJSON(originalData) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(originalData, null, 2)], {
+        type: "Json"
+    }));
+    a.setAttribute("download", "Wodopom Save.json");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
