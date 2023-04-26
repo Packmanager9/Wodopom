@@ -7677,12 +7677,12 @@ let shipimage3 = new Image()
 shipimage3.src = "ship4.png"
 let holeimg = new Image()
 holeimg.src = "hole.png"
-for (let t = 1; t < 50; t++) {
+for (let t = 1; t < 53; t++) {
     let ing = new Image()
     ing.src = `r${t}.png`
     rs.push(ing)
 }
-for (let t = 1; t < 50; t++) {
+for (let t = 1; t < 53; t++) {
     let ing = new Image()
     ing.src = `p${t}.png`
     ps.push(ing)
@@ -7724,6 +7724,7 @@ class Gear {
         this.extinguish = 0
         this.frame = 0
         this.teleporting = 0
+        this.types = []
         if (this.type == 0) {
             this.gearvalue = 2
             this.name1 = 'Basic Body '
@@ -7899,11 +7900,11 @@ class Gear {
         if (this.type == 17) {
             this.name1 = 'Time '
             this.name2 = 'Rewinder'
-            this.gearvalue = 2
-            this.armor = 1
-            this.damage = .25
+            this.gearvalue = 3
+            this.armor = 1.2
+            this.damage = .35
             this.speed = -4
-            this.regen = .1
+            this.regen = .3
             this.repair = 2
             this.medical = 0
             this.time = 1
@@ -7972,13 +7973,17 @@ class Gear {
         if (this.type == 9999) {
             this.name1 = 'Broken '
             this.name2 = 'Rewinder'
-            this.gearvalue = 2
-            this.armor = 1
-            this.damage = .25
+            this.gearvalue = 3
+            this.armor = 1.2
+            this.damage = .35
             this.speed = -4
-            this.regen = .1
+            this.regen = .3
             this.repair = 2
             this.medical = 0
+        }
+        if (this.type == 90000) {
+            this.name1 = 'Mystery '
+            this.name2 = 'Slag'
         }
         this.healthbox = new Rectangle(0, 131, 110, 32, "#444444")
         this.guy.bodydraw
@@ -8003,7 +8008,9 @@ class Gear {
                     let g = vessel.upgradeMenu.wepsto[index].gearType
                     if (vessel.upgradeMenu.wepsto[index].droneType == -1 && (vessel.upgradeMenu.wepsto[index].gearType >= 0 || vessel.upgradeMenu.wepsto[index].real != 1)) {
                         vessel.upgradeMenu.wepsto[index] = new Weapon(-1, -1, this.type)
-                        this.guy.gear[this.guy.gear.indexOf(this)] = new Gear(g, this.guy)
+                        vessel.upgradeMenu.wepsto[index].types = [...this.types]
+                        let geario = new Gear(g, this.guy)
+                        this.guy.gear[this.guy.gear.indexOf(this)] = geario
                     }
                     vessel.upgradeMenu.wepsto[index].selected = 0
                     for (let t = 0; t < this.guy.gear.length; t++) {
@@ -8027,6 +8034,12 @@ class Gear {
                 this.guy.shielded = 1
             }
         }
+        if(this.type !== -1){
+            for(let t = 0;t<this.types.length;t++){
+                let temp = new Gear(this.types[t], this.guy)
+                temp.balance()
+            }
+        }
         this.guy.teleporting += this.teleporting
         this.guy.gearSpeed += this.speed
         this.guy.gearArmor += this.armor
@@ -8046,6 +8059,12 @@ class Gear {
             if (this.shieldTimer >= 300) {
                 this.shieldTimer = 0
                 this.guy.shielded = 1
+            }
+        }
+        if(this.type !== -1){
+            for(let t = 0;t<this.types.length;t++){
+                let temp = new Gear(this.types[t], this.guy)
+                temp.balance()
             }
         }
         this.guy.gearSpeed += this.speed
@@ -8357,7 +8376,11 @@ class Gear {
                 if (this.guy.gear[t].type == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, x, y, 96, 96)
                 }
+                if (this.guy.gear[t].type == 90000) {
+                    canvas_context.drawImage(mysteryslag, 0, 0, 32, 32, x, y, 96, 96)
+                }
             }
+
         }
         //153 348
         // this.body.draw()
@@ -8396,7 +8419,7 @@ class Guy {
         this.body = new Circle(256 * rat, 256 * rat, 16, "transparent")
         this.count = 0
         if (type == -1) {
-            this.type = Math.floor(Math.random() * 49) //there is manterfly don't forget
+            this.type = Math.floor(Math.random() * 52) //there is manterfly don't forget
         } else {
             this.type = type
         }
@@ -8454,7 +8477,7 @@ class Guy {
                 }
                 if (type == -1 && this.type == 11) {
                     while (this.type == 11) {
-                        this.type = Math.floor(Math.random() * 49)
+                        this.type = Math.floor(Math.random() * 52)
                     }
                 }
             }
@@ -8484,72 +8507,72 @@ class Guy {
         if (vessel.type == 0) { }
         // } else {
         //     while (this.type == 11) {
-        //         this.type = Math.floor(Math.random() * 49)
+        //         this.type = Math.floor(Math.random() * 52)
         //     }
         // }
         if (vessel.type == 1) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 2) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 3) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 4) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 5) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 6) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 7) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 8) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 9) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 10) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 11) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type == 12) {
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         if (vessel.type >= 13) { //enough
             while (this.type == 11) {
-                this.type = Math.floor(Math.random() * 49)
+                this.type = Math.floor(Math.random() * 52)
             }
         }
         // while (this.type == 18) {
@@ -8592,8 +8615,8 @@ class Guy {
         // }
         let jbreak = 0
         if (this.isPomao != 1) {
-            while (this.type == 37 || (type != 40 && this.type == 40) || (type != 39 && this.type == 39) || (type != 36 && this.type == 36) || (this.isPomao == 1 && this.type == 11)) {
-                this.type = Math.floor(Math.random() * 49)
+            while (this.type == 37 || (type != 50 && this.type == 50) || (type != 40 && this.type == 40) || (type != 39 && this.type == 39) || (type != 36 && this.type == 36) || (this.isPomao == 1 && this.type == 11)) {
+                this.type = Math.floor(Math.random() * 52)
                 jbreak++
                 if (jbreak > 10000) {
                     break
@@ -8965,6 +8988,71 @@ class Guy {
             this.names = ["Tew", "Tu", "Too", "Tou", "Teau", "Two", "Teauh", "Tough", "Teaux"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 409
+            this.maxhealth = this.health
+        }
+        if (this.type == 49) {
+            this.stats[0] = 15
+            this.rate = 15
+            this.stats[2] += 2
+            this.stats[4] += 2
+            this.stats[6] += 2
+            this.stats[10] += 2
+            this.damage = 8
+            this.gearArmorSto = .6
+            this.fireproof = 1
+            this.regen = .2
+            this.repair +=4
+            this.metal = 1
+            this.skills += 'Slow-, Shield+++, Oxygen++, Engine++, Drones++, Fight+, Armored++, Regen+, Metal Body+, Missing Parts--'
+            this.names = ["Scarbeque", "Charbeque", "Bequescar", "Hogrill", "Pigrill", "Swinebot", "Robopig", "Barbepig", "Grilloin"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 360
+            this.maxhealth = this.health
+            this.head = 1
+        }
+        if (this.type == 51) {
+            this.stats[0] = 5
+            this.rate = 5
+            this.stats[1] += 2
+            this.stats[3] += 2
+            this.stats[5] += 2
+            this.stats[7] += 2
+            this.damage = 11
+            this.gearArmorSto = .3
+            this.regen = .5
+            this.metal = 1
+            this.airless = 1
+            this.extinguish +=4
+            this.skills += 'Fast+, Weapons++, Helm++, Security++, Fight++, Armored+, Metal Body+, Breathless+, Extinguish++, Regen++, Missing Parts--'
+            this.names = ["Dothog", ".hog", "Hog()", "Drophog", "Pingpig", "Onswine", "Pinghog", "Ribbot", "Baconnecting"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 420
+            this.maxhealth = this.health
+            this.tail = 1
+        }
+        if (this.type == 50) {
+            this.stats[0] = 5
+            this.rate = 5
+            this.stats[1] += 2
+            this.stats[3] += 2
+            this.stats[5] += 2
+            this.stats[7] += 2
+            this.stats[2] += 2
+            this.stats[4] += 2
+            this.stats[6] += 2
+            this.stats[10] += 2
+            this.damage = 12
+            this.gearArmorSto = .6
+            this.repair +=4
+            this.fireproof = 1
+            this.regen = .7
+            this.metal = 1
+            this.airless = 1
+            this.extinguish +=4
+            this.skills += 'Fast+, Weapons++, Helm++, Security++, Fight+++, Armored++, Metal Body+, Breathless+, Extinguish++, Regen+++, Shield++, Oxygen++, Engine++, Drones++, Complete+, Happy+'
+            this.names = ["Dotbeque", "Hogchar", "Scardot", "Scarbehog", "Baconbot", "Hog.exist()", "Pingswing", "Grillbeque", "Robacon"]
+            this.name = this.names[Math.floor(Math.random() * this.names.length)]
+            this.health = 780
             this.maxhealth = this.health
         }
         if (this.type == 43) {
@@ -10402,6 +10490,170 @@ class Guy {
         if (this.type != -2) {
             if (this.teleflag == 1) {
                 if (vessel.guys.includes(this)) {
+                    if(this.head == 1){
+                        for(let t = 0;t<vessel.guys.length;t++){
+                            if(vessel.guys[t].tile.special == 1 && vessel.guys[t].tail == 1){
+                            
+                                let hv1 = 0
+                                let hv2 = 0
+                                let t1 = -1
+                                let t2 = -1
+                                let gear = []
+                                for(let k = 0;k<this.gear.length;k++){
+                                    if(this.gear[k].type != -1){
+                                        gear.push(this.gear[k])
+                                    }
+                                    if(this.gear[k].time == 1){
+                                        hv1 = 1
+                                        t1=k
+                                    }
+                                }
+                                for(let k = 0;k<vessel.guys[t].gear.length;k++){
+                                    if(vessel.guys[t].gear[k].type != -1){
+                                        gear.push(vessel.guys[t].gear[k])
+                                    }
+                                    if(vessel.guys[t].gear[k].time == 1){
+                                        hv2 = 1
+                                        t2=k
+                                    }
+                                }
+                                if(hv1==0){
+                                    this.health = - 1000
+                                    this.type = -2
+                                }else{
+                                    this.gear[t1] = new Gear(9999, this)
+                                    accelerator.play()
+                                }
+                                if(hv2==0){
+                                    vessel.guys[t].health = -1000
+                                    vessel.guys[t].type = -2
+                                }else{
+                                    this.gear[t2] = new Gear(9999, vessel.guys[t])
+                                    accelerator.play()
+                                }
+
+
+                                let tile = {}
+                                for(let k = 0;k<vessel.supratiles.length;k++){
+                                    if(vessel.supratiles[k].special == 1){
+                                        tile = vessel.supratiles[k]
+                                    }
+                                }
+                                let crewman = new Guy(tile, 50)
+                                crewman.teleflag = 1
+
+                                let newgear = new Gear(90000, crewman)
+                                newgear.types = []
+                                for(let k = 0;k<gear.length;k++){
+                                    if(gear[k].type != -1){
+                                        newgear.types.push(gear[k].type)
+                                    }
+                                    let keys = Object.keys(gear[k])
+                                    for(let h = 0;h<keys.length;h++){
+                                        if(keys[h] != "types"){
+                                            if(newgear[keys[h]]){
+                                                newgear[keys[h]] += gear[k][keys[h]]
+                                            }else{
+                                                newgear[keys[h]] = gear[k][keys[h]]
+                                            }
+                                        }
+                                    }
+                                }
+
+                                
+                                newgear.guy = crewman
+                                newgear.type = 90000
+                                newgear.name1 = "Gear"
+                                newgear.name2 = "Slag"
+                                newgear.body = crewman.gear[0].body
+                                newgear.healthbox = crewman.gear[0].healthbox
+                                crewman.gear[0] = newgear
+                                console.log(newgear)
+                                vessel.guys.push(crewman)
+                                break
+                            }
+                        }
+                    }
+
+                    if(this.tail == 1){
+                        for(let t = 0;t<vessel.guys.length;t++){
+                            if(vessel.guys[t].tile.special == 1 && vessel.guys[t].head == 1){
+                        
+                                let hv1 = 0
+                                let hv2 = 0
+                                let t1 = -1
+                                let t2 = -1
+                                let gear = []
+                                for(let k = 0;k<this.gear.length;k++){
+                                    if(this.gear[k].type != -1){
+                                        gear.push(this.gear[k])
+                                    }
+                                    if(this.gear[k].time == 1){
+                                        hv1 = 1
+                                        t1=k
+                                    }
+                                }
+                                for(let k = 0;k<vessel.guys[t].gear.length;k++){
+                                    if(vessel.guys[t].gear[k].type != -1){
+                                        gear.push(vessel.guys[t].gear[k])
+                                    }
+                                    if(vessel.guys[t].gear[k].time == 1){
+                                        hv2 = 1
+                                        t2=k
+                                    }
+                                }
+                                if(hv1==0){
+                                    this.health = - 1000
+                                    this.type = -2
+                                }else{
+                                    this.gear[t1] = new Gear(9999, this)
+                                    accelerator.play()
+                                }
+                                if(hv2==0){
+                                    vessel.guys[t].health = -1000
+                                    vessel.guys[t].type = -2
+                                }else{
+                                    this.gear[t2] = new Gear(9999, vessel.guys[t])
+                                    accelerator.play()
+                                }
+                                let tile = {}
+                                for(let k = 0;k<vessel.supratiles.length;k++){
+                                    if(vessel.supratiles[k].special == 1){
+                                        tile = vessel.supratiles[k]
+                                    }
+                                }
+                                let crewman = new Guy(tile, 50)
+                                crewman.teleflag = 1
+                                let newgear = new Gear(90000, crewman)
+                                newgear.types = []
+                                for(let k = 0;k<gear.length;k++){
+                                    if(gear[k].type != -1){
+                                        newgear.types.push(gear[k].type)
+                                    }
+                                    let keys = Object.keys(gear[k])
+                                    for(let h = 0;h<keys.length;h++){
+                                        if(keys[h] != "types"){
+                                            if(newgear[keys[h]]){
+                                                newgear[keys[h]] += gear[k][keys[h]]
+                                            }else{
+                                                newgear[keys[h]] = gear[k][keys[h]]
+                                            }
+                                        }
+                                    }
+                                }
+                                newgear.guy = crewman
+                                newgear.type = 90000
+                                newgear.name1 = "Gear"
+                                newgear.name2 = "Slag"
+                                newgear.body = crewman.gear[0].body
+                                newgear.healthbox = crewman.gear[0].healthbox
+                                crewman.gear[0] = newgear
+                                console.log(newgear)
+                                vessel.guys.push(crewman)
+                                break
+                            }
+                        }
+                    }
                     if (this.tile.special == 1) {
                         ////////////////////////console.log(vessel.teleTarget)
                         if (vessel.teleTarget.x > 0) {
@@ -10426,7 +10678,9 @@ class Guy {
                                 clone2.skillslist[s] = this.skillslist[s]
                             }
                             for (let k = 0; k < this.gear.length; k++) {
-                                clone2.gear.push(new Gear(this.gear[k].type, clone2))
+                                let obgear = new Gear(this.gear[k].type, clone2)
+                                obgear.types = [...this.gear[k].types]
+                                clone2.gear.push(obgear)
                             }
                             if (this.shielded >= 1) {
                                 clone2.shielded = this.shielded
@@ -10472,7 +10726,9 @@ class Guy {
                                 clone2.skillslist[s] = this.skillslist[s]
                             }
                             for (let k = 0; k < this.gear.length; k++) {
-                                clone2.gear.push(new Gear(this.gear[k].type, clone2))
+                                let obgear = new Gear(this.gear[k].type, clone2)
+                                obgear.types = [...this.gear[k].types]
+                                clone2.gear.push(obgear)
                             }
                             clone2.name = this.name
                             if (this.shielded >= 1) {
@@ -10527,7 +10783,9 @@ class Guy {
                             clone2.skillslist[s] = this.skillslist[s]
                         }
                         for (let k = 0; k < this.gear.length; k++) {
-                            clone2.gear.push(new Gear(this.gear[k].type, clone2))
+                            let obgear = new Gear(this.gear[k].type, clone2)
+                            obgear.types = [...this.gear[k].types]
+                            clone2.gear.push(obgear)
                         }
                         clone2.name = this.name
                         if (this.shielded >= 1) {
@@ -11327,7 +11585,7 @@ class Guy {
             canvas_context.fillRect(this.tile.x, this.tile.y, this.tile.width, this.tile.height)
             this.tile.color = colorsto
         }
-        if (Math.random() < .1 || this.type == 15) {
+        if (Math.random() < .1 || this.type == 15 || this.type == 49  || this.type == 50  || this.type == 51 ) {
             this.count++
         }
         // ////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
@@ -13819,6 +14077,7 @@ class Weapon {
         this.opacity = 10
         this.stopBlade = 0
         this.delay = 0
+        this.types = []
         this.blades = []
         this.plate = new LineOP(new Point((0, 0), new Point(0, 0)))
         this.shotCount = 1
@@ -13926,6 +14185,10 @@ class Weapon {
                     this.buy = 100
                     this.sell = 40
                 }
+                if (this.gearType == 17) {
+                    this.buy = 100
+                    this.sell = 40
+                }
                 this.buy = Math.floor(this.buy * .5)
                 this.sell = Math.floor(this.sell * .5)
             } else {
@@ -13947,6 +14210,10 @@ class Weapon {
                     this.sell = 40
                 }
                 if (this.gearType == 20) {
+                    this.buy = 100
+                    this.sell = 40
+                }
+                if (this.gearType == 17) {
                     this.buy = 100
                     this.sell = 40
                 }
@@ -14535,7 +14802,7 @@ class Weapon {
                 this.buy = 40
                 this.sell = 22
                 // this.mind = 2
-                this.value = 22
+                this.value = 25
             } else if (this.type == 35) {
                 this.name1 = "Mirror"
                 this.name2 = "Shell II"
@@ -14551,7 +14818,7 @@ class Weapon {
                 this.fireChance = 0
                 this.double = 0
                 this.buy = 50
-                this.sell = 28
+                this.sell = 30
                 // this.mind = 2
                 this.value = 25
             } else if (this.type == 36) {
@@ -14964,8 +15231,8 @@ class Weapon {
                 this.value = 10
                 this.turnTo = 561
             } else if (this.type == 57) {
-                this.name1 = "Bubble"
-                this.name2 = "Gun"
+                this.name1 = "Bubblegun"
+                this.name2 = ""
                 this.max = 750
                 this.damage = 65
                 this.real = 1
@@ -15054,7 +15321,7 @@ class Weapon {
                 // this.stuns = 1
             } else if (this.type == 63) {
                 this.name1 = "Minty Ion"
-                this.name2 = "Bubble Gun"
+                this.name2 = "Bubblegun"
                 this.max = 600
                 this.damage = 55
                 this.real = 1
@@ -15069,7 +15336,7 @@ class Weapon {
                 this.stuns = 1
             } else if (this.type == 64) {
                 this.name1 = "Cinnamon"
-                this.name2 = "Bubble Gun"
+                this.name2 = "Bubblegun"
                 this.max = 700
                 this.damage = 55
                 this.real = 1
@@ -20902,7 +21169,7 @@ class Weapon {
                     rat++
                     if (vessel.weapons.includes(this)) {
                         if (enemy.shield.rings.length > 0) {
-                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                 dot.draw()
                             }
                         } else {
@@ -20911,7 +21178,7 @@ class Weapon {
                     }
                     if (enemy.weapons.includes(this)) {
                         if (vessel.shield.rings.length > 0) {
-                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                 dot.draw()
                             }
                         } else {
@@ -23078,7 +23345,7 @@ class Weapon {
                                 rat++
                                 if (vessel.weapons.includes(this)) {
                                     if (enemy.shield.rings.length > 0) {
-                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -23087,7 +23354,7 @@ class Weapon {
                                 }
                                 if (enemy.weapons.includes(this)) {
                                     if (vessel.shield.rings.length > 0) {
-                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -23118,7 +23385,7 @@ class Weapon {
                                     rat++
                                     if (vessel.weapons.includes(this)) {
                                         if (enemy.shield.rings.length > 0) {
-                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -23127,7 +23394,7 @@ class Weapon {
                                     }
                                     if (enemy.weapons.includes(this)) {
                                         if (vessel.shield.rings.length > 0) {
-                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -23151,7 +23418,7 @@ class Weapon {
                         rat++
                         if (vessel.weapons.includes(this)) {
                             if (enemy.shield.rings.length > 0) {
-                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -23160,7 +23427,7 @@ class Weapon {
                         }
                         if (enemy.weapons.includes(this)) {
                             if (vessel.shield.rings.length > 0) {
-                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -23196,7 +23463,7 @@ class Weapon {
                                 rat++
                                 if (vessel.weapons.includes(this)) {
                                     if (enemy.shield.rings.length > 0) {
-                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -23205,7 +23472,7 @@ class Weapon {
                                 }
                                 if (enemy.weapons.includes(this)) {
                                     if (vessel.shield.rings.length > 0) {
-                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -23236,7 +23503,7 @@ class Weapon {
                                     rat++
                                     if (vessel.weapons.includes(this)) {
                                         if (enemy.shield.rings.length > 0) {
-                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -23245,7 +23512,7 @@ class Weapon {
                                     }
                                     if (enemy.weapons.includes(this)) {
                                         if (vessel.shield.rings.length > 0) {
-                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -23269,7 +23536,7 @@ class Weapon {
                         rat++
                         if (vessel.weapons.includes(this)) {
                             if (enemy.shield.rings.length > 0) {
-                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -23278,7 +23545,7 @@ class Weapon {
                         }
                         if (enemy.weapons.includes(this)) {
                             if (vessel.shield.rings.length > 0) {
-                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -24016,6 +24283,9 @@ class Weapon {
                 }
                 if (this.gearType == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
+                if (this.gearType == 90000) {
+                    canvas_context.drawImage(mysteryslag, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
             } else {
                 canvas_context.drawImage(rs[this.crewType], 64 * (Math.floor(Math.random() * 1) % (rs[this.crewType].width / 64)), 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
@@ -26727,7 +26997,7 @@ class Weapon {
                     rat++
                     if (vessel.weapons.includes(this)) {
                         if (enemy.shield.rings.length > 0) {
-                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                 dot.draw(1)
                             }
                         } else {
@@ -26736,7 +27006,7 @@ class Weapon {
                     }
                     if (enemy.weapons.includes(this)) {
                         if (vessel.shield.rings.length > 0) {
-                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                 dot.draw(1)
                             }
                         } else {
@@ -27500,7 +27770,7 @@ class Weapon {
                                 rat++
                                 if (vessel.weapons.includes(this)) {
                                     if (enemy.shield.rings.length > 0) {
-                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -27509,7 +27779,7 @@ class Weapon {
                                 }
                                 if (enemy.weapons.includes(this)) {
                                     if (vessel.shield.rings.length > 0) {
-                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -27540,7 +27810,7 @@ class Weapon {
                                     rat++
                                     if (vessel.weapons.includes(this)) {
                                         if (enemy.shield.rings.length > 0) {
-                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -27549,7 +27819,7 @@ class Weapon {
                                     }
                                     if (enemy.weapons.includes(this)) {
                                         if (vessel.shield.rings.length > 0) {
-                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -27573,7 +27843,7 @@ class Weapon {
                         rat++
                         if (vessel.weapons.includes(this)) {
                             if (enemy.shield.rings.length > 0) {
-                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -27582,7 +27852,7 @@ class Weapon {
                         }
                         if (enemy.weapons.includes(this)) {
                             if (vessel.shield.rings.length > 0) {
-                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -27618,7 +27888,7 @@ class Weapon {
                                 rat++
                                 if (vessel.weapons.includes(this)) {
                                     if (enemy.shield.rings.length > 0) {
-                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -27627,7 +27897,7 @@ class Weapon {
                                 }
                                 if (enemy.weapons.includes(this)) {
                                     if (vessel.shield.rings.length > 0) {
-                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                        if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                             dot.draw()
                                         }
                                     } else {
@@ -27658,7 +27928,7 @@ class Weapon {
                                     rat++
                                     if (vessel.weapons.includes(this)) {
                                         if (enemy.shield.rings.length > 0) {
-                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -27667,7 +27937,7 @@ class Weapon {
                                     }
                                     if (enemy.weapons.includes(this)) {
                                         if (vessel.shield.rings.length > 0) {
-                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                            if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                                 dot.draw()
                                             }
                                         } else {
@@ -27691,7 +27961,7 @@ class Weapon {
                         rat++
                         if (vessel.weapons.includes(this)) {
                             if (enemy.shield.rings.length > 0) {
-                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (enemy.shield.rings[enemy.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -27700,7 +27970,7 @@ class Weapon {
                         }
                         if (enemy.weapons.includes(this)) {
                             if (vessel.shield.rings.length > 0) {
-                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { } else {
+                                if (vessel.shield.rings[vessel.shield.rings.length - 1].isPointInside(dot)) { break } else {
                                     dot.draw()
                                 }
                             } else {
@@ -28399,6 +28669,9 @@ class Weapon {
                 if (this.gearType == 9999) {
                     canvas_context.drawImage(timeRewinder, 16, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
                 }
+                if (this.gearType == 90000) {
+                    canvas_context.drawImage(mysteryslag, 0, 0, 32, 32, this.body.x + 4, this.body.y + 18, 44, 44)
+                }
             } else {
                 canvas_context.drawImage(rs[this.crewType], 64 * (Math.floor(Math.random() * 1) % (rs[this.crewType].width / 64)), 0, 64, 64, this.body.x + 4, this.body.y + 18, 44, 44)
             }
@@ -28573,6 +28846,8 @@ let shieldGenerator = new Image()
 shieldGenerator.src = "shieldGenerator.png"
 let timeRewinder = new Image()
 timeRewinder.src = "timeRewinder.png"
+let mysteryslag = new Image()
+mysteryslag.src = "mysteryslag.png"
 let fireExtinguisher = new Image()
 fireExtinguisher.src = "fireExtinguisher.png"
 let shoes1 = new Image()
@@ -29277,7 +29552,9 @@ class UpgradeMenu {
                         newguy.skillslist[s] = enemy.guys[t].skillslist[s]
                     }
                     for (let k = 0; k < enemy.guys[t].gear.length; k++) {
-                        newguy.gear.push(new Gear(enemy.guys[t].gear[k].type, newguy))
+                        let obgear = new Gear(enemy.guys[t].gear[k].type, newguy)
+                        obgear.types = [...enemy.guys[t].gear[k].types]
+                        newguy.gear.push(obgear)
                     }
                     if (this.shielded >= 1) {
                         newguy.shielded = enemy.guys[t].shielded
@@ -29323,7 +29600,9 @@ class UpgradeMenu {
                         newguy.skillslist[s] = enemy.guys[t].skillslist[s]
                     }
                     for (let k = 0; k < enemy.guys[t].gear.length; k++) {
-                        newguy.gear.push(new Gear(enemy.guys[t].gear[k].type, newguy))
+                        let obgear = new Gear(enemy.guys[t].gear[k].type, newguy)
+                        obgear.types = [...enemy.guys[t].gear[k].types]
+                        newguy.gear.push(obgear)
                     }
                     if (this.shielded >= 1) {
                         newguy.shielded = enemy.guys[t].shielded
@@ -29449,6 +29728,9 @@ class UpgradeMenu {
                     // canvas_context.
                     // canvas_context.fillText()
                     for (let t = 0; t < stars.stars[vessel.star].weapons.length; t++) {
+                        if(stars.stars[vessel.star].weapons[t].crewType == 50){
+                            stars.stars[vessel.star].weapons[t].crewType = 0 // keep scarbeque and dothog exlusive 
+                        }
                         stars.stars[vessel.star].weapons[t].draw()
                         stars.stars[vessel.star].weapons[t].auto = 0
                     }
@@ -29756,8 +30038,12 @@ class UpgradeMenu {
                                     if (vessel.upgradeMenu.wepsto[t].gearType >= 0) {
                                         if (this.wepsto[t].droneType == -1) {
                                             let f = vessel.guys[g].gear[k].type
+                                            let type2 = [...vessel.guys[g].gear[k].types]
+                                            let type3 = [...vessel.upgradeMenu.wepsto[t].types]
                                             vessel.guys[g].gear[k] = new Gear(vessel.upgradeMenu.wepsto[t].gearType, vessel.guys[g])
                                             vessel.upgradeMenu.wepsto[t] = new Weapon(-1, -1, f)
+                                            vessel.guys[g].gear[k].types = [...type3]
+                                            vessel.upgradeMenu.wepsto[t].types =[...type2]
                                             vessel.guys[g].gear[k].draw()
                                             break
                                         }
@@ -30033,10 +30319,12 @@ class UpgradeMenu {
                                         if (vessel.upgradeMenu.wepsto[t].gearType >= 0) {
                                             if (this.wepsto[t].droneType == -1) {
                                                 let f = vessel.guys[g].gear[k].type
+                                                let type2 = [...vessel.guys[g].gear[k].types]
+                                                let type3 = [...vessel.upgradeMenu.wepsto[t].types]
                                                 vessel.guys[g].gear[k] = new Gear(vessel.upgradeMenu.wepsto[t].gearType, vessel.guys[g])
                                                 vessel.upgradeMenu.wepsto[t] = new Weapon(-1, -1, f)
-                                                vessel.upgradeMenu.wepsto[t].selected = 0
-                                                vessel.guys[g].gear[k].selected = 0
+                                                vessel.guys[g].gear[k].types = [...type3]
+                                                vessel.upgradeMenu.wepsto[t].types =[...type2]
                                                 // vessel.guys[g].gear[k].draw()
                                             }
                                             break
@@ -30055,12 +30343,14 @@ class UpgradeMenu {
                                     if (vessel.guys[g].gear[k].selected == 1 || vessel.guys[g].gear[k].body.isPointInside(TIP_engine)) {
                                         if (vessel.upgradeMenu.wepsto[t].real != 1) {
                                             if (this.wepsto[t].droneType == -1) {
-                                                let f = vessel.guys[g].gear[k].type
-                                                vessel.guys[g].gear[k] = new Gear(vessel.upgradeMenu.wepsto[t].gearType, vessel.guys[g])
-                                                vessel.upgradeMenu.wepsto[t] = new Weapon(-1, -1, f)
-                                                vessel.upgradeMenu.wepsto[t].selected = 0
-                                                vessel.guys[g].gear[k].selected = 0
-                                                // vessel.guys[g].gear[k].draw()
+                                            let f = vessel.guys[g].gear[k].type
+                                            let type2 = [...vessel.guys[g].gear[k].types]
+                                            let type3 = [...vessel.upgradeMenu.wepsto[t].types]
+                                            vessel.guys[g].gear[k] = new Gear(vessel.upgradeMenu.wepsto[t].gearType, vessel.guys[g])
+                                            vessel.upgradeMenu.wepsto[t] = new Weapon(-1, -1, f)
+                                            vessel.guys[g].gear[k].types = [...type3]
+                                            vessel.upgradeMenu.wepsto[t].types =[...type2]
+                                            // vessel.guys[g].gear[k].draw()
                                                 break
                                             }
                                         }
@@ -31185,8 +31475,8 @@ class Drone {
             this.max = 400
             this.firstCharge = 400
             this.real = 1
-            this.buy = 50
-            this.sell = 30
+            this.buy = 30
+            this.sell = 25
             this.rod = 1
             // this.blocking = 1
             // this.internal = 1
@@ -31198,10 +31488,10 @@ class Drone {
             this.name2 = "Pulse Drone I"
             this.charge = 0
             this.max = 300
-            this.firstCharge = 25
+            this.firstCharge = 500 //10
             this.real = 1
             this.buy = 30
-            this.sell = 12
+            this.sell = 26
             // this.blocking = 1
             // this.internal = 1
         }
@@ -34605,7 +34895,7 @@ class Ship {
                     } else if (this.alt == 4) {
                         this.guys = [new Guy(tiles[12], 22), new Guy(tiles[19], 8), new Guy(tiles[23], 8), new Guy(tiles[25], 8)]
                     } else if (this.alt == 5) {
-                        this.guys = [new Guy(tiles[12], 8), new Guy(tiles[14], 8), new Guy(tiles[23], 8), new Guy(tiles[20], 8), new Guy(tiles[28], 34)]
+                        this.guys = [new Guy(tiles[12], 49), new Guy(tiles[14], 51), new Guy(tiles[23], 8), new Guy(tiles[20], 8), new Guy(tiles[28], 34)]
                     }
                 } else if (this.type == 13) {
                     this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
@@ -36318,7 +36608,7 @@ class Ship {
                     } else if (this.alt == 4) {
                         this.guys = [new Guy(tiles[12], 22), new Guy(tiles[19], 8), new Guy(tiles[23], 8), new Guy(tiles[25], 8)]
                     } else if (this.alt == 5) {
-                        this.guys = [new Guy(tiles[12], 8), new Guy(tiles[14], 8), new Guy(tiles[23], 8), new Guy(tiles[20], 8), new Guy(tiles[28], 34)]
+                        this.guys = [new Guy(tiles[12], 49), new Guy(tiles[14], 51), new Guy(tiles[23], 8), new Guy(tiles[20], 8), new Guy(tiles[28], 34)]
                     }
                 } else if (this.type == 13) {
                     this.guys = [new Guy(tiles[12], 13), new Guy(tiles[14], 15), new Guy(tiles[23], 20), new Guy(tiles[3], 19)]
@@ -39172,7 +39462,9 @@ class EnemyShip {
                             newguy.skillslist[s] = enemy.guys[t].skillslist[s]
                         }
                         for (let k = 0; k < enemy.guys[t].gear.length; k++) {
-                            newguy.gear.push(new Gear(enemy.guys[t].gear[k].type, newguy))
+                            let obgear = new Gear(enemy.guys[t].gear[k].type, newguy)
+                            obgear.types = [...enemy.guys[t].gear[k].types]
+                            newguy.gear.push(obgear)
                         }
                         if (this.shielded >= 1) {
                             newguy.shielded = enemy.guys[t].shielded
@@ -40208,7 +40500,11 @@ class EnemyShip {
                 }
                 if (this.guys[t].tile.special == 1) {
                     this.guys[t].teleflag = 1
-                    intruder.play()
+                    if(this.guys[t].type == -2){
+                        
+                    }else{
+                        intruder.play()
+                    }
                 }
                 if (this.guys[t].cound > 0) { //.14 connect
                     // //////////////////////////////////////////////////////////////////////////console.log(t)
@@ -41649,7 +41945,9 @@ class EnemyShip {
                             newguy.skillslist[s] = enemy.guys[t].skillslist[s]
                         }
                         for (let k = 0; k < enemy.guys[t].gear.length; k++) {
-                            newguy.gear.push(new Gear(enemy.guys[t].gear[k].type, newguy))
+                            let obgear = new Gear(enemy.guys[t].gear[k].type, newguy)
+                            obgear.types = [...enemy.guys[t].gear[k].types]
+                            newguy.gear.push(obgear)
                         }
                         if (this.shielded >= 1) {
                             newguy.shielded = enemy.guys[t].shielded
@@ -42690,7 +42988,11 @@ class EnemyShip {
                 }
                 if (this.guys[t].tile.special == 1) {
                     this.guys[t].teleflag = 1
-                    intruder.play()
+                    if(this.guys[t].type == -2){
+                        
+                    }else{
+                        intruder.play()
+                    }
                 }
                 if (this.guys[t].cound > 0) { //.14 connect
                     // //////////////////////////////////////////////////////////////////////////console.log(t)
@@ -43925,7 +44227,7 @@ class Star {
                 this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
             }
             for (let t = 0; t < 1; t++) {
-                this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
             }
             for (let t = 0; t < 1; t++) {
                 this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
@@ -43942,7 +44244,7 @@ class Star {
                     this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                 }
                 for (let t = 0; t < 1; t++) {
-                    this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                    this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                 }
                 for (let t = 0; t < 1; t++) {
                     this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
@@ -43959,7 +44261,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
@@ -43975,7 +44277,7 @@ class Star {
                         this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                     }
                     for (let t = 0; t < 1; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 11)))
@@ -44002,7 +44304,7 @@ class Star {
             } else {
                 if (Math.random() < .2) {
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                        this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                     }
                     for (let t = 0; t < 1; t++) {
                         this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -44019,7 +44321,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                         }
                         for (let t = 0; t < 1; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -44035,7 +44337,7 @@ class Star {
                             this.weapons.push(new Weapon(Math.floor(Math.random() * 70)))
                         }
                         for (let t = 0; t < 2; t++) {
-                            this.weapons.push(new Weapon(Math.floor(Math.random() * 49), (new Guy({}, Math.floor(Math.random() * 49)).type)))
+                            this.weapons.push(new Weapon(Math.floor(Math.random() * 52), (new Guy({}, Math.floor(Math.random() * 52)).type)))
                         }
                         for (let t = 0; t < 1; t++) {
                             this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 21)))
@@ -44813,10 +45115,38 @@ class Labels {
                         continue
                     }
                     if (vessel.guys[t].gear[k].body.isPointInside(TIP_engine)) {
-                        this.text1 = `Armor ${vessel.guys[t].gear[k].armor * 10}x`
-                        this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].damage - (1 / 4)) * 100)}%`
-                        this.text3 = `Speed + ${(vessel.guys[t].gear[k].speed)}`
-                        this.text4 = `Regen ${(vessel.guys[t].gear[k].regen)},  Repair: ${vessel.guys[t].gear[k].repair}`
+
+                        if(vessel.guys[t].gear[k].types.length > 0){
+                            
+                            vessel.guys[t].gear[k].totalarmor = 0
+                            vessel.guys[t].gear[k].totaldamage = 0
+                            vessel.guys[t].gear[k].totalspeed = 0
+                            vessel.guys[t].gear[k].totalregen = 0
+                            vessel.guys[t].gear[k].totalrepair = 0
+
+                            for(let g = 0;g<vessel.guys[t].gear[k].types.length;g++){
+                                let gearint = new Gear(vessel.guys[t].gear[k].types[g], vessel.guys[t])
+                                vessel.guys[t].gear[k].totalarmor += gearint.armor
+                                vessel.guys[t].gear[k].totaldamage += gearint.damage
+                                vessel.guys[t].gear[k].totalspeed  += gearint.speed
+                                vessel.guys[t].gear[k].totalregen  += gearint.regen
+                                vessel.guys[t].gear[k].totalrepair  += gearint.repair
+                            }
+
+                            this.text1 = `Armor ${vessel.guys[t].gear[k].totalarmor * 10}x`
+                            this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].totaldamage - (1 / 4)) * 100)}%`
+                            this.text3 = `Speed + ${(vessel.guys[t].gear[k].totalspeed)}`
+                            this.text4 = `Regen ${(vessel.guys[t].gear[k].totalregen)},  Repair: ${vessel.guys[t].gear[k].totalrepair}`
+                        }else{
+
+                            this.text1 = `Armor ${vessel.guys[t].gear[k].armor * 10}x`
+                            this.text2 = `Damage + ${Math.round((vessel.guys[t].gear[k].damage - (1 / 4)) * 100)}%`
+                            this.text3 = `Speed + ${(vessel.guys[t].gear[k].speed)}`
+                            this.text4 = `Regen ${(vessel.guys[t].gear[k].regen)},  Repair: ${vessel.guys[t].gear[k].repair}`
+                        }
+
+
+
                         let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
                         // this.text4 = "System: "
                         // for (let s = 0; s < sys.length; s++) {
@@ -45599,12 +45929,38 @@ class Labels {
                             //monsters
                             if (vessel.upgradeMenu.wepsto[t].name1 == "Buy") {
                                 let subgear = new Gear(vessel.upgradeMenu.wepsto[t].gearType, {})
-                                this.text1 = ` ${subgear.name1 + subgear.name2}`
-                                this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
-                                if (subgear.medical >= 1) {
-                                    this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
-                                }
-                                this.text3 = ''
+                           
+                        if(vessel.upgradeMenu.wepsto[t].types.length > 0){
+                            
+                            subgear.totalarmor = 0
+                            subgear.totaldamage = 0
+                            subgear.totalspeed = 0
+                            subgear.totalregen = 0
+                            subgear.totalrepair = 0
+
+                            for(let g = 0;g<vessel.upgradeMenu.wepsto[t].types.length;g++){
+                                let gearint = new Gear(vessel.upgradeMenu.wepsto[t].types[g], vessel.guys[0])
+                                subgear.totalarmor += gearint.armor
+                                subgear.totaldamage += gearint.damage
+                                subgear.totalspeed  += gearint.speed
+                                subgear.totalregen  += gearint.regen
+                                subgear.totalrepair  += gearint.repair
+                            }
+
+                            this.text1 = ` ${subgear.name1 + subgear.name2}`
+                            this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen},  Repair: ${subgear.totalrepair}`
+                            if (subgear.medical >= 1) {
+                                this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen}+Medical,  Repair: ${subgear.totalrepair}`
+                            }
+                        }else{
+
+                            this.text1 = ` ${subgear.name1 + subgear.name2}`
+                            this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
+                            if (subgear.medical >= 1) {
+                                this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
+                            }
+                        }
+
                                 let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
                                 this.text4 = "Equip To Crew"
                                 // for (let s = 0; s < sys.length; s++) {
@@ -45999,11 +46355,38 @@ class Labels {
                                 canvas_context.fillText("Breaks " + Math.floor((wep.double / 1) * 1) + " Shield", rect.x + 10, py - (dim.h + 10))
                             }
                         } else if (vessel.upgradeMenu.wepsto[t].name1 == "Buy") {
+                       
                             let subgear = new Gear(vessel.upgradeMenu.wepsto[t].gearType, {})
-                            this.text1 = ` ${subgear.name1 + subgear.name2}`
-                            this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
-                            if (subgear.medical >= 1) {
-                                this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
+                           
+                            if(vessel.upgradeMenu.wepsto[t].types.length > 0){
+                                
+                                subgear.totalarmor = 0
+                                subgear.totaldamage = 0
+                                subgear.totalspeed = 0
+                                subgear.totalregen = 0
+                                subgear.totalrepair = 0
+    
+                                for(let g = 0;g<vessel.upgradeMenu.wepsto[t].types.length;g++){
+                                    let gearint = new Gear(vessel.upgradeMenu.wepsto[t].types[g], vessel.guys[0])
+                                    subgear.totalarmor += gearint.armor
+                                    subgear.totaldamage += gearint.damage
+                                    subgear.totalspeed  += gearint.speed
+                                    subgear.totalregen  += gearint.regen
+                                    subgear.totalrepair  += gearint.repair
+                                }
+    
+                                this.text1 = ` ${subgear.name1 + subgear.name2}`
+                                this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen},  Repair: ${subgear.totalrepair}`
+                                if (subgear.medical >= 1) {
+                                    this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen}+Medical,  Repair: ${subgear.totalrepair}`
+                                }
+                            }else{
+    
+                                this.text1 = ` ${subgear.name1 + subgear.name2}`
+                                this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
+                                if (subgear.medical >= 1) {
+                                    this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
+                                }
                             }
                             this.text3 = ''
                             let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
@@ -46958,11 +47341,38 @@ class Labels {
             for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
                 if (vessel.upgradeMenu.wepsto[t].body.isPointInside(TIP_engine) && vessel.upgradeMenu.wepsto[t].type != -1) {
                     if (vessel.upgradeMenu.wepsto[t].name1 == "Buy") {
+                  
                         let subgear = new Gear(vessel.upgradeMenu.wepsto[t].gearType, {})
-                        this.text1 = ` ${subgear.name1 + subgear.name2}`
-                        this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
-                        if (subgear.medical >= 1) {
-                            this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
+                           
+                        if(vessel.upgradeMenu.wepsto[t].types.length > 0){
+                            
+                            subgear.totalarmor = 0
+                            subgear.totaldamage = 0
+                            subgear.totalspeed = 0
+                            subgear.totalregen = 0
+                            subgear.totalrepair = 0
+
+                            for(let g = 0;g<vessel.upgradeMenu.wepsto[t].types.length;g++){
+                                let gearint = new Gear(vessel.upgradeMenu.wepsto[t].types[g], vessel.guys[0])
+                                subgear.totalarmor += gearint.armor
+                                subgear.totaldamage += gearint.damage
+                                subgear.totalspeed  += gearint.speed
+                                subgear.totalregen  += gearint.regen
+                                subgear.totalrepair  += gearint.repair
+                            }
+
+                            this.text1 = ` ${subgear.name1 + subgear.name2}`
+                            this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen},  Repair: ${subgear.totalrepair}`
+                            if (subgear.medical >= 1) {
+                                this.text2 = `Stats: Armor: ${subgear.totalarmor * 10}, Damage: +${Math.round((subgear.totaldamage - .25) * 100)}%, Speed: ${-subgear.totalspeed}, Regen: ${subgear.totalregen}+Medical,  Repair: ${subgear.totalrepair}`
+                            }
+                        }else{
+
+                            this.text1 = ` ${subgear.name1 + subgear.name2}`
+                            this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen},  Repair: ${subgear.repair}`
+                            if (subgear.medical >= 1) {
+                                this.text2 = `Stats: Armor: ${subgear.armor * 10}, Damage: +${Math.round((subgear.damage - .25) * 100)}%, Speed: ${-subgear.speed}, Regen: ${subgear.regen}+Medical,  Repair: ${subgear.repair}`
+                            }
                         }
                         this.text3 = ''
                         let sys = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "drones"]
@@ -48146,3 +48556,5 @@ function exportJSON(originalData) {
     a.click();
     document.body.removeChild(a);
 }
+
+
