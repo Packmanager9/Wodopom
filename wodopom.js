@@ -10488,12 +10488,12 @@ class Guy {
         }
         this.regen = this.regenSto + this.gearRegen
         if (this.type != -2) {
+
             if (this.teleflag == 1) {
                 if (vessel.guys.includes(this)) {
                     if(this.head == 1){
                         for(let t = 0;t<vessel.guys.length;t++){
-                            if(vessel.guys[t].tile.special == 1 && vessel.guys[t].tail == 1){
-                            
+                            if(vessel.guys[t].tile.special == 1 && vessel.guys[t].tail == 1){                        
                                 let hv1 = 0
                                 let hv2 = 0
                                 let t1 = -1
@@ -48557,4 +48557,9 @@ function exportJSON(originalData) {
     document.body.removeChild(a);
 }
 
+
+
+// for(let i = '';i.length<10;i+='+'){
+//     console.log(i)
+// }
 
