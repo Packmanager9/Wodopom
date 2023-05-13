@@ -6,7 +6,7 @@ async function loadFonts() {
     });
     // wait for font to be loaded
     await font.load();
-    await ////////////////////////////console.log(font)
+    await //////////////////////////////console.log(font)
         // add font to document
         document.fonts.add(font);
     // enable font with CSS class
@@ -16,13 +16,17 @@ let debugu = false
 // let f = new FontFace("test", "url(https://ditzbitz.com/hackfont.otf)");
 // f.load().then(() => {
 //   // Ready to use the font in a canvas context
-//   ////////////////////////////console.log(f)
+//   //////////////////////////////console.log(f)
 // });
+let skret = 0
+let time = 0
+let globalSkip = 0
 let speedrate = 0
 let speedcount = 0
 let gigadebug = 0
 let difficulty = 0
-
+let frames = 0
+let frames2 = 0
 let distoconst = 2
 let distoangle = 0
 // window.addEventListener('DOMContentLoaded', (event) => {
@@ -181,7 +185,7 @@ let recording = 0
 //         }
 //         gamepadAPI.axesStatus = axes;// assign received values
 //         gamepadAPI.buttonsStatus = pressed;
-//         // //////////////////////////////////////////////////////////////////////////////////////////////console.log(pressed); // return buttons for debugging purposes
+//         // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(pressed); // return buttons for debugging purposes
 //         return pressed;
 //     },
 //     buttonPressed: function (button, hold) {
@@ -233,6 +237,8 @@ class Options {
         this.rightClickText = "Right Click Move Off"
         this.lighting = 1
         this.lightText = "Light On"
+        this.alwaysHover = -1
+        this.hoverText = "Persistent Tooltip Off"
     }
 }
 let options = new Options()
@@ -569,7 +575,7 @@ class LineOPX {
         ctx.moveTo(this.object.x, this.object.y)
         ctx.lineTo(this.target.x, this.target.y)
         ctx.stroke()
-        ////////////////////////////////////////////////////////////console.log(this)
+        //////////////////////////////////////////////////////////////console.log(this)
         // starcanvas_context.lineWidth = linewidthstorage
     }
 }
@@ -791,7 +797,7 @@ class Circle {
             canvas_context.fill()
             canvas_context.stroke();
         } else {
-            //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+            ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         }
     }
     move() {
@@ -950,7 +956,7 @@ class ExpandingCircle {
             // canvas_context.fill()
             canvas_context.stroke();
         } else {
-            //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+            ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         }
         canvas_context.lineWidth = 1
     }
@@ -1115,7 +1121,7 @@ class CircleF {
         // canvas_context.fill()
         // canvas_context.stroke();
         // } else {
-        //     //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         // }
     }
     move() {
@@ -1279,7 +1285,7 @@ class CircleG {
         // canvas_context.fill()
         // canvas_context.stroke();
         // } else {
-        //     //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         // }
     }
     move() {
@@ -1443,7 +1449,171 @@ class CircleO {
         // canvas_context.fill()
         // canvas_context.stroke();
         // } else {
-        //     //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        // }
+    }
+    move() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+    }
+    unmove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    frictiveMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.x += this.xmom
+        this.y += this.ymom
+        this.xmom *= this.friction
+        this.ymom *= this.friction
+    }
+    frictiveunMove() {
+        if (this.reflect == 1) {
+            if (this.x + this.radius > canvas.width) {
+                if (this.xmom > 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y + this.radius > canvas.height) {
+                if (this.ymom > 0) {
+                    this.ymom *= -1
+                }
+            }
+            if (this.x - this.radius < 0) {
+                if (this.xmom < 0) {
+                    this.xmom *= -1
+                }
+            }
+            if (this.y - this.radius < 0) {
+                if (this.ymom < 0) {
+                    this.ymom *= -1
+                }
+            }
+        }
+        this.xmom /= this.friction
+        this.ymom /= this.friction
+        this.x -= this.xmom
+        this.y -= this.ymom
+    }
+    isPointInside(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= (this.radius * this.radius)) {
+            return true
+        }
+        return false
+    }
+    doesPerimeterTouch(point) {
+        this.areaY = point.y - this.y
+        this.areaX = point.x - this.x
+        if (((this.areaX * this.areaX) + (this.areaY * this.areaY)) <= ((this.radius + point.radius) * (this.radius + point.radius))) {
+            return true
+        }
+        return false
+    }
+}
+class CircleOr {
+    constructor(x, y, radius, color, xmom = 0, ymom = 0, friction = 1, reflect = 0, strokeWidth = 0, strokeColor = "transparent") {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.xmom = xmom
+        this.ymom = ymom
+        this.friction = friction
+        this.reflect = reflect
+        this.strokeWidth = strokeWidth
+        this.strokeColor = strokeColor
+    }
+    movex(zise) {
+        this.x += this.xmom / zise
+        this.y += this.ymom / zise
+    }
+    draw() {
+        canvas_context.lineWidth = 5
+        canvas_context.strokeStyle = this.color
+        canvas_context.beginPath();
+        // if (this.radius > 0) {
+        let rad = canvas_context.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius)
+        rad.addColorStop(0, "transparent");
+        rad.addColorStop(0.5, "transparent");
+        rad.addColorStop(0.6, "#00FF0005");
+        rad.addColorStop(0.7, "#00FF0030");
+        rad.addColorStop(0.8, "#00Ff0044");
+        rad.addColorStop(.9, "#00FF00AA");
+        rad.addColorStop(1, "#FF0000");
+        canvas_context.arc(this.x, this.y, this.radius, 0, (Math.PI * 2), true)
+        canvas_context.fillStyle = rad
+        canvas_context.fill()
+        // canvas_context.fill()
+        // canvas_context.stroke();
+        // } else {
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         // }
     }
     move() {
@@ -1598,7 +1768,7 @@ class CircleR {
         // canvas_context.fill()
         canvas_context.stroke();
         // } else {
-        //     //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         // }
     }
     move() {
@@ -1755,7 +1925,7 @@ class CircleA {
         // canvas_context.fill()
         canvas_context.stroke();
         // } else {
-        //     //////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
+        //     ////////////////////////////////////////////////////////////////////////////////////////////////console.log("The circle is below a radius of 0, and has not been drawn. The circle is:", this)
         // }
     }
     move() {
@@ -2321,7 +2491,7 @@ class Observer {
         this.ray = []
     }
 }
-let speeds = [1, 2, 3, 4, 5, 8, 20, 40, 999999999]
+let speeds = [1, 2, 3, 3, 3, 3, 999999999, 999999999, 999999999]
 let speedsto = 5
 
 let overpanel = new Image()
@@ -4188,7 +4358,7 @@ class Encyclopedia {
                     this.canvas_context.fillStyle = "#090909"
                     this.canvas_context.fillRect(1280 - 425, 200, 375, 375)
                     this.canvas_context.drawImage(rs[this.shipnum % rs.length], 0, 0, 64, 64, 1280 - 425, 200, 375, 375)
-                }else if (this.shipnum == 65) {
+                } else if (this.shipnum == 65) {
                     this.canvas_context.fillText("Species:", 50, 90)
                     this.canvas_context.font = "30px helvetica"
                     this.canvas_context.fillText(guyTypes[this.shipnum], 50, 150)
@@ -5956,7 +6126,7 @@ class Encyclopedia {
                     this.canvas_context.fillStyle = "#090909"
                     this.canvas_context.fillRect(1280 - 425, 200, 375, 375)
                     this.canvas_context.drawImage(bombrope, 0, 0, bombrope.width, bombrope.height, 1280 - 425, 200, 375, 375)
-                }else if (this.shipnum == 78) {
+                } else if (this.shipnum == 78) {
                     this.canvas_context.fillText("Weapon: The Egg Launcher", 50, 90)
                     this.canvas_context.font = "30px helvetica"
                     this.canvas_context.fillText("Charge: 765", 50, 150)
@@ -5987,7 +6157,7 @@ class Encyclopedia {
     check(p) {
         let point = new Point(p.x - mix, p.y - miy)
         if (this.active == 1) {
-            ////console.log(this)
+            //////console.log(this)
             if (this.numup.isPointInside(point)) {
                 this.shipnum++
             }
@@ -6033,7 +6203,94 @@ class Encyclopedia {
 }
 
 let enc = new Encyclopedia()
-// ////console.log(shipsarr)
+// //////console.log(shipsarr)
+
+
+class MetaProgression {
+
+}
+
+class Homestar {
+    constructor(){
+        this.drop = new RectangleR(1000, 260, 100,100, "#FFFF0088")
+        this.recieved = 0
+        this.checkbox = new Rectangle(900, 120, 300, 120, "#FFFFFF88")
+        this.active = -1
+        this.donating = -1
+        this.population = 0
+        this.guys = []
+    }
+    donate(){
+        if(this.donating == 1){
+
+            //add some special bechaivors like adding mystery slag, lots of dodge mods, mirror shells etc
+            for(let t = 0;t<vessel.upgradeMenu.wepsto.length;t++){
+                if(vessel.upgradeMenu.wepsto[t].selected == 1){
+                    this.recieved += vessel.upgradeMenu.wepsto[t].sell
+                    if( vessel.upgradeMenu.wepsto[t].type >= 0 ||  vessel.upgradeMenu.wepsto[t].gearType >= 0 ||  vessel.upgradeMenu.wepsto[t].crewType >= 0 ||  vessel.upgradeMenu.wepsto[t].part >= 0 ||  vessel.upgradeMenu.wepsto[t].droneType >= 0 ){
+
+                        vessel.upgradeMenu.wepsto[t] = new Weapon(-1)
+                    }
+                }
+            }
+            for(let t = 0;t<vessel.upgradeMenu.partsto.length;t++){
+                if(vessel.upgradeMenu.partsto[t].lifted == 1){
+                    this.recieved += 5 //part prices
+                    vessel.upgradeMenu.partsto.splice(t,1)
+                }
+            }
+            for(let t = 0;t<vessel.guys.length;t++){
+                if(vessel.guys[t].selected == 1){
+                    if(vessel.guys[t].type != 11){
+                        this.population++
+                        this.guys.push(vessel.guys[t])
+                        for(let k = 0;k<4;k++){
+                            let we = new Weapon(-1,-1, vessel.guys[t].gear[k].type, -1, -1)
+                            this.recieved += we.sell
+                        }
+                        vessel.guys.splice(t,1)
+                    }
+                }
+            }
+        }
+    }
+    draw(){
+        if(vessel.star == 0){
+            if(vessel.upgradeMenu.open == 1){
+                if(this.active == 1){
+                    this.checkbox.draw()
+                    canvas_context.fillStyle = "Black"
+                    canvas_context.font = "20px arial"
+                    canvas_context.fillText("Donating Crew and Inventory!", this.checkbox.x + 20, this.checkbox.y + 25)
+                    canvas_context.fillText("Click Box Again To Stop.", this.checkbox.x + 20, this.checkbox.y + 50)
+                    canvas_context.fillText("Donated: "  + this.recieved, this.checkbox.x + 20, this.checkbox.y + 80)
+                    canvas_context.fillText("Population: "  + this.population, this.checkbox.x + 20, this.checkbox.y + 105)
+                }
+                this.drop.draw()
+                canvas_context.font = "20px arial"
+                canvas_context.fillStyle = "Black"
+                canvas_context.fillText("Donate", this.drop.x + 20, this.drop.y + 25)
+                this.donate()
+            }else{
+            this.donating = -1
+            this.active = -1
+            }
+        }else{
+            this.donating = -1
+            this.active = -1
+        }
+    }
+    check(){
+        if(this.drop.isPointInside(TIP_engine)){
+            this.active *= -1
+            this.donating*= -1
+            for(let t = 0;t<vessel.upgradeMenu.wepsto.length;t++){
+                vessel.upgradeMenu.wepsto[t].selected = -1
+            }
+        }
+    }
+}
+
 class OverBoardShips {
     constructor() {
         this.active = -1
@@ -6843,7 +7100,7 @@ class OverBoardShips {
     check(p) {
         let point = new Point(p.x - mix, p.y - miy)
         if (this.active == 1) {
-            ////console.log(this)
+            //////console.log(this)
             if (this.numup.isPointInside(point)) {
                 this.shipnum++
                 this.shipnum %= 15
@@ -7961,7 +8218,7 @@ class OverBoard {
             // this.canvas_context.fillText(this.text, 50, 50)
             this.measure()
 
-            if(this.powertip == 1){
+            if (this.powertip == 1) {
                 this.canvas_context.fillRect(1280 - 425, 200, 375, 375)
                 this.canvas_context.drawImage(powerinfo, 0, 0, powerinfo.width, powerinfo.height, 1280 - 425, 200, 375, 375)
             }
@@ -8001,7 +8258,7 @@ class OverBoard {
                 }
             }
         }
-        // //////////console.log(this)
+        // ////////////console.log(this)
     }
 }
 
@@ -8028,7 +8285,7 @@ function setUp(canvas_pass, style = "#000000") {
     file.value = {}
     file.files = []
     file.value.length = 1
-    //////console.log(file.value)
+    ////////console.log(file.value)
 
     // form.addEventListener('submit', handleSubmit);
 
@@ -8037,7 +8294,7 @@ function setUp(canvas_pass, style = "#000000") {
         let reader = new FileReader();
 
 
-        //////console.log('File(s) dropped');
+        ////////console.log('File(s) dropped');
 
         // Prevent default behavior (Prevent file from being opened)
         ev.preventDefault();
@@ -8048,8 +8305,8 @@ function setUp(canvas_pass, style = "#000000") {
                 // If dropped items aren't files, reject them
                 if (ev.dataTransfer.items[i].kind === 'file') {
                     const file = ev.dataTransfer.items[i].getAsFile();
-                    //////console.log('... file[' + i + '].name = ' + file.name);
-                    //   //////console.log((file.text()))
+                    ////////console.log('... file[' + i + '].name = ' + file.name);
+                    //   ////////console.log((file.text()))
                     file.text().then(result => {
                         saved = JSON.parse(result)
                     }).catch(err => {
@@ -8060,7 +8317,7 @@ function setUp(canvas_pass, style = "#000000") {
         } else {
             // Use DataTransfer interface to access the file(s)
             for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-                //////console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+                ////////console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
             }
         }
     }
@@ -8097,11 +8354,30 @@ function setUp(canvas_pass, style = "#000000") {
     starcanvas.style.background = style
     shipcanvas.style.background = style
     window.setInterval(function () {
-
+        skret--
+        if(skret >= 8){
+            for(let t = 0;t<vessel.guys.length;t++){
+                vessel.guys.path = astar.search(vessel, vessel.guys[t].tile, vessel.guys[t].stogo)
+            }
+        }
+        if(skret == 1){
+            skret = 0
+            for (let t = 0; t < vessel.blocks.length; t++) {
+                for (let k = 0; k < vessel.blocks[t].length; k++) {
+                            vessel.blocks[t][k].ren()
+                }
+            }
+        }
+        if( Date.now() > time+1000){
+            time =  Date.now()
+            //console.log(frames, frames2)
+            frames = 0
+            frames2 = 0
+        }
         // if(start == 2){ // lol
         //     let point = new Point(1920*.5, 1080*.5)
         //     if(keysPressed['l']){
-        //         ////console.log(vessel, enemy)
+        //         //////console.log(vessel, enemy)
         //         for(let t = 0;t<vessel.supratiles.length;t++){
         //             vessel.supratiles[t].xmom += (point.x-vessel.supratiles[t].x)/100
         //             vessel.supratiles[t].ymom += (point.y-vessel.supratiles[t].y)/100
@@ -8216,12 +8492,14 @@ function setUp(canvas_pass, style = "#000000") {
         }
         if (keysPressed['p']) {
             speedrate++
-            if (speedrate >= speeds.length - 2) {
-                speedrate = speeds.length - 2
+            if (speedrate >= speeds.length - 5) {
+                speedrate = speeds.length - 5
             }
             keysPressed['p'] = false
         }
         if (speedcount % speeds[speedrate] == 0) {
+            
+             frames++
             canvas_context.fillStyle = "black"
             canvas_context.fillRect(0, 0, 1920, 1080)
             if (vessel.starrate > 2560) {
@@ -8244,6 +8522,8 @@ function setUp(canvas_pass, style = "#000000") {
             }
             main()
             if (start == 2) {
+                // enemy.draw()
+                // vessel.draw()
                 for (let w = 0; w < enemy.weapons.length; w++) {
                     enemy.weapons[w].work()
                 }
@@ -8251,10 +8531,20 @@ function setUp(canvas_pass, style = "#000000") {
                 labels.draw()
                 canvas_context.fillStyle = "orange"
                 canvas_context.font = "20px clock"
-                canvas_context.fillText("Game Speed: " + Math.floor(400 / (speeds[speedrate] + 1)) + "% (O/P)", 80, 120)
+                if(speedrate == 0){
+                    canvas_context.fillText("Game Speed: " + 100+ "% (O/P)", 80, 120)
+                }else   if(speedrate == 1){
+                    canvas_context.fillText("Game Speed: " + 50+ "% (O/P)", 80, 120)
+                }else  if(speedrate >= 2 && speedrate <= 5){
+                    canvas_context.fillText("Game Speed: " + 33+ "% (O/P)", 80, 120)
+                }else  if(speedrate > 5){
+                    canvas_context.fillText("Game Speed: " + 0+ "% (O/P)", 80, 120)
+                }
                 dragger.draw()
             }
         } else {
+
+            frames2++
             if (start == 2) {
                 canvas_context.clearRect(0, 0, canvas.width, canvas.height) // refreshes the image
                 canvas_context.fillStyle = "black"
@@ -8333,7 +8623,7 @@ function setUp(canvas_pass, style = "#000000") {
                 for (let t = 0; t < enemy.asteroids.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -8354,7 +8644,16 @@ function setUp(canvas_pass, style = "#000000") {
                 labels.draw()
                 canvas_context.fillStyle = "orange"
                 canvas_context.font = "20px clock"
-                canvas_context.fillText("Game Speed: " + Math.floor(400 / (speeds[speedrate] + 1)) + "% (O/P)", 80, 120)
+                canvas_context.font = "20px clock"
+                if(speedrate == 0){
+                    canvas_context.fillText("Game Speed: " + 100+ "% (O/P)", 80, 120)
+                }else   if(speedrate == 1){
+                    canvas_context.fillText("Game Speed: " + 50+ "% (O/P)", 80, 120)
+                }else  if(speedrate >= 2 && speedrate <= 5){
+                    canvas_context.fillText("Game Speed: " + 33+ "% (O/P)", 80, 120)
+                }else  if(speedrate > 5){
+                    canvas_context.fillText("Game Speed: " + 0+ "% (O/P)", 80, 120)
+                }
                 dragger.draw()
             }
         }
@@ -8381,7 +8680,7 @@ function setUp(canvas_pass, style = "#000000") {
 
 
 
-    }, 5)
+    }, 20)
     document.addEventListener('keydown', (event) => {
         keysPressed[event.key] = true;
     });
@@ -8410,7 +8709,7 @@ function setUp(canvas_pass, style = "#000000") {
         }
     })
     window.addEventListener('pointerdown', e => {
-        // //////console.log("dd")
+        // ////////console.log("dd")
         // for (let t = 0; t < vessel.blocks.length; t++) {
         //     for (let k = 0; k < vessel.blocks[t].length; k++) {
         //         // if (vessel.blocks[t][k].isPointInside(TIP_engine)){
@@ -8422,6 +8721,7 @@ function setUp(canvas_pass, style = "#000000") {
         if (e.button == 2 && options.rightClick == 0) {
             return
         }
+        vessel.partMenu.check()
         radio.check(TIP_engine)
         window.addEventListener('pointermove', radiotouch);
         window.addEventListener('pointermove', dragbox);
@@ -8436,6 +8736,17 @@ function setUp(canvas_pass, style = "#000000") {
         dragger.y = TIP_engine.y
         dragger.xsto = TIP_engine.x
         dragger.ysto = TIP_engine.y
+        vessel.home.check()
+        if(vessel.home.donating == 1){
+            for(let t = 0;t<vessel.guys.length;t++){
+                if(vessel.guys[t].healthbox.isPointInside(TIP_engine)){
+                    vessel.guys[t].selected = 1
+                    return
+                }
+            }
+        }
+
+
         if (metaEvent.active == 1) {
             metaEvent.check(TIP_engine)
             return
@@ -8468,7 +8779,8 @@ function setUp(canvas_pass, style = "#000000") {
         } else {
         }
         // vessel.distortionPoints.push(new Point(TIP_engine.x, TIP_engine.y))
-        let menubox = new Rectangle(304, 317, 883, 526)
+        // let menubox = new Rectangle(304, 317, 883, 526) //before parts
+        let menubox = new Rectangle(304, 217, 1883, 626)
         if (vessel.upgradeMenu.open == 1) {
             if (!menubox.isPointInside(TIP_engine)) {
                 if (!vessel.upgradeMenu.button.isPointInside(TIP_engine)) {
@@ -8509,6 +8821,22 @@ function setUp(canvas_pass, style = "#000000") {
                 return
             }
         }
+        if (vessel.upgradeMenu.partsto.length == 0) {
+            let activeSystem = 0
+            for (let t = 0; t < vessel.partMenu.systems.length; t++) {
+                if (vessel.partMenu.systems[t].active == 1) {
+                    activeSystem = vessel.partMenu.systems[t]
+                }
+            }
+            if (activeSystem != 0) {
+                if (activeSystem.zonecheck(TIP_engine)) {
+                    if (globalSkip == 1) {
+                        globalSkip = 0
+                        return
+                    }
+                }
+            }
+        }
         if (start == 0) {
             if (tut == -1) {
                 if (shakeButton.isPointInside(TIP_engine)) {
@@ -8541,6 +8869,17 @@ function setUp(canvas_pass, style = "#000000") {
                     } else {
                         options.lightText = "Light Off"
                         lightButton.color = "#00ff0044"
+                    }
+                    return
+                }
+                if (hoverButton.isPointInside(TIP_engine)) {
+                    options.alwaysHover *= -1
+                    if (options.alwaysHover == 1) {
+                        options.hoverText = "Persistent Tooltips On"
+                        hoverButton.color = "#00ff0044"
+                    } else {
+                        options.hoverText = "Persistent Tooltips Off"
+                        hoverButton.color = "#FF000044"
                     }
                     return
                 }
@@ -8579,7 +8918,7 @@ function setUp(canvas_pass, style = "#000000") {
                 }
             }
         }
-        ////////////////////////////////////////////////////////////////////////console.log(TIP_engine)
+        //////////////////////////////////////////////////////////////////////////console.log(TIP_engine)
         if (vessel.guys) {
             for (let t = 0; t < vessel.guys.length; t++) {
                 if (vessel.guys[t].selected == 1 && vessel.guys[t].hostile != 1) {
@@ -8754,113 +9093,220 @@ function setUp(canvas_pass, style = "#000000") {
         vessel.upgradeMenu.levels.check(TIP_engine)
         let shert = 0
         let gindex = -1
-        for (let t = 0; t < vessel.shield.inventory.items.length; t++) {
-            gigadebug++
-            if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
-                gigadebug = 0
-                break
-            }
-            if (vessel.shield.inventory.items[t].lifted == 1) {
-                for (let g = 0; g < vessel.shield.inventory.cells.length - 0; g++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    for (let h = 0; h < vessel.shield.inventory.cells[g].length - 0; h++) {
-                        gigadebug++
-                        if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
-                            gigadebug = 0
-                            break
-                        }
-                        if (vessel.shield.inventory.cells[g][h].isPointInside(TIP_engine)) {
-                            vessel.shield.inventory.items[t].tile = vessel.shield.inventory.cells[g][h]
-                            vessel.shield.inventory.items[t].lifted = -1
-                            shert = 1
-                            gindex = t
-                            break
-                        }
-                    }
-                }
+        let activeSystem = 0
+        for (let t = 0; t < vessel.partMenu.systems.length; t++) {
+            if (vessel.partMenu.systems[t].active == 1) {
+                activeSystem = vessel.partMenu.systems[t]
             }
         }
-        if (shert == 1) {
-            let wetsum = 0
-            for (let t = 0; t < vessel.shield.inventory.items.length; t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
+        if (activeSystem != 0) {
+
+
+            // //console.log( activeSystem.items)
+            // //console.log( TIP_engine)
+
+            let bet = 0
+            let wbet = 0
+            for (let t = 0; t < activeSystem.items.length; t++) {
+
+                if (activeSystem.items[t].lifted == 1) {
+                    wbet = 1
+                }
+            }
+            for (let t = 0; t < activeSystem.items.length; t++) {
+                if(bet == 1){
                     break
                 }
-                for (let g = 0; g < vessel.shield.inventory.items[t].shape.length; g++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    for (let h = 0; h < vessel.shield.inventory.items[t].shape[g].length; h++) {
-                        gigadebug++
-                        if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
-                            gigadebug = 0
+                if (activeSystem.items[t].lifted == 1) {
+                    for (let g = 0; g < activeSystem.cells.length - 0; g++) {
+                        if(bet == 1){
                             break
                         }
-                        if (vessel.shield.inventory.items[t].shape[g][h] == 1) {
-                            wetsum++
+                        for (let h = 0; h < activeSystem.cells[g].length - 0; h++) {
+                            if(bet == 1){
+                                break
+                            }
+                            let subpoint = new Point(TIP_engine.x - 86, TIP_engine.y - 86)
+                            if (activeSystem.cells[g][h].isPointInside(subpoint)) {
+                                activeSystem.items[t].tile = activeSystem.cells[g][h] //
+                                activeSystem.items[t].lifted = -1
+                                globalSkip = 1
+                                shert = 1
+                                gindex = t
+                                bet = 1
+                                wbet = 1
+                                break
+                            }
                         }
+                    }
+                } else {
+                    if(bet == 1){
+                        break
+                    }
+                    if(wbet == 1){
+                        continue
+                    }
+                    // //console.log("f344fawdaf")
+
+                    // for (let g = 0; g < activeSystem.cells.length; g++) {
+                    //     for (let h = 0; h  < activeSystem.cells[g].length; h++) {
+                    let subpoint = new Point(TIP_engine.x - 86, TIP_engine.y - 86)
+                    // if (activeSystem.cells[g][h].isPointInside(subpoint)) {
+                    if (activeSystem.items[t].tile.isPointInside(subpoint)) {
+                        // activeSystem.items[t].lifted = 1
+                        let parto = new ModularPart(activeSystem.items[t].part)
+                        parto.lifted = 1
+                        vessel.upgradeMenu.partsto.push(parto)
+                        activeSystem.items.splice(t, 1)
+                        globalSkip = 1
+                        return
                     }
                 }
             }
-            let hash = {}
-            for (let t = 0; t < vessel.shield.inventory.items.length; t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
-                    break
-                }
-                for (let g = Math.max(vessel.shield.inventory.items[t].tile.t, 5); g < Math.min(vessel.shield.inventory.items[t].tile.t + 5, vessel.shield.inventory.cells.length - 5); g++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    for (let h = Math.max(vessel.shield.inventory.items[t].tile.k, 5); h < Math.min(vessel.shield.inventory.items[t].tile.k + 5, vessel.shield.inventory.cells[g].length - 5); h++) {
-                        gigadebug++
-                        if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
-                            gigadebug = 0
-                            break
-                        }
-                        if (vessel.shield.inventory.items[t].shape[g - vessel.shield.inventory.items[t].tile.t][h - vessel.shield.inventory.items[t].tile.k] == 1) {
-                            if (hash[`${g}${h}`] == 1) {
-                                vessel.shield.inventory.items[gindex].lifted = 1
-                                break
-                            } else {
-                                wetsum--
-                                hash[`${g}${h}`] = 1
+            //     }
+            // }
+            if (shert == 1) {
+                let wetsum = 0
+                for (let t = 0; t < activeSystem.items.length; t++) {
+                    for (let g = 0; g < activeSystem.items[t].shape.length; g++) {
+                        for (let h = 0; h < activeSystem.items[t].shape[g].length; h++) {
+                            if (activeSystem.items[t].shape[g][h] == 1) {
+                                wetsum++
                             }
                         }
                     }
                 }
+                let hash = {}
+                let sum = 0
+                let sum2 = 0
+                for (let g = 0; g < activeSystem.cells.length; g++) {
+                    for (let h = 0; h < activeSystem.cells[g].length; h++) {
+                        if (activeSystem.cells[g][h] == 1) {
+                            sum2++
+                        }
+                    }
+                }
+                for (let g = 5; g < activeSystem.cells.length - 5; g++) {
+                    for (let h = 5; h < activeSystem.cells[g].length - 5; h++) {
+                        if (activeSystem.cells[g][h] == 1) {
+                            sum++
+                        }
+                    }
+                }
+                for (let t = 0; t < activeSystem.items.length; t++) {
+                    for (let g = Math.max(activeSystem.items[t].tile.t, 5); g < Math.min(activeSystem.items[t].tile.t + 5, activeSystem.cells.length - 5); g++) {
+                        for (let h = Math.max(activeSystem.items[t].tile.k, 5); h < Math.min(activeSystem.items[t].tile.k + 5, activeSystem.cells[g].length - 5); h++) {
+                            if (activeSystem.items[t].shape[g - activeSystem.items[t].tile.t][h - activeSystem.items[t].tile.k] == 1) {
+                                activeSystem.cells[g][h].touched = 0
+                            }
+                        }
+                    }
+                }
+                for (let t = 0; t < activeSystem.items.length; t++) {
+                    for (let g = Math.max(activeSystem.items[t].tile.t, 5); g < Math.min(activeSystem.items[t].tile.t + 5, activeSystem.cells.length - 5); g++) {
+                        for (let h = Math.max(activeSystem.items[t].tile.k, 5); h < Math.min(activeSystem.items[t].tile.k + 5, activeSystem.cells[g].length - 5); h++) {
+                            if (activeSystem.items[t].shape[g - activeSystem.items[t].tile.t][h - activeSystem.items[t].tile.k] == 1) {
+                                activeSystem.cells[g][h].touched = 1
+                            }
+                        }
+                    }
+                }
+                for (let t = 0; t < activeSystem.items.length; t++) {
+
+                    for (let g = 0; g < activeSystem.cells.length; g++) {
+                        for (let h = 0; h < activeSystem.cells[g].length; h++) {
+                            if (activeSystem.cells[g][h].touched == 1) {
+                                if (g < 5 || h < 5 || g > 13 || h > 10) {
+
+                                    activeSystem.items[gindex].lifted = 1
+                                    globalSkip = 0
+                                    return
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let t = 0; t < activeSystem.items.length; t++) {
+                    for (let g = Math.max(activeSystem.items[t].tile.t, 5); g < Math.min(activeSystem.items[t].tile.t + 5, activeSystem.cells.length - 5); g++) {
+                        for (let h = Math.max(activeSystem.items[t].tile.k, 5); h < Math.min(activeSystem.items[t].tile.k + 5, activeSystem.cells[g].length - 5); h++) {
+                            if (activeSystem.items[t].shape[g - activeSystem.items[t].tile.t][h - activeSystem.items[t].tile.k] == 1) {
+                                if (hash[`${g}${h}`] == 1) {
+                                    activeSystem.items[gindex].lifted = 1
+                                    globalSkip = 0
+                                    return
+                                } else {
+                                    wetsum--
+                                    hash[`${g}${h}`] = 1
+
+                                    activeSystem.cells[g][h].touched = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let t = 0; t < activeSystem.items.length; t++) {
+                    for (let g = Math.max(activeSystem.items[t].tile.t, 0); g < Math.min(activeSystem.items[t].tile.t + 0, activeSystem.cells.length - 0); g++) {
+                        for (let h = Math.max(activeSystem.items[t].tile.k, 0); h < Math.min(activeSystem.items[t].tile.k + 0, activeSystem.cells[g].length - 0); h++) {
+                            if (activeSystem.items[t].shape[g - activeSystem.items[t].tile.t][h - activeSystem.items[t].tile.k] == 1) {
+                            }
+                        }
+                    }
+                }
+                if (wetsum != 0 || (sum2 != sum)) {
+                    activeSystem.items[gindex].lifted = 1
+
+                    // let parto = new ModularPart(vessel.partMenu.wepsto[vessel.partMenu.partshow][k].part)
+                    // parto.lifted = 1
+                    // vessel.upgradeMenu.partsto.push(parto)
+                    // vessel.partMenu.wepsto[vessel.partMenu.partshow][k] = new Weapon(-1)
+
+                    vessel.upgradeMenu.partsto[0] = activeSystem.items[gindex]
+                    activeSystem.items.splice(gindex, 1)
+                    globalSkip = 0
+                    return
+                }
             }
-            if (wetsum != 0) {
-                vessel.shield.inventory.items[gindex].lifted = 1
+            if (vessel.upgradeMenu.partsto.length > 0) {
+                if (activeSystem.zonecheck(TIP_engine)) {
+                    vessel.upgradeMenu.partsto[0].lifted = 1
+                    globalSkip = 0
+                    activeSystem.items.push(vessel.upgradeMenu.partsto[0])
+                    vessel.upgradeMenu.partsto = []
+                }
             }
         }
-        if (vessel.upgradeMenu.partsto.length > 0) {
-            if (vessel.shield.inventory.zonecheck(TIP_engine)) {
-                vessel.upgradeMenu.partsto[0].lifted = 1
-                vessel.shield.inventory.items.push(vessel.upgradeMenu.partsto[0])
-                vessel.upgradeMenu.partsto = []
+
+        let qet = 0
+        for(let t = 0;t<vessel.partMenu.systems.length;t++){
+            for(let k = 0;k<vessel.partMenu.systems[t].items.length;k++){
+                if(vessel.partMenu.systems[t].items[k].lifted == 1){
+                    qet = 1
+                }
             }
         }
+
+
+        if(qet == 0){
+            for (let k = 0; k < 6; k++) {
+                // vessel.partMenu.wepsto[vessel.partMenu.partshow][k].body.color = getRandomColor()
+                // vessel.partMenu.wepsto[vessel.partMenu.partshow][k].body.draw()
+                if (vessel.partMenu.wepsto[vessel.partMenu.partshow][k].part > -1) {
+                    if (vessel.upgradeMenu.partsto.length == 0) {
+                        if (vessel.partMenu.wepsto[vessel.partMenu.partshow][k].body.isPointInside(TIP_engine)) {
+                            let parto = new ModularPart(vessel.partMenu.wepsto[vessel.partMenu.partshow][k].part)
+                            parto.lifted = 1
+                            vessel.upgradeMenu.partsto.push(parto)
+                            vessel.partMenu.wepsto[vessel.partMenu.partshow][k] = new Weapon(-1)
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
         vessel.shield.check(TIP_engine)
         if (vessel.upgradeMenu.open == 1 && start == 2) {
             if (mode == 1) {
@@ -8949,8 +9395,14 @@ function setUp(canvas_pass, style = "#000000") {
                     if (vessel.guys[g].hostile != 1) {
                         if (keysPressed['z']) {
                             if (vessel.guys[g].healthbox.isPointInside(TIP_engine)) {
-                                vessel.guys[g].zSelected = 1
-                                vessel.upgradeMenu.open = -1
+                                if(vessel.home.donating == 1){
+
+                                }else{
+                                if(!vessel.guys[g].powerbutton.isPointInside(TIP_engine)){
+                                    vessel.guys[g].zSelected = 1
+                                    vessel.upgradeMenu.open = -1
+                                }
+                                }
                             }
                         }
                     }
@@ -8967,12 +9419,12 @@ function setUp(canvas_pass, style = "#000000") {
             }
             return
         }
-        // ////////////////////////////////////////////////////////////////////////////////////////////console.log(vessel.energy.upgradeMenu)
+        // //////////////////////////////////////////////////////////////////////////////////////////////console.log(vessel.energy.upgradeMenu)
         // if (keysPressed['2']) {
-        //     ////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.length)
+        //     //////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.length)
         //     let door = new Airlock(TIP_engine.x, TIP_engine.y)
         //     vessel.doors.push(door)
-        //     ////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(vessel.doors))
+        //     //////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(vessel.doors))
         //     return
         // }
         // for (let t = 0; t < enemy.blocks.length; t++) {
@@ -8986,7 +9438,7 @@ function setUp(canvas_pass, style = "#000000") {
         //     }
         // }
         //         if (enemy.blocks[t][k].isPointInside(TIP_engine)) {
-        //             // ////////////////////////////////////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
+        //             // //////////////////////////////////////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
         //             enemy.blocks[t][k].marked = 1
         //             if (keysPressed['k']) {
         //                 enemy.blocks[t][k].doorway = 1
@@ -9031,8 +9483,8 @@ function setUp(canvas_pass, style = "#000000") {
         //         }
         //     }
         // }
-        // ////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.doors))
-        // ////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
+        // //////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.doors))
+        // //////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
         // return
         // wad.launch(TIP_engine)
         for (let t = 0; t < vessel.doors.length; t++) {
@@ -9062,7 +9514,7 @@ function setUp(canvas_pass, style = "#000000") {
                                     for (let t = 0; t < enemy.guys.length; t++) {
                                         gigadebug++
                                         if (gigadebug > 1000000) {
-                                            //////console.log("ha ha!")
+                                            ////////console.log("ha ha!")
                                             gigadebug = 0
                                             break
                                         }
@@ -9128,7 +9580,7 @@ function setUp(canvas_pass, style = "#000000") {
             }
         }
         // if (keysPressed['u']) {
-        //     //////console.log("dd")
+        //     ////////console.log("dd")
         //     for (let t = 0; t < enemy.blocks.length; t++) {
         //         for (let k = 0; k < enemy.blocks[t].length; k++) {
         //             // if (vessel.blocks[t][k].isPointInside(TIP_engine)){
@@ -9150,7 +9602,7 @@ function setUp(canvas_pass, style = "#000000") {
                     //     vessel.blocks[t][k].fire = -1000
                     //     vessel.blocks[t][k].onFire = 1
                     // }
-                    // // ////////////////////////////////////////////////////////////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
+                    // // //////////////////////////////////////////////////////////////////////////////////////////////console.log(vessel.blocks[t][k].t, vessel.blocks[t][k].k)
                     // if (keysPressed['m']) {
                     //     vessel.blocks[t][k].medbay = 1
                     //     vessel.blocks[t][k].color = "#00ff0044"
@@ -9198,7 +9650,7 @@ function setUp(canvas_pass, style = "#000000") {
                         // for(let t = 0;t<vessel.upgradeMenu.wepsto.length;t++){
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -9209,7 +9661,7 @@ function setUp(canvas_pass, style = "#000000") {
                         // for(let t = 0;t<vessel.guys.length;t++){
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -9217,7 +9669,7 @@ function setUp(canvas_pass, style = "#000000") {
                         //         for(let k = 0;k<vessel.guys[t].gear.length;k++){
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -9244,15 +9696,22 @@ function setUp(canvas_pass, style = "#000000") {
                                 // vessel.guys[g].health = 0
                                 for (let r = 0; r < vessel.guys.length; r++) {
                                     if (vessel.guys[r].healthbox.isPointInside(TIP_engine)) { } else {
-                                        // vessel.guys[r].selected = 0
+                                        vessel.guys[r].selected = 0
                                         vessel.guys[r].zSelected = 0
                                     }
                                 }
                                 if (vessel.guys[g].hostile != 1) {
                                     if (keysPressed['z'] || vessel.guys[g].selected == 1) {
                                         if (vessel.guys[g].healthbox.isPointInside(TIP_engine)) {
+                                            if(vessel.home.donating == 1){
+            
+                                            }else{
+                                                
+                                if(!vessel.guys[g].powerbutton.isPointInside(TIP_engine)){
                                             vessel.guys[g].zSelected = 1
                                             vessel.upgradeMenu.open = -1
+                                }
+                                            }
                                         }
                                     }
                                     vessel.guys[g].selected = 1
@@ -9272,7 +9731,7 @@ function setUp(canvas_pass, style = "#000000") {
                         // if (vet == 0) {
                         // }
                         if (vessel.guys.length > 0) {
-                            // ////////////////////////console.log(TIP_engine)
+                            // //////////////////////////console.log(TIP_engine)
                             let rect = new Rectangle(vessel.guys[0].gear[0].body.x + 467, vessel.guys[0].gear[0].body.y - 40, sidePanel.width + 35, sidePanel.height + 20, "red")
                             // rect.draw()
                             let rect2 = new Rectangle(vessel.guys[0].gear[0].body.x - 22, vessel.guys[0].gear[0].body.y - 30, crewPanel.width + 5, crewPanel.height + 20, "red")
@@ -9297,7 +9756,7 @@ function setUp(canvas_pass, style = "#000000") {
                         for (let fau = 0; fau < vessel.guys.length; fau++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -9315,22 +9774,39 @@ function setUp(canvas_pass, style = "#000000") {
                                                 if (vessel.guys[selectedIndex].selected == 1) {
                                                     if (vessel.guys[selectedIndex].cound > 0) {
                                                         if (zopen == 0) {
-                                                            vessel.guys[selectedIndex].turning = 1
+                                                            let pnt = new Point(vessel.guys[selectedIndex].tile.x + (vessel.guys[selectedIndex].tile.width*.5), vessel.guys[selectedIndex].tile.y + (vessel.guys[selectedIndex].tile.height*.5))
+                                                            let vec = new Vector(vessel.guys[selectedIndex].body, vessel.guys[selectedIndex].body.x-pnt.x, vessel.guys[selectedIndex].body.y-pnt.y)
+                                                            let pnt2 = new Point(tile.x + (tile.width*.5), tile.y+(tile.height*.5))
                                                             vessel.guys[selectedIndex].flagpath = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
+                                                            if(vec.isToward(pnt2)){
+                                                                vessel.guys[selectedIndex].path = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
+                                                            }else{
+                                                                vessel.guys[selectedIndex].turning = 1
+                                                            }
                                                             vessel.guys[selectedIndex].stogo = tile
+                                                            vessel.guys[selectedIndex].stogo2 = tile
                                                             vessel.guys[selectedIndex].zapto = tile
                                                         }
                                                         if (vessel.guys[selectedIndex].flagpath.length > 1) {
-                                                            vessel.guys[selectedIndex].selected = 0
+                                                            // vessel.guys[selectedIndex].selected = 0
                                                         }
                                                     } else {
                                                         if (zopen == 0) {
-                                                            vessel.guys[selectedIndex].path = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
+                                                            let pnt = new Point(vessel.guys[selectedIndex].tile.x + (vessel.guys[selectedIndex].tile.width*.5), vessel.guys[selectedIndex].tile.y + (vessel.guys[selectedIndex].tile.height*.5))
+                                                            let vec = new Vector(vessel.guys[selectedIndex].body, vessel.guys[selectedIndex].body.x-pnt.x, vessel.guys[selectedIndex].body.y-pnt.y)
+                                                            let pnt2 = new Point(tile.x + (tile.width*.5), tile.y+(tile.height*.5))
+                                                            vessel.guys[selectedIndex].flagpath = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
+                                                            if(vec.isToward(pnt2)){
+                                                                vessel.guys[selectedIndex].path = astar.search(vessel, vessel.guys[selectedIndex].tile, tile)
+                                                            }else{
+                                                                vessel.guys[selectedIndex].turning = 1
+                                                            }
                                                             vessel.guys[selectedIndex].stogo = tile
+                                                            vessel.guys[selectedIndex].stogo2 = tile
                                                             vessel.guys[selectedIndex].zapto = tile
                                                         }
                                                         if (vessel.guys[selectedIndex].path.length > 1) {
-                                                            vessel.guys[selectedIndex].selected = 0
+                                                            // vessel.guys[selectedIndex].selected = 0
                                                         }
                                                     }
                                                     whet = 1
@@ -9366,7 +9842,7 @@ function setUp(canvas_pass, style = "#000000") {
             for (let t = 0; t < vessel.guys.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -9389,7 +9865,7 @@ function setUp(canvas_pass, style = "#000000") {
                     //     enemy.blocks[t][k].fire = -100
                     //     // enemy.blocks[t][k].onFire = 1
                     // }
-                    // ////////////////////////////////////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
+                    // //////////////////////////////////////////////////////////////////////////////////////////////console.log(enemy.blocks[t][k].t, enemy.blocks[t][k].k)
                     // if (keysPressed['m']) {
                     //     enemy.blocks[t][k].medbay = 1
                     //     enemy.blocks[t][k].color = "#00ff0044"
@@ -9504,7 +9980,7 @@ function setUp(canvas_pass, style = "#000000") {
                 stars.check(TIP_engine)
             }
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
+        //////////////////////////////////////////////////////////////////////////////////////////////console.log(JSON.stringify(enemy.blocks))
         // example usage: if(object.isPointInside(TIP_engine)){ take action }
     });
     window.addEventListener('pointermove', continued_stimuli);
@@ -9518,7 +9994,7 @@ function setUp(canvas_pass, style = "#000000") {
         for (let t = 0; t < vessel.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -9532,7 +10008,7 @@ function setUp(canvas_pass, style = "#000000") {
             for (let t = 0; t < enemy.guys.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -9610,7 +10086,7 @@ function setUp(canvas_pass, style = "#000000") {
     }
 }
 // function gamepad_control(object, speed = 1) { // basic control for objects using the controler
-//     //         //////////////////////////////////////////////////////////////////////////////////////////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
+//     //         ////////////////////////////////////////////////////////////////////////////////////////////////console.log(gamepadAPI.axesStatus[1]*gamepadAPI.axesStatus[0]) //debugging
 //     if (typeof object.body != 'undefined') {
 //         if (typeof (gamepadAPI.axesStatus[1]) != 'undefined') {
 //             if (typeof (gamepadAPI.axesStatus[0]) != 'undefined') {
@@ -9971,7 +10447,7 @@ engineblastr.src = "engineblastr.png"
 class Tile {
     constructor(x, y, width, height, color, id, size, posx, posy, walkable) {
         this.r = 12
-        this.g= 12
+        this.g = 12
         this.b = 12
         this.a = 1
         this.left = 0
@@ -10022,10 +10498,10 @@ class Tile {
         this.tag = Math.floor(Math.random() * 18)
         this.id = id;
         this.subtiles = []
-        for(let t = 0;t<7;t++){
+        for (let t = 0; t < 7; t++) {
             let alley = []
-            for(let k = 0;k<7;k++){
-                let tile = new VTile(this.x +(this.width*(t/7)), this.y +(this.height*(k/7)), this.width/7, this.height/7, getRandomColor())
+            for (let k = 0; k < 7; k++) {
+                let tile = new VTile(this.x + (this.width * (t / 7)), this.y + (this.height * (k / 7)), this.width / 7, this.height / 7, getRandomColor())
                 tile.t = t
                 tile.k = k
                 tile.r = 12
@@ -10042,15 +10518,15 @@ class Tile {
         }
         // this.subbed = 1
     }
-    subdiv(x){
-        if(options.lighting != 1){
+    subdiv(x) {
+        if (options.lighting != 1) {
             return
         }
         this.subtiles = []
-        for(let t = 0;t<x;t++){
+        for (let t = 0; t < x; t++) {
             let alley = []
-            for(let k = 0;k<x;k++){
-                let tile = new VTile(this.x +(this.width*(t/x)), this.y +(this.height*(k/x)), this.width/x, this.height/x, getRandomColor())
+            for (let k = 0; k < x; k++) {
+                let tile = new VTile(this.x + (this.width * (t / x)), this.y + (this.height * (k / x)), this.width / x, this.height / x, getRandomColor())
                 tile.t = t
                 tile.k = k
                 tile.r = 12
@@ -10067,66 +10543,92 @@ class Tile {
         }
         this.subbed = 1
     }
-    newold(){
-        if(options.lighting != 1){
+    newold() {
+        if (options.lighting != 1) {
             return
         }
-        for(let t = 0;t<this.subtiles.length;t++){
-            for(let k = 0;k<this.subtiles[t].length;k++){
+        for (let t = 0; t < this.subtiles.length; t++) {
+            for (let k = 0; k < this.subtiles[t].length; k++) {
                 this.subtiles[t][k].newold()
             }
-        }     
+        }
     }
-    sublive(){  
-        if(options.lighting != 1){
+    justnewold() {
+        return
+    }
+    sublive() {
+        if (options.lighting != 1) {
             return
         }
         this.a = 20
-        if(this.subbed != 1){
+        if (this.subbed != 1) {
             this.subdiv(7)
         }
-        for(let t = 0;t<this.subtiles.length;t++){
-            for(let k = 0;k<this.subtiles[t].length;k++){
+        for (let t = 0; t < this.subtiles.length; t++) {
+            for (let k = 0; k < this.subtiles[t].length; k++) {
                 this.subtiles[t][k].sublive()
-        //     }
-        // }
-        // for(let t = 0;t<this.subtiles.length;t++){
-        //     for(let k = 0;k<this.subtiles[t].length;k++){
-                // if(this.isPointInside(TIP_engine)){
-                //     let ll = 100
-                //     if (keysPressed['l']){
-                //         ll = 10000
-                //     }
-                //     if(keysPressed['i']){
-                //         if(this.subtiles[t][k].isPointInside(TIP_engine)){
-                //             this.subtiles[t][k].r = 5120*ll
-                //         }
-                //     }
-                //     if(keysPressed['r']){
-                //         this.subtiles[4][4].r = 512*ll
-                //     }
-                //     if(keysPressed['t']){
-                //         this.subtiles[t][k].r = 512*ll
-                //     }
-                //     if(keysPressed['g']){
-                //     this.subtiles[4][k].g = 512*ll
-                //     }
-                //     if(keysPressed['h']){
-                //     this.subtiles[6][k].g = 512*ll
-                //     }
-                //     if(keysPressed['f']){
-                //     this.subtiles[0][k].g = 512*ll
-                //     }
-                //     if(keysPressed['b']){
-                //     this.subtiles[t][4].b = 512*ll
-                //     }
-                //     if(keysPressed['v']){
-                //     this.subtiles[t][6].b = 512*ll
-                //     }
-                //     if(keysPressed['n']){
-                //     this.subtiles[t][0].b = 512*ll
                 //     }
                 // }
+                // for (let t = 0; t < this.subtiles.length; t++) {
+                //     for (let k = 0; k < this.subtiles[t].length; k++) {
+                //         if (this.isPointInside(TIP_engine)) {
+                //             let ll = 100
+                //             if (keysPressed['l']) {
+                //                 ll = 10000
+                //             }
+                //             if (keysPressed['i']) {
+                //                 if (this.subtiles[t][k].isPointInside(TIP_engine)) {
+                //                     this.subtiles[t][k].r = 5120 * ll
+                //                 }
+                //             }
+                //             if (keysPressed['r']) {
+                //                 this.subtiles[3][3].r = 512 * ll
+                //             }
+                //             if (keysPressed['t']) {
+                //                 this.subtiles[t][k].r = 512 * ll
+                //             }
+                //             if (keysPressed['g']) {
+                //                 this.subtiles[3][k].g = 512 * ll
+                //             }
+                //             if (keysPressed['h']) {
+                //                 this.subtiles[6][k].g = 512 * ll
+                //             }
+                //             if (keysPressed['f']) {
+                //                 this.subtiles[0][k].g = 512 * ll
+                //             }
+                //             if (keysPressed['b']) {
+                //                 this.subtiles[t][3].b = 512 * ll
+                //             }
+                //             if (keysPressed['v']) {
+                //                 this.subtiles[t][6].b = 512 * ll
+                //             }
+                //             if (keysPressed['n']) {
+                //                 this.subtiles[t][0].b = 512 * ll
+                //             }
+                //         }
+                //     }
+                // }
+            }
+        }
+    }
+    ren(){
+        for (let t = 0; t < this.subtiles.length; t++) {
+            for (let k = 0; k < this.subtiles[t].length; k++) {
+                this.subtiles[t][k].ren()
+            }
+        }
+    }
+    justsublive() {
+        if (options.lighting != 1) {
+            return
+        }
+        this.a = 20
+        if (this.subbed != 1) {
+            this.subdiv(7)
+        }
+        for (let t = 0; t < this.subtiles.length; t++) {
+            for (let k = 0; k < this.subtiles[t].length; k++) {
+                this.subtiles[t][k].justsublive()
             }
         }
     }
@@ -10244,8 +10746,8 @@ class Tile {
         //gctx.fillStyle = "transparent";
         // let link = new Line(this.posx, this.posy, bottle.crew[bottle.selectedcrew].body.x-100, bottle.crew[bottle.selectedcrew].body.y-300, "#FF0000", 1)
         // if (link.hypotenuse() < 108) {
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
         // }
         // let roundedx = (Math.round((startPoint.x) / 10))
         // let roundedy = (Math.round((startPoint.y) / 10))
@@ -10258,12 +10760,12 @@ class Tile {
         // if (this.inPath === true) {
         //     // this.drawPath();
         // } else if (this.walkable === false) {
-        //     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
+        //     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
         //     // this.createWall();
         //     return;
         //     // }else if (link.hypotenuse() < 11) {
         // } else if (this.posx == roundedx && this.posy == roundedy) {
-        //     //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
+        //     //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
         //     //   this.createStartNode();
         //     return;
         // } else if (this.posx == endPoint.x && this.posy == endPoint.y) {
@@ -10295,10 +10797,10 @@ class Tile {
                 this.newlyOnFire = 1
             }
             this.onFire = 1
-                this.subtiles[3][3].r += 10000000*((50-this.fire)/50)
-                this.subtiles[3][3].g += 8000000*((50-this.fire)/50)
-                this.subtiles[3][3].b += 5000000*((50-this.fire)/50)
-            
+            this.subtiles[3][3].r += 10000000 * ((50 - this.fire) / 50)
+            this.subtiles[3][3].g += 8000000 * ((50 - this.fire) / 50)
+            this.subtiles[3][3].b += 5000000 * ((50 - this.fire) / 50)
+
         }
         if (this.fire >= 50) {
             this.onFire = 0
@@ -10390,12 +10892,12 @@ class Tile {
         // canvas_context.fillStyle = "#000000"
         // // canvas_context.strokeStyle = this.color
         // canvas_context.fillRect(this.x, this.y, this.width, this.height)
-        if((keysPressed['Shift'] || keysPressed['z'] )){
+        if ((keysPressed['Shift'] || keysPressed['z'])) {
 
             canvas_context.fillStyle = this.color
             // canvas_context.strokeStyle = this.color
             canvas_context.fillRect(this.x, this.y, this.width, this.height)
-        }else if (vessel.type == 1 || vessel.type == 0 || vessel.type == 7 || vessel.type == 2 || vessel.type == 12 || vessel.type == 3 || vessel.type == 4|| vessel.type == 14) {
+        } else if (vessel.type == 1 || vessel.type == 0 || vessel.type == 7 || vessel.type == 2 || vessel.type == 12 || vessel.type == 3 || vessel.type == 4 || vessel.type == 14) {
             if (vessel.supratiles.includes(this)) { } else {
                 canvas_context.fillStyle = this.color
                 // canvas_context.strokeStyle = this.color
@@ -11241,7 +11743,7 @@ class Tile {
                                         canvas_context.drawImage(yowep2, 0, 0, yowep.height, yowep.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
                                     } else if (vessel.weapons[vessel.wepDrawCount].type == 77) {
                                         canvas_context.drawImage(bombrope, 0, 0, bombrope.height, bombrope.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
-                                    }else if (vessel.weapons[vessel.wepDrawCount].type == 78) {
+                                    } else if (vessel.weapons[vessel.wepDrawCount].type == 78) {
                                         canvas_context.drawImage(egggun, 0, 0, egggun.height, egggun.height, vessel.weapons[vessel.wepDrawCount].center.x - (this.width * .45) + 2.5, vessel.weapons[vessel.wepDrawCount].center.y - (this.width * .25), this.width * .5, this.height * .5)
                                     }
                                 }
@@ -11645,7 +12147,7 @@ class Tile {
                                         canvas_context.drawImage(yowep2r, 0, 0, yowepr.width, yowepr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                     } else if (enemy.weapons[enemy.wepDrawCount].type == 77) {
                                         canvas_context.drawImage(bombroper, 0, 0, bombrope.width, bombrope.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
-                                    }else if (enemy.weapons[enemy.wepDrawCount].type == 78) {
+                                    } else if (enemy.weapons[enemy.wepDrawCount].type == 78) {
                                         canvas_context.drawImage(egggunr, 0, 0, egggunr.width, egggunr.height, (this.x - (this.width * .5)) - 2.5, this.y, this.width * .5, this.height * .5)
                                     }
                                 }
@@ -11842,7 +12344,7 @@ class Tile {
         //         this.color = "transparent"
         //     }
         //     if (typeof this.wallcolor != "undefined") {
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////console.log("s")
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////console.log("s")
         let n
         let eet = 0
         if (vessel.supratiles.includes(this)) {
@@ -11920,15 +12422,15 @@ class Tile {
     move() {
         this.x += this.xmom
         this.y += this.ymom
-        for(let t = 0;t<this.subtiles.length;t++){
-            for(let k = 0;k<this.subtiles[t].length;k++){
+        for (let t = 0; t < this.subtiles.length; t++) {
+            for (let k = 0; k < this.subtiles[t].length; k++) {
                 this.subtiles[t][k].x += this.xmom
                 this.subtiles[t][k].y += this.ymom
             }
         }
     }
     isPointInside(point) {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////console.log(point, this)
+        //////////////////////////////////////////////////////////////////////////////////////////////////////console.log(point, this)
         if (point.x >= this.x) {
             if (point.y >= this.y) {
                 if (point.x <= this.x + this.width) {
@@ -12006,101 +12508,117 @@ class VTile {
         this.tag = Math.floor(Math.random() * 18)
         this.id = id;
     }
-    newold(){
+    newold() {
         this.r = this.newr
         this.g = this.newg
         this.b = this.newb
     }
-    sublive(){  
-        if(this.r > 128){
+   justnewold() {
+        this.r = this.newr
+        this.g = this.newg
+        this.b = this.newb
+    }
+    ren(){
+        this.blocks = this.parent.subtiles
+        this.n = this.neighbors(this)
+    }
+    sublive() {
+        if (this.r > 128) {
             // this.r*= 1-(Math.min(this.r,128)/2060)
-            this.r*= 1-(Math.max((21-speeds[speedrate]),1)/60)
+            this.r *= .98 //1 - (speeds[speedrate] / 60)//1 - (Math.max((21 - speeds[speedrate]), 1) / 60)
         }
-        if(this.g > 128){
+        if (this.g > 128) {
             // this.g*= 1-(Math.min(this.g,128)/2000)
-            this.g*= 1-(Math.max((21-speeds[speedrate]),1)/60)
+            this.g *= .98 // 1 - (speeds[speedrate] / 60)//1 - (Math.max((21 - speeds[speedrate]), 1) / 60)
         }
-        if(this.b > 128){
+        if (this.b > 128) {
             // this.b*= 1-(Math.min(this.b,128)/2040)
-            this.b*= 1-(Math.max((21-speeds[speedrate]),1)/60)
+            this.b *= .98 // 1 - (speeds[speedrate] / 60)
         }
 
-            if(this.b <= 128){
-                if(this.r <= 128){
-                    if(this.g <= 128){
-                        this.a*= .95
-                    }else{
-                        if(this.a < 3){
-                            // this.a++
-                    this.a+=.01
-                            this.a*= 1.06
-                        }
-                    }
-                }else{
-                    if(this.a < 3){
-                        // this.a++
-                    this.a+=.01
-                        this.a*= 1.06
-                    }
-                }
-            }else{
-                if(this.a < 3){
-                    this.a+=.01
-                    this.a*= 1.06
-                }
-            }
+        // if (this.b <= 128) {
+        //     if (this.r <= 128) {
+        //         if (this.g <= 128) {
+        //             this.a *= .95
+        //         } else {
+        //             // if (this.a < 3) {
+        //             //     // this.a++
+        //             //     this.a += .01
+        //             //     this.a *= 1.06
+        //             // }
+        //         }
+        //     } else {
+        //         // if (this.a < 3) {
+        //         //     // this.a++
+        //         //     this.a += .01
+        //         //     this.a *= 1.06
+        //         // }
+        //     }
+        // } else {
+        //     // if (this.a < 3) {
+        //     //     this.a += .01
+        //     //     this.a *= 1.06
+        //     // }
+        // }
         // }
 
 
-        if(this.a > 1){
-            this.a*= .8
-        }
+        // if (this.a > 1) {
+        //     this.a *= .8
+        // }
 
 
-        let rmax = Math.min(255, this.r)
-        let gmax = Math.min(255, this.g)
-        let bmax = Math.min(255, this.b)
+        // let rmax = Math.min(255, this.r)
+        // let gmax = Math.min(255, this.g)
+        // let bmax = Math.min(255, this.b)
 
-        let dif = Math.abs(rmax-128) + Math.abs(gmax-128) + Math.abs(bmax-128)
+        // let dif = Math.abs(rmax - 128) + Math.abs(gmax - 128) + Math.abs(bmax - 128)
         this.a = Math.max(this.a, 2)
 
         this.blocks = this.parent.subtiles
-                let n = this.neighbors(this)
-                let r = this.r
-                let g = this.g
-                let b = this.b
-                let r2 = this.r
-                let g2 = this.g
-                let b2 = this.b
-                let superk = this.width
-                for(let h = 0;h<n.length;h++){
-                    superk+=(n[h].width/((4*(7/10))))
-                    r+=n[h].r
-                    g+=n[h].g
-                    b+=n[h].b
-                    // if(n[h].r < 255){
-                    //     n[h].r += (this.r/50)
-                    // }
-                    // if(n[h].g < 255){
-                    //     n[h].g += (this.g/50)
-                    // }
-                    // if(n[h].b < 255){
-                    //     n[h].b += (this.b/50)
-                    // }
-                }
+        if(!this.n){
+            this.n = this.neighbors(this)
+        }
+        let r = this.r
+        let g = this.g
+        let b = this.b
+        let r2 = this.r
+        let g2 = this.g
+        let b2 = this.b
+        let superk = this.width
+        for (let h = 0; h < this.n.length; h++) {
+            superk += (this.n[h].width / ((4 * (7 / 10))))
+            r += this.n[h].r
+            g += this.n[h].g
+            b += this.n[h].b
+            // if(n[h].r < 255){
+            //     n[h].r += (this.r/50)
+            // }
+            // if(n[h].g < 255){
+            //     n[h].g += (this.g/50)
+            // }
+            // if(n[h].b < 255){
+            //     n[h].b += (this.b/50)
+            // }
+        }
 
-                // console.log(superk)
+        // //console.log(superk)
 
-                this.newr = ((r/(1+superk))+r2)*.5
-                this.newg = ((g/(1+superk))+g2)*.5
-                this.newb =  ((b/(1+superk))+b2)*.5
-                this.color = `rgba(${this.newr}, ${this.newg}, ${this.newb}, ${this.a/10})`
-            // vessel.canvas_context.globalAlpha = .1
-            if((this.r+this.g+this.b) > 200){
-                this.draw()
-            }
-            // vessel.canvas_context.globalAlpha = 1
-    }   
+        this.newr = ((r / (1 + superk)) + r2) * .5
+        this.newg = ((g / (1 + superk)) + g2) * .5
+        this.newb = ((b / (1 + superk)) + b2) * .5
+        this.color = `rgba(${this.newr}, ${this.newg}, ${this.newb}, ${this.a / 9})`
+        // vessel.canvas_context.globalAlpha = .1
+        if ((this.r + this.g + this.b) > 200) {
+            this.draw()
+        }
+        // vessel.canvas_context.globalAlpha = 1
+    }
+    justsublive() {
+        if ((this.r + this.g + this.b) > 200) {
+            this.draw()
+        }
+    }
 
     cleanDirty() {
         for (var i = 0; i < this.dirtyNodes.length; i++) {
@@ -12180,33 +12698,33 @@ class VTile {
         // West
         if (grid[x - 1] && grid[x - 1][y]) {
             // if (grid[x - 1][y].type == node.type || (node.type2 == -1 && grid[x - 1][y].type2 == -1)) {
-                // if (grid[x - 1][y].marked == 1) {
-                    ret.push(grid[x - 1][y]);
-                // }
+            // if (grid[x - 1][y].marked == 1) {
+            ret.push(grid[x - 1][y]);
+            // }
             // }
         }
         // East
         if (grid[x + 1] && grid[x + 1][y]) {
             // if (grid[x + 1][y].type == node.type || (node.type2 == -1 && grid[x + 1][y].type2 == -1)) {
-                // if (grid[x + 1][y].marked == 1) {
-                    ret.push(grid[x + 1][y]);
-                // }
+            // if (grid[x + 1][y].marked == 1) {
+            ret.push(grid[x + 1][y]);
+            // }
             // }
         }
         // South
         if (grid[x] && grid[x][y - 1]) {
             // if (grid[x][y - 1].type == node.type || (node.type2 == -1 && grid[x][y - 1].type2 == -1)) {
-                // if (grid[x][y - 1].marked == 1) {
-                    ret.push(grid[x][y - 1]);
-                // }
+            // if (grid[x][y - 1].marked == 1) {
+            ret.push(grid[x][y - 1]);
+            // }
             // }
         }
         // North
         if (grid[x] && grid[x][y + 1]) {
             // if (grid[x][y + 1].type == node.type || (node.type2 == -1 && grid[x][y + 1].type2 == -1)) {
-                // if (grid[x][y + 1].marked == 1) {
-                    ret.push(grid[x][y + 1]);
-                // }
+            // if (grid[x][y + 1].marked == 1) {
+            ret.push(grid[x][y + 1]);
+            // }
             // }
         }
         if (this.diagonal) {
@@ -12235,147 +12753,147 @@ class VTile {
                 // }
             }
         }
-        if(true){
+        if (true) {
 
-        // var ret = [];
-        node = this.parent
-        var x = node.t;
-        var y = node.k;
-        let grid 
-        if(vessel.supratiles.includes(this.parent)){
-            grid = vessel.blocks;
-        }else{
-            grid = enemy.blocks;
+            // var ret = [];
+            node = this.parent
+            var x = node.t;
+            var y = node.k;
+            let grid
+            if (vessel.supratiles.includes(this.parent)) {
+                grid = vessel.blocks;
+            } else {
+                grid = enemy.blocks;
+            }
+            this.diagonal = true
+            // West
+            if (this.t == 0 || this.k == 0 || this.t == 6 || this.k == 6) {
+
+                if (grid[x - 1] && grid[x - 1][y]) {
+                    if (grid[x - 1][y].type == node.type || (node.type2 == -1 && grid[x - 1][y].type2 == -1)) {
+                        if (grid[x - 1][y].marked == 1) {
+                            if (this.t == 0) {
+                                ret.push(grid[x - 1][y].subtiles[6][this.k]);
+                                // ret.push(grid[x - 1][y].subtiles[0][1]);
+                                // ret.push(grid[x - 1][y].subtiles[0][2]);
+                                // ret.push(grid[x - 1][y].subtiles[0][3]);
+                                // ret.push(grid[x - 1][y].subtiles[0][4]);
+                                // ret.push(grid[x - 1][y].subtiles[0][5]);
+                                // ret.push(grid[x - 1][y].subtiles[0][6]);
+                                // ret.push(grid[x - 1][y].subtiles[0][7]);
+                                // ret.push(grid[x - 1][y].subtiles[0][8]);
+                                // ret.push(grid[x - 1][y].subtiles[0][6]);
+                            }
+                        }
+                    }
+                }
+                // East
+                if (grid[x + 1] && grid[x + 1][y]) {
+                    if (grid[x + 1][y].type == node.type || (node.type2 == -1 && grid[x + 1][y].type2 == -1)) {
+                        if (grid[x + 1][y].marked == 1) {
+                            if (this.t == 6) {
+                                ret.push(grid[x + 1][y].subtiles[0][this.k]);
+                                // ret.push(grid[x + 1][y].subtiles[6][1]);
+                                // ret.push(grid[x + 1][y].subtiles[6][2]);
+                                // ret.push(grid[x + 1][y].subtiles[6][3]);
+                                // ret.push(grid[x + 1][y].subtiles[6][4]);
+                                // ret.push(grid[x + 1][y].subtiles[6][5]);
+                                // ret.push(grid[x + 1][y].subtiles[6][6]);
+                                // ret.push(grid[x + 1][y].subtiles[6][7]);
+                                // ret.push(grid[x + 1][y].subtiles[6][8]);
+                                // ret.push(grid[x + 1][y].subtiles[6][6]);
+                            }
+                        }
+                    }
+                }
+                // South
+                if (grid[x] && grid[x][y - 1]) {
+                    if (grid[x][y - 1].type == node.type || (node.type2 == -1 && grid[x][y - 1].type2 == -1)) {
+                        if (grid[x][y - 1].marked == 1) {
+                            if (this.k == 0) {
+                                ret.push(grid[x][y - 1].subtiles[this.t][6]);
+                                // ret.push(grid[x][y-1].subtiles[1][6]);
+                                // ret.push(grid[x][y-1].subtiles[2][6]);
+                                // ret.push(grid[x][y-1].subtiles[3][6]);
+                                // ret.push(grid[x][y-1].subtiles[4][6]);
+                                // ret.push(grid[x][y-1].subtiles[5][6]);
+                                // ret.push(grid[x][y-1].subtiles[6][6]);
+                                // ret.push(grid[x][y-1].subtiles[7][6]);
+                                // ret.push(grid[x][y-1].subtiles[8][6]);
+                                // ret.push(grid[x][y-1].subtiles[6][6]);
+                            }
+                        }
+                    }
+                }
+                // North
+                if (grid[x] && grid[x][y + 1]) {
+                    if (grid[x][y + 1].type == node.type || (node.type2 == -1 && grid[x][y + 1].type2 == -1)) {
+                        if (grid[x][y + 1].marked == 1) {
+                            // ret.push(grid[x][y + 1]);
+                            if (this.k == 6) {
+                                ret.push(grid[x][y + 1].subtiles[this.t][0]);
+                                // ret.push(grid[x][y+1].subtiles[1][0]);
+                                // ret.push(grid[x][y+1].subtiles[2][0]);
+                                // ret.push(grid[x][y+1].subtiles[3][0]);
+                                // ret.push(grid[x][y+1].subtiles[4][0]);
+                                // ret.push(grid[x][y+1].subtiles[5][0]);
+                                // ret.push(grid[x][y+1].subtiles[6][0]);
+                                // ret.push(grid[x][y+1].subtiles[7][0]);
+                                // ret.push(grid[x][y+1].subtiles[8][0]);
+                                // ret.push(grid[x][y+1].subtiles[6][0]);
+                            }
+                        }
+                    }
+                }
+
+                if (this.diagonal) {
+                    if (grid[x - 1] && grid[x - 1][y - 1]) {
+                        if (grid[x - 1][y - 1].marked == 1) {
+                            if (this.t == 0 && this.k == 0) {
+                                if (grid[x - 1][y - 1].type == node.type || (node.type2 == -1 && grid[x - 1][y - 1].type2 == -1)) {
+                                    //correct
+                                    ret.push(grid[x - 1][y - 1].subtiles[6][6]);
+                                }
+                            }
+                        }
+                    }
+                    if (grid[x + 1] && grid[x + 1][y - 1]) {
+                        if (grid[x + 1][y - 1].marked == 1) {
+                            if (this.t == 6 && this.k == 0) {
+                                if (grid[x + 1][y - 1].type == node.type || (node.type2 == -1 && grid[x + 1][y - 1].type2 == -1)) {
+                                    // //console.log(Math.abs(grid[x + 1][y - 1].subtiles[0][6].x-this.x)-this.width, Math.abs(grid[x + 1][y - 1].subtiles[0][6].y - this.y)-this.height)
+                                    ret.push(grid[x + 1][y - 1].subtiles[0][6]);
+                                }
+                            }
+                        }
+                    }
+                    if (grid[x - 1] && grid[x - 1][y + 1]) {
+                        if (grid[x - 1][y + 1].marked == 1) {
+                            if (this.t == 0 && this.k == 6) {
+                                if (grid[x - 1][y + 1].type == node.type || (node.type2 == -1 && grid[x - 1][y + 1].type2 == -1)) {
+                                    ret.push(grid[x - 1][y + 1].subtiles[6][0]);
+                                }
+                            }
+                        }
+                    }
+                    if (grid[x + 1] && grid[x + 1][y + 1]) {
+                        if (grid[x + 1][y + 1].marked == 1) {
+                            if (this.t == 6 && this.k == 6) {
+                                if (grid[x + 1][y + 1].type == node.type || (node.type2 == -1 && grid[x + 1][y + 1].type2 == -1)) {
+                                    ret.push(grid[x + 1][y + 1].subtiles[0][0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
         }
-        this.diagonal = true
-        // West
-        if(this.t == 0 || this.k == 0|| this.t == 6 || this.k == 6){
-
-            if (grid[x - 1] && grid[x - 1][y]) {
-                if (grid[x - 1][y].type == node.type || (node.type2 == -1 && grid[x - 1][y].type2 == -1)) {
-                    if (grid[x - 1][y].marked == 1) {
-                        if(this.t == 0){
-                        ret.push(grid[x - 1][y].subtiles[6][this.k]);
-                        // ret.push(grid[x - 1][y].subtiles[0][1]);
-                        // ret.push(grid[x - 1][y].subtiles[0][2]);
-                        // ret.push(grid[x - 1][y].subtiles[0][3]);
-                        // ret.push(grid[x - 1][y].subtiles[0][4]);
-                        // ret.push(grid[x - 1][y].subtiles[0][5]);
-                        // ret.push(grid[x - 1][y].subtiles[0][6]);
-                        // ret.push(grid[x - 1][y].subtiles[0][7]);
-                        // ret.push(grid[x - 1][y].subtiles[0][8]);
-                        // ret.push(grid[x - 1][y].subtiles[0][6]);
-                        }
-                    }
-                }
-            }
-            // East
-            if (grid[x + 1] && grid[x + 1][y]) {
-                if (grid[x + 1][y].type == node.type || (node.type2 == -1 && grid[x + 1][y].type2 == -1)) {
-                    if (grid[x + 1][y].marked == 1) {
-                        if(this.t == 6){
-                            ret.push(grid[x + 1][y].subtiles[0][this.k]);
-                            // ret.push(grid[x + 1][y].subtiles[6][1]);
-                            // ret.push(grid[x + 1][y].subtiles[6][2]);
-                            // ret.push(grid[x + 1][y].subtiles[6][3]);
-                            // ret.push(grid[x + 1][y].subtiles[6][4]);
-                            // ret.push(grid[x + 1][y].subtiles[6][5]);
-                            // ret.push(grid[x + 1][y].subtiles[6][6]);
-                            // ret.push(grid[x + 1][y].subtiles[6][7]);
-                            // ret.push(grid[x + 1][y].subtiles[6][8]);
-                            // ret.push(grid[x + 1][y].subtiles[6][6]);
-                        }
-                    }
-                }
-            }
-            // South
-            if (grid[x] && grid[x][y - 1]) {
-                if (grid[x][y - 1].type == node.type || (node.type2 == -1 && grid[x][y - 1].type2 == -1)) {
-                    if (grid[x][y - 1].marked == 1) {
-                        if(this.k == 0){
-                            ret.push(grid[x][y-1].subtiles[this.t][6]);
-                            // ret.push(grid[x][y-1].subtiles[1][6]);
-                            // ret.push(grid[x][y-1].subtiles[2][6]);
-                            // ret.push(grid[x][y-1].subtiles[3][6]);
-                            // ret.push(grid[x][y-1].subtiles[4][6]);
-                            // ret.push(grid[x][y-1].subtiles[5][6]);
-                            // ret.push(grid[x][y-1].subtiles[6][6]);
-                            // ret.push(grid[x][y-1].subtiles[7][6]);
-                            // ret.push(grid[x][y-1].subtiles[8][6]);
-                            // ret.push(grid[x][y-1].subtiles[6][6]);
-                        }
-                    }
-                }
-            }
-            // North
-            if (grid[x] && grid[x][y + 1]) {
-                if (grid[x][y + 1].type == node.type || (node.type2 == -1 && grid[x][y + 1].type2 == -1)) {
-                    if (grid[x][y + 1].marked == 1) {
-                        // ret.push(grid[x][y + 1]);
-                        if(this.k == 6){
-                            ret.push(grid[x][y+1].subtiles[this.t][0]);
-                            // ret.push(grid[x][y+1].subtiles[1][0]);
-                            // ret.push(grid[x][y+1].subtiles[2][0]);
-                            // ret.push(grid[x][y+1].subtiles[3][0]);
-                            // ret.push(grid[x][y+1].subtiles[4][0]);
-                            // ret.push(grid[x][y+1].subtiles[5][0]);
-                            // ret.push(grid[x][y+1].subtiles[6][0]);
-                            // ret.push(grid[x][y+1].subtiles[7][0]);
-                            // ret.push(grid[x][y+1].subtiles[8][0]);
-                            // ret.push(grid[x][y+1].subtiles[6][0]);
-                        }
-                    }
-                }
-            }
-
-            if (this.diagonal) {
-                if (grid[x - 1] && grid[x - 1][y - 1]) {
-                    if(grid[x - 1][y - 1].marked == 1){
-                        if(this.t == 0 && this.k == 0){
-                            if (grid[x - 1][y - 1].type == node.type || (node.type2 == -1 && grid[x - 1][y - 1].type2 == -1)) {
-                                //correct
-                            ret.push(grid[x - 1][y - 1].subtiles[6][6]);
-                            }
-                        }
-                    }
-                }
-                if (grid[x + 1] && grid[x + 1][y - 1]) {
-                    if(grid[x + 1][y - 1].marked == 1){
-                        if(this.t == 6 && this.k == 0){
-                            if (grid[x + 1][y - 1].type == node.type || (node.type2 == -1 && grid[x + 1][y - 1].type2 == -1)) {
-                                // console.log(Math.abs(grid[x + 1][y - 1].subtiles[0][6].x-this.x)-this.width, Math.abs(grid[x + 1][y - 1].subtiles[0][6].y - this.y)-this.height)
-                                ret.push(grid[x + 1][y - 1].subtiles[0][6]);
-                            }
-                        }
-                    }
-                }
-                if (grid[x - 1] && grid[x - 1][y + 1]) {
-                    if(grid[x - 1][y + 1].marked == 1){
-                        if(this.t == 0 && this.k == 6){
-                            if (grid[x - 1][y + 1].type == node.type || (node.type2 == -1 && grid[x - 1][y + 1].type2 == -1)) {
-                            ret.push(grid[x - 1][y + 1].subtiles[6][0]);
-                            }
-                    }
-                    }
-                }
-                if (grid[x + 1] && grid[x + 1][y + 1]) {
-                    if(grid[x + 1][y + 1].marked == 1){
-                        if(this.t == 6 && this.k == 6){
-                            if (grid[x + 1][y + 1].type == node.type || (node.type2 == -1 && grid[x + 1][y + 1].type2 == -1)) {
-                    ret.push(grid[x + 1][y + 1].subtiles[0][0]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        
-        }
-        // console.log(ret)
+        // //console.log(ret)
         // if(ret.length > 4){
-        //     console.log(ret)
+        //     //console.log(ret)
         // }
         return ret;
     }
@@ -12507,8 +13025,8 @@ class VTile {
         //gctx.fillStyle = "transparent";
         // let link = new Line(this.posx, this.posy, bottle.crew[bottle.selectedcrew].body.x-100, bottle.crew[bottle.selectedcrew].body.y-300, "#FF0000", 1)
         // if (link.hypotenuse() < 108) {
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(link)
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(bottle)
         // }
         // let roundedx = (Math.round((startPoint.x) / 10))
         // let roundedy = (Math.round((startPoint.y) / 10))
@@ -12521,12 +13039,12 @@ class VTile {
         // if (this.inPath === true) {
         //     // this.drawPath();
         // } else if (this.walkable === false) {
-        //     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
+        //     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(this)
         //     // this.createWall();
         //     return;
         //     // }else if (link.hypotenuse() < 11) {
         // } else if (this.posx == roundedx && this.posy == roundedy) {
-        //     //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
+        //     //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("hit the startNode");
         //     //   this.createStartNode();
         //     return;
         // } else if (this.posx == endPoint.x && this.posy == endPoint.y) {
@@ -12565,6 +13083,10 @@ class VTile {
         if (this.fire >= 50) {
             this.onFire = 0
             this.newlyOnFire = 0
+        }else if(this.fire <= 50){
+
+        }else{ 
+            this.fire = 50 //invisible fire fix?
         }
         if (this.onFire == 1) {
             // if(Math.random()<.5){
@@ -12649,7 +13171,7 @@ class VTile {
         }
     }
     draw() {
-        if(debugu){
+        if (debugu) {
             vessel.canvas_context.fillStyle = this.color
             vessel.canvas_context.fillRect(this.x, this.y, this.width, this.height)
         }
@@ -12659,7 +13181,7 @@ class VTile {
         this.y += this.ymom
     }
     isPointInside(point) {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////console.log(point, this)
+        //////////////////////////////////////////////////////////////////////////////////////////////////////console.log(point, this)
         if (point.x >= this.x) {
             if (point.y >= this.y) {
                 if (point.x <= this.x + this.width) {
@@ -12717,6 +13239,14 @@ let intruder = new Audio()
 intruder.src = "intruder.mp3"
 let blast = new Audio()
 blast.src = "blast.mp3"
+let pomaoframes = []
+
+for (let t = 1; t < 68; t++) { //215
+    let pomaoframe = new Image()
+    pomaoframe.src = `pomaoframes/pomframe${t}.png`
+    pomaoframes.push(pomaoframe)
+}
+
 class Radio {
     constructor() {
         this.controlled = 0
@@ -13482,7 +14012,7 @@ class Gear {
                     }
                 }
                 if (index != -1) {
-                    ////////////////////////////////////////console.log(index)
+                    //////////////////////////////////////////console.log(index)
                     let g = vessel.upgradeMenu.wepsto[index].gearType
                     if (vessel.upgradeMenu.wepsto[index].droneType == -1 && (vessel.upgradeMenu.wepsto[index].gearType >= 0 || vessel.upgradeMenu.wepsto[index].real != 1)) {
                         vessel.upgradeMenu.wepsto[index] = new Weapon(-1, -1, this.type)
@@ -13530,7 +14060,7 @@ class Gear {
         this.guy.airless = Math.max(this.guy.airless, this.airless)
         this.guy.fireproof = Math.max(this.guy.fireproof, this.fireproof)
         this.guy.oxygenating = this.guy.oxygenating + this.oxygenating
-        // ////////////////////////////////////////console.log(this.guy.gearArmor)
+        // //////////////////////////////////////////console.log(this.guy.gearArmor)
     }
     justbalance() {
         if (this.shieldTimer > -1) {
@@ -13557,7 +14087,7 @@ class Gear {
         this.guy.airless = Math.max(this.guy.airless, this.airless)
         this.guy.fireproof = Math.max(this.guy.fireproof, this.fireproof)
         this.guy.oxygenating = Math.max(this.guy.oxygenating + this.oxygenating, this.oxygenating)
-        // ////////////////////////////////////////console.log(this.guy.gearArmor)
+        // //////////////////////////////////////////console.log(this.guy.gearArmor)
     }
     draw() {
         //292 355
@@ -13581,7 +14111,25 @@ class Gear {
             canvas_context.drawImage(crewPanel, 0, 0, crewPanel.width, crewPanel.height, this.body.x, this.body.y, crewPanel.width, crewPanel.height)
             canvas_context.drawImage(sidePanel, 0, 0, sidePanel.width, sidePanel.height, this.body.x + crewPanel.width + 20, this.body.y, sidePanel.width, sidePanel.height)
             if (this.guy.type == 11) {
-                canvas_context.drawImage(crewPortraitPomao, 0, 0, crewPanel.width, crewPanel.height, this.body.x, this.body.y, crewPanel.width, crewPanel.height)
+                if(this.scnt > -1){
+                }else{
+                    this.scnt = 0
+                }
+                this.scnt%=68
+                this.scnt+=.5
+                //console.log(this.scnt)
+                canvas_context.drawImage(pomaoframes[Math.round(Math.min(Math.max(this.scnt, 1),66))], 0,0,183,183, this.body.x+149, this.body.y+124, 183, 183)
+
+
+                // canvas_context.drawImage(pomaoCrew, (this.guy.count % ((pomaoCrew.width / 186))) * 186, this.scnt*186, 186, pomaoCrew.height/3, this.body.x + 146, this.body.y + 121, 186, 186)
+                // if(this.guy.count%43 == 0){
+                //     this.scnt++
+                //     if(this.scnt == 3){
+                //         this.scnt = 0
+                //         this.count = 0
+                //     }
+                // }
+                
             } else {
                 canvas_context.drawImage(rs[this.guy.type], (this.guy.count % (rs[this.guy.type].width / 64)) * 64, 0, 64, rs[this.guy.type].height, this.body.x + 146, this.body.y + 121, 186, 186)
             }
@@ -13676,7 +14224,7 @@ class Gear {
             //     // box1.draw()
             // // if(r == 8){
             // //     this.guy.skillslist[r] = this.guy.skillslist[8]
-            // //     //////////////////////console.log(this.guy.skillslist[8])
+            // //     ////////////////////////console.log(this.guy.skillslist[8])
             // // }
             // // if(r == 9){
             // //     this.guy.skillslist[r] = this.guy.skillslist[9]
@@ -13709,9 +14257,9 @@ class Gear {
             //     box2.draw()
             //     box3.draw()
             //     box4.draw()
-            //     //////////////////////console.log(box2)
-            //     //////////////////////console.log(box3)
-            //     //////////////////////console.log(box4)
+            //     ////////////////////////console.log(box2)
+            //     ////////////////////////console.log(box3)
+            //     ////////////////////////console.log(box4)
             //     // py += 19
             // }
             for (let k = 0; k < 5; k++) {
@@ -13905,6 +14453,7 @@ class Gear {
 }
 class Guy {
     constructor(tile, type = -1) {
+        this.subcount = 0
         this.healthbox = new Rectangle(0, 0, 0, 0, "#444444")
         this.droneLine = {}
         this.droneLine.flaggedOn = 0
@@ -13924,7 +14473,7 @@ class Guy {
         this.gearDamage = 0
         this.gearRegen = 0
         this.meleeKills = 0
-        // ////////////////////////////////////////////////////////console.log(type)
+        // //////////////////////////////////////////////////////////console.log(type)
         this.bullets = []
         this.teleflag = 0
         this.energydeathtag = 0
@@ -14125,7 +14674,7 @@ class Guy {
         // for(let t = 0;t<this.skillslist.length;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -14133,7 +14682,7 @@ class Guy {
         // }
         let jbreak = 0
         if (this.isPomao != 1) {
-            while (this.type == 37 || (type != 50 && this.type == 50) ||  (type != 63 && this.type == 63) ||  (type != 65 && this.type == 65) || (type != 40 && this.type == 40) || (type != 39 && this.type == 39) || (type != 36 && this.type == 36) || (this.isPomao == 1 && this.type == 11)) {
+            while (this.type == 37 || (type != 50 && this.type == 50) || (type != 63 && this.type == 63) || (type != 65 && this.type == 65) || (type != 40 && this.type == 40) || (type != 39 && this.type == 39) || (type != 36 && this.type == 36) || (this.isPomao == 1 && this.type == 11)) {
                 this.type = Math.floor(Math.random() * 66)
                 jbreak++
                 if (jbreak > 10000) {
@@ -14169,6 +14718,7 @@ class Guy {
             this.shieldPower = 1
             this.repair = 5
             this.extinguish = 3
+            this.ranged = 1
             this.skills += 'Repair+, Extinguish+, Shield++++, Indominable+'
             this.names = ["Psuch", "Psybie", "Psybo", "Bozbe", "Psychus", "Psybean", "Pinkus", "Dotsy", "Beanbo", "Pynky"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
@@ -15053,7 +15603,7 @@ class Guy {
             this.oxygenating = 1
             this.skills += 'Low-Repair-, Flimsy-, Makes Air++'
             this.names = ["Shrubbisher"]
-            this.shrubmancer  = 1
+            this.shrubmancer = 1
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 100
             this.maxhealth = this.health
@@ -15067,7 +15617,7 @@ class Guy {
             this.gearArmorSto = .2
             this.regen = 2
             this.skills += 'Regen++++'
-            this.shrubmancer  = 1
+            this.shrubmancer = 1
             this.names = ["Paulus"]
             this.name = this.names[Math.floor(Math.random() * this.names.length)]
             this.health = 305
@@ -15183,7 +15733,7 @@ class Guy {
         //     for(let t = 0;t<6;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -15217,14 +15767,14 @@ class Guy {
     }
     activatePower() {
 
-                    if(this.isPomao == 1){
-                        if(this.health <= 0){
-                            this.ropestunned = 2000
-                            this.health = 1
-                            this.recalled = 1
-                            this.teleflag = 1
-                        }
-                    }
+        if (this.isPomao == 1) {
+            if (this.health <= 0) {
+                this.ropestunned = 2000
+                this.health = 1
+                this.recalled = 1
+                this.teleflag = 1
+            }
+        }
         //activated
         this.cooldown--
         this.temp--
@@ -15619,7 +16169,7 @@ class Guy {
                     canvas_context.fillStyle = "#FFFFAA"
                     canvas_context.fillText(Math.max(Math.round((1 * this.health)), 1), this.healthbar.x + 2, this.healthbox.y + 13)
                     if (this.hostile != 1) {
-                        // //console.log(this.type)
+                        // ////console.log(this.type)
 
                         if (this.dug == 1) {
                             canvas_context.drawImage(mound, 0, 0, 64, 64, this.healthbox.x, this.healthbox.y, this.body.radius * 2, this.body.radius * 2)
@@ -15718,320 +16268,322 @@ class Guy {
         }
     }
     fight() {
-        this.fightCount++
-        if (this.fightCount % 30 <= 3) {
-            if (this.hostile == 1) {
-                if (enemy.guys) {
-                    if (enemy.guys.includes(this)) {
-                        let exclude = []
-                        for (let t = 0; t < enemy.guys.length; t++) {
-                            if (enemy.guys[t].hostile != 1) {
-                                let link = new LineOP(enemy.guys[t].body, this.body, "#00FFFF", 5)
-                                let link2 = new LineOP(enemy.guys[t].body, this.body, "#FFFFFF", 2)
-                                // let doorindex = -1
-                                let n = enemy.neighbors(this.tile)
-                                if (link.hypotenuse() < 50 && n.includes(enemy.guys[t].tile)) {
-                                    if (this.type != -2 && enemy.guys[t].type != -2) {
-                                        link.draw()
-                                        link2.draw()
-                                        crewHit.play()
-                                    }
-                                    if (!exclude.includes(t)) {
-                                        exclude.push(t)
-                                        // this.health -= enemy.guys[t].damage * .1
-                                        let wet = 1
-                                        if (this.health > 0) {
-                                            wet = 0
-                                        }
-                                        // this.health -= (enemy.guys[t].damage * enemy.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
-                                        if (wet == 0) {
-                                            if (this.health <= 0) {
-                                                if(enemy.guys[t].shrubmancer == 1){
-                                                    let egg = new Guy(this.tile, 65)
-                                                    egg.temp = 500
-                                                    enemy.guys.push(egg)
-                                                }
-                                                enemy.guys[t].meleeKills++
-                                                enemy.guys[t].skillslist[8] += .01
-                                            }
-                                        }
-                                    }
-                                    let wet = 1
-                                    if (enemy.guys[t].health > 0) {
-                                        wet = 0
-                                    }
-                                    enemy.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + enemy.guys[t].gearArmor)
-                                    if (wet == 0) {
-                                        if (enemy.guys[t].health <= 0) {
-                                            if(this.shrubmancer == 1){
-                                                let egg = new Guy(enemy.guys[t].tile, 65)
-                                                egg.temp = 500
-                                                egg.hostile = 1
-                                                enemy.guys.push(egg)
-                                            }
-                                            this.meleeKills++
-                                            this.skillslist[8] += .01
-                                        }
-                                    }
-                                    this.skillslist[8] += .0005
-                                    enemy.guys[t].skillslist[8] += .0005
-                                    break
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (enemy.guys) {
-                    if (enemy.guys.includes(this)) {
-                        let exclude = []
-                        for (let t = 0; t < enemy.guys.length; t++) {
-                            if (enemy.guys[t].hostile == 1) {
-                                let link = new LineOP(enemy.guys[t].body, this.body, "#ff0000", 5)
-                                let link2 = new LineOP(enemy.guys[t].body, this.body, "#FFFFFF", 2)
-                                let n = enemy.neighbors(this.tile)
-                                if (link.hypotenuse() < 50 && n.includes(enemy.guys[t].tile)) {
-                                    this.fighting = 31
-                                    if (this.type != -2 && enemy.guys[t].type != -2) {
-                                        link.draw()
-                                        link2.draw()
-                                        crewHit.play()
-                                    }
-                                    if (!exclude.includes(t)) {
-                                        exclude.push(t)
-                                        // this.health -= enemy.guys[t].damage * .1
-                                        let wet = 1
-                                        if (this.health > 0) {
-                                            wet = 0
-                                        }
-                                        // this.health -= (enemy.guys[t].damage * enemy.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
-                                        if (wet == 0) {
-                                            if (this.health <= 0) {
-                                                if(enemy.guys[t].shrubmancer == 1){
-                                                    let egg = new Guy(this.tile, 65)
-                                                    egg.temp = 500
-                                                    egg.hostile = 1
-                                                    enemy.guys.push(egg)
-                                                }
-                                                enemy.guys[t].meleeKills++
-                                                enemy.guys[t].skillslist[8] += .01
-                                            }
-                                        }
-                                    }
-                                    let wet = 1
-                                    if (enemy.guys[t].health > 0) {
-                                        wet = 0
-                                    }
-                                    enemy.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + enemy.guys[t].gearArmor)
-                                    if (wet == 0) {
-                                        if (enemy.guys[t].health <= 0) {
-                                            if(this.shrubmancer == 1){
-                                                let egg = new Guy(enemy.guys[t].tile, 65)
-                                                egg.temp = 500
-                                                enemy.guys.push(egg)
-                                            }
-                                            this.meleeKills++
-                                            this.skillslist[8] += .01
-                                        }
-                                    }
-                                    this.skillslist[8] += .0005
-                                    enemy.guys[t].skillslist[8] += .0005
-                                    break
-                                } else {
-                                    let max = 999999
-                                    let i = -1
-                                    for (let k = 0; k < enemy.guys.length; k++) {
-                                        if (enemy.guys[k].hostile == 1) {
-                                            if (max > enemy.guys[k].health) {
-                                                max = enemy.guys[k].health
-                                                i = k
-                                            }
-                                        }
-                                    }
-                                    if (i != -1) {
-                                        let n = enemy.neighbors(enemy.guys[i].tile)
-                                        let m = enemy.neighbors(this.tile)
-                                        let nx = Math.floor(Math.random() * n.length)
-                                        if (this.health > this.maxhealth * .3) {
-                                            if (n[nx].walkable == true) {
-                                                if (this.fighting <= 1) {
-                                                    if (!(m.includes(enemy.guys[i].tile))) {
-                                                        this.path = astar.search(enemy, this.tile, n[nx])
-                                                        this.stogo = n[nx]
-                                                        this.fighting = 31
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        break
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.hostile != 1) {
-                if (vessel.guys) {
-                    if (vessel.guys.includes(this)) {
-                        let exclude = []
-                        for (let t = 0; t < vessel.guys.length; t++) {
-                            if (vessel.guys[t].hostile == 1) {
-                                let link = new LineOP(vessel.guys[t].body, this.body, "cyan", 5)
-                                let link2 = new LineOP(vessel.guys[t].body, this.body, "#FFFFFF", 2)
-                                for (let d = 0; d < vessel.doors.length; d++) {
-                                    gigadebug++
-                                    if (gigadebug > 1000000) {
-                                        //////console.log("ha ha!")
-                                        gigadebug = 0
-                                        break
-                                    }
-                                    if (vessel.doors[d].open != 1) {
-                                        if (link.intersects(vessel.doors[d].link)) {
-                                            return
-                                        }
-                                    }
-                                }
-                                let n = vessel.neighbors(this.tile)
-                                if (link.hypotenuse() < 60 && n.includes(vessel.guys[t].tile)) {
-                                    if (this.type != -2 && vessel.guys[t].type != -2) {
-                                        link.draw()
-                                        link2.draw()
-                                        crewHit.play()
-                                    }
-                                    if (!exclude.includes(t)) {
-                                        exclude.push(t)
-                                        let wet = 1
-                                        if (this.health > 0) {
-                                            wet = 0
-                                        }
-                                        // this.health -= (vessel.guys[t].damage * vessel.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
-                                        if (wet == 0) {
-                                            if (this.health <= 0) {
-                                                if(vessel.guys[t].shrubmancer == 1){
-                                                    let egg = new Guy(this.tile, 65)
-                                                    egg.temp = 500
-                                                    egg.hostile = 1
-                                                    enemy.guys.push(egg)
-                                                }
-                                                vessel.guys[t].meleeKills++
-                                                vessel.guys[t].skillslist[8] += .01
-                                            }
-                                        }
-                                    }
-                                    let wet = 1
-                                    if (vessel.guys[t].health > 0) {
-                                        wet = 0
-                                    }
-                                    vessel.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + vessel.guys[t].gearArmor)
-                                    if (wet == 0) {
-                                        if (vessel.guys[t].health <= 0) {
-                                            if(this.shrubmancer == 1){
-                                                let egg = new Guy(enemy.guys[t].tile, 65)
-                                                egg.temp = 500
-                                                enemy.guys.push(egg)
-                                            }
-                                            this.meleeKills++
-                                            this.skillslist[8] += .01
-                                        }
-                                    }
-                                    this.skillslist[8] += .0005
-                                    vessel.guys[t].skillslist[8] += .0005
-                                    break
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (vessel.guys) {
-                    if (vessel.guys.includes(this)) {
-                        let exclude = []
-                        for (let t = 0; t < vessel.guys.length; t++) {
-                            if (vessel.guys[t].hostile != 1) {
-                                let link = new LineOP(vessel.guys[t].body, this.body, "#FF0000", 5)
-                                let link2 = new LineOP(vessel.guys[t].body, this.body, "#FFFFFF", 2)
-                                // if (link.hypotenuse() < 60) {
-                                for (let d = 0; d < vessel.doors.length; d++) {
-                                    gigadebug++
-                                    if (gigadebug > 1000000) {
-                                        //////console.log("ha ha!")
-                                        gigadebug = 0
-                                        break
-                                    }
-                                    if (vessel.doors[d].airlock == 1) {
-                                        continue
-                                    }
-                                    if (vessel.doors[d].open != 1) {
-                                        let dlink = new LineOP(this.body, vessel.doors[d].body)
-                                        if (dlink.hypotenuse() < 60) {
-                                            vessel.doors[d].health -= (this.damage)
-                                            if (vessel.doors[d].health <= 0) {
-                                                vessel.doors[d].check(vessel.doors[d].body, 0, 1)
-                                            }
-                                            link.object = vessel.doors[d].body
-                                            link2.object = vessel.doors[d].body
+        // if(this.ranged == 1){
+
+            this.fightCount++
+            if (this.fightCount % 30 <= 3) {
+                if (this.hostile == 1) {
+                    if (enemy.guys) {
+                        if (enemy.guys.includes(this)) {
+                            let exclude = []
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].hostile != 1) {
+                                    let link = new LineOP(enemy.guys[t].body, this.body, "#00FFFF", 5)
+                                    let link2 = new LineOP(enemy.guys[t].body, this.body, "#FFFFFF", 2)
+                                    // let doorindex = -1
+                                    let n = enemy.neighbors(this.tile)
+                                    if ((link.hypotenuse() < 50 && n.includes(enemy.guys[t].tile))     ||  (link.hypotenuse() < 180 && this.ranged == 1)  ) {
+                                        if (this.type != -2 && enemy.guys[t].type != -2) {
                                             link.draw()
                                             link2.draw()
                                             crewHit.play()
-                                            return
+                                        }
+                                        if (!exclude.includes(t)) {
+                                            exclude.push(t)
+                                            // this.health -= enemy.guys[t].damage * .1
+                                            let wet = 1
+                                            if (this.health > 0) {
+                                                wet = 0
+                                            }
+                                            // this.health -= (enemy.guys[t].damage * enemy.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
+                                            if (wet == 0) {
+                                                if (this.health <= 0) {
+                                                    if (enemy.guys[t].shrubmancer == 1) {
+                                                        let egg = new Guy(this.tile, 65)
+                                                        egg.temp = 500 //fx
+                                                        egg.hostile = 1
+                                                        enemy.guys.push(egg)
+                                                    }
+                                                    enemy.guys[t].meleeKills++
+                                                    enemy.guys[t].skillslist[8] += .01
+                                                }
+                                            }
+                                        }
+                                        let wet = 1
+                                        if (enemy.guys[t].health > 0) {
+                                            wet = 0
+                                        }
+                                        enemy.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + enemy.guys[t].gearArmor)
+                                        if (wet == 0) {
+                                            if (enemy.guys[t].health <= 0) {
+                                                if (this.shrubmancer == 1) {
+                                                    let egg = new Guy(enemy.guys[t].tile, 65)
+                                                    egg.temp = 500 //fx
+                                                    enemy.guys.push(egg)
+                                                }
+                                                this.meleeKills++
+                                                this.skillslist[8] += .01
+                                            }
+                                        }
+                                        this.skillslist[8] += .0005
+                                        enemy.guys[t].skillslist[8] += .0005
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (enemy.guys) {
+                        if (enemy.guys.includes(this)) {
+                            let exclude = []
+                            for (let t = 0; t < enemy.guys.length; t++) {
+                                if (enemy.guys[t].hostile == 1) {
+                                    let link = new LineOP(enemy.guys[t].body, this.body, "#ff0000", 5)
+                                    let link2 = new LineOP(enemy.guys[t].body, this.body, "#FFFFFF", 2)
+                                    let n = enemy.neighbors(this.tile)
+                                    if ((link.hypotenuse() < 50 && n.includes(enemy.guys[t].tile))     ||  (link.hypotenuse() < 180 && this.ranged == 1)  ) {
+                                        this.fighting = 31
+                                        if (this.type != -2 && enemy.guys[t].type != -2) {
+                                            link.draw()
+                                            link2.draw()
+                                            crewHit.play()
+                                        }
+                                        if (!exclude.includes(t)) {
+                                            exclude.push(t)
+                                            // this.health -= enemy.guys[t].damage * .1
+                                            let wet = 1
+                                            if (this.health > 0) {
+                                                wet = 0
+                                            }
+                                            // this.health -= (enemy.guys[t].damage * enemy.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
+                                            if (wet == 0) {
+                                                if (this.health <= 0) {
+                                                    if (enemy.guys[t].shrubmancer == 1) {
+                                                        let egg = new Guy(this.tile, 65)
+                                                        egg.temp = 500 //
+                                                        egg.hostile = 1
+                                                        enemy.guys.push(egg)
+                                                    }
+                                                    enemy.guys[t].meleeKills++
+                                                    enemy.guys[t].skillslist[8] += .01
+                                                }
+                                            }
+                                        }
+                                        let wet = 1
+                                        if (enemy.guys[t].health > 0) {
+                                            wet = 0
+                                        }
+                                        enemy.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + enemy.guys[t].gearArmor)
+                                        if (wet == 0) {
+                                            if (enemy.guys[t].health <= 0) {
+                                                if (this.shrubmancer == 1) {
+                                                    let egg = new Guy(enemy.guys[t].tile, 65)
+                                                    egg.temp = 500 //
+                                                    enemy.guys.push(egg)
+                                                }
+                                                this.meleeKills++
+                                                this.skillslist[8] += .01
+                                            }
+                                        }
+                                        this.skillslist[8] += .0005
+                                        enemy.guys[t].skillslist[8] += .0005
+                                        break
+                                    } else {
+                                        let max = 999999
+                                        let i = -1
+                                        for (let k = 0; k < enemy.guys.length; k++) {
+                                            if (enemy.guys[k].hostile == 1) {
+                                                if (max > enemy.guys[k].health) {
+                                                    max = enemy.guys[k].health
+                                                    i = k
+                                                }
+                                            }
+                                        }
+                                        if (i != -1) {
+                                            let n = enemy.neighbors(enemy.guys[i].tile)
+                                            let m = enemy.neighbors(this.tile)
+                                            let nx = Math.floor(Math.random() * n.length)
+                                            if (this.health > this.maxhealth * .3) {
+                                                if (n[nx].walkable == true) {
+                                                    if (this.fighting <= 1) {
+                                                        if (!(m.includes(enemy.guys[i].tile))) {
+                                                            this.path = astar.search(enemy, this.tile, n[nx])
+                                                            this.stogo = n[nx]
+                                                            this.fighting = 31
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            break
                                         }
                                     }
                                 }
-                                // }
-                                let n = vessel.neighbors(this.tile)
-                                if (link.hypotenuse() < 60 && n.includes(vessel.guys[t].tile)) {
-                                    if (this.type != -2 && vessel.guys[t].type != -2) {
-                                        link.draw()
-                                        link2.draw()
-                                        crewHit.play()
+                            }
+                        }
+                    }
+                }
+                if (this.hostile != 1) {
+                    if (vessel.guys) {
+                        if (vessel.guys.includes(this)) {
+                            let exclude = []
+                            for (let t = 0; t < vessel.guys.length; t++) {
+                                if (vessel.guys[t].hostile == 1) {
+                                    let link = new LineOP(vessel.guys[t].body, this.body, "cyan", 5)
+                                    let link2 = new LineOP(vessel.guys[t].body, this.body, "#FFFFFF", 2)
+                                    for (let d = 0; d < vessel.doors.length; d++) {
+                                        gigadebug++
+                                        if (gigadebug > 1000000) {
+                                            ////////console.log("ha ha!")
+                                            gigadebug = 0
+                                            break
+                                        }
+                                        if (vessel.doors[d].open != 1) {
+                                            if (link.intersects(vessel.doors[d].link)) {
+                                                return
+                                            }
+                                        }
                                     }
-                                    if (!exclude.includes(t)) {
-                                        exclude.push(t)
+                                    let n = vessel.neighbors(this.tile)
+                                    if ((link.hypotenuse() < 50 && n.includes(vessel.guys[t].tile))     ||  (link.hypotenuse() < 180 && this.ranged == 1)  ) {
+                                        if (this.type != -2 && vessel.guys[t].type != -2) {
+                                            link.draw()
+                                            link2.draw()
+                                            crewHit.play()
+                                        }
+                                        if (!exclude.includes(t)) {
+                                            exclude.push(t)
+                                            let wet = 1
+                                            if (this.health > 0) {
+                                                wet = 0
+                                            }
+                                            // this.health -= (vessel.guys[t].damage * vessel.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
+                                            if (wet == 0) {
+                                                if (this.health <= 0) {
+                                                    if (vessel.guys[t].shrubmancer == 1) {
+                                                        let egg = new Guy(this.tile, 65)
+                                                        egg.temp = 500
+                                                        egg.hostile = 1
+                                                        enemy.guys.push(egg)
+                                                    }
+                                                    vessel.guys[t].meleeKills++
+                                                    vessel.guys[t].skillslist[8] += .01
+                                                }
+                                            }
+                                        }
                                         let wet = 1
-                                        if (this.health > 0) {
+                                        if (vessel.guys[t].health > 0) {
                                             wet = 0
                                         }
-                                        // this.health -= (vessel.guys[t].damage * vessel.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
+                                        vessel.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + vessel.guys[t].gearArmor)
                                         if (wet == 0) {
-                                            if (this.health <= 0) {
-                                                if(vessel.guys[t].shrubmancer == 1){
-                                                    let egg = new Guy(this.tile, 65)
+                                            if (vessel.guys[t].health <= 0) {
+                                                if (this.shrubmancer == 1) {
+                                                    let egg = new Guy(vessel.guys[t].tile, 65)
                                                     egg.temp = 500
                                                     enemy.guys.push(egg)
                                                 }
-                                                vessel.guys[t].meleeKills++
-                                                vessel.guys[t].skillslist[8] += .01
+                                                this.meleeKills++
+                                                this.skillslist[8] += .01
+                                            }
+                                        }
+                                        this.skillslist[8] += .0005
+                                        vessel.guys[t].skillslist[8] += .0005
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (vessel.guys) {
+                        if (vessel.guys.includes(this)) {
+                            let exclude = []
+                            for (let t = 0; t < vessel.guys.length; t++) {
+                                if (vessel.guys[t].hostile != 1) {
+                                    let link = new LineOP(vessel.guys[t].body, this.body, "#FF0000", 5)
+                                    let link2 = new LineOP(vessel.guys[t].body, this.body, "#FFFFFF", 2)
+                                    // if (link.hypotenuse() < 60) {
+                                    for (let d = 0; d < vessel.doors.length; d++) {
+                                        gigadebug++
+                                        if (gigadebug > 1000000) {
+                                            ////////console.log("ha ha!")
+                                            gigadebug = 0
+                                            break
+                                        }
+                                        if (vessel.doors[d].airlock == 1) {
+                                            continue
+                                        }
+                                        if (vessel.doors[d].open != 1) {
+                                            let dlink = new LineOP(this.body, vessel.doors[d].body)
+                                            if (dlink.hypotenuse() < 60 ||  (dlink.hypotenuse() < 180 && this.ranged == 1)  ) {
+                                                vessel.doors[d].health -= (this.damage)
+                                                if (vessel.doors[d].health <= 0) {
+                                                    vessel.doors[d].check(vessel.doors[d].body, 0, 1)
+                                                }
+                                                link.object = vessel.doors[d].body
+                                                link2.object = vessel.doors[d].body
+                                                link.draw()
+                                                link2.draw()
+                                                crewHit.play()
+                                                return
                                             }
                                         }
                                     }
-                                    let wet = 1
-                                    if (vessel.guys[t].health > 0) {
-                                        wet = 0
-                                    }
-                                    vessel.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + vessel.guys[t].gearArmor)
-                                    if (wet == 0) {
-                                        if (vessel.guys[t].health <= 0) {
-                                            if(this.shrubmancer == 1){
-                                                let egg = new Guy(enemy.guys[t].tile, 65)
-                                                egg.temp = 500
-                                                egg.hostile = 1
-                                                enemy.guys.push(egg)
-                                            }
-                                            this.meleeKills++
-                                            this.skillslist[8] += .01
+                                    // }
+                                    let n = vessel.neighbors(this.tile)
+                                    if ((link.hypotenuse() < 60 && n.includes(vessel.guys[t].tile))     ||  (link.hypotenuse() < 180 && this.ranged == 1)  ) {
+                                        if (this.type != -2 && vessel.guys[t].type != -2) {
+                                            link.draw()
+                                            link2.draw()
+                                            crewHit.play()
                                         }
+                                        if (!exclude.includes(t)) {
+                                            exclude.push(t)
+                                            let wet = 1
+                                            if (this.health > 0) {
+                                                wet = 0
+                                            }
+                                            // this.health -= (vessel.guys[t].damage * vessel.guys[t].gearDamage * 1.05) / (1 + this.gearArmor)
+                                            if (wet == 0) {
+                                                if (this.health <= 0) {
+                                                    if (vessel.guys[t].shrubmancer == 1) {
+                                                        let egg = new Guy(this.tile, 65)
+                                                        egg.temp = 500 //fx
+                                                        egg.hostile = 1
+                                                        enemy.guys.push(egg)
+                                                    }
+                                                    vessel.guys[t].meleeKills++
+                                                    vessel.guys[t].skillslist[8] += .01
+                                                }
+                                            }
+                                        }
+                                        let wet = 1
+                                        if (vessel.guys[t].health > 0) {
+                                            wet = 0
+                                        }
+                                        vessel.guys[t].health -= (this.damage * this.gearDamage * 1.05) / (1 + vessel.guys[t].gearArmor)
+                                        if (wet == 0) {
+                                            if (vessel.guys[t].health <= 0) {
+                                                if (this.shrubmancer == 1) {
+                                                    let egg = new Guy(vessel.guys[t].tile, 65)
+                                                    egg.temp = 500 //fx
+                                                    enemy.guys.push(egg)
+                                                }
+                                                this.meleeKills++
+                                                this.skillslist[8] += .01
+                                            }
+                                        }
+                                        this.skillslist[8] += .0005
+                                        vessel.guys[t].skillslist[8] += .0005
+                                        break
                                     }
-                                    this.skillslist[8] += .0005
-                                    vessel.guys[t].skillslist[8] += .0005
-                                    break
                                 }
                             }
                         }
                     }
                 }
             }
-        }
     }
     justfight() {
         // this.fightCount++
@@ -16176,7 +16728,7 @@ class Guy {
                                 for (let d = 0; d < vessel.doors.length; d++) {
                                     gigadebug++
                                     if (gigadebug > 1000000) {
-                                        //////console.log("ha ha!")
+                                        ////////console.log("ha ha!")
                                         gigadebug = 0
                                         break
                                     }
@@ -16238,7 +16790,7 @@ class Guy {
                                 for (let d = 0; d < vessel.doors.length; d++) {
                                     gigadebug++
                                     if (gigadebug > 1000000) {
-                                        //////console.log("ha ha!")
+                                        ////////console.log("ha ha!")
                                         gigadebug = 0
                                         break
                                     }
@@ -16247,7 +16799,7 @@ class Guy {
                                     }
                                     if (vessel.doors[d].open != 1) {
                                         let dlink = new LineOP(this.body, vessel.doors[d].body)
-                                        if (dlink.hypotenuse() < 60) {
+                                        if (dlink.hypotenuse() < 60 ||  (dlink.hypotenuse() < 180 && this.ranged == 1)  ) {
                                             // vessel.doors[d].health  -= (this.damage)
                                             if (vessel.doors[d].health <= 0) {
                                                 // vessel.doors[d].check(vessel.doors[d].body, 0, 1)
@@ -16319,7 +16871,7 @@ class Guy {
         }
         guy.secont = 1
         guy.isPomao = this.isPomao
-        if(guy.isPomao){
+        if (guy.isPomao) {
             guy.type = 11
         }
         for (let t = 0; t < this.skillslist.length; t++) {
@@ -16464,7 +17016,7 @@ class Guy {
                                 newgear.body = crewman.gear[0].body
                                 newgear.healthbox = crewman.gear[0].healthbox
                                 crewman.gear[0] = newgear
-                                //////console.log(newgear)
+                                ////////console.log(newgear)
                                 vessel.guys.push(crewman)
                                 break
                             }
@@ -16544,16 +17096,16 @@ class Guy {
                                 newgear.body = crewman.gear[0].body
                                 newgear.healthbox = crewman.gear[0].healthbox
                                 crewman.gear[0] = newgear
-                                //////console.log(newgear)
+                                ////////console.log(newgear)
                                 vessel.guys.push(crewman)
                                 break
                             }
                         }
                     }
                     if (this.tile.special == 1) {
-                        //////////////////////////////console.log(vessel.teleTarget)
+                        ////////////////////////////////console.log(vessel.teleTarget)
                         if (vessel.teleTarget.x > 0) {
-                            //////////////////////////////console.log("wa")
+                            ////////////////////////////////console.log("wa")
                             vessel.copies.push(this.clone(this.tile))
                             this.tile.walkable = true
                             let dummytile = vessel.teleTarget
@@ -16567,11 +17119,11 @@ class Guy {
                             }
                             let clone2 = this.clone(dummytile)
                             clone2.hostile = 1
-                            ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+                            //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
                             clone2.gear = []
                             clone2.secont = 1
                             clone2.isPomao = this.isPomao
-                            if(clone2.isPomao){
+                            if (clone2.isPomao) {
                                 clone2.type = 11
                             }
                             for (let s = 0; s < this.skillslist.length; s++) {
@@ -16619,11 +17171,11 @@ class Guy {
                             }
                             let clone2 = this.clone(dummytile)
                             clone2.hostile = 1
-                            ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+                            //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
                             clone2.gear = []
                             clone2.secont = 1
                             clone2.isPomao = this.isPomao
-                            if(clone2.isPomao){
+                            if (clone2.isPomao) {
                                 clone2.type = 11
                             }
                             for (let s = 0; s < this.skillslist.length; s++) {
@@ -16684,7 +17236,7 @@ class Guy {
                         clone2.gear = []
                         clone2.secont = 1
                         clone2.isPomao = this.isPomao
-                        if(clone2.isPomao){
+                        if (clone2.isPomao) {
                             clone2.type = 11
                         }
                         for (let s = 0; s < this.skillslist.length; s++) {
@@ -16699,7 +17251,7 @@ class Guy {
                         if (this.shielded >= 1) {
                             clone2.shielded = this.shielded
                         }
-                        ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+                        //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
                         vessel.guys.push(clone2)
 
 
@@ -16762,7 +17314,7 @@ class Guy {
                     for (let t = 0; t < vessel.supratiles.length; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -16789,7 +17341,7 @@ class Guy {
                 //     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * Math.max(1,this.cound-this.gearSpeed)
                 //     this.body.x *= 1 / this.rate
                 //     this.body.y *= 1 / this.rate
-                //     // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                //     // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                 //     this.tiles[t].draw = (new Tile()).draw
                 //     // this.tiles[t].color = "green"
                 //     // this.tiles[t].draw()
@@ -16801,7 +17353,7 @@ class Guy {
                     this.body.y += (this.tiles[t + 1].y + (this.tiles[t + 1].height * .5)) * this.cound
                     this.body.x *= 1 / this.rate
                     this.body.y *= 1 / this.rate
-                    // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                    // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                     this.tiles[t].draw = (new Tile()).draw
                     // this.tiles[t].color = "green"
                     // this.tiles[t].draw()
@@ -16813,7 +17365,7 @@ class Guy {
                         this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                         this.body.x *= 1 / this.rate
                         this.body.y *= 1 / this.rate
-                        // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+                        // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
                         this.tile.draw = (new Tile()).draw
                         // this.tile.color = "green"
                         // this.tile.draw()
@@ -16902,7 +17454,7 @@ class Guy {
                         let linkw = new LineOP(d1, d2, this.c1, this.bodies[b].radius + 5)
                         linkw.draw()
                         this.lines[b - 1] = link
-                        //////////////////////////////////////////////////////////////console.log(this.bodies.length)
+                        ////////////////////////////////////////////////////////////////console.log(this.bodies.length)
                     }
                 }
             }
@@ -16920,7 +17472,7 @@ class Guy {
                     k--
                     this.skillslist[Math.floor(Math.random() * this.skillslist.length)] += Math.min((enemy.level / 100), .15)
                 }
-                //////////////////////////////////////////////////////////////////////////////console.log(this.skillslist)
+                ////////////////////////////////////////////////////////////////////////////////console.log(this.skillslist)
             }
         }
         for (let t = 0; t < this.skillslist.length; t++) {
@@ -16972,7 +17524,7 @@ class Guy {
             for (let t = 0; t < vessel.guys.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -17031,16 +17583,18 @@ class Guy {
                                     let n = vessel.neighbors(this.tile)
                                     for (let r = 0; r < n.length; r++) {
                                         if (n[r].walkable == true && n[r].guyIn == false && !kiles.includes(n[r])) {
-                                            this.path = astar.search(vessel, this.tile, n[r])
+                                            this.flagpath = astar.search(vessel, this.tile, n[r])
+                                            this.turning = 1
                                             this.stogo = n[r]
                                             break
                                         } else {
                                             n = vessel.neighbors(n[r])
                                             for (let d = Math.floor(Math.random() * (n.length)); d < n.length; d++) {
                                                 if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
-                                                    this.path = astar.search(vessel, this.tile, n[d])
+                                                    this.flagpath = astar.search(vessel, this.tile, n[d])
+                                                    this.turning = 1
                                                     this.stogo = n[d]
-                                                    //////////////////////////////////////////////////////////////console.log(n)
+                                                    ////////////////////////////////////////////////////////////////console.log(n)
                                                     break
                                                 }
                                             }
@@ -17086,16 +17640,18 @@ class Guy {
                                     let n = vessel.neighbors(this.tile)
                                     for (let r = 0; r < n.length; r++) {
                                         if (n[r].walkable == true && n[r].guyIn == false && !kiles.includes(n[r])) {
-                                            vessel.guys[t].path = astar.search(vessel, this.tile, n[r])
+                                            vessel.guys[t].flagpath = astar.search(vessel, this.tile, n[r])
+                                            vessel.guys[t].turning = 1
                                             vessel.guys[t].stogo = n[r]
                                             break
                                         } else {
                                             n = vessel.neighbors(n[r])
                                             for (let d = Math.floor(Math.random() * (n.length)); d < n.length; d++) {
                                                 if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
-                                                    vessel.guys[t].path = astar.search(vessel, vessel.guys[t].tile, n[d])
+                                                    vessel.guys[t].flagpath = astar.search(vessel, vessel.guys[t].tile, n[d])
+                                                    vessel.guys[t].turning = 1
                                                     vessel.guys[t].stogo = n[d]
-                                                    //////////////////////////////////////////////////////////////console.log(n)
+                                                    ////////////////////////////////////////////////////////////////console.log(n)
                                                     break
                                                 }
                                             }
@@ -17117,7 +17673,8 @@ class Guy {
                                         for (let r = 0; r < n.length; r++) {
                                             if (n[r].walkable == true && n[r].guyIn == false && !kiles.includes(n[r])) {
                                                 if (this.fighting < 0) {
-                                                    this.path = astar.search(enemy, this.tile, n[r])
+                                                    this.flagpath = astar.search(enemy, this.tile, n[r])
+                                                    this.turning = 1
                                                     this.stogo = n[r]
                                                     break
                                                 }
@@ -17126,9 +17683,10 @@ class Guy {
                                                 for (let d = Math.floor(Math.random() * (n.length)); d < n.length; d++) {
                                                     if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
                                                         if (this.fighting < 0) {
-                                                            this.path = astar.search(enemy, this.tile, n[d])
+                                                            this.flagpath = astar.search(enemy, this.tile, n[d])
+                                                            this.turning = 1
                                                             this.stogo = n[d]
-                                                            //////////////////////////////////////////////////////////////console.log(n)
+                                                            ////////////////////////////////////////////////////////////////console.log(n)
                                                             break
                                                         }
                                                     }
@@ -17191,7 +17749,7 @@ class Guy {
                                                         if (enemy.guys[t].fighting < 0) {
                                                             enemy.guys[t].path = astar.search(enemy, enemy.guys[t].tile, n[d])
                                                             enemy.guys[t].stogo = n[d]
-                                                            //////////////////////////////////////////////////////////////console.log(n)
+                                                            ////////////////////////////////////////////////////////////////console.log(n)
                                                             break
                                                         }
                                                     }
@@ -17285,33 +17843,33 @@ class Guy {
 
         }
         if (this.turning > 0) {
-            if (this.path[1] == this.flagpath[1]) {
-                this.turning = 0
-                this.path = this.flagpath
-                if (this.ropestunned <= 0) {
-                    this.cound++
-                } else {
-                    // this.ropestunned--
-                    // this.cound = 0
-                    // let link = new Line(this.body.x - 18, this.body.y - 18, this.body.x + 18, this.body.y + 18, "white", 3)
-                    // let link2 = new Line(this.body.x + 18, this.body.y - 18, this.body.x - 18, this.body.y + 18, "white", 3)
-                    // link.draw()
-                    // link2.draw()
+            if(vessel.neighbors(this.tile).includes(this.path[1]) || this.tile == this.path[1]){
 
+                if (this.path[1] == this.flagpath[1]) {
+                    this.path = this.flagpath
                 }
-            }
-            this.cound--
-            if (this.cound <= 0) {
-                this.turning = 0
-                this.path = this.flagpath
+                this.cound--
+                if (this.cound <= 0) {
+                    this.turning = 0
+                    this.path = this.flagpath
+                }
+            }else{
+
+                
+                this.flagpath = astar.search(vessel, this.tile, this.stogo)
+                this.path = astar.search(vessel, this.tile, this.stogo)
+                this.turning = 1
+
+
             }
         } else if (this.step < this.path.length - 1) {
             if ((this.path[this.step + 1].walkable == true) || (this.step < this.path.length)) {
-                if (Math.random() < .5) {
-                    this.count++
-                }
+                // if (Math.random() < .5) {
+                //     this.count++
+                // }
+                this.subcount+=.5
                 // if (this.path.length > 1) {
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
 
                 if (this.ropestunned <= 0) {
                     // this.cound++
@@ -17328,7 +17886,16 @@ class Guy {
                     if (vessel.guys.includes(this) && this.hostile == 1) {
                         if (this.path[this.step + 1].walkable == true) { //made enemies unpassable, not fun.
                             if (this.ropestunned <= 0) {
-                                this.cound++
+                                if(this.turning == 0){
+                                                                  if(this.path.length > 1){
+if(this.path[0].doorway == -1 && this.path[1].doorway == -1){
+this.cound = 0
+}else{
+this.cound++
+}
+
+}
+                                }
                             } else {
                                 // this.ropestunned--
                                 // this.cound = 0
@@ -17341,7 +17908,16 @@ class Guy {
                         }
                     } else {
                         if (this.ropestunned <= 0) {
-                            this.cound++
+                            if(this.turning == 0){
+                                                              if(this.path.length > 1){
+if(this.path[0].doorway == -1 && this.path[1].doorway == -1){
+this.cound = 0
+}else{
+this.cound++
+}
+
+}
+                            }
                         } else {
                             // this.ropestunned--
                             // this.cound = 0
@@ -17354,7 +17930,16 @@ class Guy {
                     }
                 } else {
                     if (this.ropestunned <= 0) {
-                        this.cound++
+                        if(this.turning == 0){
+                                                          if(this.path.length > 1){
+if(this.path[0].doorway == -1 && this.path[1].doorway == -1){
+this.cound = 0
+}else{
+this.cound++
+}
+
+}
+                        }
                     } else {
                         // this.ropestunned--
                         // this.cound = 0
@@ -17428,7 +18013,7 @@ class Guy {
             } else if (this.path[this.step]) {
                 this.tile = this.path[this.step]
             }
-            // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+            // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
             if (this.type != -2) {
                 this.tile.walkable = false
                 this.tile.guyIn = false
@@ -17449,7 +18034,7 @@ class Guy {
         //     // Math.max(1,this.cound-this.gearSpeed)-=2
         //     // this.tile.walkable = false
         // }
-        if (this.step > 0) {
+        if (this.step > 0 && this.turning == 0) {
             this.path.splice(0, this.step)
             this.flagpath.splice(0, this.step)
             this.step = 0
@@ -17484,7 +18069,7 @@ class Guy {
                                 }
                             }
                         } else {
-                            this.path = astar.search(vessel, this.tile, this.stogo)
+                            this.flagpath = astar.search(vessel, this.tile, this.stogo)
                         }
                     } else {
                         if (this.stogo.walkable == false) {
@@ -17501,28 +18086,34 @@ class Guy {
                                 }
                             }
                         } else {
-                            this.path = astar.search(enemy, this.tile, this.stogo)
+                            this.flagpath = astar.search(enemy, this.tile, this.stogo)
                         }
                     }
                 }
             }
         }
-        if (this.selected == 1) {
-            // control(this.body)
-            // this.tile.color = '#00ff0022'
-            ////////////////////////////////////////////////////console.log(this.tile)
-            let colorsto = this.tile.color
-            this.tile.color = "#FFFFFF44"
-            // this.tile.draw()
-            canvas_context.fillStyle = this.tile.color
-            // canvas_context.strokeStyle = this.color
-            canvas_context.fillRect(this.tile.x, this.tile.y, this.tile.width, this.tile.height)
-            this.tile.color = colorsto
-        }
-        if (Math.random() < .1 || this.type == 15 || this.type == 49 || this.type == 50 || this.type == 51) {
+        // if (this.selected == 1) {
+        //     // control(this.body)
+        //     // this.tile.color = '#00ff0022'
+        //     //////////////////////////////////////////////////////console.log(this.tile)
+        //     // let colorsto = this.tile.color
+        //     // this.tile.color = "#FFFFFF88"
+        //     // // this.tile.draw()
+        //     // canvas_context.fillStyle = this.tile.color
+        //     // // canvas_context.strokeStyle = this.color
+        //     // canvas_context.fillRect(this.tile.x, this.tile.y, this.tile.width, this.tile.height)
+        //     // this.tile.color = colorsto
+        //     if(this.selected == 1){
+        //         let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+        //         draworb.draw()
+        //     }
+        // }
+        this.subcount+=.1
+        if (this.subcount >= 1 || this.type == 15 || this.type == 49 || this.type == 50 || this.type == 51) {
             this.count++
+            this.subcount = 0
         }
-        // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
+        // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
         l = this.rate - this.cound
         if (this.path.length > 1) {
             this.body.x = (this.tile.x + (this.tile.width * .5)) * l
@@ -17531,7 +18122,7 @@ class Guy {
             this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
             this.body.x *= 1 / this.rate
             this.body.y *= 1 / this.rate
-            // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+            // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
             this.tile.draw = (new Tile()).draw
             // this.tile.color = "green"
             // this.tile.draw()
@@ -17541,6 +18132,10 @@ class Guy {
             // this.tile.color = "#FF0000"
             // this.tile.draw()
         }
+                if(this.selected == 1){
+                    let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+                    draworb.draw()
+                }
         if (this.tile.air < 50) {
             if (this.airless == 0 && this.shielded <= 0) {
                 if (this.superheart == 1) {
@@ -17621,7 +18216,7 @@ class Guy {
                 this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                 this.body.x *= 1 / this.rate
                 this.body.y *= 1 / this.rate
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
                 this.tile.draw = (new Tile()).draw
                 // this.tile.color = "green"
                 // this.tile.draw()
@@ -17632,6 +18227,14 @@ class Guy {
                 // this.tile.draw()
             }
 
+            if(this.selected == 1){
+                let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+                draworb.draw()
+            }
+            // if(this.selected == 1){
+            //     let draworb = new CircleO(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+            //     draworb.draw()
+            // }
 
             if (vessel.guys) {
                 if (vessel.guys.includes(this) || vessel.hash['security'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[5].max))) && vessel.UI.systems[5].sto + vessel.UI.systems[5].fed > 0) {
@@ -17870,9 +18473,9 @@ class Guy {
         //     if (this.teleflag == 1) {
         //         if (vessel.guys.includes(this)) {
         //             if (this.tile.special == 1) {
-        //                 //////////////////////////////console.log(vessel.teleTarget)
+        //                 ////////////////////////////////console.log(vessel.teleTarget)
         //                 if (vessel.teleTarget.x > 0) {
-        //                     //////////////////////////////console.log("wa")
+        //                     ////////////////////////////////console.log("wa")
         //                     vessel.copies.push(this.clone(this.tile))
         //                     this.tile.walkable = true
         //                     let dummytile = vessel.teleTarget
@@ -17886,7 +18489,7 @@ class Guy {
         //                     }
         //                     let clone2 = this.clone(dummytile)
         //                     clone2.hostile = 1
-        //                     ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+        //                     //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
         //                     clone2.gear = []
         //                     clone2.secont = 1
         //                     for (let s = 0; s < this.skillslist.length; s++) {
@@ -17920,7 +18523,7 @@ class Guy {
         //                     }
         //                     let clone2 = this.clone(dummytile)
         //                     clone2.hostile = 1
-        //                     ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+        //                     //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
         //                     clone2.gear = []
         //                     clone2.secont = 1
         //                     for (let s = 0; s < this.skillslist.length; s++) {
@@ -17978,7 +18581,7 @@ class Guy {
         //                     clone2.gear.push(new Gear(this.gear[k].type, clone2))
         //                 }
         //                 clone2.name = this.name
-        //                 ////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
+        //                 //////////////////////////////////////////////////////////console.log(enemy, enemy.guys)
         //                 vessel.guys.push(clone2)
         //                 enemy.guys.splice(enemy.guys.indexOf(this), 1)
         //                 if (this.stretch == 1) {
@@ -18033,7 +18636,7 @@ class Guy {
         //             for(let t = 0;t<vessel.supratiles.length;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -18059,7 +18662,7 @@ class Guy {
                 //     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * Math.max(1,this.cound-this.gearSpeed)
                 //     this.body.x *= 1 / this.rate
                 //     this.body.y *= 1 / this.rate
-                //     // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                //     // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                 //     this.tiles[t].draw = (new Tile()).draw
                 //     // this.tiles[t].color = "green"
                 //     // this.tiles[t].draw()
@@ -18071,7 +18674,7 @@ class Guy {
                     this.body.y += (this.tiles[t + 1].y + (this.tiles[t + 1].height * .5)) * this.cound
                     this.body.x *= 1 / this.rate
                     this.body.y *= 1 / this.rate
-                    // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
+                    // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tiles[t])
                     this.tiles[t].draw = (new Tile()).draw
                     // this.tiles[t].color = "green"
                     // this.tiles[t].draw()
@@ -18083,7 +18686,7 @@ class Guy {
                         this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                         this.body.x *= 1 / this.rate
                         this.body.y *= 1 / this.rate
-                        // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+                        // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
                         this.tile.draw = (new Tile()).draw
                         // this.tile.color = "green"
                         // this.tile.draw()
@@ -18093,6 +18696,11 @@ class Guy {
                         // this.tile.color = "#FF0000"
                         // this.tile.draw()
                     }
+                }
+
+                if(this.selected == 1){
+                    let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+                    draworb.draw()
                 }
                 if (vessel.guys.includes(this)) {
                     this.bodies[t] = new Circle(this.body.x + (vessel.guys.indexOf(this) / 10), this.body.y + (vessel.guys.indexOf(this) / 10), 9, this.c2)
@@ -18172,7 +18780,7 @@ class Guy {
                         let linkw = new LineOP(d1, d2, this.c1, this.bodies[b].radius + 5)
                         linkw.draw()
                         this.lines[b - 1] = link
-                        //////////////////////////////////////////////////////////////console.log(this.bodies.length)
+                        ////////////////////////////////////////////////////////////////console.log(this.bodies.length)
                     }
                 }
             }
@@ -18190,7 +18798,7 @@ class Guy {
         //             k--
         //             this.skillslist[Math.floor(Math.random() * this.skillslist.length)] += Math.min((enemy.level / 100), .15)
         //         }
-        //         //////////////////////////////////////////////////////////////////////////////console.log(this.skillslist)
+        //         ////////////////////////////////////////////////////////////////////////////////console.log(this.skillslist)
         //     }
         // }
         // for (let t = 0; t < this.skillslist.length; t++) {
@@ -18242,7 +18850,7 @@ class Guy {
         //     for(let t = 0;t<vessel.guys.length;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -18310,7 +18918,7 @@ class Guy {
         //                                         if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
         //                                             this.path = astar.search(vessel, this.tile, n[d])
         //                                             this.stogo = n[d]
-        //                                             //////////////////////////////////////////////////////////////console.log(n)
+        //                                             ////////////////////////////////////////////////////////////////console.log(n)
         //                                             break
         //                                         }
         //                                     }
@@ -18365,7 +18973,7 @@ class Guy {
         //                                         if (n[d].walkable == true && n[d].guyIn == false && !kiles.includes(n[d])) {
         //                                             vessel.guys[t].path = astar.search(vessel, vessel.guys[t].tile, n[d])
         //                                             vessel.guys[t].stogo = n[d]
-        //                                             //////////////////////////////////////////////////////////////console.log(n)
+        //                                             ////////////////////////////////////////////////////////////////console.log(n)
         //                                             break
         //                                         }
         //                                     }
@@ -18398,7 +19006,7 @@ class Guy {
         //                                                 if (this.fighting < 0) {
         //                                                     this.path = astar.search(enemy, this.tile, n[d])
         //                                                     this.stogo = n[d]
-        //                                                     //////////////////////////////////////////////////////////////console.log(n)
+        //                                                     ////////////////////////////////////////////////////////////////console.log(n)
         //                                                     break
         //                                                 }
         //                                             }
@@ -18460,7 +19068,7 @@ class Guy {
         //                                             if (enemy.guys[t].fighting < 0) {
         //                                                 enemy.guys[t].path = astar.search(enemy, enemy.guys[t].tile, n[d])
         //                                                 enemy.guys[t].stogo = n[d]
-        //                                                 //////////////////////////////////////////////////////////////console.log(n)
+        //                                                 ////////////////////////////////////////////////////////////////console.log(n)
         //                                                 break
         //                                             }
         //                                         }
@@ -18521,7 +19129,7 @@ class Guy {
         //             this.count++
         //         }
         //         // if (this.path.length > 1) {
-        //         // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
+        //         // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
         //         if (this.hostile == 1) {
         //             if(vessel.guys.includes(this) && this.hostile == 1){
         //                 if (this.path[this.step + 1].walkable == true) { //made enemies unpassable, not fun.
@@ -18601,7 +19209,7 @@ class Guy {
         //     if (this.path[this.step]) {
         //         this.tile = this.path[this.step]
         //     }
-        //     // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+        //     // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
         //     if(this.type != -2){
         //     this.tile.walkable = false
         //     this.tile.guyIn = false
@@ -18687,14 +19295,15 @@ class Guy {
         if (this.selected == 1) {
             // control(this.body)
             // this.tile.color = '#00ff0022'
-            ////////////////////////////////////////////////////console.log(this.tile)
-            let colorsto = this.tile.color
-            this.tile.color = "#FFFFFF44"
-            // this.tile.draw()
-            canvas_context.fillStyle = this.tile.color
-            // canvas_context.strokeStyle = this.color
-            canvas_context.fillRect(this.tile.x, this.tile.y, this.tile.width, this.tile.height)
-            this.tile.color = colorsto
+            //////////////////////////////////////////////////////console.log(this.tile)
+            // let colorsto = this.tile.color
+            // this.tile.color = "#FFFFFF88"
+            // // this.tile.draw()
+            // canvas_context.fillStyle = this.tile.color
+            // // canvas_context.strokeStyle = this.color
+            // canvas_context.fillRect(this.tile.x, this.tile.y, this.tile.width, this.tile.height)
+            // this.tile.color = colorsto
+
         } else {
             if (speedrate >= 8) {
                 if (this.path.length > 0) {
@@ -18706,7 +19315,7 @@ class Guy {
                                 for (let t = 1; t < this.path.length; t++) {
                                     gigadebug++
                                     if (gigadebug > 1000000) {
-                                        //////console.log("ha ha!")
+                                        ////////console.log("ha ha!")
                                         gigadebug = 0
                                         break
                                     }
@@ -18722,7 +19331,7 @@ class Guy {
                             for (let t = 1; t < this.path.length; t++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -18738,7 +19347,7 @@ class Guy {
                         for (let t = 1; t < this.path.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -18754,7 +19363,7 @@ class Guy {
         // if (Math.random() < .1 || this.type == 15) {
         //     this.count++
         // }
-        // // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
+        // // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.path)
         // l = this.rate - this.cound
         // if (this.path.length > 1) {
         //     this.body.x = (this.tile.x + (this.tile.width * .5)) * l
@@ -18763,7 +19372,7 @@ class Guy {
         //     this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
         //     this.body.x *= 1 / this.rate
         //     this.body.y *= 1 / this.rate
-        //     // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+        //     // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
         //     this.tile.draw = (new Tile()).draw
         //     // this.tile.color = "green"
         //     // this.tile.draw()
@@ -18809,6 +19418,11 @@ class Guy {
         // if (this.tile.fire > 100) {
         //     this.tile.fire = 100
         // }
+
+        if(this.selected == 1){
+            let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+            draworb.draw()
+        }
         canvas_context.imageSmoothingEnabled = true
         if (this.type == 16) {
             canvas_context.imageSmoothingEnabled = false
@@ -18838,7 +19452,7 @@ class Guy {
                 this.body.y += (this.path[Math.min(this.step + 1, this.path.length - 1)].y + (this.path[Math.min(this.step + 1, this.path.length - 1)].height * .5)) * this.cound
                 this.body.x *= 1 / this.rate
                 this.body.y *= 1 / this.rate
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.tile)
                 this.tile.draw = (new Tile()).draw
                 // this.tile.color = "green"
                 // this.tile.draw()
@@ -18848,6 +19462,15 @@ class Guy {
                 // this.tile.color = "#FF0000"
                 // this.tile.draw()
             }
+
+            if(this.selected == 1){
+                let draworb = new CircleOr(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+                draworb.draw()
+            }
+            // if(this.selected == 1){
+            //     let draworb = new CircleO(this.body.x, this.body.y, this.tile.width * .55, "#00ff00")
+            //     draworb.draw()
+            // }
             if (vessel.guys) {
                 if (vessel.guys.includes(this) || vessel.hash['security'].integrity > 100 * (1 - (1 / (11 - vessel.UI.systems[5].max))) && vessel.UI.systems[5].sto + vessel.UI.systems[5].fed > 0) {
                     if (this.hostile != 1) {
@@ -18975,14 +19598,23 @@ class ModularPart {
         ]
         this.type = type
         this.color = "yellow"
+
+        this.maxDrop = 0
+        this.fireChance = 0
+        this.damage = 0
+        this.crew = 0
         if (type == 0) {
             this.shape = [
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0],
-                [0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ]
+            this.maxDrop = -.2
+            this.fireChance = .2
+            this.damage = .05
+            this.crew = 0
             this.color = "#ff000088"
         } else if (type == 1) {
             this.shape = [
@@ -18992,6 +19624,10 @@ class ModularPart {
                 [0, 0, 1, 0, 0],
                 [0, 0, 1, 1, 0]
             ]
+            this.maxDrop = 0
+            this.fireChance = .17
+            this.damage = .03
+            this.crew = 0.1
             this.color = "#00ff0088"
         } else if (type == 2) {
             this.shape = [
@@ -19001,6 +19637,10 @@ class ModularPart {
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ]
+            this.maxDrop = .05
+            this.fireChance = .05
+            this.damage = .05
+            this.crew = -.05
             this.color = "#0000FF88"
         } else if (type == 3) {
             this.shape = [
@@ -19010,6 +19650,10 @@ class ModularPart {
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ]
+            this.maxDrop = .20
+            this.fireChance = 0.01
+            this.damage = -.15
+            this.crew = 0.5
             this.color = "#FF00FF88"
         } else if (type == 4) {
             this.shape = [
@@ -19019,40 +19663,211 @@ class ModularPart {
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ]
+            this.maxDrop = .10
+            this.fireChance = .10
+            this.damage = 0
+            this.crew = 0.25
             this.color = "#00FFFF88"
         } else if (type == 5) {
             this.shape = [
+                [0, 0, 0, 0, 0],
                 [0, 0, 0, 1, 1],
                 [0, 0, 1, 1, 0],
                 [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .05
+            this.fireChance = -.10
+            this.damage = .05
+            this.crew = 0.1
+            this.color = "#FFFF0088"
+        } else if (type == 6) {
+            this.shape = [
+                [0, 0, 0, 0, 1],
+                [0, 0, 1, 1, 1],
+                [0, 0, 1, 1, 0],
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ]
-            this.color = "#FFFF0088"
+            this.maxDrop = .05
+            this.fireChance = -.10
+            this.damage = .25
+            this.crew = 0
+            this.color = "#AAFF0088"
+        } else if (type == 7) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0],
+                [0, 0, 1, 1, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .07
+            this.fireChance = .07
+            this.damage = .07
+            this.crew = 0.7
+            this.color = "#AAFF0088"
+        } else if (type == 8) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .15
+            this.fireChance = .10
+            this.damage = .05
+            this.crew = 0.15
+            this.color = "#AA00FF88"
+        } else if (type == 9) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = -.15
+            this.fireChance = -.50
+            this.damage = .05
+            this.crew = 2
+            this.color = "#00000088"
+        } else if (type == 10) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .01
+            this.fireChance = .01
+            this.damage = .05
+            this.crew = 0.15
+            this.color = "#AAAA0088"
+        } else if (type == 11) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .05
+            this.fireChance = .01
+            this.damage = 0
+            this.crew = 0.15
+            this.color = "#00FFAA88"
+        } else if (type == 12) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .01
+            this.fireChance = .01
+            this.damage = .01
+            this.crew = 0.01
+            this.color = "#FF888888"
+        } else if (type == 13) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0]
+            ]
+            this.maxDrop = .20
+            this.fireChance = .05
+            this.damage = .05
+            this.crew = 0.4
+            this.color = "#888FF888"
+        } else if (type == 14) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .10
+            this.fireChance = .10
+            this.damage = .10
+            this.crew = 0.3
+            this.color = "#0088FF88"
+        } else if (type == 15) {
+            this.shape = [
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1],
+                [0, 0, 1, 0, 1],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]
+            this.maxDrop = .15
+            this.fireChance = .10
+            this.damage = .30
+            this.crew = -.5
+            this.color = "#8888FF88"
         }
         this.tile = {}
         this.lifted = -1
-        this.maxDrop = 10
-        this.buy = 5
-        this.sell = 5
+        this.maxDrop = (this.maxDrop * .5)
+        this.damage = (this.damage * .5)
+        this.fireChance = (this.fireChance * .5)
+        this.crew = (this.crew*.5)
+        this.buy = Math.floor((this.fireChance + this.damage + this.maxDrop + (this.crew * 10)) / 2) + 10
+        this.sell = Math.floor((this.fireChance + this.damage + this.maxDrop + (this.crew * 10)) / 3) + 10
+        this.name1 = "Modular"
+        this.name2 = "Part"
+        this.name = "Modular Part"
+    }
+    transpose(matrix) {
+        const rows = matrix.length, cols = matrix[0].length;
+        const grid = [];
+        for (let j = 0; j < cols; j++) {
+            grid[j] = Array(rows);
+        }
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                grid[j][i] = matrix[i][j];
+            }
+        }
+        return grid;
+    }
+    rotate(matrix) {
+        const n = matrix.length;
+        const x = Math.floor(n / 2);
+        const y = n - 1;
+        for (let i = 0; i < x; i++) {
+            for (let j = i; j < y - i; j++) {
+                let k = matrix[i][j];
+                matrix[i][j] = matrix[y - j][i];
+                matrix[y - j][i] = matrix[y - i][y - j];
+                matrix[y - i][y - j] = matrix[j][y - i]
+                matrix[j][y - i] = k
+            }
+        }
     }
     draw() {
+        if (this.lifted == 1) {
+            if (keysPressed['r']) {
+                this.rotate(this.shape)
+                keysPressed['r'] = false
+            }
+        }
+        if (this.lifted == 1) {
+            if (keysPressed['t']) {
+                this.shape = this.transpose(this.shape)
+                keysPressed['t'] = false
+            }
+        }
         if (this.shop == 1) {
             for (let t = 0; t < this.shape.length; t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
-                    break
-                }
                 for (let k = 0; k < this.shape[t].length; k++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    let rect = new RectangleR(this.tile.x + (20 * t), this.tile.y + (20 * k), 20, 20, "#88888844")
+                    let rect = new RectangleR(this.tile.x + (10 * t), this.tile.y + (10 * k), 10, 10, "#88888844")
                     if (this.shape[t][k] == 1) {
                         rect.color = this.color
                         rect.draw()
@@ -19061,46 +19876,44 @@ class ModularPart {
             }
         }
         if (this.lifted == 1) {
+
             this.tile = new RectangleR(TIP_engine.x - 0, TIP_engine.y - 0, 0, 0, "red")
             for (let t = 0; t < this.shape.length; t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
-                    break
-                }
                 for (let k = 0; k < this.shape[t].length; k++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    let rect = new RectangleR(this.tile.x + (20 * t), this.tile.y + (20 * k), 20, 20, "#88888844")
+                    let rect = new RectangleR(this.tile.x - (86) + (43 * t), this.tile.y - (86) + (43 * k), 43, 43, "#88888844")
                     if (this.shape[t][k] == 1) {
                         rect.color = this.color
                         rect.draw()
                     }
                 }
             }
-        }
-        if (this.tile.x) {
-            for (let t = Math.max(this.tile.t, 0); t < Math.min(vessel.shield.inventory.cells.length, this.tile.t + this.shape.length); t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
-                    break
-                }
-                for (let k = Math.max(this.tile.k, 0); k < Math.min(vessel.shield.inventory.cells[t].length, this.tile.k + this.shape.length); k++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
+        } else {
+            if (this.shop == 1) {
+            } else {
+                let activeSystem = 0
+                for (let t = 0; t < vessel.partMenu.systems.length; t++) {
+                    if (vessel.partMenu.systems[t].active == 1) {
+                        activeSystem = vessel.partMenu.systems[t]
                     }
-                    if (this.shape[t - this.tile.t][k - this.tile.k] == 1) {
-                        vessel.shield.inventory.cells[t][k].color = this.color
+                }
+
+                activeSystem.cells[this.tile.t + 2][this.tile.k + 2].draw()
+            }
+        }
+
+        let activeSystem = 0
+        for (let t = 0; t < vessel.partMenu.systems.length; t++) {
+            if (vessel.partMenu.systems[t].active == 1) {
+                activeSystem = vessel.partMenu.systems[t]
+            }
+        }
+        if (activeSystem != 0) {
+            if (this.tile.x) {
+                for (let t = Math.max(this.tile.t, 0); t < Math.min(activeSystem.cells.length, this.tile.t + this.shape.length); t++) {
+                    for (let k = Math.max(this.tile.k, 0); k < Math.min(activeSystem.cells[t].length, this.tile.k + this.shape.length); k++) {
+                        if (this.shape[t - this.tile.t][k - this.tile.k] == 1) {
+                            activeSystem.cells[t][k].color = this.color
+                        }
                     }
                 }
             }
@@ -19108,31 +19921,43 @@ class ModularPart {
     }
     check(point) {
         if (this.tile.x) {
-            for (let t = this.tile.t; t < Math.min(vessel.shield.inventory.cells.length, this.tile.t + this.shape.length); t++) {
-                gigadebug++
-                if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
-                    gigadebug = 0
-                    break
-                }
-                for (let k = this.tile.k; k < Math.min(vessel.shield.inventory.cells[t].length, this.tile.k + this.shape.length); k++) {
-                    gigadebug++
-                    if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
-                        gigadebug = 0
-                        break
-                    }
-                    if (this.shape[t - this.tile.t][k - this.tile.k] == 1) {
-                        if (vessel.shield.inventory.cells[t][k].isPointInside(point)) {
-                            this.lifted = 1
-                            return true
-                        }
-                    }
+            let activeSystem = 0
+            for (let t = 0; t < vessel.partMenu.systems.length; t++) {
+                if (vessel.partMenu.systems[t].active == 1) {
+                    activeSystem = vessel.partMenu.systems[t]
                 }
             }
+            let iet = 0
+            for(let t = 0;t<activeSystem.items.length;t++){
+                if(activeSystem.items[t].lifted == 1){
+                    iet = 1
+                    return false
+                }
+            }
+            if (activeSystem != 0) {
+                for (let t = this.tile.t; t < Math.min(activeSystem.cells.length, this.tile.t + this.shape.length); t++) {
+                    for (let k = this.tile.k; k < Math.min(activeSystem.cells[t].length, this.tile.k + this.shape.length); k++) {
+                        if(this.tile == activeSystem.cells[t][k]){
+
+                            let subpoint = new Point(TIP_engine.x - 86, TIP_engine.y - 86)
+                //         if (this.shape[t - this.tile.t][k - this.tile.k] == 1) {
+                            // if (activeSystem.cells[t][k].isPointInside(point)) {
+                                if(this.tile.isPointInside(subpoint)){
+                                    this.lifted = 1
+                                    return true
+                                }
+                            // }
+                //         }
+                //     }
+                // }
+                        }
+            }
         }
+    }
+}
         return false
     }
+    
     balance(target) {
         if (this.lifted == 1) {
             this.active = 0
@@ -19140,7 +19965,22 @@ class ModularPart {
             this.active = 1
         }
         if (this.active == 1) {
-            target.max -= this.maxDrop
+            target.max += this.maxDrop
+            if(target.max <= 0){
+                target.max = 0
+            }
+            target.damage += this.damage
+            if(target.damage <= 0){
+                target.damage = 0
+            }
+            target.fireChance += this.fireChance
+            if(target.fireChance <= 0){
+                target.fireChance = 0
+            }
+            target.crew += this.crew
+            if(target.crew <= 0){
+                target.crew = 0
+            }
         }
     }
 }
@@ -19151,7 +19991,7 @@ class ShieldInventory {
         for (let t = 0; t < 18; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -19159,13 +19999,14 @@ class ShieldInventory {
             for (let k = 0; k < 15; k++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
                 let cell = new RectangleR((305 - 100) + (t * 20), (203 - 100) + (k * 20), 20, 20, "#88888899")
                 cell.t = t
                 cell.k = k
+                cell.touched = 0
                 cellline.push(cell)
             }
             this.cells.push(cellline)
@@ -19181,14 +20022,14 @@ class ShieldInventory {
         for (let t = 0; t < this.cells.length - 0; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
             for (let k = 0; k < this.cells[t].length - 0; k++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -19201,12 +20042,6 @@ class ShieldInventory {
     }
     check(point) {
         for (let k = 0; k < this.items.length; k++) {
-            gigadebug++
-            if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
-                gigadebug = 0
-                break
-            }
             if (this.items[k].lifted == 1) {
                 return
             }
@@ -19214,7 +20049,7 @@ class ShieldInventory {
         for (let k = 0; k < this.items.length; k++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -19227,14 +20062,14 @@ class ShieldInventory {
         for (let t = 5; t < this.cells.length - 5; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
             for (let k = 5; k < this.cells[t].length - 5; k++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -19245,7 +20080,7 @@ class ShieldInventory {
         for (let k = 0; k < this.items.length; k++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -19256,7 +20091,7 @@ class ShieldInventory {
         for (let k = 0; k < this.items.length; k++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -19265,6 +20100,89 @@ class ShieldInventory {
     }
 }
 
+class ModInv {
+    constructor(system) {
+        this.active = -1
+        this.system = system
+        this.cells = []
+        for (let t = 0; t < 18; t++) {
+            let cellline = []
+            for (let k = 0; k < 15; k++) {
+                let cell = new RectangleR((906 + 300 - (43 * 5)) + (t * 43), (313 - (43 * 5)) + (k * 43), 43, 43, "#88888899")
+                cell.t = t
+                cell.k = k
+                cellline.push(cell)
+            }
+            this.cells.push(cellline)
+        }
+        this.items = []
+        // this.items[0].tile = this.cells[3][3]
+        // this.items[1].tile = this.cells[7][3]
+        // this.items[2].tile = this.cells[5][5]
+        // this.items[3].tile = this.cells[6][6]
+        // this.items[4].tile = this.cells[7][7]
+    }
+    zonecheck(point) {
+        if (this.active == -1) {
+            return
+        }
+        for (let t = 5; t < this.cells.length - 5; t++) {
+            for (let k = 5; k < this.cells[t].length - 5; k++) {
+                if (this.cells[t][k].isPointInside(point)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    check(point) {
+        if (this.active == -1) {
+            return
+        }
+        let wet = 0
+        for (let t = 0; t < this.cells.length; t++) {
+            for (let k = 0; k < this.cells[t].length; k++) {
+                if (this.cells[t][k].isPointInside(point)) {
+                    wet = 1
+                }
+            }
+        }
+        if (wet == 0) {
+
+            for (let k = 0; k < this.items.length; k++) {
+                if (this.items[k].lifted == 1) {
+                    vessel.upgradeMenu.partsto.push(this.items[k])
+                    this.items.splice(k, 1)
+                    return
+                }
+            }
+        }
+        for (let k = 0; k < this.items.length; k++) {
+            if (this.items[k].check(point)) {
+                break
+            }
+        }
+    }
+    draw() {
+        if (this.active == -1) {
+            return
+        }
+        for (let t = 5; t < this.cells.length - 5; t++) {
+            for (let k = 5; k < this.cells[t].length - 5; k++) {
+                this.cells[t][k].draw()
+                this.cells[t][k].color = "#88888899"
+            }
+        }
+        for (let k = 0; k < this.items.length; k++) {
+            this.items[k].draw()
+        }
+    }
+    balance() {
+        for (let k = 0; k < this.items.length; k++) {
+            this.items[k].balance(this.system)
+        }
+    }
+}
 class BreakingShield {
     constructor(x, y, radius) {
         this.life = 8
@@ -19330,8 +20248,8 @@ class Shields {
         if (this.invEnter == 1) {
             // this.inventory.draw()
         }
-        this.normalize()
-        this.inventory.balance()
+        // this.normalize()
+        // this.inventory.balance()
         let hrat = this.charge / this.max
         if (this.charge > this.max) {
             hrat = 1
@@ -19727,7 +20645,7 @@ class System {
             if (this.type == 8) {
                 this.max = 0
             }
-        } else if (v == 0 || v == 1 || v == 2 || v == 4 || v == 5 || v == 6 || v == 7 || v == 9  || v == 14) { //vessel.type ==
+        } else if (v == 0 || v == 1 || v == 2 || v == 4 || v == 5 || v == 6 || v == 7 || v == 9 || v == 14) { //vessel.type ==
             if (this.type == 0) {
                 this.max = 1
             }
@@ -20351,8 +21269,8 @@ class Weapon {
             // this.tee = 4
             // this.kay = 4
 
-            this.tee = Math.floor(Math.random()*7)
-            this.kay = Math.floor(Math.random()*7)
+            this.tee = Math.floor(Math.random() * 7)
+            this.kay = Math.floor(Math.random() * 7)
             this.value = 0
             if (this.type == 0) {
                 this.name1 = "Basic"
@@ -20365,9 +21283,9 @@ class Weapon {
                 this.sell = 24
                 this.laser = 1
                 this.value = 10
-                this.rpump = 250000*1000
-                this.gpump = 10000*1000
-                this.bpump = 100*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 10000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 1) {
                 this.name1 = "Basic"
                 this.name2 = "Rocket"
@@ -20380,9 +21298,9 @@ class Weapon {
                 this.sell = 23
                 this.double = 0
                 this.value = 18
-                this.rpump = 2500000*1000
-                this.gpump = 250000*1000
-                this.bpump = 100*1000
+                this.rpump = 2500000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 2) {
                 this.name1 = "Double"
                 this.name2 = "Laser"
@@ -20395,9 +21313,9 @@ class Weapon {
                 this.sell = 30
                 this.laser = 1
                 this.value = 17
-                this.rpump = 350000*1000
-                this.gpump = 250000*1000
-                this.bpump = 100*1000
+                this.rpump = 350000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 3) {
                 this.name1 = "Triple"
                 this.name2 = "Laser"
@@ -20410,9 +21328,9 @@ class Weapon {
                 this.sell = 40
                 this.laser = 1
                 this.value = 20
-                this.rpump = 250000*1000
-                this.gpump = 0*1000
-                this.bpump = 250000*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 4) {
                 this.name1 = "Crew"
                 this.name2 = "Laser"
@@ -20426,9 +21344,9 @@ class Weapon {
                 this.sell = 40
                 this.laser = 1
                 this.value = 23
-                this.rpump = 10000*1000
-                this.gpump = 250000*1000
-                this.bpump = 100*1000
+                this.rpump = 10000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 5) {
                 this.name1 = "Mega"
                 this.name2 = "Laser"
@@ -20442,9 +21360,9 @@ class Weapon {
                 this.sell = 45
                 this.laser = 1
                 this.value = 25
-                this.rpump = 100*1000
-                this.gpump = 100*1000
-                this.bpump = 250000*1000
+                this.rpump = 100 * 1000
+                this.gpump = 100 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 6) {
                 this.name1 = "Medium"
                 this.name2 = "Rocket"
@@ -20457,9 +21375,9 @@ class Weapon {
                 this.sell = 25
                 this.double = 0
                 this.value = 22
-                this.rpump = 3500000*1000
-                this.gpump = 350000*1000
-                this.bpump = 100*1000
+                this.rpump = 3500000 * 1000
+                this.gpump = 350000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 7) {
                 this.name1 = "Big"
                 this.name2 = "Rocket"
@@ -20473,9 +21391,9 @@ class Weapon {
                 this.fireChance = 45
                 this.double = 0
                 this.value = 35
-                this.rpump = 4500000*1000
-                this.gpump = 450000*1000
-                this.bpump = 100*1000
+                this.rpump = 4500000 * 1000
+                this.gpump = 450000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 8) {
                 this.name1 = "Mega"
                 this.name2 = "Rocket"
@@ -20490,9 +21408,9 @@ class Weapon {
                 this.sell = 30
                 this.double = 0
                 this.value = 50
-                this.rpump = 5500000*1000
-                this.gpump = 550000*1000
-                this.bpump = 100*1000
+                this.rpump = 5500000 * 1000
+                this.gpump = 550000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 9) {
                 this.name1 = "Heat"
                 this.name2 = "Beam II"
@@ -20508,12 +21426,12 @@ class Weapon {
                 this.buy = 60
                 this.sell = 31
                 this.value = 20
-                this.rpump = 2500000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100*1000
+                this.rpump = 2500000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100 * 1000
 
-            this.tee = Math.floor(Math.random()*7)
-            this.kay = Math.floor(Math.random()*7)
+                this.tee = Math.floor(Math.random() * 7)
+                this.kay = Math.floor(Math.random() * 7)
             } else if (this.type == 10) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet I"
@@ -20527,9 +21445,9 @@ class Weapon {
                 this.sell = 20
                 this.shooter = 1
                 this.value = 5
-                this.rpump = 100*1000
-                this.gpump = 5500000*1000
-                this.bpump = 5500000*1000
+                this.rpump = 100 * 1000
+                this.gpump = 5500000 * 1000
+                this.bpump = 5500000 * 1000
             } else if (this.type == 11) {
                 this.name1 = "Ion"
                 this.name2 = "Pellet II"
@@ -20543,9 +21461,9 @@ class Weapon {
                 this.sell = 22
                 this.shooter = 1
                 this.value = 10
-                this.rpump = 100*1000
-                this.gpump = 9500000*1000
-                this.bpump = 5500000*1000
+                this.rpump = 100 * 1000
+                this.gpump = 9500000 * 1000
+                this.bpump = 5500000 * 1000
             } else if (this.type == 12) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet I"
@@ -20559,9 +21477,9 @@ class Weapon {
                 this.sell = 24
                 this.shooter = 1
                 this.value = 20
-                this.rpump = 100*1000
-                this.gpump = 5500000*1000
-                this.bpump = 150000*1000
+                this.rpump = 100 * 1000
+                this.gpump = 5500000 * 1000
+                this.bpump = 150000 * 1000
             } else if (this.type == 13) {
                 this.name1 = "Crew Ion"
                 this.name2 = "Pellet II"
@@ -20575,9 +21493,9 @@ class Weapon {
                 this.sell = 30
                 this.shooter = 1
                 this.value = 30
-                this.rpump = 5500000*1000
-                this.gpump = 100*1000
-                this.bpump = 100*1000
+                this.rpump = 5500000 * 1000
+                this.gpump = 100 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 14) {
                 this.name1 = "Railgun"
                 this.name2 = "I"
@@ -20592,9 +21510,9 @@ class Weapon {
                 this.sell = 19
                 this.shooter = 1
                 this.value = 10
-                this.rpump = 100000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100000*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100000 * 1000
             } else if (this.type == 15) {
                 this.name1 = "Railgun"
                 this.name2 = "II"
@@ -20611,9 +21529,9 @@ class Weapon {
                 this.sell = 24
                 this.shooter = 1
                 this.value = 18
-                this.rpump = 100000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100000*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100000 * 1000
             } else if (this.type == 16) {
                 this.name1 = "Railgun"
                 this.name2 = "Repeater I"
@@ -20628,9 +21546,9 @@ class Weapon {
                 this.sell = 29
                 this.shooter = 1
                 this.value = 21
-                this.rpump = 100000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100000*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100000 * 1000
             } else if (this.type == 17) {
                 this.name1 = "Shield"
                 this.name2 = "Sap I"
@@ -20645,9 +21563,9 @@ class Weapon {
                 this.buy = 30
                 this.sell = 10
                 this.value = 18
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 18) {
                 this.name1 = "Shield"
                 this.name2 = "Sap II"
@@ -20662,9 +21580,9 @@ class Weapon {
                 this.buy = 35
                 this.sell = 18
                 this.value = 28
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 19) {
                 this.name1 = "Shield"
                 this.name2 = "Sap III"
@@ -20679,9 +21597,9 @@ class Weapon {
                 this.buy = 40
                 this.sell = 22
                 this.value = 37
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 20) {
                 this.name1 = "Hard"
                 this.name2 = "Beam I"
@@ -20698,9 +21616,9 @@ class Weapon {
                 this.sell = 29
                 this.hard = 1
                 this.value = 10
-                this.rpump = 100*1000
-                this.gpump = 2500000*1000
-                this.bpump = 100*1000
+                this.rpump = 100 * 1000
+                this.gpump = 2500000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 21) {
                 this.name1 = "Hard"
                 this.name2 = "Beam II"
@@ -20717,12 +21635,12 @@ class Weapon {
                 this.sell = 64
                 this.hard = 1
                 this.value = 19
-                this.rpump = 2500000*1000
-                this.gpump = 2500000*1000
-                this.bpump = 2500000*1000
+                this.rpump = 2500000 * 1000
+                this.gpump = 2500000 * 1000
+                this.bpump = 2500000 * 1000
 
-            this.tee = Math.floor(Math.random()*7)
-            this.kay = Math.floor(Math.random()*7)
+                this.tee = Math.floor(Math.random() * 7)
+                this.kay = Math.floor(Math.random() * 7)
             } else if (this.type == 22) {
                 this.name1 = "Hard"
                 this.name2 = "Beam III"
@@ -20739,12 +21657,12 @@ class Weapon {
                 this.sell = 74
                 this.hard = 1
                 this.value = 30
-                this.rpump = 2500000*1000
-                this.gpump = 0*1000
-                this.bpump = 2500000*1000
+                this.rpump = 2500000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 2500000 * 1000
 
-            this.tee = Math.floor(Math.random()*7)
-            this.kay = Math.floor(Math.random()*7)
+                this.tee = Math.floor(Math.random() * 7)
+                this.kay = Math.floor(Math.random() * 7)
             } else if (this.type == 23) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon I"
@@ -20765,9 +21683,9 @@ class Weapon {
                 this.shotCount = 2
                 // this.hard = 1
                 this.value = 12
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 24) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon II"
@@ -20788,9 +21706,9 @@ class Weapon {
                 this.sell = 34
                 // this.hard = 1
                 this.value = 30
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 25) {
                 this.name1 = "Scrap"
                 this.name2 = "Cannon III"
@@ -20811,9 +21729,9 @@ class Weapon {
                 this.scrap = 3
                 // this.hard = 1
                 this.value = 50
-                this.rpump = 100000*0
-                this.gpump = 100000*0
-                this.bpump = 100000*0
+                this.rpump = 100000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100000 * 0
             } else if (this.type == 26) {
                 this.name1 = "Heat"
                 this.name2 = "Beam I"
@@ -20830,9 +21748,9 @@ class Weapon {
                 this.sell = 20
                 this.mini = 1
                 this.value = 8
-                this.rpump = 250000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100 * 1000
             } else if (this.type == 27) {
                 this.name1 = "Mind"
                 this.name2 = "Control I"
@@ -20849,9 +21767,9 @@ class Weapon {
                 this.sell = 45
                 this.mind = 1
                 this.value = 20
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 28) {
                 this.name1 = "Mind"
                 this.name2 = "Control II"
@@ -20868,9 +21786,9 @@ class Weapon {
                 this.sell = 55
                 this.mind = 2
                 this.value = 30
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 29) {
                 this.name1 = "Ship"
                 this.name2 = "Tether I"
@@ -20889,9 +21807,9 @@ class Weapon {
                 // this.mind = 2
                 this.value = 7
                 this.rope = 1
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 30) {
                 this.name1 = "Ship"
                 this.name2 = "Tether II"
@@ -20910,9 +21828,9 @@ class Weapon {
                 // this.mind = 2
                 this.value = 9
                 this.rope = 1
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 31) {
                 this.name1 = "Ship"
                 this.name2 = "Tether III"
@@ -20930,9 +21848,9 @@ class Weapon {
                 // this.mind = 2
                 this.value = 11
                 this.rope = 1
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 32) {
                 this.name1 = "Tractor"
                 this.name2 = "Beam I"
@@ -20949,9 +21867,9 @@ class Weapon {
                 this.sell = 25
                 // this.mind = 2
                 this.value = 20
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 33) {
                 this.name1 = "Tractor"
                 this.name2 = "Beam II"
@@ -20969,9 +21887,9 @@ class Weapon {
                 this.sell = 35
                 // this.mind = 2
                 this.value = 30
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 34) {
                 this.name1 = "Mirror"
                 this.name2 = "Shell I"
@@ -20990,9 +21908,9 @@ class Weapon {
                 this.sell = 22
                 // this.mind = 2
                 this.value = 25
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 35) {
                 this.name1 = "Mirror"
                 this.name2 = "Shell II"
@@ -21011,9 +21929,9 @@ class Weapon {
                 this.sell = 30
                 // this.mind = 2
                 this.value = 25
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 36) {
                 this.name1 = "Capacitor"
                 this.name2 = "I"
@@ -21034,9 +21952,9 @@ class Weapon {
                 this.capacitor = 1
                 // this.mind = 2
                 this.value = 12
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 37) {
                 this.name1 = "Capacitor"
                 this.name2 = "II"
@@ -21057,9 +21975,9 @@ class Weapon {
                 this.sell = 28
                 // this.mind = 2
                 this.value = 13
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 38) {
                 this.name1 = "Evasion"
                 this.name2 = "Module I"
@@ -21081,9 +21999,9 @@ class Weapon {
                 this.sell = 28
                 // this.mind = 2
                 this.value = 40
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 39) {
                 this.name1 = "Healing"
                 this.name2 = "Shield I"
@@ -21107,9 +22025,9 @@ class Weapon {
                 this.pulsing = 0
                 // this.mind = 2
                 this.value = 7
-                this.rpump = 250000*0
-                this.gpump = 100000*0
-                this.bpump = 100*0
+                this.rpump = 250000 * 0
+                this.gpump = 100000 * 0
+                this.bpump = 100 * 0
             } else if (this.type == 40) {
                 this.name1 = "Death"
                 this.name2 = "Beam I"
@@ -21133,9 +22051,9 @@ class Weapon {
                 this.pulsing = 0
                 // this.mind = 2
                 this.value = 25
-                this.rpump = 5500000*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 5500000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 41) {
                 this.name1 = "Telescopic"
                 this.name2 = "Spine I"
@@ -21162,9 +22080,9 @@ class Weapon {
                 this.pulsing = 0
                 // this.mind = 2
                 this.value = 20
-                this.rpump = 250000*1000
-                this.gpump = 250000*1000
-                this.bpump = 250000*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 42) {
                 this.name1 = "Telescopic"
                 this.name2 = "Spine II"
@@ -21191,9 +22109,9 @@ class Weapon {
                 this.pulsing = 0
                 // this.mind = 2
                 this.value = 30
-                this.rpump = 350000*1000
-                this.gpump = 350000*1000
-                this.bpump = 350000*1000
+                this.rpump = 350000 * 1000
+                this.gpump = 350000 * 1000
+                this.bpump = 350000 * 1000
             } else if (this.type == 43) {
                 this.name1 = "Boomerang"
                 this.name2 = "Blade I"
@@ -21214,9 +22132,9 @@ class Weapon {
                 // this.scrap = 3
                 // this.hard = 1
                 this.value = 25
-                this.rpump = 3500000*1000
-                this.gpump = 3500000*1000
-                this.bpump = 0*1000
+                this.rpump = 3500000 * 1000
+                this.gpump = 3500000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 44) {
                 this.name1 = "Boomerang"
                 this.name2 = "Blade II"
@@ -21237,9 +22155,9 @@ class Weapon {
                 // this.scrap = 3
                 // this.hard = 1
                 this.value = 30
-                this.rpump = 7500000*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 7500000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 45) {
                 this.name1 = "Basic"
                 this.name2 = "Bomb"
@@ -21261,9 +22179,9 @@ class Weapon {
                 // this.scrap = 3
                 // this.hard = 1
                 this.value = 21
-                this.rpump = 550000*1000
-                this.gpump = 250000*1000
-                this.bpump = 0*1000
+                this.rpump = 550000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 46) {
                 this.name1 = "Anti-Mobility"
                 this.name2 = "Beads I"
@@ -21287,9 +22205,9 @@ class Weapon {
                 // this.scrap = 3
                 // this.hard = 1
                 this.value = 11
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 47) {
                 this.name1 = "Healing"
                 this.name2 = "Shield II"
@@ -21314,9 +22232,9 @@ class Weapon {
                 this.pulsing = 0
                 // this.mind = 2
                 this.value = 20
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 48) {
                 this.name1 = "Advanced"
                 this.name2 = "Bomb"
@@ -21336,9 +22254,9 @@ class Weapon {
                 this.buy = 50
                 this.sell = 32
                 this.value = 35
-                this.rpump = 650000*1000
-                this.gpump = 550000*1000
-                this.bpump = 0*1000
+                this.rpump = 650000 * 1000
+                this.gpump = 550000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 49) {
                 this.name1 = "Zero Area"
                 this.name2 = "Field"
@@ -21354,9 +22272,9 @@ class Weapon {
                 this.bomb = 1
                 this.zero = 1
                 this.value = 22
-                this.rpump = 650000*1000
-                this.gpump = 0*1000
-                this.bpump = 650000*1000
+                this.rpump = 650000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 650000 * 1000
             } else if (this.type == 50) {
                 this.name1 = "1-D"
                 this.name2 = "Filament"
@@ -21371,9 +22289,9 @@ class Weapon {
                 // this.shooter = 1
                 this.one = 1
                 this.value = 9
-                this.rpump = Math.random()*650000*1000
-                this.gpump = Math.random()*650000*1000
-                this.bpump = Math.random()*650000*1000
+                this.rpump = Math.random() * 650000 * 1000
+                this.gpump = Math.random() * 650000 * 1000
+                this.bpump = Math.random() * 650000 * 1000
             } else if (this.type == 51) {
                 this.name1 = "Hot"
                 this.name2 = "Laser"
@@ -21385,9 +22303,9 @@ class Weapon {
                 this.sell = 30
                 this.laser = 1
                 this.value = 12
-                this.rpump = 450000*1000
-                this.gpump = 250000*1000
-                this.bpump = 0*1000
+                this.rpump = 450000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 52) {
                 this.name1 = "Cap"
                 this.name2 = "Laser"
@@ -21401,9 +22319,9 @@ class Weapon {
                 this.capacitor = 1
                 this.caplaser = 1
                 this.value = 12
-                this.rpump = 450000*1000
-                this.gpump = 0*1000
-                this.bpump = 450000*1000
+                this.rpump = 450000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 450000 * 1000
             } else if (this.type == 53) {
                 this.name1 = "Cap"
                 this.name2 = "Shield"
@@ -21421,9 +22339,9 @@ class Weapon {
                 this.value = 12
                 this.secretDouble = 0
                 this.double = 0
-                this.rpump = 450000*0
-                this.gpump = 0*0
-                this.bpump = 450000*0
+                this.rpump = 450000 * 0
+                this.gpump = 0 * 0
+                this.bpump = 450000 * 0
             } else if (this.type == 54) {
                 this.name1 = "Crash"
                 this.name2 = "Paddle"
@@ -21435,9 +22353,9 @@ class Weapon {
                 this.buy = 35
                 this.sell = 18
                 // this.laser = 1
-                this.rpump = 150000*1000
-                this.gpump = 250000*1000
-                this.bpump = 250000*1000
+                this.rpump = 150000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 250000 * 1000
                 this.ball = new Circle(-11, -11, 11, "#FF00AA")
                 this.string = {}
                 this.string.cx = 0
@@ -21466,9 +22384,9 @@ class Weapon {
                 this.dot2 = new Circle(this.center.x, this.center.y, 10, "#00AAFF")
                 this.secretDouble = 2
                 this.double = 2
-                this.rpump = 1150000*1000
-                this.gpump = 1250000*1000
-                this.bpump = 1250000*1000
+                this.rpump = 1150000 * 1000
+                this.gpump = 1250000 * 1000
+                this.bpump = 1250000 * 1000
             } else if (this.type == 56) {
                 this.name1 = "Spinner"
                 this.name2 = "Pellet"
@@ -21483,9 +22401,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 10
                 this.turnTo = 561
-                this.rpump = 0*1000
-                this.gpump = 250000*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 57) {
                 this.name1 = "Bubblegun"
                 this.name2 = ""
@@ -21500,9 +22418,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 17
                 this.stuns = 1
-                this.rpump = 150000*1000
-                this.gpump = 0*1000
-                this.bpump = 250000*1000
+                this.rpump = 150000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 58) {
                 this.name1 = "Detonating"
                 this.name2 = "Shield I"
@@ -21518,9 +22436,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 17
                 this.stuns = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 59) {
                 this.name1 = "Crew"
                 this.name2 = "Lightning"
@@ -21536,9 +22454,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 20
                 // this.stuns = 1
-                this.rpump = 0*1000
-                this.gpump = 250000*1000
-                this.bpump = 250000*1000
+                this.rpump = 0 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 60) {
                 this.name1 = "Quick"
                 this.name2 = "Lightning"
@@ -21554,9 +22472,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 18
                 // this.stuns = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 450000*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 450000 * 1000
             } else if (this.type == 61) {
                 this.name1 = "Hot"
                 this.name2 = "Lightning"
@@ -21572,9 +22490,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 20
                 // this.stuns = 1
-                this.rpump = 250000*1000
-                this.gpump = 150000*1000
-                this.bpump = 0*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 150000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 62) {
                 this.name1 = "Chain"
                 this.name2 = "Lightning"
@@ -21590,9 +22508,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 30
                 // this.stuns = 1
-                this.rpump = 0*1000
-                this.gpump = 150000*1000
-                this.bpump = 150000*1000
+                this.rpump = 0 * 1000
+                this.gpump = 150000 * 1000
+                this.bpump = 150000 * 1000
             } else if (this.type == 63) {
                 this.name1 = "Minty Ion"
                 this.name2 = "Bubblegun"
@@ -21608,9 +22526,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 16
                 this.stuns = 1
-                this.rpump = 0*1000
-                this.gpump = 150000*1000
-                this.bpump = 150000*1000
+                this.rpump = 0 * 1000
+                this.gpump = 150000 * 1000
+                this.bpump = 150000 * 1000
             } else if (this.type == 64) {
                 this.name1 = "Cinnamon"
                 this.name2 = "Bubblegun"
@@ -21626,9 +22544,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 18
                 this.stuns = 1
-                this.rpump = 999999*1000
-                this.gpump = 150000*1000
-                this.bpump = 150000*1000
+                this.rpump = 999999 * 1000
+                this.gpump = 150000 * 1000
+                this.bpump = 150000 * 1000
             } else if (this.type == 65) {
                 this.name1 = "Harm"
                 this.name2 = "Wave"
@@ -21645,9 +22563,9 @@ class Weapon {
                 this.value = 22
                 // this.stuns = 1
                 this.meanwave = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 66) {
                 this.name1 = "Stun"
                 this.name2 = "Wave"
@@ -21664,9 +22582,9 @@ class Weapon {
                 this.value = 22
                 this.stuns = 1
                 this.meanwave = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 67) {
                 this.name1 = "Mean"
                 this.name2 = "Wave"
@@ -21683,9 +22601,9 @@ class Weapon {
                 this.value = 28
                 this.stuns = 1
                 this.meanwave = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 68) {
                 this.name1 = "Spot"
                 this.name2 = "Light I"
@@ -21701,9 +22619,9 @@ class Weapon {
                 this.pulsing = 0
                 this.value = 15
                 this.light = 1
-                this.rpump = 250000*1000
-                this.gpump = 250000*1000
-                this.bpump = 0*1000
+                this.rpump = 250000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 69) {
                 this.name1 = "Hot"
                 this.name2 = "Light I"
@@ -21719,9 +22637,9 @@ class Weapon {
                 this.pulsing = 0
                 this.value = 17
                 this.light = 1
-                this.rpump = 450000*1000
-                this.gpump = 250000*1000
-                this.bpump = 0*1000
+                this.rpump = 450000 * 1000
+                this.gpump = 250000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 70) {
                 this.name1 = "Detonating"
                 this.name2 = "Shield II"
@@ -21737,9 +22655,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 19
                 this.stuns = 1
-                this.rpump = 250000*0
-                this.gpump = 250000*0
-                this.bpump = 0*0
+                this.rpump = 250000 * 0
+                this.gpump = 250000 * 0
+                this.bpump = 0 * 0
             } else if (this.type == 71) {
                 this.name1 = "Drone"
                 this.name2 = "Swatter"
@@ -21754,9 +22672,9 @@ class Weapon {
                 // this.shooter = 1
                 this.value = 40
                 this.killsdrones = 1
-                this.rpump = 250000*0
-                this.gpump = 250000*0
-                this.bpump = 0*0
+                this.rpump = 250000 * 0
+                this.gpump = 250000 * 0
+                this.bpump = 0 * 0
             } else if (this.type == 72) {
                 this.name1 = "Ionizing"
                 this.name2 = "Light I"
@@ -21772,9 +22690,9 @@ class Weapon {
                 this.pulsing = 0
                 this.value = 17
                 this.light = 1
-                this.rpump = 0*1000
-                this.gpump = 0*1000
-                this.bpump = 250000*1000
+                this.rpump = 0 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 250000 * 1000
             } else if (this.type == 73) {
                 this.name1 = "Ram"
                 this.name2 = "Mod"
@@ -21792,9 +22710,9 @@ class Weapon {
                 this.dodgeMod = 1
                 this.dodgeMax = 4
                 this.rammod = 1
-                this.rpump = 0*0
-                this.gpump = 0*0
-                this.bpump = 250000*0
+                this.rpump = 0 * 0
+                this.gpump = 0 * 0
+                this.bpump = 250000 * 0
             } else if (this.type == 74) {
                 this.name1 = "Anti-Mobility"
                 this.name2 = "Bees I"
@@ -21818,9 +22736,9 @@ class Weapon {
                 // this.scrap = 3
                 // this.hard = 1
                 this.value = 20
-                this.rpump = 0*0
-                this.gpump = 0*0
-                this.bpump = 250000*0
+                this.rpump = 0 * 0
+                this.gpump = 0 * 0
+                this.bpump = 250000 * 0
             } else if (this.type == 75) {
                 this.name1 = "Yo-Yo Ship"
                 this.name2 = "Tether I"
@@ -21840,9 +22758,9 @@ class Weapon {
                 this.value = 20
                 this.yoyo = 1
                 this.rope = 1
-                this.rpump = 0*0
-                this.gpump = 0*0
-                this.bpump = 250000*0
+                this.rpump = 0 * 0
+                this.gpump = 0 * 0
+                this.bpump = 250000 * 0
             } else if (this.type == 76) {
                 this.name1 = "Yo-Yo Ship"
                 this.name2 = "Tether II"
@@ -21862,9 +22780,9 @@ class Weapon {
                 this.value = 32
                 this.yoyo = 2
                 this.rope = 1
-                this.rpump = 0*0
-                this.gpump = 0*0
-                this.bpump = 250000*0
+                this.rpump = 0 * 0
+                this.gpump = 0 * 0
+                this.bpump = 250000 * 0
             } else if (this.type == 77) {
                 this.name1 = "Tether"
                 this.name2 = "Bomb"
@@ -21888,9 +22806,9 @@ class Weapon {
                 this.buy = 60
                 this.sell = 37
                 this.value = 27
-                this.rpump = 0*0
-                this.gpump = 0*0
-                this.bpump = 250000*0
+                this.rpump = 0 * 0
+                this.gpump = 0 * 0
+                this.bpump = 250000 * 0
             } else if (this.type == 78) {
                 this.name1 = "Egg"
                 this.name2 = "Launcher"
@@ -21907,9 +22825,9 @@ class Weapon {
                 this.sell = 20
                 this.shooter = 1
                 this.value = 20
-                this.rpump = 100000*1000
-                this.gpump = 100000*1000
-                this.bpump = 100000*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 100000 * 1000
             } else if (this.type == 561) {
                 this.name1 = "Spinner"
                 this.name2 = "Pellet"
@@ -21924,9 +22842,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 10
                 this.turnTo = 562
-                this.rpump = 100000*1000
-                this.gpump = 100000*1000
-                this.bpump = 0*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 100000 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 562) {
                 this.name1 = "Spinner"
                 this.name2 = "Pellet"
@@ -21941,9 +22859,9 @@ class Weapon {
                 this.shooter = 1
                 this.value = 10
                 this.turnTo = 56
-                this.rpump = 100000*1000
-                this.gpump = 0*1000
-                this.bpump = 0*1000
+                this.rpump = 100000 * 1000
+                this.gpump = 0 * 1000
+                this.bpump = 0 * 1000
             } else if (this.type == 4242) {
                 this.name1 = ""
                 this.name2 = ""
@@ -22025,9 +22943,9 @@ class Weapon {
                 this.buy *= 2
             }
         }
-        this.rpump*=15
-        this.gpump*=15
-        this.bpump*=15
+        this.rpump *= 15
+        this.gpump *= 15
+        this.bpump *= 15
     }
     sold() {
         if (vessel.weapons.includes(this)) {
@@ -22107,18 +23025,41 @@ class Weapon {
                 if (vessel.scrap >= price) {
                     if (stars.stars[vessel.star].weapons.includes(this)) {
                         if (this.part > -1) {
-                            vessel.upgradeMenu.wepsto[index] = new Weapon(this.type, this.crewType, this.gearType, this.droneType, this.part)
-                            vessel.upgradeMenu.wepsto[index].shop = 1
-                            stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1, -1, -1, -1, -1)
+                            let kwndex = -1
+                            let gindex = -1
+                            let wet = 0
+                            for (let w = 0; w < vessel.partMenu.wepsto.length; w++) {
+                                for (let g = 0; g < vessel.partMenu.wepsto[w].length; g++) {
+                                    if (vessel.partMenu.wepsto[w][g].part > -1) {
+                                    } else {
+                                        wet = 1
+                                        kwndex = w
+                                        gindex = g
+                                        break
+                                    }
+                                }
+                                if (wet == 1) {
+                                    break
+                                }
+                            }
+                            if (wet == 1) {
+                                vessel.partMenu.wepsto[kwndex][gindex] = new Weapon(this.type, this.crewType, this.gearType, this.droneType, this.part)
+                                vessel.partMenu.wepsto[kwndex][gindex].shop = 1
+                                stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1, -1, -1, -1, -1)
+                                vessel.scrap -= price
+                                vessel.upgradeMenu.shopdraw = 0
+                            }
                         } else if (this.droneType == -1) {
                             vessel.upgradeMenu.wepsto[index] = new Weapon(this.type, this.crewType, this.gearType, this.droneType)
                             stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1, -1, -1)
+                            vessel.scrap -= price
+                            vessel.upgradeMenu.shopdraw = 0
                         } else {
                             vessel.upgradeMenu.wepsto[index] = new Weapon(this.type, this.crewType, this.gearType, this.droneType)
                             stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1, -1, -1)
+                            vessel.scrap -= price
+                            vessel.upgradeMenu.shopdraw = 0
                         }
-                        vessel.scrap -= price
-                        vessel.upgradeMenu.shopdraw = 0
                     }
                 }
             }
@@ -22140,14 +23081,45 @@ class Weapon {
                 if (stars.stars[vessel.star].weapons.includes(this)) {
                     if (vessel.scrap >= price) {
                         if (index == -1) {
-                            vessel.upgradeMenu.wepsto[index] = new Weapon(this.type, this.crewType, this.gearType, this.droneType, this.part)
-                            stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1)
+
+                            let kwndex = -1
+                            let gindex = -1
+                            let wet = 0
+                            for (let w = 0; w < vessel.partMenu.wepsto.length; w++) {
+                                for (let g = 0; g < vessel.partMenu.wepsto[w].length; g++) {
+                                    if (vessel.partMenu.wepsto[w][g].part > -1) {
+                                    } else {
+                                        wet = 1
+                                        kwndex = w
+                                        gindex = g
+                                        break
+                                    }
+                                }
+                                if (wet == 1) {
+                                    break
+                                }
+                            }
+                            if (wet == 1) {
+                                vessel.partMenu.wepsto[kwndex][gindex] = new Weapon(this.type, this.crewType, this.gearType, this.droneType, this.part)
+                                vessel.partMenu.wepsto[kwndex][gindex].shop = 1
+                                stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1, -1, -1, -1, -1)
+                                vessel.scrap -= price
+                                vessel.upgradeMenu.shopdraw = 0
+                            }
+
+
+
+
+
+
+                            // vessel.upgradeMenu.wepsto[index] = new Weapon(this.type, this.crewType, this.gearType, this.droneType, this.part)
+                            // stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1)
                         } else {
                             vessel.drones[index] = new Drone(this.droneType, vessel)
                             stars.stars[vessel.star].weapons[stars.stars[vessel.star].weapons.indexOf(this)] = new Weapon(-1)
+                            vessel.scrap -= price
+                            vessel.upgradeMenu.shopdraw = 0
                         }
-                        vessel.scrap -= price
-                        vessel.upgradeMenu.shopdraw = 0
                     }
                 }
             } else if (dronecase == 1) {
@@ -22213,7 +23185,7 @@ class Weapon {
             if (enemy.shield.rings.length > 0) {
                 if (this.bullets[t].rope != 1) { //|| this.bullets[t].subly > 0
                     if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
-                        // // //////////////////////////console.log("ddd")
+                        // // ////////////////////////////console.log("ddd")
                         // this.bullets[t].stopped = 1
                         // this.bullets[t].life -= 1500
                         // // this.bullets[t].x = -1000
@@ -22249,7 +23221,7 @@ class Weapon {
                 if (this.bullets[t].rope != 1) { //this.bullets[t].subly > 0 ??
                     if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                         // this.bullets[t].stopped = 1
-                        // //  //////////////////////////console.log("ddd")
+                        // //  ////////////////////////////console.log("ddd")
                         // this.bullets[t].life -= 1500
                         // // this.bullets[t].x = -1000
                         // // this.bullets[t].y = -1000
@@ -22344,7 +23316,7 @@ class Weapon {
             if (enemy.shield.rings.length > 0) {
                 if (this.bullets[t].rope != 1 && this.yoyo != 1 && this.yoyo != 2 && this.yoyo != 3) { //|| this.bullets[t].subly > 0
                     if (this.bullets[t].doesPerimeterTouch(enemy.shield.rings[enemy.shield.rings.length - 1])) {
-                        // //////////////////////////console.log("ddd")
+                        // ////////////////////////////console.log("ddd")
                         this.bullets[t].stopped = 1
                         this.bullets[t].life -= 1500
                         // this.bullets[t].x = -1000
@@ -22380,7 +23352,7 @@ class Weapon {
                 if (this.bullets[t].rope != 1 && this.yoyo != 1 && this.yoyo != 2 && this.yoyo != 3) { //this.bullets[t].subly > 0 ??
                     if (this.bullets[t].doesPerimeterTouch(vessel.shield.rings[vessel.shield.rings.length - 1])) {
                         this.bullets[t].stopped = 1
-                        //  //////////////////////////console.log("ddd")
+                        //  ////////////////////////////console.log("ddd")
                         this.bullets[t].life -= 1500
                         // this.bullets[t].x = -1000
                         // this.bullets[t].y = -1000
@@ -22461,12 +23433,12 @@ class Weapon {
                         if (enemy.shield.state < 0) {
                             enemy.shield.state = 0
                         }
-                        // //////////////////////////console.log("ddd")
+                        // ////////////////////////////console.log("ddd")
                     }
                 }
             }
             if (((this.bullets[t].life <= 1 && this.bullets[t].stopped != 1 && this.bullets[t].aura != 1) || (this.bullets[t].goTo.isPointInside(this.bullets[t]) && this.bullets[t].stopped != 1 && this.bullets[t].aura != 1)) || this.bullets[t].tap == 0) {
-                // //////////////////////////console.log(this.bullets[t].stopped)
+                // ////////////////////////////console.log(this.bullets[t].stopped)
                 this.bullets[t].stopped = 1
                 for (let g = 0; g < enemy.guys.length; g++) {
                     if (this.bullets[t].goTo.t == enemy.guys[g].tile.t && this.bullets[t].goTo.k == enemy.guys[g].tile.k) {
@@ -22498,7 +23470,7 @@ class Weapon {
                     this.target.subtiles[this.tee][this.kay].r += this.rpump
                     this.target.subtiles[this.tee][this.kay].g += this.gpump
                     this.target.subtiles[this.tee][this.kay].b += this.bpump
-                    if(this.bullets[t].egg == 1){
+                    if (this.bullets[t].egg == 1) {
                         let egg = new Guy(this.bullets[t].goTo, 63)
                         egg.temp = 500
                         egg.hostile = 1
@@ -22564,7 +23536,7 @@ class Weapon {
                         if (enemy.shield.state < 0) {
                             enemy.shield.state = 0
                         }
-                        // //////////////////////////console.log("ddd")
+                        // ////////////////////////////console.log("ddd")
                     }
                 }
             }
@@ -22597,7 +23569,7 @@ class Weapon {
                     }
                 } else {
                     this.bullets[t].goTo.integrity -= this.damage / this.shotCount
-                    if(this.bullets[t].egg == 1){
+                    if (this.bullets[t].egg == 1) {
                         let egg = new Guy(this.bullets[t].goTo, 63)
                         egg.temp = 500
                         egg.hostile = 1
@@ -22966,8 +23938,8 @@ class Weapon {
 
             if (this.firing <= 0) {
 
-                this.tee = Math.floor(Math.random()*7)
-                this.kay = Math.floor(Math.random()*7)
+                this.tee = Math.floor(Math.random() * 7)
+                this.kay = Math.floor(Math.random() * 7)
                 this.firing = 10
                 this.target = tile
                 this.charge = 0
@@ -23113,7 +24085,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -23203,7 +24175,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -23241,7 +24213,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -23374,7 +24346,7 @@ class Weapon {
                     if (this.spine != 1) {
                         enemy.bombs--
                     }
-                    ////////////////////////////////////////////////////////console.log(vessel.shake)
+                    //////////////////////////////////////////////////////////console.log(vessel.shake)
                 }
                 // if (this.scrap >= 1) {
                 //     if (enemy.scrap <= this.scrap) {
@@ -23501,7 +24473,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -23591,7 +24563,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -23629,7 +24601,7 @@ class Weapon {
                                 }
                                 if (this.temp != -2) {
                                     this.temp += 100 * this.tether
-                                    //////////////////////////////////////console.log(this.temp)
+                                    ////////////////////////////////////////console.log(this.temp)
                                 }
                                 this.bullets.push(bullet)
                                 this.firing = 0
@@ -25344,9 +26316,9 @@ class Weapon {
                             }
                         }
                     }
-                    // //////////////////////////////////////////////////console.log(this.bullets[t])
+                    // ////////////////////////////////////////////////////console.log(this.bullets[t])
                 } else {
-                    // //////////////////////////////////////////////////console.log(this.bullets[t])
+                    // ////////////////////////////////////////////////////console.log(this.bullets[t])
                     this.bullets[t].move()
                     this.bullets[t].draw()
                     if (vessel.weapons.includes(this)) {
@@ -27154,7 +28126,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -27163,11 +28135,11 @@ class Weapon {
                     xmom *= link.hypotenuse() / 5
                     ymom *= link.hypotenuse() / 5
                     let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 6
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 5
@@ -27634,7 +28606,7 @@ class Weapon {
                 if (this.firing == 10) {
                     sap3aud.play()
                 }
-                //////////////////////////////////////////////////////////console.log(this)
+                ////////////////////////////////////////////////////////////console.log(this)
                 let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
                 ring.draw()
                 let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
@@ -29310,7 +30282,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -29319,11 +30291,11 @@ class Weapon {
                     xmom *= link.hypotenuse() / 5
                     ymom *= link.hypotenuse() / 5
                     let bullet = new Circle(link.object.x, link.object.y, 5, "#00ff00", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 6
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 5
@@ -29371,7 +30343,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -29380,11 +30352,11 @@ class Weapon {
                     xmom *= link.hypotenuse() / 5
                     ymom *= link.hypotenuse() / 5
                     let bullet = new Circle(link.object.x, link.object.y, 5, "#FF0088", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 6
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 5
@@ -29431,7 +30403,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -29440,11 +30412,11 @@ class Weapon {
                     xmom *= link.hypotenuse() / 5
                     ymom *= link.hypotenuse() / 5
                     let bullet = new Circle(link.object.x, link.object.y, 5, "#FFDD00", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 6
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 5
@@ -29490,7 +30462,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -29499,12 +30471,12 @@ class Weapon {
                     xmom *= link.hypotenuse() / 24
                     ymom *= link.hypotenuse() / 24
                     let bullet = new Circle(link.object.x, link.object.y, 15, "#FF00AA88", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 25
                     bullet.stun = 250
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 24
@@ -29927,9 +30899,9 @@ class Weapon {
 
             } else if (this.type == 62) {
 
-                //////console.log(this)
+                ////////console.log(this)
                 if (this.target) {
-                    //////console.log("d")
+                    ////////console.log("d")
 
                 } else {
                     if (vessel.weapons.includes(this)) {
@@ -30089,7 +31061,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -30098,12 +31070,12 @@ class Weapon {
                     xmom *= link.hypotenuse() / 16
                     ymom *= link.hypotenuse() / 16
                     let bullet = new Circle(link.object.x, link.object.y, 15, "#AAFFFF88", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 17
                     bullet.stun = 250
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 16
@@ -30135,7 +31107,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -30144,12 +31116,12 @@ class Weapon {
                     xmom *= link.hypotenuse() / 18
                     ymom *= link.hypotenuse() / 18
                     let bullet = new Circle(link.object.x, link.object.y, 15, "#FF888888", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 19
                     bullet.stun = 250
                     this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 18
@@ -30761,7 +31733,7 @@ class Weapon {
             } else if (this.type == 75) {
 
 
-            }else if(this.type == 78){
+            } else if (this.type == 78) {
 
                 let site5 = new X(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), "#FFFFAA", 13)
                 site5.draw()
@@ -31034,7 +32006,7 @@ class Weapon {
             // }
             if (vessel.weapons.includes(this)) {
                 if (enemy.hull <= 0) {
-                    // ////////////////////////////console.log(this.bullets)
+                    // //////////////////////////////console.log(this.bullets)
                     // this.bullets = []
                     // for (let t = 0; t < enemy.blocks.length; t++) {
                     //     for (let k = 0; k < enemy.blocks[t].length; k++) {
@@ -31066,7 +32038,7 @@ class Weapon {
             }
             if (vessel.weapons.includes(this)) {
                 if (this.crewType != -1 && this.droneType == -1) {
-                    ////console.log(this)
+                    //////console.log(this)
                     //should not hit this if 16 or more
                     vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], this.crewType))
                     vessel.weapons[vessel.weapons.indexOf(this)] = new Weapon(-1)
@@ -31075,7 +32047,7 @@ class Weapon {
             }
             if (vessel.upgradeMenu.wepsto.includes(this)) {
                 if (this.crewType != -1 && this.droneType == -1) {
-                    ////console.log(this)
+                    //////console.log(this)
                     //should not hit this if 16 or more
                     vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], this.crewType))
                     vessel.upgradeMenu.wepsto[vessel.upgradeMenu.wepsto.indexOf(this)] = new Weapon(-1)
@@ -31123,7 +32095,38 @@ class Weapon {
             this.work()
             this.beingchecked--
         }
-        if (vessel.weapons.includes(this)) {
+        let wet = 0
+        let pi = -1
+        let pik = -1
+        for (let t = 0; t < vessel.partMenu.wepsto.length; t++) {
+            for (let k = 0; k < vessel.partMenu.wepsto[t].length; k++) {
+                if (this == vessel.partMenu.wepsto[t][k]) {
+                    wet = 1
+                    pi = t
+                    pik = k
+                    break
+                }
+            }
+        }
+        if (wet == 1) {
+            this.body.x = 909 + (118 * pik) + 300
+            this.body.y = 581
+            if (pik > 2) {
+                this.body.y = 581 + 118
+                this.body.x = 909 + (118 * pik) - 330 + 300
+            }
+            this.body.width = 118
+            this.body.height = 118
+            // if(this.part > -1){
+
+            //     let part = new ModularPart(this.part)
+            //     part.tile = this.body
+            //     part.shop = 1
+            //     part.draw()
+            // }
+
+            this.parted = 1
+        } else if (vessel.weapons.includes(this)) {
             this.body.x = 436 + (125 * vessel.weapons.indexOf(this)) + 36
             this.body.y = (1080 - this.body.height) - 7
             this.body.width = 118
@@ -31154,7 +32157,10 @@ class Weapon {
             this.body.color = "#444444"
         }
         if (this.temp == -2) {
-            if ((vessel.weapons.indexOf(this) < 10)) {
+            if (wet == 1) {
+
+                canvas_context.drawImage(invSlot, this.body.x, this.body.y, 0, 0, invSlot.width, invSlot.height, 109, 109)
+            } else if ((vessel.weapons.indexOf(this) < 10)) {
                 if (this.auto == 1) {
                     if (vessel.weapons.includes(this)) {
                         this.body.y = (1080 - this.body.height) - 2
@@ -31181,6 +32187,16 @@ class Weapon {
                 }
             }
             // this.body.draw()
+            if (wet == 1) {
+
+                if (this.part > -1) {
+
+                    let part = new ModularPart(this.part)
+                    part.tile = this.body
+                    part.shop = 1
+                    part.draw()
+                }
+            }
             if (vessel.wepSelect == -1) {
                 if (vessel.weapons.includes(this)) {
                     this.selected = -1
@@ -31728,14 +32744,16 @@ class Weapon {
                     }
                 } else {
                     // enemy.hull -= this.damage * .1
-                    for (let g = 0; g < enemy.guys.length; g++) {
-                        if (this.bombs[t].goTo.t == enemy.guys[g].tile.t && this.bombs[t].goTo.k == enemy.guys[g].tile.k) {
-                            // enemy.guys[g].health -= ((this.damage / this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
-                        }
-                        if (enemy.guys[g].stretch == 1) {
-                            for (let d = 0; d < enemy.guys[g].tiles.length; d++) {
-                                if (this.bombs[t].goTo.t == enemy.guys[g].tiles[d].t && this.bombs[t].goTo.k == enemy.guys[g].tiles[d].k) {
-                                    // enemy.guys[g].health -= ((this.damage / this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
+                    if(enemy.guys){
+                        for (let g = 0; g < enemy.guys.length; g++) {
+                            if (this.bombs[t].goTo.t == enemy.guys[g].tile.t && this.bombs[t].goTo.k == enemy.guys[g].tile.k) {
+                                // enemy.guys[g].health -= ((this.damage / this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
+                            }
+                            if (enemy.guys[g].stretch == 1) {
+                                for (let d = 0; d < enemy.guys[g].tiles.length; d++) {
+                                    if (this.bombs[t].goTo.t == enemy.guys[g].tiles[d].t && this.bombs[t].goTo.k == enemy.guys[g].tiles[d].k) {
+                                        // enemy.guys[g].health -= ((this.damage / this.shotCount) * this.crew) / (1 + enemy.guys[g].gearArmor)
+                                    }
                                 }
                             }
                         }
@@ -32847,9 +33865,9 @@ class Weapon {
                         //     }
                         // }
                     }
-                    // //////////////////////////////////////////////////console.log(this.bullets[t])
+                    // ////////////////////////////////////////////////////console.log(this.bullets[t])
                 } else {
-                    // //////////////////////////////////////////////////console.log(this.bullets[t])
+                    // ////////////////////////////////////////////////////console.log(this.bullets[t])
                     // this.bullets[t].move()
                     this.bullets[t].draw(1)
                     if (vessel.weapons.includes(this)) {
@@ -33368,7 +34386,7 @@ class Weapon {
                         link.target = ring
                         link.object = this.center
                     } else {
-                        ////////////////////////////////////////////////////////////////////console.log("d")
+                        //////////////////////////////////////////////////////////////////////console.log("d")
                         link.target = ring
                         link.object = this.center
                     }
@@ -33377,11 +34395,11 @@ class Weapon {
                     xmom *= link.hypotenuse() / 5
                     ymom *= link.hypotenuse() / 5
                     let bullet = new Circle(link.object.x, link.object.y, 5, "cyan", -xmom, -ymom)
-                    ////////////////////////////////////////////////////////////////////console.log(bullet)
+                    //////////////////////////////////////////////////////////////////////console.log(bullet)
                     bullet.goTo = this.target
                     bullet.life = 6
                     //this.bullets.push(bullet)
-                    ////////////////////////////////////////////////////////////////////console.log(this.bullets)
+                    //////////////////////////////////////////////////////////////////////console.log(this.bullets)
                     if (vessel.weapons.includes(this) && enemy.shield.rings.length > 0) {
                         // bullet.goTo = this.target
                         bullet.life = 5
@@ -33838,7 +34856,7 @@ class Weapon {
                 if (this.firing == 10) {
                     sap3aud.pause()
                 }
-                //////////////////////////////////////////////////////////console.log(this)
+                ////////////////////////////////////////////////////////////console.log(this)
                 let ring = new Circle(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
                 ring.draw(1)
                 let ring2 = new CircleR(this.target.x + (this.target.width * .5), this.target.y + (this.target.height * .5), Math.max(((Math.cos(this.firing * 3) * 36)) - 11, 5), "#0000FF44")
@@ -34270,11 +35288,11 @@ class Weapon {
                         this.stopBlade = 1
                         this.target.integrity -= this.damage
 
-                this.target.subtiles[this.tee][this.kay].r += this.rpump
-                this.target.subtiles[this.tee][this.kay].g += this.gpump
-                this.target.subtiles[this.tee][this.kay].b += this.bpump
+                        this.target.subtiles[this.tee][this.kay].r += this.rpump
+                        this.target.subtiles[this.tee][this.kay].g += this.gpump
+                        this.target.subtiles[this.tee][this.kay].b += this.bpump
 
-                
+
                         this.target.fire -= this.fireChance
                         if (vessel.weapons.includes(this)) {
                             enemy.hull -= this.damage * .1
@@ -35537,7 +36555,7 @@ class Weapon {
             // }
             if (vessel.weapons.includes(this)) {
                 if (enemy.hull <= 0) {
-                    // ////////////////////////////console.log(this.bullets)
+                    // //////////////////////////////console.log(this.bullets)
                     // this.bullets = []
                     // for (let t = 0; t < enemy.blocks.length; t++) {
                     //     for (let k = 0; k < enemy.blocks[t].length; k++) {
@@ -35569,7 +36587,7 @@ class Weapon {
             }
             if (vessel.weapons.includes(this)) {
                 if (this.crewType != -1 && this.droneType == -1) {
-                    ////console.log(this)
+                    //////console.log(this)
                     vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], this.crewType))
                     vessel.weapons[vessel.weapons.indexOf(this)] = new Weapon(-1)
                     return
@@ -35577,7 +36595,7 @@ class Weapon {
             }
             if (vessel.upgradeMenu.wepsto.includes(this)) {
                 if (this.crewType != -1 && this.droneType == -1) {
-                    ////console.log(this)
+                    //////console.log(this)
                     vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], this.crewType))
                     vessel.upgradeMenu.wepsto[vessel.upgradeMenu.wepsto.indexOf(this)] = new Weapon(-1)
                     return
@@ -35624,7 +36642,39 @@ class Weapon {
             this.justwork()
             this.beingchecked--
         }
-        if (vessel.weapons.includes(this)) {
+
+        let wet = 0
+        let pi = -1
+        let pik = -1
+        for (let t = 0; t < vessel.partMenu.wepsto.length; t++) {
+            for (let k = 0; k < vessel.partMenu.wepsto[t].length; k++) {
+                if (this == vessel.partMenu.wepsto[t][k]) {
+                    wet = 1
+                    pi = t
+                    pik = k
+                    break
+                }
+            }
+        }
+        if (wet == 1) {
+            this.body.x = 909 + (118 * pik) + 300
+            this.body.y = 581
+            if (pik > 2) {
+                this.body.y = 581 + 118
+                this.body.x = 909 + (118 * pik) - 330 + 300
+            }
+            this.body.width = 118
+            this.body.height = 118
+            // if(this.part > -1){
+
+            //     let part = new ModularPart(this.part)
+            //     part.tile = this.body
+            //     part.shop = 1
+            //     part.draw()
+            // }
+
+            this.parted = 1
+        } else if (vessel.weapons.includes(this)) {
             this.body.x = 436 + (125 * vessel.weapons.indexOf(this)) + 36
             this.body.y = (1080 - this.body.height) - 7
             this.body.width = 118
@@ -36556,7 +37606,7 @@ class ShipUI {
             }
             let j = 0
             while (j < (level * .5)) {
-                // ////////////////////////////////////////////////////////////////////////////////////console.log("hit")
+                // //////////////////////////////////////////////////////////////////////////////////////console.log("hit")
                 this.systems[j % this.systems.length].max += 1
                 if (this.systems[j % this.systems.length].max >= 10) {
                     this.systems[j % this.systems.length].max = 10
@@ -36586,7 +37636,7 @@ class ShipUI {
     draw() {
         // this.body.draw()
         for (let t = 0; t < this.systems.length - 0; t++) {
-            //////////////////////////////////////////////////////////console.log(this.systems[t].fed)
+            ////////////////////////////////////////////////////////////console.log(this.systems[t].fed)
             if ((this.systems[t].demand + this.systems[t].fed) > this.systems[t].sto) {
                 this.systems[t].demand = Math.max(this.systems[t].sto - this.systems[t].fed, 0)
             } else {
@@ -36654,7 +37704,7 @@ class ShipUI {
                 this.systems[t].bars[k].y -= 1
                 this.systems[t].bars[k].height += 2
                 if (this.systems[t].bars[k].isPointInside(point)) {
-                    //////////////////////////////////////////////////////////////////////////////console.log(this.systems[t].demand, this.systems[t].fed, k)
+                    ////////////////////////////////////////////////////////////////////////////////console.log(this.systems[t].demand, this.systems[t].fed, k)
                     if (this.systems[t].sto > k) {
                         // this.systems[t].demand--
                         this.systems[t].sto--
@@ -36824,6 +37874,165 @@ class MenuUI {
 }
 let system = new Image()
 system.src = "system.png"
+
+class BalanceCatcher {
+    constructor(type) {
+        this.type = type
+        this.max = 1
+        this.damage = 1
+        this.fireChance = 1
+        this.crew = 1
+    }
+    reset() {
+        this.max = 1
+        this.damage = 1
+        this.fireChance = 1
+        this.crew = 1
+    }
+    balance() {
+        if (this.type == 1) {
+            for (let t = 0; t < vessel.weapons.length; t++) {
+                if (vessel.weapons[t].temp == -2) {
+                    let wep = new Weapon(vessel.weapons[t].type)
+                    vessel.weapons[t].max = (wep).max / (this.max)
+                    vessel.weapons[t].damage = (wep).damage * (this.damage)
+                    vessel.weapons[t].fireChance = (wep).fireChance * (this.fireChance)
+                    vessel.weapons[t].crew = (wep).crew * (this.crew)
+                    vessel.weapons[t].max = Math.round(vessel.weapons[t].max)
+                    vessel.weapons[t].fireChance = Math.round(vessel.weapons[t].fireChance)
+                    vessel.weapons[t].crew = Math.round(vessel.weapons[t].crew*100)/100
+                    vessel.weapons[t].damage = Math.round(vessel.weapons[t].damage)
+                }
+            }
+        }
+        if (this.type == 2) {
+            vessel.shield.max = 300 / (this.max)
+        }
+        if (this.type == 3) {
+            vessel.boosts[3] += (Math.max(1-this.max,0)*10)  +   (Math.max(1-this.crew,0)*10)
+            if (vessel.boosts[3] <= 0) {
+                vessel.boosts[3] = 0
+            }
+        }
+        if (this.type == 6) {
+            vessel.boosts[6] += (Math.max(1-this.fireChance,0)*10)  +   (Math.max(1-this.crew,0)*10)
+            // vessel.boosts[6] += (this.fireChance) * (this.crew)
+            if (vessel.boosts[6] <= 0) {
+                vessel.boosts[6] = 0
+            }
+        }
+
+        this.reset()
+    }
+
+
+
+}
+class PartMenu {
+    constructor() {
+        this.open = -1
+        this.buttons = []
+        for (let t = 0; t < 9; t++) {
+            let button = new Rectangle(922 + 300 + (36 * t), 254, 35, 35, "#FFFFFF22")
+            this.buttons.push(button)
+        }
+        this.subsystems = []
+        this.systems = []
+        for (let t = 0; t < 9; t++) {
+            this.subsystems.push(new BalanceCatcher(t))
+            this.systems.push(new ModInv(this.subsystems[t]))
+        }
+        this.wepsto = []
+        for (let t = 0; t < 100; t++) {
+            this.wepsto.push([])
+            for (let k = 0; k < 6; k++) {
+                this.wepsto[t].push(new Weapon(-1))
+            }
+        }
+        this.up = new Rectangle(1273 + 300, 625, 35, 35)
+        this.down = new Rectangle(1273 + 300, 672, 35, 35)
+        this.partshow = 0
+    }
+    check() {
+        if (this.up.isPointInside(TIP_engine)) {
+            this.partshow = Math.max(0, this.partshow - 1)
+        }
+        if (this.down.isPointInside(TIP_engine)) {
+            this.partshow = Math.min(99, this.partshow + 1)
+        }
+
+        let wet = 0
+        for (let t = 0; t < this.buttons.length; t++) {
+            if (this.buttons[t].isPointInside(TIP_engine)) {
+                wet = 1
+            }
+        }
+        if (wet == 1) {
+
+            for (let t = 0; t < this.buttons.length; t++) {
+                this.systems[t].active = -1
+            }
+        }
+        for (let t = 0; t < this.buttons.length; t++) {
+            if (this.buttons[t].isPointInside(TIP_engine)) {
+                this.systems[t].active = 1
+            }
+        }
+        for (let t = 0; t < this.systems.length; t++) {
+            if (this.systems[t].active == 1) {
+                this.systems[t].check(TIP_engine)
+            }
+        }
+
+        for (let t = 0; t < this.wepsto[this.partshow].length; t++) {
+            if (this.wepsto[this.partshow][t].body.isPointInside(TIP_engine)) {
+                if (this.wepsto[this.partshow][t].type == -1 && this.wepsto[this.partshow][t].crewType == -1 && this.wepsto[this.partshow][t].gearType == -1 && this.wepsto[this.partshow][t].droneType == -1 && this.wepsto[this.partshow][t].part == -1) {
+                    if (vessel.upgradeMenu.partsto.length > 0) {
+                        this.wepsto[this.partshow][t] = new Weapon(-1, -1, -1, -1, vessel.upgradeMenu.partsto[0].type)
+                        vessel.upgradeMenu.partsto = []
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    draw() {
+        if (this.open == 1) {
+            canvas_context.drawImage(partMenu, 300, 0)
+            for (let t = 0; t < this.systems.length; t++) {
+                this.systems[t].draw()
+                if (this.systems[t].active == 1) {
+                    this.buttons[t].draw()
+                }
+            }
+            canvas_context.fillStyle = "white"
+            canvas_context.font = "10px clock"
+            canvas_context.fillText(this.partshow, this.up.x, this.up.y - 50)
+            for (let k = 0; k < 6; k++) {
+                let t = vessel.partMenu.partshow
+                vessel.partMenu.wepsto[t][k].draw()
+            }
+        } else {
+        }
+        if (vessel.upgradeMenu.open != 1) {
+            this.open = -1
+            for (let t = 0; t < this.systems.length; t++) {
+                this.systems[t].active = -1
+            }
+        }
+    }
+    balance() {
+        for (let t = 0; t < this.subsystems.length; t++) {
+            this.systems[t].balance()
+        }
+        for (let t = 0; t < this.subsystems.length; t++) {
+            this.subsystems[t].balance()
+        }
+    }
+}
+
 class UpgradeMenu {
     constructor(type) {
         this.questing = -1
@@ -36836,7 +38045,7 @@ class UpgradeMenu {
         // for(let t = 0;t<8;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -36943,6 +38152,8 @@ class UpgradeMenu {
         this.levels = new MenuUI(this.window)
         this.repairButton = new RectangleR(328, 394, 154, 68, "#FF000044")
         this.first = 0
+        this.activate = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y + -75, 150, 25, "#88888888")
+
     }
     draw() {
         if (this.first == 0) {
@@ -36990,7 +38201,7 @@ class UpgradeMenu {
                     newguy.gear = []
                     newguy.secont = 1
                     newguy.isPomao = enemy.guys[t].isPomao
-                    if(newguy.isPomao){
+                    if (newguy.isPomao) {
                         newguy.type = 11
                     }
                     for (let s = 0; s < enemy.guys[t].skillslist.length; s++) {
@@ -37010,7 +38221,7 @@ class UpgradeMenu {
             vessel.copies = []
             enemy.guys = []
         } else if (enemy.guys) {
-            // ////////////////////////////////////////////////////////console.log(c, enemy.guys.length)
+            // //////////////////////////////////////////////////////////console.log(c, enemy.guys.length)
             if (enemy.guys.length == 0 || c == enemy.guys.length) {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     // let w = {}
@@ -37042,7 +38253,7 @@ class UpgradeMenu {
                     newguy.gear = []
                     newguy.secont = 1
                     newguy.isPomao = enemy.guys[t].isPomao
-                    if(newguy.isPomao){
+                    if (newguy.isPomao) {
                         newguy.type = 11
                     }
                     for (let s = 0; s < enemy.guys[t].skillslist.length; s++) {
@@ -37387,8 +38598,26 @@ class UpgradeMenu {
         } else {
             this.shopdraw = 0
         }
+
+        if (this.open == 1) {
+            this.activate = new RectangleR(this.wepsto[0].body.x - 50, this.wepsto[0].body.y - 75, 100, 25, "#88888888")
+            this.activate.draw()
+            if (vessel.partMenu.open == -1) {
+                canvas_context.fillStyle = "yellow"
+                canvas_context.font = "13px clock"
+                canvas_context.fillText("Open Parts Menu", this.activate.x + 1, this.activate.y + 15)
+            } else {
+                canvas_context.fillStyle = "yellow"
+                canvas_context.font = "13px clock"
+                canvas_context.fillText("Close Parts Menu", this.activate.x + 1, this.activate.y + 15)
+            }
+        }
     }
     check(point) {
+        if (this.activate.isPointInside(point)) {
+            vessel.partMenu.open *= -1
+            return
+        }
         if (this.open == 1) {
             if (this.questing == 1) {
                 for (let t = 0; t < this.questButtons.length; t++) {
@@ -37573,6 +38802,14 @@ class UpgradeMenu {
                     }
                 }
             }
+            // for (let t = vessel.partMenu.partshow; t < vessel.partMenu.partshow+1; t++) { //vessel.partMenu.wepsto.length
+            for (let k = 0; k < vessel.partMenu.wepsto[vessel.partMenu.partshow].length; k++) {
+                if (vessel.partMenu.wepsto[vessel.partMenu.partshow][k].body.isPointInside(TIP_engine)) {
+                    gwet = 6
+                    break
+                }
+            }
+            // }
             if (gwet == 4) {
                 for (let k = 0; k < vessel.drones.length; k++) {
                     if (vessel.drones[k].body.isPointInside(point)) {
@@ -37615,16 +38852,43 @@ class UpgradeMenu {
                         }
                     }
                 }
+            } else if (gwet == 6) {
+                let kwndex = -1
+                let gindex = -1
+                for(let w = 0;w<vessel.partMenu.wepsto.length;w++){
+                // let w = vessel.partMenu.partshow
+                for (let g = 0; g < vessel.partMenu.wepsto[w].length; g++) {
+                    if (vessel.partMenu.wepsto[w][g].part > -1) {
+                    } else {
+                        kwndex = w
+                        gindex = g
+                        break
+                    }
+                }
+                }
+                if (this.partsto.length < 1) {
+                    if (vessel.partMenu.wepsto[kwndex][gindex].part > -1) {
+                        if (this.partsto.length < 1) {
+                            let parto = new ModularPart(vessel.partMenu.wepsto[kwndex][gindex].part)
+                            parto.lifted = 1
+                            this.partsto.push(parto)
+                            vessel.partMenu.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
+                        }
+                    }
+                } else {
+                    for (let u = 0; u < vessel.partMenu.wepsto[vessel.partMenu.partshow].length; u++) {
+                        vessel.partMenu.wepsto[vessel.partMenu.partshow][u].body.draw()
+                        if (vessel.partMenu.wepsto[vessel.partMenu.partshow][u].body.isPointInside(TIP_engine)) {
+                            if (vessel.partMenu.wepsto[vessel.partMenu.partshow][u].part == -1) {
+                            vessel.partMenu.wepsto[vessel.partMenu.partshow][u] = new Weapon(-1, -1, -1, -1, this.partsto[0].part)
+                            this.partsto = []
+                            }
+                        }
+                    }
+                }
             } else if (gwet == 1) {
                 for (let t = 0; t < this.wepsto.length; t++) {
                     if (this.wepsto[t].body.isPointInside(point)) {
-                        if (this.wepsto[t].part > -1) {
-                            let parto = new ModularPart(this.wepsto[t].part)
-                            parto.lifted = 1
-                            this.partsto.push(parto)
-                            this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
-                            break
-                        }
                         for (let k = 0; k < vessel.weapons.length; k++) {
                             if (vessel.weapons[k].selected == 1) {
                                 if (this.wepsto[t].gearType < 0 && this.wepsto[t].droneType == -1) {
@@ -37640,11 +38904,13 @@ class UpgradeMenu {
                 for (let t = 0; t < this.wepsto.length; t++) {
                     if (this.wepsto[t].body.isPointInside(point)) {
                         if (this.wepsto[t].part > -1) {
-                            let parto = new ModularPart(this.wepsto[t].part)
-                            parto.lifted = 1
-                            this.partsto.push(parto)
-                            this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
-                            break
+                            if (this.partsto.length < 1) {
+                                let parto = new ModularPart(this.wepsto[t].part)
+                                parto.lifted = 1
+                                this.partsto.push(parto)
+                                this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
+                                break
+                            }
                         }
                         for (let k = 0; k < vessel.drones.length; k++) {
                             if (vessel.drones[k].selected == 1) {
@@ -37660,11 +38926,13 @@ class UpgradeMenu {
                 for (let t = 0; t < this.wepsto.length; t++) {
                     if (this.wepsto[t].body.isPointInside(point)) {
                         if (this.wepsto[t].part > -1) {
-                            let parto = new ModularPart(this.wepsto[t].part)
-                            parto.lifted = 1
-                            this.partsto.push(parto)
-                            this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
-                            break
+                            if (this.partsto.length < 1) {
+                                let parto = new ModularPart(this.wepsto[t].part)
+                                parto.lifted = 1
+                                this.partsto.push(parto)
+                                this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
+                                break
+                            }
                         }
                         this.wepsto[t].selected = 1
                         if (stars.stars[vessel.star].shop == 1) {
@@ -37711,14 +38979,17 @@ class UpgradeMenu {
                     }
                     this.wepsto[t].selected = 0
                 }
+
                 for (let t = 0; t < this.wepsto.length; t++) {
                     if (this.wepsto[t].body.isPointInside(point)) {
                         if (this.wepsto[t].part > -1) {
-                            let parto = new ModularPart(this.wepsto[t].part)
-                            parto.lifted = 1
-                            this.partsto.push(parto)
-                            this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
-                            break
+                            if (this.partsto.length < 1) {
+                                let parto = new ModularPart(this.wepsto[t].part)
+                                parto.lifted = 1
+                                this.partsto.push(parto)
+                                this.wepsto[t] = new Weapon(-1, -1, -1, -1, -1)
+                                break
+                            }
                         }
                         this.wepsto[t].selected = 1
                         if (stars.stars[vessel.star].shop == 1) {
@@ -37830,7 +39101,7 @@ class Battery {
     constructor(power, systems) {
         this.power = power
         this.powersto = power
-        //////////////////////////////////////////////////////////////////////console.log(this.powersto)
+        ////////////////////////////////////////////////////////////////////////console.log(this.powersto)
         this.expenditure = 0
         this.systems = systems
     }
@@ -38139,7 +39410,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 1) {
@@ -38147,7 +39418,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x - 40
                 // this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y + 10
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 2) {
@@ -38155,7 +39426,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 3) {
@@ -38163,7 +39434,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship4doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship4doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 4) {
@@ -38171,7 +39442,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship5doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship5doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 5) {
@@ -38179,7 +39450,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship6doors[vessel.doors.indexOf(this)].body.x + 50
                 // this.body.y = ship6doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 6) {
@@ -38187,7 +39458,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship7doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship7doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 7) {
@@ -38195,7 +39466,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship8doors[vessel.doors.indexOf(this)].body.x + 40
                 // this.body.y = ship8doors[vessel.doors.indexOf(this)].body.y + 40
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 8) {
@@ -38203,7 +39474,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship9doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship9doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 9) {
@@ -38211,7 +39482,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship10doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship10doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 10) {
@@ -38219,7 +39490,7 @@ class Airlock {
             if (vessel.doors.includes(this)) {
                 // this.body.x = ship11doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = ship11doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 11) {
@@ -38250,7 +39521,7 @@ class Airlock {
             }
         }
         if (vessel.type == 14) {
-            vverts = [1, 2, 3, 4, 5, 6, 7, 8, 12,13, 14, 15, 16, 17, 18, 19]
+            vverts = [1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 17, 18, 19]
             let drop = [1, 2]
             let up = [0, 3]
             if (vessel.doors.includes(this)) {
@@ -38314,7 +39585,7 @@ class Airlock {
         for (let t = 0; t < vessel.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -38347,7 +39618,7 @@ class Airlock {
             }
             let wet = 0
             if (this.rect.isPointInside(point)) {
-                // console.log(vessel.doors.indexOf(this))
+                // //console.log(vessel.doors.indexOf(this))
                 this.open *= -1
                 if (this.open == 1) {
                     this.body.color = "#00ff00"
@@ -38357,7 +39628,7 @@ class Airlock {
                     doorclose.play()
                 }
                 wet = 1
-                // //////////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                // ////////////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
                 // for (let t = 0; t < vessel.blocks.length; t++) {
                 //     for (let k = 0; k < vessel.blocks[t].length; k++) {
                 //         if (vessel.blocks[t][k].doesPerimeterTouch(this.body)) {
@@ -38428,7 +39699,7 @@ class Door {
                         this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x - 40
                         this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y + 10 + (16 * rat)
                     }
-                    // //////////////////////////////////////////console.log("s")
+                    // ////////////////////////////////////////////console.log("s")
                 }
                 this.body.x += 200
                 this.body.y += 150
@@ -38449,7 +39720,7 @@ class Door {
             if (vessel.doors.includes(this)) {
                 // this.body.x = doors[vessel.doors.indexOf(this)].body.x
                 // this.body.y = doors[vessel.doors.indexOf(this)].body.y
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type >= 10000) {
@@ -38482,7 +39753,7 @@ class Door {
                 //     this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x-40
                 //     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y+10+(16*rat)
                 // }
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 3) {
@@ -38500,7 +39771,7 @@ class Door {
                 //     this.body.x = ship2doors[vessel.doors.indexOf(this)].body.x-40
                 //     this.body.y = ship2doors[vessel.doors.indexOf(this)].body.y+10+(16*rat)
                 // }
-                // //////////////////////////////////////////console.log("s")
+                // ////////////////////////////////////////////console.log("s")
             }
         }
         if (vessel.type == 4) {
@@ -38594,7 +39865,7 @@ class Door {
             }
         }
         if (vessel.type == 14) {
-            vverts = [ 11, 7, 10, 6]
+            vverts = [11, 7, 10, 6]
             let drop = [1, 2]
             let up = [0, 3]
             if (vessel.doors.includes(this)) {
@@ -38642,7 +39913,7 @@ class Door {
             for (let t = 0; t < vessel.guys.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -38665,7 +39936,7 @@ class Door {
             for (let t = 0; t < enemy.guys.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -38712,11 +39983,11 @@ class Door {
         if (vessel.guys) {
             for (let t = 0; t < vessel.guys.length; t++) {
                 if (vessel.guys[t].stretch == 1) {
-                    //////////////////////////////////////////////////////////////console.log("33")
+                    ////////////////////////////////////////////////////////////////console.log("33")
                     for (let l = 0; l < vessel.guys[t].lines.length; l++) {
-                        ////////////////////////////////////////////////////////////////console.log(vessel.guys[t].lines)
+                        //////////////////////////////////////////////////////////////////console.log(vessel.guys[t].lines)
                         if (vessel.guys[t].lines[l].intersects(this.link)) {
-                            ////////////////////////////////////////////////////////////////console.log("dd")
+                            //////////////////////////////////////////////////////////////////console.log("dd")
                             worm = 1
                         }
                     }
@@ -38724,9 +39995,9 @@ class Door {
             }
         }
         if (this.body.color == "#00ff00") {
-            ////////////////////////////////////////////////////////////////console.log("gg")
+            //////////////////////////////////////////////////////////////////console.log("gg")
             if (worm == 1) {
-                ////////////////////////////////////////////////////////////////console.log("ee")
+                //////////////////////////////////////////////////////////////////console.log("ee")
                 return
             }
         }
@@ -38735,14 +40006,15 @@ class Door {
                 return
             }
             let wet = 0
+            // let skret = 0
             if (this.rect.isPointInside(point)) {
-                // console.log(vessel.doors.indexOf(this))
-                //////////////////////////////////////console.log(vessel.doors.indexOf(this))
-                // //////////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                // //console.log(vessel.doors.indexOf(this))
+                ////////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                // ////////////////////////////////////////////////////////////////////////////////////console.log(vessel.doors.indexOf(this))
                 for (let t = 0; t < vessel.blocks.length; t++) {
                     for (let k = 0; k < vessel.blocks[t].length; k++) {
                         if (vessel.blocks[t][k].doesPerimeterTouch(this.body)) {
-                            // //////////////////////////////////////console.log(vessel.doors.indexOf(this))
+                            // ////////////////////////////////////////console.log(vessel.doors.indexOf(this))
                             let debt = 0
                             for (let d = 0; d < vessel.doors.length; d++) {
                                 if (this == vessel.doors[d]) {
@@ -38755,6 +40027,7 @@ class Door {
                             }
                             if (debt == 0) {
                                 vessel.blocks[t][k].doorway *= -1
+                                skret = 10
                             }
                             wet = 1
                             if (vessel.blocks[t][k].doorway == 1) {
@@ -39620,7 +40893,7 @@ class Drone {
                 for (let t = 0; t < vessel.weapons.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -39642,7 +40915,7 @@ class Drone {
                     for (let k = 0; k < vessel.weapons[t].bullets.length; k++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -39714,7 +40987,7 @@ class Drone {
                     for (let k = 0; k < vessel.weapons[t].rockets.length; k++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -39761,7 +41034,7 @@ class Drone {
                 for (let t = 0; t < enemy.weapons.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -39785,7 +41058,7 @@ class Drone {
                     for (let k = 0; k < enemy.weapons[t].bullets.length; k++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -39854,7 +41127,7 @@ class Drone {
                     for (let k = 0; k < enemy.weapons[t].rockets.length; k++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -40025,7 +41298,7 @@ class Drone {
         for (let t = 0; t < vessel.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -40220,6 +41493,8 @@ class LightningO {
 
 class Ship {
     constructor(type, width, height, posx, posy, gridPoints,) {
+        this.home = new Homestar()
+        this.boosts = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         this.distortionPoints = []
         this.dettimer = 0
         this.arcs = []
@@ -40300,7 +41575,7 @@ class Ship {
                 let tile = new Tile((t * 32 * rat), (k * 32 * rat), 32 * rat, 32 * rat, getRandomColor() + '41')
                 tile.t = t
                 tile.k = k
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(baseShipTiles)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(baseShipTiles)
                 if (this.type == 0) {
                     let keys = Object.keys(baseShipTiles[t][k])
                     for (let f = 0; f < keys.length; f++) {
@@ -40415,26 +41690,26 @@ class Ship {
                         tile[keys[f]] = tutship4[t][k][keys[f]]
                     }
                 }
-                //////////////////////////////////////////////////////////////////////////////////////////////console.log(tile)
+                ////////////////////////////////////////////////////////////////////////////////////////////////console.log(tile)
                 if (tile.color == "#ff000044") {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
                     tile.medbay = 1
                 }
                 if (tile.empty == 1) {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
                     //droneification
                     tile.color = "#001122"
                 }
                 if (tile.special == 1) {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
                     tile.color = "#AA00FF44"
                 }
                 if (tile.engine == 1) {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("h")
                     tile.color = "#ffaa0044"
                 }
                 if (tile.marked == 1) {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
                     tile.walkable = true
                 }
                 if (this.type == 1) {
@@ -40563,11 +41838,11 @@ class Ship {
                 }
             }
         }
-        
-        for(let t = 0;t<this.supratiles.length;t++){
-            if(this.supratiles[t].subbed != 1){
+
+        for (let t = 0; t < this.supratiles.length; t++) {
+            if (this.supratiles[t].subbed != 1) {
                 this.supratiles[t].subdiv(7)
-            }else{
+            } else {
                 // this.supratiles[t].sublive()
             }
         }
@@ -40697,9 +41972,15 @@ class Ship {
         this.first = 0
         this.wepmax = 0
         this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
-        if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9 || this.type == 10 || this.type == 11 || this.type == 12 || this.type == 13 || this.type == 0 ||this.type == 14||  this.type >= 10000) {
+        if (this.type == 1 || this.type == 2 || this.type == 3 || this.type == 4 || this.type == 5 || this.type == 6 || this.type == 7 || this.type == 8 || this.type == 9 || this.type == 10 || this.type == 11 || this.type == 12 || this.type == 13 || this.type == 0 || this.type == 14 || this.type >= 10000) {
             this.supratiles.sort((a, b) => a.y > b.y ? 1 : -1)
             this.supratiles.sort((a, b) => a.x > b.x ? -1 : 1)
+            this.supratiles.sort((a, b) => {
+                if (a.x === b.x) {
+                  return a.y - b.y;
+                }
+                return b.x - a.x;
+              });
             for (let t = 0; t < this.supratiles.length; t++) {
                 if (this.type == 5) {
                     if (this.supratiles[t].x == this.supratiles[0].x - this.supratiles[0].width && this.supratiles[t].y != this.supratiles[0].y) {
@@ -40824,7 +42105,7 @@ class Ship {
                 }
             }
         }
-        ////////////////////////////////////////////////console.log(this.wepmax, this.supratiles)
+        //////////////////////////////////////////////////console.log(this.wepmax, this.supratiles)
         this.weapons = []
         this.doors = []
         if (this.type == 0) {
@@ -40999,10 +42280,10 @@ class Ship {
         }
         if (this.type == 14) {
             for (let t = 0; t < eggshipdoors.length; t++) {
-                if(t == 0){
+                if (t == 0) {
                     this.doors.push(new Door(eggshipdoors[t].body.x - 30, eggshipdoors[t].body.y - 2))
 
-                }else{
+                } else {
 
                     if (t <= 8) {
                         this.doors.push(new Door(eggshipdoors[t].body.x - 25, eggshipdoors[t].body.y + 0))
@@ -41012,9 +42293,10 @@ class Ship {
                 }
             }
         }
-        //////////////////////////////////////////console.log(ship2doors)
-        //////////////////////////////////////////console.log(this.doors)
+        ////////////////////////////////////////////console.log(ship2doors)
+        ////////////////////////////////////////////console.log(this.doors)
         this.upgradeMenu = new UpgradeMenu(this.type)
+        this.partMenu = new PartMenu()
         this.menuBattery = new BatteryMenu(9, this.upgradeMenu.levels)
         let rooms = ["medbay", "weapon", "shield", "helm", "oxygen", "security", "engine", "special", "empty"]
         this.hash = {}
@@ -41074,16 +42356,16 @@ class Ship {
 
         // canvas_context.globalAlpha = .1
 
-        for(let t = 0;t<vessel.supratiles.length;t++){
-            this.supratiles[t].sublive()
-    }
-    for(let t = 0;t<vessel.supratiles.length;t++){
-            this.supratiles[t].newold()
-    }
-    // canvas_context.globalAlpha = .25
-    canvas_context.drawImage(this.canvas,0,0)
-    canvas_context.globalAlpha = 1
-    this.canvas_context.clearRect(0,0,this.canvas.width, this.canvas.height)
+        for (let t = 0; t < vessel.supratiles.length; t++) {
+            this.supratiles[t].justsublive()
+        }
+        for (let t = 0; t < vessel.supratiles.length; t++) {
+            this.supratiles[t].justnewold()
+        }
+        // canvas_context.globalAlpha = .25
+        canvas_context.drawImage(this.canvas, 0, 0)
+        canvas_context.globalAlpha = 1
+        this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
         // canvas_context.globalAlpha = 1
         for (let t = 0; t < this.zaps.length; t++) {
@@ -41133,7 +42415,7 @@ class Ship {
         for (let t = 0; t < this.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -41143,7 +42425,7 @@ class Ship {
                 for (let k = 0; k < this.guys[t].tiles.length; k++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41155,7 +42437,7 @@ class Ship {
             for (let t = 0; t < this.supratiles.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -41223,7 +42505,7 @@ class Ship {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41246,7 +42528,7 @@ class Ship {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41306,7 +42588,7 @@ class Ship {
         for (let t = 0; t < vessel.fuelmax; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -41451,7 +42733,7 @@ class Ship {
         for (let t = 0; t < this.drones.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -41527,26 +42809,21 @@ class Ship {
         this.UI.draw()
         this.energy.draw()
         // enemy.UI.draw()
-        for (let t = 0; t < this.upgradeMenu.partsto.length; t++) {
-            gigadebug++
-            if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
-                gigadebug = 0
-                break
-            }
-            this.upgradeMenu.partsto[t].draw()
-        }
         this.shield.UIdraw()
+        this.partMenu.draw()
         this.upgradeMenu.draw()
+        this.home.draw()
         for (let t = 0; t < this.guys.length; t++) {
             this.guys[t].bodydraw()
+        }
+        for (let t = 0; t < this.upgradeMenu.partsto.length; t++) {
+            this.upgradeMenu.partsto[t].draw()
         }
     }
 
     distorting() {
         distort_context.imageSmoothingEnabled = false
         canvas_context.imageSmoothingEnabled = false
-
         for (let t = 0; t < this.distortionPoints.length; t++) {
             this.distortionPoints[t].angle += .025
             distoconst = 2 * Math.cos(this.distortionPoints[t].angle)
@@ -41564,6 +42841,8 @@ class Ship {
         }
         canvas_context.imageSmoothingEnabled = true
     }
+
+
     justdistorting() {
         distort_context.imageSmoothingEnabled = false
         canvas_context.imageSmoothingEnabled = false
@@ -41593,24 +42872,24 @@ class Ship {
     }
 
     UIdraw() {
-        
-        for(let t = 0;t<vessel.supratiles.length;t++){
-            if(this.supratiles[t].subbed != 1){
+
+        for (let t = 0; t < vessel.supratiles.length; t++) {
+            if (this.supratiles[t].subbed != 1) {
                 this.supratiles[t].subdiv(7)
-            }else{
+            } else {
                 // this.supratiles[t].sublive()
             }
         }
-        for(let t = 0;t<vessel.supratiles.length;t++){
-                this.supratiles[t].sublive()
+        for (let t = 0; t < vessel.supratiles.length; t++) {
+            this.supratiles[t].sublive()
         }
-        for(let t = 0;t<vessel.supratiles.length;t++){
-                this.supratiles[t].newold()
+        for (let t = 0; t < vessel.supratiles.length; t++) {
+            this.supratiles[t].newold()
         }
         // canvas_context.globalAlpha = .25
-        canvas_context.drawImage(this.canvas,0,0)
+        canvas_context.drawImage(this.canvas, 0, 0)
         canvas_context.globalAlpha = 1
-        this.canvas_context.clearRect(0,0,this.canvas.width, this.canvas.height)
+        this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height)
         for (let t = 0; t < this.zaps.length; t++) {
             this.zaps[t].life--
             this.zaps[t].draw()
@@ -41660,7 +42939,7 @@ class Ship {
         for (let t = 0; t < this.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -41670,7 +42949,7 @@ class Ship {
                 for (let k = 0; k < this.guys[t].tiles.length; k++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41682,7 +42961,7 @@ class Ship {
             for (let t = 0; t < this.supratiles.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -41750,7 +43029,7 @@ class Ship {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41773,7 +43052,7 @@ class Ship {
                 for (let t = 0; t < enemy.guys.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -41833,7 +43112,7 @@ class Ship {
         for (let t = 0; t < vessel.fuelmax; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -41978,13 +43257,13 @@ class Ship {
         for (let t = 0; t < this.drones.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
             this.drones[t].draw()
         }
-        // //////console.log(this.weapons)
+        // ////////console.log(this.weapons)
         for (let t = 0; t < this.weapons.length; t++) {
             this.weapons[t].draw()
             if (this.weapons[t]) {
@@ -42055,19 +43334,15 @@ class Ship {
         this.UI.draw()
         this.energy.draw()
         // enemy.UI.draw()
-        for (let t = 0; t < this.upgradeMenu.partsto.length; t++) {
-            gigadebug++
-            if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
-                gigadebug = 0
-                break
-            }
-            this.upgradeMenu.partsto[t].draw()
-        }
         this.shield.UIdraw()
+        this.partMenu.draw()
         this.upgradeMenu.draw()
+        this.home.draw()
         for (let t = 0; t < this.guys.length; t++) {
             this.guys[t].bodydraw()
+        }
+        for (let t = 0; t < this.upgradeMenu.partsto.length; t++) {
+            this.upgradeMenu.partsto[t].draw()
         }
     }
     shaker() {
@@ -42092,7 +43367,7 @@ class Ship {
             return 0
         }
         let dodgerate = (Math.sqrt(this.boosts[3]) + Math.sqrt(this.boosts[6])) * 4
-        // //////////////////////////////////////////////////////////////////////////////////console.log( 1-(1/(11-this.UI.systems[6].max)))
+        // ////////////////////////////////////////////////////////////////////////////////////console.log( 1-(1/(11-this.UI.systems[6].max)))
         if (this.hash['engine'].integrity < 100 * (1 - (1 / (11 - this.UI.systems[6].max)))) {
             dodgerate = 0
             this.boosts[3] = 0
@@ -42129,7 +43404,7 @@ class Ship {
             for (let t = 0; t < this.drones.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -42143,7 +43418,7 @@ class Ship {
                 for (let t = 0; t < this.drones.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -42157,7 +43432,7 @@ class Ship {
             for (let t = 0; t < this.drones.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -42387,11 +43662,11 @@ class Ship {
                         vessel.weapons[x].follow = this.drones[t].center
                         vessel.weapons[x].metatarget = this.drones[t].metatarget
                         vessel.weapons[x].following = 1
-                        //////console.log(this.drones[t].metatarget)
+                        ////////console.log(this.drones[t].metatarget)
                         if (this.drones[t].metatarget.x) {
-                            //////console.log("ee")
+                            ////////console.log("ee")
                             vessel.weapons[x].target = this.drones[t].metatarget
-                            //////console.log(vessel.weapons[x].target )
+                            ////////console.log(vessel.weapons[x].target )
                         } else {
                             vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
                         }
@@ -42408,9 +43683,9 @@ class Ship {
                         vessel.weapons[x].follow = this.drones[t].center
                         vessel.weapons[x].metatarget = this.drones[t].metatarget
                         vessel.weapons[x].following = 1
-                        //////console.log(this.drones[t].metatarget)
+                        ////////console.log(this.drones[t].metatarget)
                         if (this.drones[t].metatarget.x) {
-                            //////console.log("ee")
+                            ////////console.log("ee")
                             vessel.weapons[x].target = this.drones[t].metatarget
                         } else {
                             vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
@@ -42429,9 +43704,9 @@ class Ship {
                         vessel.weapons[x].follow = this.drones[t].center
                         vessel.weapons[x].metatarget = this.drones[t].metatarget
                         vessel.weapons[x].following = 1
-                        //////console.log(this.drones[t].metatarget)
+                        ////////console.log(this.drones[t].metatarget)
                         if (this.drones[t].metatarget.x) {
-                            //////console.log("ee")
+                            ////////console.log("ee")
                             vessel.weapons[x].target = this.drones[t].metatarget
                         } else {
                             vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
@@ -42492,9 +43767,9 @@ class Ship {
                         vessel.weapons[x].follow = this.drones[t].center
                         vessel.weapons[x].metatarget = this.drones[t].metatarget
                         vessel.weapons[x].following = 1
-                        //////console.log(this.drones[t].metatarget)
+                        ////////console.log(this.drones[t].metatarget)
                         if (this.drones[t].metatarget.x) {
-                            //////console.log("ee")
+                            ////////console.log("ee")
                             vessel.weapons[x].target = this.drones[t].metatarget
                         } else {
                             vessel.weapons[x].target = enemy.supratiles[Math.floor(Math.random() * enemy.supratiles.length)]
@@ -42615,7 +43890,7 @@ class Ship {
         if (this.type == 14) {
             if (start == 2) {
                 // if (vessel.alt == 0) {
-                    canvas_context.drawImage(eggshipimage, -40 + 240 + this.accumulated.x, 10 + 140 + this.accumulated.y)
+                canvas_context.drawImage(eggshipimage, -40 + 240 + this.accumulated.x, 10 + 140 + this.accumulated.y)
                 // }
             }
         }
@@ -42769,7 +44044,7 @@ class Ship {
                 canvas_context.drawImage(energyshipsmall, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
                 //newship
             }
-            // //////////////////////////////////////////////////////console.log("hif")
+            // ////////////////////////////////////////////////////////console.log("hif")
         } else {
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
@@ -42910,7 +44185,7 @@ class Ship {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].marked == 1) {
                             this.blocks[t][k].walkable = true
-                            //////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
+                            ////////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
                             tiles.push(this.blocks[t][k])
                         }
                     }
@@ -43101,7 +44376,7 @@ class Ship {
                     // for(let t= 0;t<31;t++){
                     // gigadebug++
                     // if(gigadebug >1000000){
-                    // //////console.log("ha ha!")
+                    // ////////console.log("ha ha!")
                     // gigadebug = 0
                     // break
                     // }
@@ -43825,7 +45100,7 @@ class Ship {
                 // for(let t = 4;t<25;t++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -43877,7 +45152,7 @@ class Ship {
                 for (let k = 0; k < this.guys[t].gear.length; k++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -43922,7 +45197,7 @@ class Ship {
                     if (this.guys[t].droneLine.flaggedOn == 1) {
                         this.guys[t].droneLine.flaggedOn = 0
                     }
-                    if(this.guys[t].isPomao != 1){
+                    if (this.guys[t].isPomao != 1) {
                         this.guys.splice(t, 1)
                     }
                 } else {
@@ -43976,7 +45251,7 @@ class Ship {
             //     if (this.guys[t].tile.integrity > 100) {
             //         this.guys[t].tile.integrity = 100
             //     }
-            //     // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+            //     // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
             //     if (this.guys[t].tile.medbay == 1) {
             //         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
             //             this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -44072,7 +45347,7 @@ class Ship {
             //             if (this.guys[t].tiles[q].integrity > 100) {
             //                 this.guys[t].tiles[q].integrity = 100
             //             }
-            //             // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+            //             // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
             //             if (this.guys[t].tiles[q].medbay == 1) {
             //                 if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
             //                     this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -44208,7 +45483,7 @@ class Ship {
             // }
             // for (let w = 0; w < this.weapons.length; w++) {
             //     if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-            //         //////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])////////////////////////////////////////////////console.log( this.boosts[1])
+            //         ////////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])//////////////////////////////////////////////////console.log( this.boosts[1])
             //         if (this.weapons[w].temp == -2) {
             //             this.weapons[w].charge += Math.sqrt(this.boosts[1])
             //         }
@@ -44525,7 +45800,7 @@ class Ship {
         if (this.type == 14) {
             if (start == 2) {
                 // if (vessel.alt == 0) {
-                    canvas_context.drawImage(eggshipimage, -40 + 240 + this.accumulated.x, 10 + 140 + this.accumulated.y)
+                canvas_context.drawImage(eggshipimage, -40 + 240 + this.accumulated.x, 10 + 140 + this.accumulated.y)
                 // }
             }
         }
@@ -44678,11 +45953,11 @@ class Ship {
             } else if (this.type == 13) {
                 canvas_context.drawImage(energyshipsmall, 0, 0, 64, 64, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
                 //newship
-            }else if (this.type == 14) {
+            } else if (this.type == 14) {
                 canvas_context.drawImage(eggshipimage, 0, 0, 720, 720, stars.stars[this.star].body.x - (Math.cos(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.y - (Math.sin(vessel.angle) * (stars.stars[this.star].body.radius * 1)) - (stars.stars[this.star].body.radius * .5), stars.stars[this.star].body.radius * 1, stars.stars[this.star].body.radius * 1)
                 //newship
             }
-            // //////////////////////////////////////////////////////console.log("hif")
+            // ////////////////////////////////////////////////////////console.log("hif")
         } else {
             for (let t = 0; t < this.blocks.length; t++) {
                 for (let k = 0; k < this.blocks[t].length; k++) {
@@ -44823,7 +46098,7 @@ class Ship {
                     for (let k = 0; k < this.blocks[t].length; k++) {
                         if (this.blocks[t][k].marked == 1) {
                             this.blocks[t][k].walkable = true
-                            //////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
+                            ////////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
                             tiles.push(this.blocks[t][k])
                         }
                     }
@@ -44859,7 +46134,7 @@ class Ship {
                     if (this.alt == 2) {
                         this.guys[0] = new Guy(tiles[0], 46)
                     }
-                }  else if (this.type == 14) {
+                } else if (this.type == 14) {
                     this.guys = [new Guy(tiles[0], 17), new Guy(tiles[20], 17), new Guy(tiles[21], 17), new Guy(tiles[25], 17)]
                 } else if (this.type == 3) {
                     if (this.alt == 0) {
@@ -45005,11 +46280,11 @@ class Ship {
                     this.drones[1] = new Drone(-1, this)
                     this.drones[2] = new Drone(-1, this)
 
-                }  else if (this.type == 1) {
+                } else if (this.type == 1) {
                     // for(let t= 0;t<31;t++){
                     // gigadebug++
                     // if(gigadebug >1000000){
-                    // //////console.log("ha ha!")
+                    // ////////console.log("ha ha!")
                     // gigadebug = 0
                     // break
                     // }
@@ -45716,7 +46991,7 @@ class Ship {
                 // for(let t = 4;t<25;t++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -45806,7 +47081,7 @@ class Ship {
                 for (let k = 0; k < this.guys[t].gear.length; k++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -45852,14 +47127,15 @@ class Ship {
                     if (this.guys[t].droneLine.flaggedOn == 1) {
                         this.guys[t].droneLine.flaggedOn = 0
                     }
-                    if(this.guys[t].isPomao != 1){
-                    this.guys.splice(t, 1)
+                    if (this.guys[t].isPomao != 1) {
+                        this.guys.splice(t, 1)
                     }
                 } else {
                     this.guys[t].energydeathtag--
                 }
             }
             this.boosts = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.partMenu.balance()
             //0 medbay, 1 weapons, 2 shield, 3 helm, 4 oxygen, 5 security, 6 engine, 7 special, 8 empty
             let c = 0
             for (let t = 0; t < this.guys.length; t++) {
@@ -45876,9 +47152,9 @@ class Ship {
             }
             for (let t = 0; t < this.guys.length; t++) {
                 if (this.guys[t].hostile == 1) {
-                    if (this.guys[t].tile.integrity <= 10) { } else {
+                    if (this.guys[t].tile.integrity <= 8) { } else {
                         this.guys[t].tile.integrity -= (this.guys[t].repair * 2) / (this.UI.systems[5].max + 1)
-                        if (this.guys[t].tile.integrity <= 10) {
+                        if (this.guys[t].tile.integrity <= 8) {
                             this.guys[t].tile.integrity = 10
                         }
                     }
@@ -45893,15 +47169,15 @@ class Ship {
                 }
                 if (this.hostile != 1) {
                     this.guys[t].tile.integrity += this.guys[t].repair
-                    if(this.guys[t].tile.integrity < 98){
-                    this.guys[t].tile.subtiles[3][6].r += 0
-                    this.guys[t].tile.subtiles[3][6].g += this.guys[t].repair*123456
-                    this.guys[t].tile.subtiles[3][6].b += this.guys[t].repair*234567
+                    if (this.guys[t].tile.integrity < 98) {
+                        this.guys[t].tile.subtiles[3][6].r += 0
+                        this.guys[t].tile.subtiles[3][6].g += this.guys[t].repair * 123456
+                        this.guys[t].tile.subtiles[3][6].b += this.guys[t].repair * 234567
                     }
                 } else {
-                    if (this.guys[t].tile.integrity <= 10) { } else {
+                    if (this.guys[t].tile.integrity <= 8) { } else {
                         this.guys[t].tile.integrity -= (this.guys[t].repair * 2) / (this.UI.systems[5].max + 1)
-                        if (this.guys[t].tile.integrity <= 10) {
+                        if (this.guys[t].tile.integrity <= 8) {
                             this.guys[t].tile.integrity = 10
                         }
                     }
@@ -45909,7 +47185,7 @@ class Ship {
                 if (this.guys[t].tile.integrity > 100) {
                     this.guys[t].tile.integrity = 100
                 }
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                         this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -46002,15 +47278,15 @@ class Ship {
                     for (let q = 0; q < this.guys[t].tiles.length; q++) {
                         // this.guys[t].draw()
                         this.guys[t].tiles[q].integrity += (1 / 6) * this.guys[t].repair
-                        if(this.guys[t].tiles[q].integrity < 98){
+                        if (this.guys[t].tiles[q].integrity < 98) {
                             this.guys[t].tiles[q].subtiles[3][6].r += 0
-                            this.guys[t].tiles[q].subtiles[3][6].g += this.guys[t].repair*123456
-                            this.guys[t].tiles[q].subtiles[3][6].b += this.guys[t].repair*234567
+                            this.guys[t].tiles[q].subtiles[3][6].g += this.guys[t].repair * 123456
+                            this.guys[t].tiles[q].subtiles[3][6].b += this.guys[t].repair * 234567
                         }
                         if (this.guys[t].tiles[q].integrity > 100) {
                             this.guys[t].tiles[q].integrity = 100
                         }
-                        // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+                        // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
                         if (this.guys[t].tiles[q].medbay == 1) {
                             if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                                 this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -46182,7 +47458,7 @@ class Ship {
             }
             for (let w = 0; w < this.weapons.length; w++) {
                 if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])////////////////////////////////////////////////console.log( this.boosts[1])
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])//////////////////////////////////////////////////console.log( this.boosts[1])
                     if (this.weapons[w].temp == -2) {
                         this.weapons[w].charge += Math.sqrt(this.boosts[1])
                     }
@@ -46537,13 +47813,13 @@ class Ship {
             for (var j = 0; j < this.height; j += NODESIZE) {
                 gridPointsByPos[i][j] = countNodes;
                 //here's the problem , need to set the walkability of the node without always being true...
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(countNodes)
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log(countNodes)
                 tempNode = new Tile(i, j, 10, 10, "tan", countNodes, NODESIZE, i, j, true);
                 // let cutOut = [0,1 ,2, 3, 10, 5,6,7, 8, 9, 10, 11, 12,13, 18, 19,20, 32,33,  26, 31, 39, 410, 45, 46, 52, 57,58,59,99, 112, 108, 95, 197, 198, 199, 205, 203, 2010, 236, 237, 238, 242, 243,2410, 216, 212, 229, 225, 210, 211, 223, 2210, 217, 218, 230, 231]
                 // for(let t = 0; t< 1000; t++){
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -46567,7 +47843,7 @@ class Ship {
                 // for(let t  = 0; t<bottle.crew.length; t++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -46579,7 +47855,7 @@ class Ship {
                 //         tempNode.walkable = false;
                 // }
                 // if (wallSet.has(countNodes)) {
-                // //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
+                // //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////console.log("wallSet had countNodes!")
                 //   tempNode.walkable = false;
                 // }
                 // tempNode.drawNode();
@@ -46951,7 +48227,7 @@ class EnemyShip {
                 tile.color = "#8888FF44"
                 if (tile.engine > 0 || tile.medbay > 0 || tile.oxygen > 0 || tile.weapon > 0 || tile.helm > 0 || tile.security > 0 || tile.special > 0 || tile.empty > 0 || tile.doorway > 0 || tile.shield > 0 || tile.empty > 0) {
                     tile.marked = 1
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
                     tile.walkable = true
                     if (tile.empty > 0) {
                         tile.color = "#444444"
@@ -47011,7 +48287,7 @@ class EnemyShip {
                     }
                 } else {
                     tile.marked = -1
-                    //////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
+                    ////////////////////////////////////////////////////////////////////////////////////////////////console.log("w")
                     tile.walkable = false
                 }
                 tile.holed = 0
@@ -47284,13 +48560,13 @@ class EnemyShip {
         // this.energy.balance()
         for (let r = 0; r < rooms.length; r++) {
             if (this.hash[rooms[r]].occupied == 0 && this.AIship != 1) {
-                // ////////////////////////////////////////////////////////////////////////////////////console.log("hit")
+                // //////////////////////////////////////////////////////////////////////////////////////console.log("hit")
                 if (rooms[r] == "empty") {
                     let wet = 0
                     for (let t = 0; t < this.drones.length; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -47333,12 +48609,12 @@ class EnemyShip {
                 if (rooms[r] == "medbay") {
                     if (this.energy.power > 0 && this.UI.systems[0].sto < this.UI.systems[0].max) {
                         this.UI.systems[r].sto++
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
-                        // //////////////////////////////////////////////////////////////////////console.log("med")
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log("med")
                         continue
                     }
                     if (this.UI.systems[r].sto == 1) {
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
                         continue
                     }
                 }
@@ -47387,7 +48663,7 @@ class EnemyShip {
             for (let t = 0; t < this.drones.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -47804,7 +49080,7 @@ class EnemyShip {
                 }
             }
         }
-        //////////////////////////////////////////////////////////////////////////////////////////console.log(ret.length)
+        ////////////////////////////////////////////////////////////////////////////////////////////console.log(ret.length)
         return ret;
     }
     createGrid() {
@@ -47902,7 +49178,7 @@ class EnemyShip {
             for (let t = 0; t < this.weapons.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -47916,7 +49192,7 @@ class EnemyShip {
                 for (let t = 0; t < this.weapons.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -48157,7 +49433,7 @@ class EnemyShip {
                         newguy.gear = []
                         newguy.secont = 1
                         newguy.isPomao = enemy.guys[t].isPomao
-                        if(newguy.isPomao){
+                        if (newguy.isPomao) {
                             newguy.type = 11
                         }
                         for (let s = 0; s < enemy.guys[t].skillslist.length; s++) {
@@ -48209,7 +49485,7 @@ class EnemyShip {
                 canvas_context.drawImage(ejumpPip, 0, 0, 3, 21, t, 36, 3, 21)
             }
             let widteh = ((enemy.hull / enemy.maxhull) * 260)
-            // //////////////////////////////console.log(widteh, enemy)
+            // ////////////////////////////////console.log(widteh, enemy)
             for (let t = 1438; t < 1438 + widteh; t += 13) {
                 if (enemy.hull < enemy.maxhull * .33) {
                     canvas_context.drawImage(healthPip, 0, 0, 13, 19, t, 11, 13, 19)
@@ -48279,7 +49555,7 @@ class EnemyShip {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].marked == 1) {
                         this.blocks[t][k].walkable = true
-                        //////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
+                        ////////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
                         tiles.push(this.blocks[t][k])
                         this.supratiles.push(this.blocks[t][k])
                     }
@@ -48289,7 +49565,7 @@ class EnemyShip {
                 for (let t = 0; t < vessel.supratiles.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -48353,8 +49629,20 @@ class EnemyShip {
                     this.wepmax += 2
                 }
             }
-            this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
-            this.supratiles.sort((a, b) => a.x < b.x ? -1 : 1)
+            // this.supratiles.sort((a, b) => a.y > b.y ? -1 : 1)
+            // this.supratiles.sort((a, b) => a.x < b.x ? -1 : 1)
+            // this.supratiles.sort((a, b) => {
+            //     if (a.x === b.x) {
+            //       return a.y - b.y;
+            //     }
+            //     return b.x - a.x;
+            //   });
+            this.supratiles.sort((a, b) => {
+  if (a.x === b.x) {
+    return b.y - a.y;
+  }
+  return a.x - b.x;
+});
             let emergencyLock = new Airlock(this.supratiles[0].x + (this.supratiles[0].width * .5) - 200, (this.supratiles[0].y + (this.supratiles[0].height * 1) - 150))
             emergencyLock.draw(1)
             this.doors.push(emergencyLock)
@@ -48396,7 +49684,7 @@ class EnemyShip {
                     for (let t = 0; t < h; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -48409,7 +49697,7 @@ class EnemyShip {
                     for (let t = 0; t < 19; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -48422,7 +49710,7 @@ class EnemyShip {
                     for (let t = 0; t < 25; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -48439,7 +49727,7 @@ class EnemyShip {
                     for (let t = 0; t < 25; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -48455,7 +49743,7 @@ class EnemyShip {
             // for(let t = 0;t<this.guys.length;t++){
             // gigadebug++
             // if(gigadebug >1000000){
-            // //////console.log("ha ha!")
+            // ////////console.log("ha ha!")
             // gigadebug = 0
             // break
             // }
@@ -48493,7 +49781,7 @@ class EnemyShip {
                 if (this.guys[t].temp > 0) {
                     this.guys[t] = new Guy(this.guys[t].tile, this.guys[t].type)
                     this.guys[t].temp *= 190100
-                    // ////console.log(this.guys[t])
+                    // //////console.log(this.guys[t])
                 }
             }
             if (vessel.type < 10000) {
@@ -48545,11 +49833,11 @@ class EnemyShip {
             this.drones.push(new Drone(-1, this))
             if (this.level < 7) {
                 //enemjump
-                // //////////////////////////////////////////////console.log(this.wepmax)
+                // ////////////////////////////////////////////////console.log(this.wepmax)
                 // for(let  k = 0;k<this.wepmax;k++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -48812,7 +50100,7 @@ class EnemyShip {
                 }
                 if (this.hull <= 0) {
                     this.shield.state = 0
-                    // ////////////////////////////////////////////////////////////////////////////////////////console.log(this.blocks)
+                    // //////////////////////////////////////////////////////////////////////////////////////////console.log(this.blocks)
                     // return
                     if (this.crewless != 1) {
                         this.guys = []
@@ -48842,7 +50130,7 @@ class EnemyShip {
             for (let k = 0; k < this.guys[t].gear.length; k++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -48887,9 +50175,9 @@ class EnemyShip {
                 if (this.guys[t].droneLine.flaggedOn == 1) {
                     this.guys[t].droneLine.flaggedOn = 0
                 }
-                if(this.guys[t].isPomao != 1){
-                this.guys.splice(t, 1)
-                }else{
+                if (this.guys[t].isPomao != 1) {
+                    this.guys.splice(t, 1)
+                } else {
                     this.guys[t].recalled = 1
                 }
             } else {
@@ -48901,9 +50189,9 @@ class EnemyShip {
         for (let t = 0; t < this.guys.length; t++) {
             if (this.guys[t].hostile == 1) {
                 if (this.guys[t].tile.medbay == 1) { } else {
-                    if (this.guys[t].tile.integrity <= 10) { } else {
+                    if (this.guys[t].tile.integrity <= 8) { } else {
                         this.guys[t].tile.integrity -= (this.guys[t].repair * 2) / (this.UI.systems[5].max + 1)
-                        if (this.guys[t].tile.integrity <= 10) {
+                        if (this.guys[t].tile.integrity <= 8) {
                             this.guys[t].tile.integrity = 10
                         }
                     }
@@ -48912,7 +50200,7 @@ class EnemyShip {
                 // if (this.guys[t].tile.integrity > 100) {
                 //     this.guys[t].tile.integrity = 100
                 // }
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                         this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -48932,16 +50220,16 @@ class EnemyShip {
                 }
                 if (this.hostile != 1) {
                     this.guys[t].tile.integrity += this.guys[t].repair
-                    if(this.guys[t].tile.integrity < 98){
-                    this.guys[t].tile.subtiles[3][6].r += 0
-                    this.guys[t].tile.subtiles[3][6].g += this.guys[t].repair*123456
-                    this.guys[t].tile.subtiles[3][6].b += this.guys[t].repair*234567
+                    if (this.guys[t].tile.integrity < 98) {
+                        this.guys[t].tile.subtiles[3][6].r += 0
+                        this.guys[t].tile.subtiles[3][6].g += this.guys[t].repair * 123456
+                        this.guys[t].tile.subtiles[3][6].b += this.guys[t].repair * 234567
                     }
                 } else { }
                 if (this.guys[t].tile.integrity > 100) {
                     this.guys[t].tile.integrity = 100
                 }
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                         this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -48998,15 +50286,15 @@ class EnemyShip {
                     }
                     // this.guys[t].draw()
                     this.guys[t].tiles[q].integrity += (1 / 6) * this.guys[t].repair
-                    if(this.guys[t].tiles[q].integrity < 98){
+                    if (this.guys[t].tiles[q].integrity < 98) {
                         this.guys[t].tiles[q].subtiles[3][6].r += 0
-                        this.guys[t].tiles[q].subtiles[3][6].g += this.guys[t].repair*123456
-                        this.guys[t].tiles[q].subtiles[3][6].b += this.guys[t].repair*234567
+                        this.guys[t].tiles[q].subtiles[3][6].g += this.guys[t].repair * 123456
+                        this.guys[t].tiles[q].subtiles[3][6].b += this.guys[t].repair * 234567
                     }
                     if (this.guys[t].tiles[q].integrity > 100) {
                         this.guys[t].tiles[q].integrity = 100
                     }
-                    // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+                    // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
                     if (this.guys[t].tiles[q].medbay == 1) {
                         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                             this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -49098,7 +50386,7 @@ class EnemyShip {
 
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////////console.log(this.boosts[2])
+        //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.boosts[2])
         this.hash = {}
         for (let r = 0; r < rooms.length; r++) {
             this.hash[rooms[r]] = {}
@@ -49144,7 +50432,7 @@ class EnemyShip {
         // this.energy.balance()
         for (let r = 0; r < rooms.length; r++) {
             if (this.hash[rooms[r]].occupied == 0 && this.AIship != 1) {
-                // ////////////////////////////////////////////////////////////////////////////////////console.log("hit")
+                // //////////////////////////////////////////////////////////////////////////////////////console.log("hit")
                 if (rooms[r] == "shield") {
                     if (this.shield.rings.length >= this.UI.systems[r].sto + this.UI.systems[r].fed) { //demand???????? wtf why lmao
                         continue
@@ -49190,12 +50478,12 @@ class EnemyShip {
                 if (rooms[r] == "medbay") {
                     if (this.energy.power > 0 && this.UI.systems[0].sto < this.UI.systems[0].max) {
                         this.UI.systems[r].sto++
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
-                        // //////////////////////////////////////////////////////////////////////console.log("med")
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log("med")
                         continue
                     }
                     if (this.UI.systems[r].sto == 1) {
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
                         continue
                     }
                 }
@@ -49289,7 +50577,7 @@ class EnemyShip {
                     }
                 }
                 if (this.guys[t].cound > 0) { //.14 connect
-                    // ////////////////////////////////////////////////////////////////////////////////console.log(t)
+                    // //////////////////////////////////////////////////////////////////////////////////console.log(t)
                     continue
                 }
                 this.wet = 0
@@ -49342,7 +50630,7 @@ class EnemyShip {
                         this.doors[this.doors.length - 1].open = -1
                     }
                 }
-                // ////////////////////////////////////////////////////////////////////////////////////////console.log(ac)
+                // //////////////////////////////////////////////////////////////////////////////////////////console.log(ac)
                 for (let b = 0; b < this.blocks.length; b++) {
                     for (let k = 0; k < this.blocks[b].length; k++) {
                         if (this.wet == 1) {
@@ -49427,7 +50715,7 @@ class EnemyShip {
                     //         this.UI.systems[0].demand--
                     //     }
                     // }
-                    // //////////////////////////////////////////////////////////////console.log(this.guys)
+                    // ////////////////////////////////////////////////////////////////console.log(this.guys)
                     if (fire == 1) {
                         if (this.state == 0) {
                             let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
@@ -49435,7 +50723,7 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -49461,7 +50749,7 @@ class EnemyShip {
                             if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
                                 priorities[this.guys.length - 1] = 'medbay'
                             }
-                            // ////////////////////////////////////////////////////////////////////////////////console.log(priorities, t)
+                            // //////////////////////////////////////////////////////////////////////////////////console.log(priorities, t)
                             tile = tiles[Math.floor(Math.random() * tiles.length)]
                             let j = 0
                             let kiles = []
@@ -49491,7 +50779,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49536,7 +50824,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49552,7 +50840,7 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -49607,7 +50895,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49652,7 +50940,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49668,15 +50956,15 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
-                                // //////////console.log('1')
+                                // ////////////console.log('1')
                                 if (this.drones[d].real == 1) {
-                                    // //////////console.log('21')
+                                    // ////////////console.log('21')
                                     if (this.drones[d].active == 0) {
-                                        // //////////console.log('3')
+                                        // ////////////console.log('3')
                                         if (this.droneparts > det) {
                                             det++
                                         }
@@ -49726,7 +51014,7 @@ class EnemyShip {
                                 }
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                             }
-                            ////////////////////////////////////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
+                            //////////////////////////////////////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
                             if (this.guys[t].tile[priorities[t - c]] == 1) {
                                 tile = this.guys[t].tile
                                 if (priorities[t - c] != "holed") {
@@ -49734,7 +51022,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49776,7 +51064,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -49794,7 +51082,7 @@ class EnemyShip {
                         this.guys[t].stogo = tile
                         this.guys[t].zapto = tile
                         if (this.guys[t].flagpath.length > 1) {
-                            this.guys[t].selected = 0
+                            // this.guys[t].selected = 0
                         }
                     } else {
                         if (this.guys[t].fighting < 0) {
@@ -49853,7 +51141,7 @@ class EnemyShip {
 
         for (let w = 0; w < this.weapons.length; w++) {
             if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-                //////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])
+                ////////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])
                 if (this.weapons[w].temp == -2) {
                     this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
                 }
@@ -49865,7 +51153,7 @@ class EnemyShip {
         if (this.hash["empty"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[8].max)))) {
             for (let w = 0; w < this.drones.length; w++) {
                 this.drones[w].charge += Math.sqrt(this.boosts[8])
-                ////////////////console.log("hi")
+                //////////////////console.log("hi")
             }
         }
         let oat = 0
@@ -49901,7 +51189,7 @@ class EnemyShip {
             for (let t = 0; t < this.supratiles.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -50151,7 +51439,7 @@ class EnemyShip {
                         }
                     }
                 }
-                ////////////////////////////////////console.log(enododge)
+                //////////////////////////////////////console.log(enododge)
                 this.loot += enododge
                 // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                 this.wegflag = Math.random()
@@ -50324,13 +51612,13 @@ class EnemyShip {
                         for (let t = 0; t < vessel.drones.length; t++) {
                             if (vessel.drones[t].real != 1) {
                                 indexd = t
-                                //////////////console.log(t)
+                                ////////////////console.log(t)
                                 break
                             }
                         }
                         if (indexd > -1) {
                             vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 15), vessel))
-                            //////////////console.log(vessel.drones)
+                            ////////////////console.log(vessel.drones)
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -50348,7 +51636,7 @@ class EnemyShip {
                         }
                     }
                 }
-                //////////////console.log(vessel.drones)
+                ////////////////console.log(vessel.drones)
             }
             canvas_context.fillStyle = "#FFFFFF"
             canvas_context.font = "30px helvetica"
@@ -50418,7 +51706,7 @@ class EnemyShip {
                             for (let t = 0; t < enemy.supratiles.length; t++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -50461,7 +51749,7 @@ class EnemyShip {
                         for (let t = 0; t < this.supratiles.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -50470,7 +51758,7 @@ class EnemyShip {
                         for (let t = 0; t < this.guys.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -50479,7 +51767,7 @@ class EnemyShip {
                         for (let t = 0; t < this.weapons.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -50488,7 +51776,7 @@ class EnemyShip {
                         for (let t = 0; t < this.shield.rings.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -50497,7 +51785,7 @@ class EnemyShip {
                         for (let t = 0; t < this.drones.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -50522,18 +51810,18 @@ class EnemyShip {
             }
         }
 
-        for(let t = 0;t<this.supratiles.length;t++){
-            if(this.supratiles[t].subbed != 1){
+        for (let t = 0; t < this.supratiles.length; t++) {
+            if (this.supratiles[t].subbed != 1) {
                 this.supratiles[t].subdiv(7)
-            }else{
+            } else {
                 // this.supratiles[t].sublive()
             }
         }
-        for(let t = 0;t<this.supratiles.length;t++){
-                this.supratiles[t].sublive()
+        for (let t = 0; t < this.supratiles.length; t++) {
+            this.supratiles[t].sublive()
         }
-        for(let t = 0;t<this.supratiles.length;t++){
-                this.supratiles[t].newold()
+        for (let t = 0; t < this.supratiles.length; t++) {
+            this.supratiles[t].newold()
         }
 
 
@@ -50547,7 +51835,7 @@ class EnemyShip {
             for (let t = 0; t < this.weapons.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -50561,7 +51849,7 @@ class EnemyShip {
                 for (let t = 0; t < this.weapons.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -50801,7 +52089,7 @@ class EnemyShip {
                         newguy.gear = []
                         newguy.secont = 1
                         newguy.isPomao = enemy.guys[t].isPomao
-                        if(newguy.isPomao){
+                        if (newguy.isPomao) {
                             newguy.type = 11
                         }
                         for (let s = 0; s < enemy.guys[t].skillslist.length; s++) {
@@ -50853,7 +52141,7 @@ class EnemyShip {
                 canvas_context.drawImage(ejumpPip, 0, 0, 3, 21, t, 36, 3, 21)
             }
             let widteh = ((enemy.hull / enemy.maxhull) * 260)
-            // //////////////////////////////console.log(widteh, enemy)
+            // ////////////////////////////////console.log(widteh, enemy)
             for (let t = 1438; t < 1438 + widteh; t += 13) {
                 if (enemy.hull < enemy.maxhull * .33) {
                     canvas_context.drawImage(healthPip, 0, 0, 13, 19, t, 11, 13, 19)
@@ -50921,7 +52209,7 @@ class EnemyShip {
                 for (let k = 0; k < this.blocks[t].length; k++) {
                     if (this.blocks[t][k].marked == 1) {
                         this.blocks[t][k].walkable = true
-                        //////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
+                        ////////////////////////////////////////////////////////////////////////////////////////////////console.log("r")
                         tiles.push(this.blocks[t][k])
                         this.supratiles.push(this.blocks[t][k])
                     }
@@ -50931,7 +52219,7 @@ class EnemyShip {
                 for (let t = 0; t < vessel.supratiles.length; t++) {
                     gigadebug++
                     if (gigadebug > 1000000) {
-                        //////console.log("ha ha!")
+                        ////////console.log("ha ha!")
                         gigadebug = 0
                         break
                     }
@@ -51039,7 +52327,7 @@ class EnemyShip {
                     for (let t = 0; t < h; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -51052,7 +52340,7 @@ class EnemyShip {
                     for (let t = 0; t < 19; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -51065,7 +52353,7 @@ class EnemyShip {
                     for (let t = 0; t < 25; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -51082,7 +52370,7 @@ class EnemyShip {
                     for (let t = 0; t < 25; t++) {
                         gigadebug++
                         if (gigadebug > 1000000) {
-                            //////console.log("ha ha!")
+                            ////////console.log("ha ha!")
                             gigadebug = 0
                             break
                         }
@@ -51101,7 +52389,7 @@ class EnemyShip {
             // for(let t = 0;t<this.guys.length;t++){
             // gigadebug++
             // if(gigadebug >1000000){
-            // //////console.log("ha ha!")
+            // ////////console.log("ha ha!")
             // gigadebug = 0
             // break
             // }
@@ -51140,7 +52428,7 @@ class EnemyShip {
                 if (this.guys[t].temp > 0) {
                     this.guys[t] = new Guy(this.guys[t].tile, this.guys[t].type)
                     this.guys[t].temp *= 190100
-                    // ////console.log(this.guys[t])
+                    // //////console.log(this.guys[t])
                 }
             }
             if (vessel.type < 10000) {
@@ -51193,11 +52481,11 @@ class EnemyShip {
             this.drones.push(new Drone(-1, this))
             if (this.level < 7) {
                 //enemjump
-                // //////////////////////////////////////////////console.log(this.wepmax)
+                // ////////////////////////////////////////////////console.log(this.wepmax)
                 // for(let  k = 0;k<this.wepmax;k++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -51462,7 +52750,7 @@ class EnemyShip {
                 }
                 if (this.hull <= 0) {
                     this.shield.state = 0
-                    // ////////////////////////////////////////////////////////////////////////////////////////console.log(this.blocks)
+                    // //////////////////////////////////////////////////////////////////////////////////////////console.log(this.blocks)
                     // return
                     if (this.crewless != 1) {
                         this.guys = []
@@ -51491,7 +52779,7 @@ class EnemyShip {
             for (let k = 0; k < this.guys[t].gear.length; k++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -51537,9 +52825,9 @@ class EnemyShip {
                 if (this.guys[t].droneLine.flaggedOn == 1) {
                     this.guys[t].droneLine.flaggedOn = 0
                 }
-                if(this.guys[t].isPomao != 1){
-                this.guys.splice(t, 1)
-                }else{
+                if (this.guys[t].isPomao != 1) {
+                    this.guys.splice(t, 1)
+                } else {
                     this.guys[t].recalled = 1
                 }
             } else {
@@ -51551,10 +52839,10 @@ class EnemyShip {
         for (let t = 0; t < this.guys.length; t++) {
             if (this.guys[t].hostile == 1) {
                 if (this.guys[t].tile.medbay == 1) { } else {
-                    if (this.guys[t].tile.integrity <= 10) { } else {
+                    if (this.guys[t].tile.integrity <= 8) { } else {
                         // this.guys[t].tile.integrity -= (this.guys[t].repair*2)/(this.UI.systems[5].max+1)
-                        if (this.guys[t].tile.integrity <= 10) {
-                            this.guys[t].tile.integrity = 10
+                        if (this.guys[t].tile.integrity <= 8) {
+                            this.guys[t].tile.integrity = 8
                         }
                     }
                 }
@@ -51562,7 +52850,7 @@ class EnemyShip {
                 // if (this.guys[t].tile.integrity > 100) {
                 //     this.guys[t].tile.integrity = 100
                 // }
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                         // this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -51586,7 +52874,7 @@ class EnemyShip {
                 if (this.guys[t].tile.integrity > 100) {
                     this.guys[t].tile.integrity = 100
                 }
-                // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
+                // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tile)
                 if (this.guys[t].tile.medbay == 1) {
                     if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                         // this.guys[t].health += Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -51646,7 +52934,7 @@ class EnemyShip {
                     if (this.guys[t].tiles[q].integrity > 100) {
                         this.guys[t].tiles[q].integrity = 100
                     }
-                    // //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
+                    // ////////////////////////////////////////////////////////////////////////////////////////////////console.log(this.guys[t].tiles[q])
                     if (this.guys[t].tiles[q].medbay == 1) {
                         if (this.UI.systems[0].sto + this.UI.systems[0].fed > 0) {
                             // this.guys[t].health += (1 / 6) * Math.sqrt((this.UI.systems[0].sto + this.UI.systems[0].fed)) * .33
@@ -51736,7 +53024,7 @@ class EnemyShip {
             //worm king code ^^^
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////console.log(this.boosts[2])
+        //////////////////////////////////////////////////////////////////////////////////////////////console.log(this.boosts[2])
         this.hash = {}
         for (let r = 0; r < rooms.length; r++) {
             this.hash[rooms[r]] = {}
@@ -51782,7 +53070,7 @@ class EnemyShip {
         // this.energy.balance()
         for (let r = 0; r < rooms.length; r++) {
             if (this.hash[rooms[r]].occupied == 0 && this.AIship != 1) {
-                // ////////////////////////////////////////////////////////////////////////////////////console.log("hit")
+                // //////////////////////////////////////////////////////////////////////////////////////console.log("hit")
                 if (rooms[r] == "shield") {
                     if (this.shield.rings.length >= this.UI.systems[r].sto + this.UI.systems[r].fed) { //demand???????? wtf why lmao
                         continue
@@ -51828,12 +53116,12 @@ class EnemyShip {
                 if (rooms[r] == "medbay") {
                     if (this.energy.power > 0 && this.UI.systems[0].sto < this.UI.systems[0].max) {
                         this.UI.systems[r].sto++
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
-                        // //////////////////////////////////////////////////////////////////////console.log("med")
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log("med")
                         continue
                     }
                     if (this.UI.systems[r].sto == 1) {
-                        // //////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
+                        // ////////////////////////////////////////////////////////////////////////console.log(this.energy.power,this.UI.systems[0].sto, this.UI.systems[0].max )
                         continue
                     }
                 }
@@ -51926,7 +53214,7 @@ class EnemyShip {
                     }
                 }
                 if (this.guys[t].cound > 0) { //.14 connect
-                    // ////////////////////////////////////////////////////////////////////////////////console.log(t)
+                    // //////////////////////////////////////////////////////////////////////////////////console.log(t)
                     continue
                 }
                 this.wet = 0
@@ -51979,7 +53267,7 @@ class EnemyShip {
                         this.doors[this.doors.length - 1].open = -1
                     }
                 }
-                // ////////////////////////////////////////////////////////////////////////////////////////console.log(ac)
+                // //////////////////////////////////////////////////////////////////////////////////////////console.log(ac)
                 for (let b = 0; b < this.blocks.length; b++) {
                     for (let k = 0; k < this.blocks[b].length; k++) {
                         if (this.wet == 1) {
@@ -52064,7 +53352,7 @@ class EnemyShip {
                     //         this.UI.systems[0].demand--
                     //     }
                     // }
-                    // //////////////////////////////////////////////////////////////console.log(this.guys)
+                    // ////////////////////////////////////////////////////////////////console.log(this.guys)
                     if (fire == 1) {
                         if (this.state == 0) {
                             let priorities = ['weapon', 'shield', 'helm', 'weapon', 'shield', 'engine', 'helm', 'weapon', 'shield', 'engine', 'helm']
@@ -52072,7 +53360,7 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -52098,7 +53386,7 @@ class EnemyShip {
                             if (this.guys[this.guys.length - 1].health / this.guys[this.guys.length - 1].maxhealth < .75 && this.guys.length > 1) {
                                 priorities[this.guys.length - 1] = 'medbay'
                             }
-                            // ////////////////////////////////////////////////////////////////////////////////console.log(priorities, t)
+                            // //////////////////////////////////////////////////////////////////////////////////console.log(priorities, t)
                             tile = tiles[Math.floor(Math.random() * tiles.length)]
                             let j = 0
                             let kiles = []
@@ -52128,7 +53416,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52173,7 +53461,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52189,7 +53477,7 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
@@ -52244,7 +53532,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52289,7 +53577,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52305,15 +53593,15 @@ class EnemyShip {
                             for (let d = 0; d < this.drones.length; d++) {
                                 gigadebug++
                                 if (gigadebug > 1000000) {
-                                    //////console.log("ha ha!")
+                                    ////////console.log("ha ha!")
                                     gigadebug = 0
                                     break
                                 }
-                                // //////////console.log('1')
+                                // ////////////console.log('1')
                                 if (this.drones[d].real == 1) {
-                                    // //////////console.log('21')
+                                    // ////////////console.log('21')
                                     if (this.drones[d].active == 0) {
-                                        // //////////console.log('3')
+                                        // ////////////console.log('3')
                                         if (this.droneparts > det) {
                                             det++
                                         }
@@ -52363,7 +53651,7 @@ class EnemyShip {
                                 }
                                 tile = tiles[Math.floor(Math.random() * tiles.length)]
                             }
-                            ////////////////////////////////////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
+                            //////////////////////////////////////////////////////////////////////////////////////console.log(kiles, !kiles.includes(tile))
                             if (this.guys[t].tile[priorities[t - c]] == 1) {
                                 tile = this.guys[t].tile
                                 if (priorities[t - c] != "holed") {
@@ -52371,7 +53659,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(this.UI.systems[index].max, this.energy.power)
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52413,7 +53701,7 @@ class EnemyShip {
                                     if (index >= 0) {
                                         if (this.UI.systems[index].demand + this.UI.systems[index].fed < this.UI.systems[index].max) {
                                             if (this.energy.power > 0) {
-                                                ////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
+                                                //////////////////////////////////////////////////////////////////////////////////////console.log(priorities[t])
                                                 this.UI.systems[index].demand++
                                                 this.UI.systems[index].sto = this.UI.systems[index].demand
                                             }
@@ -52431,7 +53719,7 @@ class EnemyShip {
                         this.guys[t].stogo = tile
                         this.guys[t].zapto = tile
                         if (this.guys[t].flagpath.length > 1) {
-                            this.guys[t].selected = 0
+                            // this.guys[t].selected = 0
                         }
                     } else {
                         if (this.guys[t].fighting < 0) {
@@ -52454,7 +53742,7 @@ class EnemyShip {
         }
         // for (let w = 0; w < this.weapons.length; w++) {
         //     if (this.hash["weapon"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[1].max)))) {
-        //         //////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])
+        //         ////////////////////////////////////////////////////////////////////////////////////////////////console.log( this.boosts[1])
         //         if (this.weapons[w].temp == -2) {
         //             this.weapons[w].charge += Math.sqrt(this.boosts[1]) // * 5
         //         }
@@ -52466,7 +53754,7 @@ class EnemyShip {
         // if (this.hash["empty"].integrity >= 100 * (1 - (1 / (11 - this.UI.systems[8].max)))) {
         //     for (let w = 0; w < this.drones.length; w++) {
         //         // this.drones[w].charge += Math.sqrt(this.boosts[8])
-        //         ////////////////console.log("hi")
+        //         //////////////////console.log("hi")
         //     }
         // }
         // let oat = 0
@@ -52502,7 +53790,7 @@ class EnemyShip {
         //     for(let t = 0;t<this.supratiles.length;t++){
         // gigadebug++
         // if(gigadebug >1000000){
-        // //////console.log("ha ha!")
+        // ////////console.log("ha ha!")
         // gigadebug = 0
         // break
         // }
@@ -52743,7 +54031,7 @@ class EnemyShip {
                         }
                     }
                 }
-                ////////////////////////////////////console.log(enododge)
+                //////////////////////////////////////console.log(enododge)
                 this.loot += enododge
                 // this.loot = Math.floor((Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5) + (Math.floor(((Math.sqrt(this.level * 2) * 3.33) + (this.level * .33) + 1.4)) * .5 * Math.random()))   //Math.floor((this.level * 1.11) + (Math.random() * (this.level * 1.11)) + 1.5) //2 //1
                 this.wegflag = Math.random()
@@ -52914,13 +54202,13 @@ class EnemyShip {
                         for (let t = 0; t < vessel.drones.length; t++) {
                             if (vessel.drones[t].real != 1) {
                                 indexd = t
-                                //////////////console.log(t)
+                                ////////////////console.log(t)
                                 break
                             }
                         }
                         if (indexd > -1) {
                             vessel.drones[indexd] = (new Drone(Math.floor(Math.random() * 6), vessel))
-                            //////////////console.log(vessel.drones)
+                            ////////////////console.log(vessel.drones)
                         } else {
                             // this.wegflag = 1
                             //new 
@@ -52938,7 +54226,7 @@ class EnemyShip {
                         }
                     }
                 }
-                //////////////console.log(vessel.drones)
+                ////////////////console.log(vessel.drones)
             }
             canvas_context.fillStyle = "#FFFFFF"
             canvas_context.font = "30px helvetica"
@@ -53007,7 +54295,7 @@ class EnemyShip {
                         for (let t = 0; t < enemy.supratiles.length; t++) {
                             gigadebug++
                             if (gigadebug > 1000000) {
-                                //////console.log("ha ha!")
+                                ////////console.log("ha ha!")
                                 gigadebug = 0
                                 break
                             }
@@ -53047,7 +54335,7 @@ class EnemyShip {
             for (let t = 0; t < this.weapons.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -53057,7 +54345,7 @@ class EnemyShip {
         for (let t = 0; t < this.supratiles.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -53066,7 +54354,7 @@ class EnemyShip {
         for (let t = 0; t < this.guys.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -53075,7 +54363,7 @@ class EnemyShip {
         for (let t = 0; t < this.shield.rings.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -53084,7 +54372,7 @@ class EnemyShip {
         for (let t = 0; t < this.drones.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -53115,18 +54403,18 @@ class EnemyShip {
 
 
 
-        for(let t = 0;t<this.supratiles.length;t++){
-            if(this.supratiles[t].subbed != 1){
+        for (let t = 0; t < this.supratiles.length; t++) {
+            if (this.supratiles[t].subbed != 1) {
                 this.supratiles[t].subdiv(7)
-            }else{
+            } else {
                 // this.supratiles[t].sublive()
             }
         }
-        for(let t = 0;t<this.supratiles.length;t++){
-                this.supratiles[t].sublive()
+        for (let t = 0; t < this.supratiles.length; t++) {
+            this.supratiles[t].sublive()
         }
-        for(let t = 0;t<this.supratiles.length;t++){
-                this.supratiles[t].newold()
+        for (let t = 0; t < this.supratiles.length; t++) {
+            this.supratiles[t].newold()
         }
 
 
@@ -53204,7 +54492,7 @@ class Star {
         }
         this.weapons = []
         //shopjump
-        if (false) {
+        if (Math.random() < .1) {
             for (let t = 0; t < 2; t++) {
                 this.weapons.push(new Weapon(-1, -1, Math.floor(Math.random() * 23)))
             }
@@ -53218,7 +54506,7 @@ class Star {
                 this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
             }
             for (let t = 0; t < 3; t++) {
-                this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 6)))
+                this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
             }
         } else if (Math.random() < .30) {
             if (Math.random() < .5) {
@@ -53235,7 +54523,7 @@ class Star {
                     this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                 }
                 for (let t = 0; t < 3; t++) {
-                    this.weapons.push(new Weapon(-1))
+                    this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                 }
             } else {
                 if (Math.random() < .5) {
@@ -53252,7 +54540,7 @@ class Star {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                     }
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(-1))
+                        this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                     }
                 } else {
                     for (let t = 0; t < 2; t++) {
@@ -53268,7 +54556,7 @@ class Star {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                     }
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(-1))
+                        this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                     }
                 }
             }
@@ -53284,7 +54572,7 @@ class Star {
                     this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                 }
                 for (let t = 0; t < 3; t++) {
-                    this.weapons.push(new Weapon(-1))
+                    this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                 }
             } else {
                 if (Math.random() < .2) {
@@ -53298,7 +54586,7 @@ class Star {
                         this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                     }
                     for (let t = 0; t < 3; t++) {
-                        this.weapons.push(new Weapon(-1))
+                        this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                     }
                 } else {
                     if (Math.random() < .8) {
@@ -53315,7 +54603,7 @@ class Star {
                             this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                         }
                         for (let t = 0; t < 3; t++) {
-                            this.weapons.push(new Weapon(-1))
+                            this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                         }
                     } else {
                         for (let t = 0; t < 1; t++) {
@@ -53331,7 +54619,7 @@ class Star {
                             this.weapons.push(new Weapon(-1, -1, -1, Math.floor(Math.random() * 15)))
                         }
                         for (let t = 0; t < 3; t++) {
-                            this.weapons.push(new Weapon(-1))
+                            this.weapons.push(new Weapon(-1, -1, -1, -1, Math.floor(Math.random() * 16)))
                         }
                     }
                 }
@@ -53588,11 +54876,11 @@ class Stars {
         }
         this.linkdraw = 1
 
-        // //////console.log(this.boxes)
+        // ////////console.log(this.boxes)
         for (let t = 0; t < this.boxes.length; t++) {
             this.boxes[t] = grahamScan(this.boxes[t])
         }
-        //////console.log(this.boxes)
+        ////////console.log(this.boxes)
     }
 
     draw() {
@@ -53783,6 +55071,8 @@ combatDrone5.src = "combatDrone6.png"
 //UI images
 let crewPortraitPomao = new Image()
 crewPortraitPomao.src = "crewPortraitPomao.png"
+let pomaoCrew = new Image()
+pomaoCrew.src = "pomaoCrew.png"
 let invSlot = new Image()
 invSlot.src = "invSlot.png"
 let noRepair = new Image()
@@ -53811,6 +55101,8 @@ let energyMenu = new Image()
 energyMenu.src = "energyMenu.png"
 let controlPanel = new Image()
 controlPanel.src = "controlPanel.png"
+let partMenu = new Image()
+partMenu.src = "partMenu.png"
 let radioPanel = new Image()
 radioPanel.src = "radioPanel.png"
 let tuneDial = new Image()
@@ -54063,8 +55355,10 @@ class Labels {
         this.text = ''
     }
     draw() {
-        if (!keysPressed['Shift'] && !keysPressed['z']) {
-            return
+        if(options.alwaysHover == -1){
+            if (!keysPressed['Shift'] && !keysPressed['z']) {
+                return
+            }
         }
         let inmenu = 0
         for (let t = 0; t < vessel.guys.length; t++) {
@@ -54093,7 +55387,7 @@ class Labels {
                     canvas_context.font = "18px helvetica"
                     dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                     dim.h = 1.6 * 12
-                    //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                    ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                     rect.draw()
                     canvas_context.fillStyle = "#FFFFFF"
@@ -54124,7 +55418,7 @@ class Labels {
                     canvas_context.font = "18px helvetica"
                     dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                     dim.h = 1.6 * 44
-                    //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                    ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                     let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
                     rect.draw()
                     canvas_context.fillStyle = "#FFFFFF"
@@ -54197,7 +55491,7 @@ class Labels {
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                         dim.h = 1.6 * 44
-                        //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                        ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                         rect.draw()
                         canvas_context.fillStyle = "#FFFFFF"
@@ -54232,7 +55526,7 @@ class Labels {
                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                 dim.h = 1.7 * 160
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                 rect.draw()
                 canvas_context.fillStyle = "#FFFFFF"
@@ -54304,7 +55598,7 @@ class Labels {
                     dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                     dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                     dim.h = 1.6 * 170
-                    //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                    ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                     if (vessel.UI.systems[5].sto >= 3) {
                         let rect = new RectangleR(TIP_engine.x - (dim.w + 20), TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                         if (vessel.UI.systems[5].sto >= 6) { } else {
@@ -54443,7 +55737,7 @@ class Labels {
                 canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                 dim.h = 1.6 * 68
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                 if (rect.width + rect.x > 1280) {
                     rect.x += 1280 - (rect.width + rect.x)
@@ -54532,7 +55826,7 @@ class Labels {
             if (vessel.drones[t].body.isPointInside(TIP_engine) && vessel.drones[t].type != -1) {
                 let wep = new Weapon(vessel.drones[t].weaponType)
                 let dr = vessel.drones[t]
-                ////////////////console.log(wep,dr)
+                //////////////////console.log(wep,dr)
                 this.text1 = `Weapon: ${dr.name1 + '' + dr.name2}`
                 if (vessel.drones[t].active == 1) {
                     this.text2 = `Charge: ${Math.round(dr.charge)}/${dr.max}`
@@ -54586,7 +55880,7 @@ class Labels {
                 canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                 dim.h = 1.6 * 68
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                 rect.draw()
                 canvas_context.fillStyle = "#FFFFFF"
@@ -54638,7 +55932,7 @@ class Labels {
                 dim.w = Math.max(170, Math.max(canvas_context.measureText(this.text1).width))
                 // dim.w = Math.max(dim.w, canvas_context.measureText(this.text4).width)
                 dim.h = 1.6 * 15
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                 rect.draw()
                 canvas_context.fillStyle = "#FFFFFF"
@@ -54699,7 +55993,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                                 dim.h = 1.6 * 68
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -54762,7 +56056,7 @@ class Labels {
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                                 dim.h = 1.6 * 42
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -54826,7 +56120,7 @@ class Labels {
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                                 dim.h = 1.6 * 170
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -54922,7 +56216,7 @@ class Labels {
                             canvas_context.font = "18px helvetica"
                             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                             dim.h = 1.6 * 68
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55019,7 +56313,7 @@ class Labels {
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                                 dim.h = 1.6 * 42
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -55083,7 +56377,7 @@ class Labels {
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                                 dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                                 dim.h = 1.6 * 170
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -55174,7 +56468,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                                 dim.h = 1.6 * 68
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -55261,7 +56555,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                                 dim.h = 1.6 * 68
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -55312,7 +56606,7 @@ class Labels {
                         if (vessel.upgradeMenu.wepsto[t].isDrone == 1) {
                             let dr = new Drone(vessel.upgradeMenu.wepsto[t].droneType, vessel)
                             let wep = new Weapon(dr.weaponType)
-                            ////////////////console.log(wep,dr)
+                            //////////////////console.log(wep,dr)
                             this.text1 = `Weapon: ${dr.name1 + '' + dr.name2}`
                             this.text2 = `Charge: ${Math.round(dr.charge)}/${dr.max}`
                             let lsrt = "Tile harm: " + wep.damage + ', ' + "Ship harm: " + (wep.damage / 10)
@@ -55358,7 +56652,7 @@ class Labels {
                             canvas_context.font = "18px helvetica"
                             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                             dim.h = 1.6 * 68
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55447,7 +56741,7 @@ class Labels {
                             dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                             dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                             dim.h = 1.6 * 42
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55511,7 +56805,7 @@ class Labels {
                             dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                             dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                             dim.h = 1.6 * 170
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55601,7 +56895,7 @@ class Labels {
                             canvas_context.font = "18px helvetica"
                             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                             dim.h = 1.6 * 68
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55688,7 +56982,7 @@ class Labels {
                             canvas_context.font = "18px helvetica"
                             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                             dim.h = 1.6 * 68
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                             rect.draw()
                             canvas_context.fillStyle = "#FFFFFF"
@@ -55743,7 +57037,7 @@ class Labels {
             canvas_context.font = "18px helvetica"
             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
             dim.h = 1.6 * 44
-            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#55555588")
             rect.draw()
             canvas_context.fillStyle = "#FFFFFF"
@@ -55762,7 +57056,7 @@ class Labels {
             canvas_context.font = "18px helvetica"
             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
             dim.h = 1.6 * 10
-            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
             rect.draw()
             canvas_context.fillStyle = "#FFFFFF"
@@ -55781,7 +57075,7 @@ class Labels {
             canvas_context.font = "18px helvetica"
             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
             dim.h = 1.6 * 10
-            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
             rect.draw()
             canvas_context.fillStyle = "#FFFFFF"
@@ -55807,7 +57101,7 @@ class Labels {
                 canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                 dim.h = 1.6 * 10
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "#FFFFFF"
@@ -55823,14 +57117,14 @@ class Labels {
         }
         if (vessel.shield.healthbar.isPointInside(TIP_engine)) {
             this.text1 = "Shields"
-            this.text2 = `Charge: ${Math.round(vessel.shield.charge)}/${vessel.shield.max}`
+            this.text2 = `Charge: ${Math.round(vessel.shield.charge)}/${Math.round(vessel.shield.max)}`
             this.text3 = "Current: " + vessel.shield.state
             this.text4 = "Max: " + vessel.shield.level
             let dim = {}
             canvas_context.font = "18px helvetica"
             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
             dim.h = 1.6 * 44
-            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
             rect.draw()
             canvas_context.fillStyle = "#FFFFFF"
@@ -55853,7 +57147,7 @@ class Labels {
                 canvas_context.font = "18px helvetica"
                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                 dim.h = 1.6 * 36
-                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                 rect.draw()
                 canvas_context.fillStyle = "#FFFFFF"
@@ -55876,7 +57170,7 @@ class Labels {
             canvas_context.font = "18px helvetica"
             dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
             dim.h = 1.6 * 24
-            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
             rect.draw()
             canvas_context.fillStyle = "#FFFFFF"
@@ -55921,7 +57215,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -55947,7 +57241,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -55973,7 +57267,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            // //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            // ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56002,7 +57296,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56034,7 +57328,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56060,7 +57354,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56089,7 +57383,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56115,7 +57409,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56147,7 +57441,7 @@ class Labels {
                             if (vessel.UI.systems[5].sto < 2) {
                                 dim.h = 1.6 * 24 - 12
                             }
-                            //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                            ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                             let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                             rect.draw()
                         }
@@ -56158,6 +57452,7 @@ class Labels {
                         canvas_context.fillText(this.text2, TIP_engine.x + 10, py)
                         py += 19
                         canvas_context.fillText(this.text3, TIP_engine.x + 10, py)
+                        return
                     }
                 }
             }
@@ -56181,7 +57476,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56202,7 +57497,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56229,7 +57524,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56253,7 +57548,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56277,7 +57572,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56307,7 +57602,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56328,7 +57623,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56346,7 +57641,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56364,7 +57659,7 @@ class Labels {
                                 canvas_context.font = "18px helvetica"
                                 dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(this.text2).width)
                                 dim.h = 1.6 * 24
-                                //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                                ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                                 let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#55555588")
                                 rect.draw()
                                 canvas_context.fillStyle = "#FFFFFF"
@@ -56433,7 +57728,7 @@ class Labels {
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                         dim.h = 1.6 * 42
-                        //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                        ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                         rect.draw()
                         canvas_context.fillStyle = "#FFFFFF"
@@ -56497,7 +57792,7 @@ class Labels {
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text2).width)
                         dim.w = Math.max(dim.w, canvas_context.measureText(this.text1).width)
                         dim.h = 1.6 * 170
-                        //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                        ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - 10, dim.w + 20, dim.h + 20, "#555555dd")
                         rect.draw()
                         canvas_context.fillStyle = "#FFFFFF"
@@ -56587,7 +57882,7 @@ class Labels {
                         canvas_context.font = "18px helvetica"
                         dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                         dim.h = 1.6 * 68
-                        //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                        ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                         rect.draw()
                         canvas_context.fillStyle = "#FFFFFF"
@@ -56674,7 +57969,7 @@ class Labels {
                         canvas_context.font = "18px helvetica"
                         dim.w = Math.max(canvas_context.measureText(this.text1).width, canvas_context.measureText(lsrt).width)
                         dim.h = 1.6 * 68
-                        //////////////////////////////////////////////////////////////////////////////////////console.log(dim)
+                        ////////////////////////////////////////////////////////////////////////////////////////console.log(dim)
                         let rect = new RectangleR(TIP_engine.x, TIP_engine.y - (dim.h + 20), dim.w + 20, dim.h + 20, "#555555dd")
                         rect.draw()
                         canvas_context.fillStyle = "#FFFFFF"
@@ -56730,6 +58025,7 @@ let tutButton = new RectangleR(100 * globalRat, 600 * globalRat, 100 * globalRat
 let shakeButton = new RectangleR(1700, 0, 220, 50, "#FF000044")
 let starScrollButton = new RectangleR(1700, 50, 220, 50, "#FF000044")
 let lightButton = new RectangleR(1700, 100, 220, 50, "#FF000044")
+let hoverButton = new RectangleR(1700, 150, 220, 50, "#FF000044")
 let modeButton = new RectangleR(100 * globalRat, 650 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
 let crabButton = new RectangleR(900 * globalRat, 600 * globalRat, 150 * globalRat, 50 * globalRat, "#FF000044")
 let crabButton1 = new RectangleR(900 * globalRat, 600 * globalRat, 25 * globalRat, 50 * globalRat, "#FF000044")
@@ -56789,7 +58085,12 @@ function main() {
             vessel.guys[t].zSelected = 0
         }
         if (vessel.upgradeMenu.open == 1) {
+            if(vessel.home.donating == 1){
+
+            }else{
+                
             vessel.upgradeMenu.open = -1
+            }
         } else {
             vessel.upgradeMenu.open = 1
         }
@@ -56811,7 +58112,7 @@ function main() {
     //     for(let t = 0;t<enemy.doors.length;t++){
     // gigadebug++
     // if(gigadebug >1000000){
-    // //////console.log("ha ha!")
+    // ////////console.log("ha ha!")
     // gigadebug = 0
     // break
     // }
@@ -56830,7 +58131,7 @@ function main() {
             // for(let k = 0;k<starss.length;k++){
             // gigadebug++
             // if(gigadebug >1000000){
-            // //////console.log("ha ha!")
+            // ////////console.log("ha ha!")
             // gigadebug = 0
             // break
             // }
@@ -56849,7 +58150,7 @@ function main() {
                 // for(let k = 0;k<starss.length;k++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -56869,7 +58170,7 @@ function main() {
                 // for(let k = 0;k<starss.length;k++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -56889,7 +58190,7 @@ function main() {
                 // for(let k = 0;k<starss.length;k++){
                 // gigadebug++
                 // if(gigadebug >1000000){
-                // //////console.log("ha ha!")
+                // ////////console.log("ha ha!")
                 // gigadebug = 0
                 // break
                 // }
@@ -57054,6 +58355,14 @@ function main() {
             canvas_context.font = "20px helvetica"
             canvas_context.fillStyle = "#FFFFFF"
             canvas_context.fillText(options.lightText, lightButton.x + 10, lightButton.y + 30)
+            hoverButton.draw()
+            canvas_context.font = "20px helvetica"
+            canvas_context.fillStyle = "#FFFFFF"
+            canvas_context.fillText(options.hoverText, hoverButton.x + 10, hoverButton.y + 30)
+
+
+
+            
 
 
             // shieldButton.draw()
@@ -57123,7 +58432,7 @@ function main() {
         for (let t = 0; t < vessel.weapons.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -57134,7 +58443,7 @@ function main() {
         for (let t = 0; t < vessel.drones.length; t++) {
             gigadebug++
             if (gigadebug > 1000000) {
-                //////console.log("ha ha!")
+                ////////console.log("ha ha!")
                 gigadebug = 0
                 break
             }
@@ -57253,7 +58562,7 @@ function main() {
             for (let t = 0; t < enemy.asteroids.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -57354,7 +58663,7 @@ function main() {
             for (let t = 0; t < enemy.asteroids.length; t++) {
                 gigadebug++
                 if (gigadebug > 1000000) {
-                    //////console.log("ha ha!")
+                    ////////console.log("ha ha!")
                     gigadebug = 0
                     break
                 }
@@ -57394,7 +58703,7 @@ function main() {
             }
             for (let t = 0; t < vessel.upgradeMenu.wepsto.length; t++) {
                 if (vessel.upgradeMenu.wepsto[t].crewType != -1 && vessel.upgradeMenu.wepsto[t].droneType == -1) {
-                    ////console.log(vessel.upgradeMenu.wepsto[t])
+                    //////console.log(vessel.upgradeMenu.wepsto[t])
                     vessel.guys.push(new Guy(vessel.supratiles[Math.floor(Math.random() * vessel.supratiles.length)], vessel.upgradeMenu.wepsto[t].crewType))
                     vessel.upgradeMenu.wepsto[vessel.upgradeMenu.wepsto.indexOf(vessel.upgradeMenu.wepsto[t])] = new Weapon(-1)
                     // return
@@ -57540,7 +58849,7 @@ function gameSave() {
         sav.drones.push(vessel.drones[t].type)
     }
     saved = sav
-    //////console.log(JSON.stringify(sav))
+    ////////console.log(JSON.stringify(sav))
     // exportJSON(sav)
 }
 function gameLoad(sav) {
@@ -57560,7 +58869,7 @@ function gameLoad(sav) {
     }
     for (let t = 0; t < sav.crew.length; t++) {
         let crewman = new Guy(vessel.supratiles[sav.crew[t].tile], sav.crew[t].type)
-        if(sav.crew[t].isPomao == 1){
+        if (sav.crew[t].isPomao == 1) {
             crewman.becomePomao()
         }
         crewman.health = sav.crew[t].health
@@ -57574,7 +58883,7 @@ function gameLoad(sav) {
     vessel.weapons = []
     for (let t = 0; t < sav.weapons.length; t++) {
         vessel.weapons[t] = (new Weapon(sav.weapons[t]))
-        //////console.log(vessel.weapons[t])
+        ////////console.log(vessel.weapons[t])
         vessel.weapons[t].draw()
     }
     vessel.drones = []
@@ -57608,7 +58917,7 @@ function gameLoad(sav) {
 //     }
 //   }
 // dist.sort((a,b) => a>b?1:-1)
-// //////console.log(dist)
+// ////////console.log(dist)
 
 
 function exportJSON(originalData) {
@@ -57625,7 +58934,7 @@ function exportJSON(originalData) {
 
 
 // for(let i = '';i.length<10;i+='+'){
-//     //////console.log(i)
+//     ////////console.log(i)
 // }
 
 
